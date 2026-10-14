@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2 } from 'lucide-react';
-import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil } from './lib';
+import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList } from './lib';
 
 type Tab = 'agenda' | 'novidades' | 'salvas' | 'sobre';
 const TABS: { id: Tab; label: string }[] = [
@@ -124,7 +124,7 @@ export default function App() {
           <a className="brand" href="/" aria-label="Radar Corridas Maranhão, página inicial"><Logo /><span>Radar Corridas Maranhão</span></a>
           <nav className="tabs" aria-label="Seções">
             {TABS.map(x => (
-              <button key={x.id} className={tab === x.id ? 'tab on' : 'tab'} aria-current={tab === x.id ? 'page' : undefined} onClick={() => { setTab(x.id); window.scrollTo({ top: 0 }); }}>
+              <button key={x.id} className={tab === x.id ? 'tab on' : 'tab'} aria-current={tab === x.id ? 'page' : undefined} onClick={ev => { setTab(x.id); window.scrollTo({ top: 0 }); ev.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }}>
                 {x.label}
                 {x.id === 'novidades' && unread > 0 && <span className="count" aria-label={unread + ' não lidas'}>{unread}</span>}
                 {x.id === 'salvas' && favorites.length > 0 && <span className="count quiet">{favorites.length}</span>}
@@ -145,7 +145,7 @@ export default function App() {
                 <p className="hero-kicker">Próxima largada</p>
                 <h1 id="next-title"><button onClick={() => setSelected(next)}>{next.name}</button></h1>
                 <p className="hero-when">{fmt.long(next.date)}</p>
-                <p className="hero-where"><MapPin size={16} aria-hidden="true" />{next.location}, {next.city}</p>
+                <p className="hero-where"><MapPin size={16} aria-hidden="true" />{placeLabel(next)}</p>
                 <div className="hero-actions">
                   <button className="btn light" onClick={() => setSelected(next)}>Ver detalhes</button>
                   <button className="btn ghost" onClick={() => toggleSave(next)} aria-pressed={favorites.includes(next.id)}>
@@ -216,7 +216,7 @@ export default function App() {
                         <span className="race-date">{e.date ? <><b>{fmt.day(e.date)}</b><small>{fmt.weekdayShort(e.date)}</small></> : <b className="tbd">?</b>}</span>
                         <span className="race-body">
                           <span className="race-name">{e.name}</span>
-                          <span className="race-place">{e.modality === 'Trail' && <Mountain size={14} aria-label="Trail" />}{e.city}, {e.location.replace(new RegExp('^' + e.city + '\\s*·\\s*'), '')}</span>
+                          <span className="race-place">{e.modality === 'Trail' && <Mountain size={14} aria-label="Trail" />}{placeList(e)}</span>
                           <span className="race-meta">
                             <span className="dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d}k</span>) : <span>distâncias a confirmar</span>}</span>
                             <StatusTag e={e} />
@@ -323,7 +323,16 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
-    const onKey = (ev: KeyboardEvent) => { if (ev.key === 'Escape') onClose(); };
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') onClose();
+      if (ev.key !== 'Tab' || !ref.current) return;
+      // mantém o foco dentro da ficha enquanto ela está aberta
+      const f = ref.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (ev.shiftKey && (document.activeElement === first || document.activeElement === ref.current)) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+    };
     document.addEventListener('keydown', onKey);
     const o = document.body.style.overflow; document.body.style.overflow = 'hidden';
     ref.current?.focus();
@@ -337,7 +346,7 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
         <p className="sheet-kind">{e.modality === 'Rua' ? 'Corrida de rua' : 'Trail'}, edição {e.edition}</p>
         <h2 id="sheet-title">{e.name}</h2>
         <div className="sheet-when">
-          <div><strong>{fmt.long(e.date)}</strong><span><MapPin size={14} aria-hidden="true" />{e.location}, {e.city}</span></div>
+          <div><strong>{fmt.long(e.date)}</strong><span><MapPin size={14} aria-hidden="true" />{placeLabel(e)}</span></div>
           {cd && n != null && n >= 0 && <div className="sheet-clock"><b>{cd.n}</b>{cd.unit && <small>{cd.unit}</small>}</div>}
         </div>
         <div className="sheet-dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d} km</span>) : <span>Distâncias a confirmar</span>}</div>

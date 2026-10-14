@@ -70,7 +70,7 @@ export function icsFor(events: Race[]) {
     const end = new Date(e.date + 'T12:00:00Z'); end.setUTCDate(end.getUTCDate() + 1);
     return ['BEGIN:VEVENT', `UID:${e.id}@radar-maranhao`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${e.date!.replace(/-/g, '')}`,
       `DTEND;VALUE=DATE:${end.toISOString().slice(0, 10).replace(/-/g, '')}`, `SUMMARY:${esc(e.name)}`,
-      `LOCATION:${esc(e.location + ', ' + e.city + ' - MA')}`, `DESCRIPTION:${esc(e.notes + '\nFonte: ' + e.sourceUrl)}`,
+      `LOCATION:${esc(placeLabel(e) + ' - MA')}`, `DESCRIPTION:${esc(e.notes + '\nFonte: ' + e.sourceUrl)}`,
       ...(e.officialUrl ? [`URL:${e.officialUrl}`] : []), 'END:VEVENT'].join('\r\n');
   });
   const body = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Radar Corridas Maranhao//Corridas//PT-BR', ...items, 'END:VCALENDAR'].join('\r\n');
@@ -83,3 +83,17 @@ export const norm = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g
 
 export function load<T>(key: string, fallback: T): T { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } }
 export function store(key: string, v: unknown) { try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* armazenamento indisponível */ } }
+
+/** Local sem repetir a cidade (alguns anúncios já trazem "Cidade · local"). */
+export function placeParts(e: Pick<Race, 'city' | 'location'>) {
+  const city = e.city.trim();
+  let rest = e.location.trim();
+  if (norm(rest).startsWith(norm(city))) rest = rest.slice(city.length).replace(/^[\s·,–-]+/, '');
+  if (norm(rest).endsWith(norm(city))) rest = rest.slice(0, rest.length - city.length).replace(/[\s·,–-]+$/, '');
+  if (rest) rest = rest[0].toUpperCase() + rest.slice(1);
+  return { city, rest };
+}
+/** "Local, Cidade" — para a ficha e o destaque. */
+export const placeLabel = (e: Pick<Race, 'city' | 'location'>) => { const { city, rest } = placeParts(e); return rest ? `${rest}, ${city}` : city; };
+/** "Cidade, local" — para a lista, onde a cidade vem primeiro. */
+export const placeList = (e: Pick<Race, 'city' | 'location'>) => { const { city, rest } = placeParts(e); return rest ? `${city}, ${rest}` : city; };
