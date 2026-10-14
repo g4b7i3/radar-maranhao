@@ -76,7 +76,7 @@ Outros comandos:
 
 ## Bom saber
 
-- **Minha agenda (provas salvas) e novidades lidas** ficam guardadas no navegador de cada pessoa, sem banco de dados nem cadastro. Cada pessoa exporta a própria agenda em "Minha agenda → Exportar minha agenda" (arquivo .ics, que abre no Google Agenda, no iPhone e no Outlook). Quem trocar de celular ou limpar o navegador começa do zero.
+- **Minha agenda (provas salvas) e novidades lidas** ficam guardadas no navegador de cada pessoa, sem banco de dados nem cadastro. Cada pessoa exporta a própria agenda em "Minha agenda → Exportar minha agenda" (arquivo .ics, que abre no Google Agenda, no iPhone e no Outlook). Para levar a lista para outro aparelho (ou mandar para um amigo), a pessoa usa "Copiar link da minha agenda": ao abrir o link, as provas são somadas à agenda daquele aparelho. Quem limpar o navegador sem guardar o link perde a lista.
 - **A pesquisa não acha tudo.** Provas anunciadas só no Instagram ou em grupos fechados podem demorar a aparecer. O site avisa isso aos visitantes.
 - **Pausar a pesquisa diária:** peça ao Claude para pausar a tarefa agendada "Radar Maranhão: pesquisa diária". O site continua no ar, só para de atualizar sozinho.
 - **O site antigo** (ChatGPT Sites / Cloudflare) e a rotina de lá continuam existindo até você desativá-los. Desative a rotina antiga para não receber avisos duplicados.

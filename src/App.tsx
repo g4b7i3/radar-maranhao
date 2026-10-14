@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2 } from 'lucide-react';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil } from './lib';
 
 type Tab = 'agenda' | 'novidades' | 'salvas' | 'sobre';
@@ -55,6 +55,24 @@ export default function App() {
       .then(setData)
       .catch(() => setError('A agenda não carregou. Confira sua conexão e recarregue a página.'));
   }, []);
+  // Link de agenda compartilhada: /?agenda=id1,id2 soma as provas à agenda deste aparelho.
+  useEffect(() => {
+    if (!data) return;
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get('agenda');
+    if (raw == null) return;
+    const ids = raw.split(',').map(x => x.trim()).filter(id => data.events.some(e => e.id === id));
+    params.delete('agenda');
+    window.history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params : '') + window.location.hash);
+    setFavorites(prev => {
+      const added = ids.filter(id => !prev.includes(id));
+      const v = [...prev, ...added];
+      store('radar-favorites', v);
+      setToast(!ids.length ? 'As provas desse link não estão mais na agenda.' : added.length ? `${added.length === 1 ? '1 prova adicionada' : added.length + ' provas adicionadas'} à sua agenda.` : 'Essas provas já estavam na sua agenda.');
+      return v;
+    });
+    setTab('salvas');
+  }, [data]);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(''), 4000); return () => clearTimeout(t); }, [toast]);
 
   const events = data?.events ?? [];
@@ -92,6 +110,11 @@ export default function App() {
   }
   function markAllRead() { const v = (data?.changes ?? []).map(c => c.id); setSeen(v); store('radar-seen', v); }
   function clearFilters() { setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setOnlyOpen(false); setShowPast(false); }
+  async function copyAgendaLink() {
+    const url = `${window.location.origin}/?agenda=${favorites.join(',')}`;
+    try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
+    catch { window.prompt('Copie o link da sua agenda:', url); }
+  }
   function exportCalendar(list: Race[]) { icsFor(list); setToast(list.length === 1 ? 'Arquivo de calendário baixado.' : `${list.filter(e => e.date).length} provas exportadas para o calendário.`); }
 
   return (
@@ -146,7 +169,7 @@ export default function App() {
 
       <main className="page" id="conteudo">
         {data && (tab === 'agenda' || tab === 'salvas') && <>
-          {tab === 'salvas' && <div className="page-head"><h1>Minha agenda</h1><p>Monte sua agenda: toque no marcador das provas que você quer correr e exporte tudo para o calendário do celular (Google Agenda, iPhone ou Outlook). Sem cadastro: a lista fica guardada neste aparelho.</p></div>}
+          {tab === 'salvas' && <div className="page-head"><h1>Minha agenda</h1><p>Monte sua agenda: toque no marcador das provas que você quer correr e exporte tudo para o calendário do celular (Google Agenda, iPhone ou Outlook). Sem cadastro: a lista fica guardada neste aparelho. Para levar para outro celular ou mandar para um amigo, use “Copiar link da minha agenda”.</p></div>}
 
           {tab === 'agenda' && (
             <div className="filters" role="search">
@@ -176,7 +199,7 @@ export default function App() {
             <div>
               {filtersOn && tab === 'agenda' && <button className="btn text" onClick={clearFilters}><RotateCcw size={15} aria-hidden="true" />Limpar filtros</button>}
               {filtered.some(e => e.date) && (tab === 'salvas'
-                ? <button className="btn solid" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar minha agenda</button>
+                ? <><button className="btn outline" onClick={copyAgendaLink}><Link2 size={15} aria-hidden="true" />Copiar link da minha agenda</button><button className="btn solid" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar minha agenda</button></>
                 : <button className="btn text" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar para o calendário</button>)}
             </div>
           </div>
@@ -270,7 +293,7 @@ export default function App() {
               <section>
                 <h2>Antes de se inscrever</h2>
                 <p>Confirme sempre no regulamento e na página oficial da prova. Anúncios feitos só no Instagram ou em grupos fechados podem demorar a aparecer aqui.</p>
-                <p>Para montar sua agenda, salve as provas que quer correr e use “Exportar minha agenda” em Minha agenda. O arquivo abre no Google Agenda, no calendário do iPhone ou no Outlook. Tudo fica guardado só neste aparelho, sem cadastro.</p>
+                <p>Para montar sua agenda, salve as provas que quer correr e use “Exportar minha agenda” em Minha agenda. O arquivo abre no Google Agenda, no calendário do iPhone ou no Outlook. Tudo fica guardado só neste aparelho, sem cadastro. Para levar a lista para outro aparelho, copie o link da sua agenda e abra lá.</p>
               </section>
             </div>
             <section>
