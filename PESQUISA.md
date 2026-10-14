@@ -19,6 +19,24 @@ Fontes, em ordem de confiança:
 3. Notícias locais (Maranhão Esportes, portais de São Luís e Imperatriz) para descobrir links.
 4. Calendários de terceiros (O2 Corre, Sou Corredor, Todas Corridas, CorridasBR): servem para descobrir provas, não para confirmar.
 
+### Onde as provas do Maranhão realmente aparecem (testado em 14/10/2026)
+
+Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirme cada prova na página de inscrição:
+
+| Fonte | Endereço | Observação |
+| --- | --- | --- |
+| CorridasBR (MA) | https://www.corridasbr.com.br/MA/Calendario.asp | Lista mais completa do estado, inclusive cidades pequenas. As páginas de detalhe não abrem certo; use só a lista. |
+| Vamu Correr | https://vamucorrer.com.br/corridas/maranhao | Traz o link de inscrição de cada prova. Já errou datas (ex.: Chapadinha). |
+| running.life (MA) | https://running.life/running-calendar/brazil/maranhao | Forte em Imperatriz e interior. Só a 1ª página abre; ache as demais provas buscando "running.life" + nome da cidade. Cada página de prova traz o link oficial. |
+| Sou Corredor (MA) | https://soucorredor.com.br/calendario?pais=31&localidade=nacional&estado=10 | Bom para São Luís; páginas de prova trazem local de largada. |
+| Topchip | https://topchip.com.br/<prova> | Cronometragem de Imperatriz e região tocantina. A lista geral não abre, mas cada página de prova abre (data, hora e status). |
+| PHB Crono | https://phbcrono.com.br/ | Lista "Próximos eventos" com provas do leste do MA e Lençóis (trail). |
+| SA Crono, Central da Corrida | sacrono.com.br, centraldacorrida.com.br | Carregam por JavaScript: use para link oficial, confirme a data em outro calendário. |
+| Ticket Sports, Sympla, Doity | — | Páginas de prova abrem bem e mostram data, local e status (inclusive cancelamento). |
+| Maranhão Esportes, O Imparcial, Imirante | — | Notícias com data de anúncio, local e entrega de kit. |
+
+Armadilhas já encontradas: cidade homônima em outro estado (Paraíso Run é em São João do Paraíso/**BA**); evento que não é prova (PACER é programa de treino; Forge Beach é competição de fitness); prova cancelada que continua nos calendários (White Sand Running); a mesma prova com dois nomes (Corrida Sicoob = Hiper Farma, em Açailândia). Prova vista em uma única fonte entra com `confidence` "Fonte única (calendário) · confirmar no organizador".
+
 Pesquise São Luís, a Grande Ilha (São José de Ribamar, Paço do Lumiar, Raposa) e as demais cidades (Imperatriz, Barreirinhas, Caxias, Timon, Bacabal, Balsas, Chapadinha, Santa Inês e outras). Inclua trail (Lençóis Maranhenses, Chapada das Mesas).
 
 ## 3. Conferir antes de registrar
