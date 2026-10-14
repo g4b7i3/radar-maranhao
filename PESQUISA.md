@@ -6,6 +6,17 @@ Instruções seguidas pela tarefa agendada que atualiza o Radar Corridas Maranh�
 
 Encontrar corridas de rua e trail **no Maranhão** que foram anunciadas ou mudaram, registrar na agenda com fonte e avisar só quando houver novidade real.
 
+## 0. Ler a coleta automática (comece por aqui)
+
+Todo dia às 6h15 o GitHub Actions (`.github/workflows/coletar-plataformas.yml`) abre com navegador as plataformas que só funcionam com JavaScript e salva o texto em `coleta/`:
+
+- `coleta/cronoesportes.json` — Crono Esportes (São Luís, Sesc, UEMA…): lista + página completa de cada prova (data, horário, largada, preços, "INSCRIÇÕES ENCERRADAS", "VAGAS ESGOTADAS").
+- `coleta/sacrono.json` — SA Crono (Caxias, Coelho Neto, Coroatá, Barra do Corda…): lista + página de cada prova.
+- `coleta/centraldacorrida.json` — Central da Corrida: lista nacional com data, cidade e status ("Inscreva-se", "Inscrições abertas", "Em breve", "Inscrições esgotadas"); pegue as linhas "- MA".
+- `coleta/topchip.json` — calendário da Topchip (Imperatriz e região tocantina) até o ano seguinte; pegue as linhas "/ MA".
+
+Compare com `public/data/radar.json`: prova nova, mudança de data/local/status (abertas → encerradas/esgotadas) entram pelo `npm run atualizar`. Confira `coletadoEm` de cada arquivo; se for de outro dia, a coleta falhou — siga só com a web e avise no resumo final. Ignore provas de outros estados (PI, TO, PA) e desafios virtuais.
+
 ## 1. Ler a agenda atual
 
 Abra `public/data/radar.json`. Anote as provas que já existem (`id`, nome, cidade, edição) para não criar duplicatas.
@@ -32,7 +43,7 @@ Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirm
 | Sou Corredor (MA) | https://soucorredor.com.br/calendario?pais=31&localidade=nacional&estado=10 | Bom para São Luís; páginas de prova trazem local de largada. |
 | Topchip | https://topchip.com.br/<prova> | Cronometragem de Imperatriz e região tocantina. A lista geral não abre, mas cada página de prova abre (data, hora e status). |
 | PHB Crono | https://phbcrono.com.br/ | Lista "Próximos eventos" com provas do leste do MA e Lençóis (trail). |
-| SA Crono, Central da Corrida | sacrono.com.br, centraldacorrida.com.br | Carregam por JavaScript: use para link oficial, confirme a data em outro calendário. |
+| SA Crono, Central da Corrida, Crono Esportes | — | Carregam por JavaScript: já vêm prontas em `coleta/` (passo 0). |
 | Agenda Off Road | agendaoffroad.com.br | Provas e trails no leste do MA (Chapadinha, Timon). |
 | Ticket Sports, Sympla, Doity | — | Páginas de prova abrem bem e mostram data, local e status (inclusive cancelamento). |
 | Maranhão Esportes, O Imparcial, Imirante | — | Notícias com data de anúncio, local e entrega de kit. |

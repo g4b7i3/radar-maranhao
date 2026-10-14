@@ -79,7 +79,11 @@ export default function App() {
   useEffect(() => {
     fetch('/data/radar.json', { cache: 'no-store' })
       .then(r => { if (!r.ok) throw Error(); return r.json(); })
-      .then(setData)
+      .then((d: State) => {
+        // Primeira visita: o que já existe não conta como novidade; o contador só mostra o que chegar depois.
+        try { if (localStorage.getItem('radar-seen') === null) { const all = d.changes.map(c => c.id); store('radar-seen', all); setSeen(all); } } catch { /* sem armazenamento */ }
+        setData(d);
+      })
       .catch(() => setError('A agenda não carregou. Confira sua conexão e recarregue a página.'));
   }, []);
   // Link de agenda compartilhada: /?agenda=id1,id2 soma as provas à agenda deste aparelho.
