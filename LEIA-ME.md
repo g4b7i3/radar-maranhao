@@ -78,7 +78,7 @@ Se mudar algo grande no `sw.js`, troque a linha `const VERSION = 'v1'` para `'v2
 
 ## Coleta automática das plataformas
 
-Todo dia às 6h15 o GitHub abre com navegador a Crono Esportes, a SA Crono, a Central da Corrida e o calendário da Topchip (sites que só funcionam com JavaScript) e salva o texto em `coleta/`. A pesquisa diária das 7h47 lê esses arquivos primeiro. Mudanças só em `coleta/` não republicam o site.
+De 2 em 2 horas (6h15 às 20h15) o GitHub abre com navegador a Crono Esportes, a SA Crono, a Central da Corrida e o calendário da Topchip (sites que só funcionam com JavaScript) e salva o texto em `coleta/`. A pesquisa completa das 7h47 lê esses arquivos primeiro. Entre 10h40 e 20h40, de 2 em 2 horas, uma verificação rápida do Claude lê só a coleta e atualiza o site **apenas se algo mudou** (prova nova, inscrições abertas, encerradas ou esgotadas). Assim o site fica atualizado ao longo do dia sem gastar os minutos de publicação do Netlify (plano grátis: 300 min/mês). Mudanças só em `coleta/` não republicam o site.
 
 **Se a notificação disser que a coleta falhou:**
 

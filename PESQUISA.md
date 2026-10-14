@@ -8,7 +8,7 @@ Encontrar corridas de rua e trail **no Maranhão** que foram anunciadas ou mudar
 
 ## 0. Ler a coleta automática (comece por aqui)
 
-Todo dia às 6h15 o GitHub Actions (`.github/workflows/coletar-plataformas.yml`) abre com navegador as plataformas que só funcionam com JavaScript e salva o texto em `coleta/`:
+De 2 em 2 horas (6h15 às 20h15) o GitHub Actions (`.github/workflows/coletar-plataformas.yml`) abre com navegador as plataformas que só funcionam com JavaScript e salva o texto em `coleta/`:
 
 - `coleta/cronoesportes.json` — Crono Esportes (São Luís, Sesc, UEMA…): lista + página completa de cada prova (data, horário, largada, preços, "INSCRIÇÕES ENCERRADAS", "VAGAS ESGOTADAS").
 - `coleta/sacrono.json` — SA Crono (Caxias, Coelho Neto, Coroatá, Barra do Corda…): lista + página de cada prova.
