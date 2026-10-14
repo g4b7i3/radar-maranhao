@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
-import { HeroBackdrop, CountUp } from './HeroFx';
+import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink } from './lib';
 
@@ -149,6 +149,7 @@ export default function App() {
     try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
     catch { window.prompt('Copie o link da sua agenda:', url); }
   }
+  useReveal([tab, filtered, data]);
   const onInstalled = useCallback(() => setToast('App instalado. Procure o ícone Corridas MA na tela inicial.'), []);
   function exportCalendar(list: Race[]) { icsFor(list); setToast(list.length === 1 ? 'Arquivo de calendário baixado.' : `${list.filter(e => e.date).length} provas exportadas para o calendário.`); }
 
@@ -200,14 +201,14 @@ export default function App() {
             </> : <div className="hero-text"><h1 id="next-title">Nenhuma prova futura na agenda ainda.</h1><p className="hero-when">A pesquisa diária adiciona novas provas assim que forem anunciadas.</p></div>}
           </div>
           <p className="hero-sum">
-            <span><strong>{upcoming.length}</strong> provas pela frente em {new Set(upcoming.map(e => e.city)).size} cidades</span>
-            <span><strong>{openCount}</strong> com inscrições abertas</span>
+            <span><strong><CountUp value={String(upcoming.length)} /></strong> provas pela frente em {new Set(upcoming.map(e => e.city)).size} cidades</span>
+            <span><strong><CountUp value={String(openCount)} /></strong> com inscrições abertas</span>
             {nextDeadline && <span>Próximo prazo: <button className="link-inline" onClick={() => setSelected(nextDeadline)}>{nextDeadline.name}</button>, {daysUntil(nextDeadline.registrationClose) === 0 ? 'hoje' : daysUntil(nextDeadline.registrationClose) === 1 ? 'amanhã' : fmt.short(nextDeadline.registrationClose)}</span>}
           </p>
         </section>
       )}
 
-      <main className="page" id="conteudo">
+      <main className="page" id="conteudo" key={tab}>
         {data && (tab === 'agenda' || tab === 'salvas') && <>
           {tab === 'salvas' && <div className="page-head"><h1>Minha agenda</h1><p>Monte sua agenda: toque no marcador das provas que você quer correr e exporte tudo para o calendário do celular (Google Agenda, iPhone ou Outlook). Sem cadastro: a lista fica guardada neste aparelho. Para levar para outro celular ou mandar para um amigo, use “Copiar link da minha agenda”.</p></div>}
 

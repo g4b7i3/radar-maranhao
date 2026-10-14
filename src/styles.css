@@ -417,6 +417,44 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
     -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
             mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); }
 }
+/* ---------- animações do site (leves: transform e opacity) ---------- */
+/* itens aparecem ao entrar na tela */
+.reveal-on .race, .reveal-on .month h2, .reveal-on .missing, .reveal-on .feed li, .reveal-on .about-status,
+.reveal-on .about section, .reveal-on .page-head, .reveal-on .empty { opacity: 0; transform: translateY(12px); }
+.reveal-on .in { opacity: 1 !important; transform: none !important; transition: opacity .5s ease var(--rd, 0ms), transform .55s cubic-bezier(.2,.8,.2,1) var(--rd, 0ms); }
+/* linha do mês se desenha */
+.month h2 { border-bottom: 0; position: relative; }
+.month h2::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--ink); transform-origin: left; }
+.reveal-on .month h2::after { transform: scaleX(0); }
+.reveal-on .month h2.in::after { transform: scaleX(1); transition: transform .8s cubic-bezier(.2,.8,.2,1) calc(var(--rd, 0ms) + .1s); }
+/* troca de aba */
+.page { animation: fx-fade .35s ease both; }
+@keyframes fx-fade { from { opacity: 0; } }
+.tab.on::after { animation: fx-grow .3s cubic-bezier(.2,.8,.2,1); transform-origin: center; }
+@keyframes fx-grow { from { transform: scaleX(0); } }
+.count { animation: fx-pop .4s cubic-bezier(.3,1.6,.5,1); }
+/* salvar: o marcador dá um pulinho */
+.save.on svg, .btn[aria-pressed="true"] svg { animation: fx-pop .4s cubic-bezier(.3,1.6,.5,1); }
+@keyframes fx-pop { 0% { transform: scale(.6); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+/* prazo acabando: pontinho laranja piscando */
+.due.urgent { display: inline-flex; align-items: center; gap: 6px; }
+.due.urgent::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: fx-blink 1.2s ease-in-out infinite; }
+@keyframes fx-blink { 50% { opacity: .2; } }
+/* novidade não lida pulsa */
+.feed li.unread button::before { animation: fx-blink 1.6s ease-in-out infinite; }
+/* toque nos botões */
+.btn, .chip, .seg button, .save, .tab, .race-main { transition: transform .12s ease, background-color .15s, border-color .15s, color .15s; }
+.btn:active, .chip:active, .seg button:active, .save:active { transform: scale(.96); }
+@media (hover: hover) {
+  .race { transition: background-color .2s; }
+  .race:hover { background: color-mix(in srgb, var(--cobalt-tint) 45%, transparent); }
+  .race-main:hover .race-date b { transform: translateX(3px); }
+  .race-date b { display: inline-block; transition: transform .25s cubic-bezier(.2,.8,.2,1); }
+  .btn.solid:hover, .btn.whats:hover, .btn.light:hover { transform: translateY(-1px); }
+}
+.toast { animation: fx-toast .3s cubic-bezier(.2,.8,.2,1); }
+@keyframes fx-toast { from { opacity: 0; transform: translate(-50%, 12px); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

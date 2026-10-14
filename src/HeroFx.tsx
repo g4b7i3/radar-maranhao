@@ -110,3 +110,32 @@ export function CountUp({ value }: { value: string }) {
   }, [target, value]);
   return <>{n}</>;
 }
+
+const REVEAL = '.race, .month h2, .missing, .feed li, .about-status, .about section, .page-head, .empty';
+
+/**
+ * Faz cada item aparecer suavemente quando entra na tela (uma vez só).
+ * Um único IntersectionObserver para a página toda: leve mesmo com 80 provas.
+ */
+export function useReveal(deps: unknown[]) {
+  useEffect(() => {
+    const root = document.documentElement;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    root.classList.add('reveal-on');
+    const io = new IntersectionObserver(entries => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      visible.forEach((e, i) => {
+        const el = e.target as HTMLElement;
+        el.style.setProperty('--rd', `${Math.min(i, 6) * 55}ms`);
+        el.classList.add('in');
+        io.unobserve(el);
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+    document.querySelectorAll<HTMLElement>(REVEAL).forEach(el => { if (!el.classList.contains('in')) io.observe(el); });
+    // segurança: nada fica escondido se algo der errado
+    const t = setTimeout(() => document.querySelectorAll(REVEAL).forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight) el.classList.add('in'); }), 1500);
+    return () => { io.disconnect(); clearTimeout(t); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+}
