@@ -2,6 +2,8 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  # Mudança só na pasta coleta/ (dados brutos da coleta automática) não republica o site.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)coleta'"
 
 [build.environment]
   NODE_VERSION = "22"
