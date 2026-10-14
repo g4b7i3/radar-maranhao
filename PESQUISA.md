@@ -1,6 +1,6 @@
 # Pesquisa diária de provas
 
-Instruções seguidas pela tarefa agendada que atualiza o Radar Maranhão todo dia às 8h (horário de São Luís). Servem também para quem for atualizar a agenda à mão.
+Instruções seguidas pela tarefa agendada que atualiza o Radar Corridas Maranhão todo dia às 8h (horário de São Luís). Servem também para quem for atualizar a agenda à mão.
 
 ## Objetivo
 

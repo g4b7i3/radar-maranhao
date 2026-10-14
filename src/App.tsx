@@ -6,7 +6,7 @@ type Tab = 'agenda' | 'novidades' | 'salvas' | 'sobre';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'agenda', label: 'Agenda' },
   { id: 'novidades', label: 'Novidades' },
-  { id: 'salvas', label: 'Salvas' },
+  { id: 'salvas', label: 'Minha agenda' },
   { id: 'sobre', label: 'Sobre' },
 ];
 
@@ -88,7 +88,7 @@ export default function App() {
   function toggleSave(e: Race) {
     const v = favorites.includes(e.id) ? favorites.filter(id => id !== e.id) : [...favorites, e.id];
     setFavorites(v); store('radar-favorites', v);
-    setToast(v.includes(e.id) ? 'Prova salva neste aparelho.' : 'Prova removida das salvas.');
+    setToast(v.includes(e.id) ? 'Prova salva na sua agenda.' : 'Prova removida da sua agenda.');
   }
   function markAllRead() { const v = (data?.changes ?? []).map(c => c.id); setSeen(v); store('radar-seen', v); }
   function clearFilters() { setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setOnlyOpen(false); setShowPast(false); }
@@ -98,7 +98,7 @@ export default function App() {
     <>
       <header className="top">
         <div className="top-inner">
-          <a className="brand" href="/" aria-label="Radar Maranhão, página inicial"><Logo /><span>Radar Maranhão</span></a>
+          <a className="brand" href="/" aria-label="Radar Corridas Maranhão, página inicial"><Logo /><span>Radar Corridas Maranhão</span></a>
           <nav className="tabs" aria-label="Seções">
             {TABS.map(x => (
               <button key={x.id} className={tab === x.id ? 'tab on' : 'tab'} aria-current={tab === x.id ? 'page' : undefined} onClick={() => { setTab(x.id); window.scrollTo({ top: 0 }); }}>
@@ -146,7 +146,7 @@ export default function App() {
 
       <main className="page" id="conteudo">
         {data && (tab === 'agenda' || tab === 'salvas') && <>
-          {tab === 'salvas' && <div className="page-head"><h1>Provas salvas</h1><p>Ficam guardadas neste aparelho. Use o marcador em qualquer prova para salvar.</p></div>}
+          {tab === 'salvas' && <div className="page-head"><h1>Minha agenda</h1><p>Monte sua agenda: toque no marcador das provas que você quer correr e exporte tudo para o calendário do celular (Google Agenda, iPhone ou Outlook). Sem cadastro: a lista fica guardada neste aparelho.</p></div>}
 
           {tab === 'agenda' && (
             <div className="filters" role="search">
@@ -175,7 +175,9 @@ export default function App() {
             <p>{filtered.length === 1 ? '1 prova' : filtered.length + ' provas'}{filtersOn && tab === 'agenda' ? ' com esses filtros' : ''}</p>
             <div>
               {filtersOn && tab === 'agenda' && <button className="btn text" onClick={clearFilters}><RotateCcw size={15} aria-hidden="true" />Limpar filtros</button>}
-              {filtered.some(e => e.date) && <button className="btn text" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar para o calendário</button>}
+              {filtered.some(e => e.date) && (tab === 'salvas'
+                ? <button className="btn solid" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar minha agenda</button>
+                : <button className="btn text" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar para o calendário</button>)}
             </div>
           </div>
 
@@ -268,7 +270,7 @@ export default function App() {
               <section>
                 <h2>Antes de se inscrever</h2>
                 <p>Confirme sempre no regulamento e na página oficial da prova. Anúncios feitos só no Instagram ou em grupos fechados podem demorar a aparecer aqui.</p>
-                <p>Provas salvas e novidades lidas ficam guardadas neste aparelho, sem cadastro.</p>
+                <p>Para montar sua agenda, salve as provas que quer correr e use “Exportar minha agenda” em Minha agenda. O arquivo abre no Google Agenda, no calendário do iPhone ou no Outlook. Tudo fica guardado só neste aparelho, sem cadastro.</p>
               </section>
             </div>
             <section>
@@ -281,7 +283,12 @@ export default function App() {
         )}
       </main>
 
-      {data && <footer className="foot"><p>Radar Maranhão. Conferido em {fmt.full(data.lastChecked)}. Confirme as informações com a organização de cada prova.</p></footer>}
+      {data && (
+        <footer className="foot">
+          <p>Radar Corridas Maranhão. Conferido em {fmt.full(data.lastChecked)}. Confirme as informações com a organização de cada prova.</p>
+          <p className="credit">Desenvolvido por <a href="https://www.instagram.com/gabriel_vinicius_jj/" target="_blank" rel="noopener noreferrer">@gabriel_vinicius_jj</a></p>
+        </footer>
+      )}
 
       {selected && <Sheet race={selected} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
       {toast && <div className="toast" role="status"><Check size={16} aria-hidden="true" />{toast}</div>}

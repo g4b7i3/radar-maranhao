@@ -1,4 +1,4 @@
-# Radar Maranhão
+# Radar Corridas Maranhão
 
 Agenda de corridas de rua e trail em São Luís e no Maranhão, com prazos de inscrição, fonte de cada informação e uma pesquisa automática todo dia às 8h.
 
@@ -25,7 +25,7 @@ envia para o GitHub e te avisa no celular se houver novidade
 4. Selecione o repositório **radar-maranhao**.
 5. Não precisa mudar nada: o arquivo `netlify.toml` já informa tudo (comando `npm run build`, pasta `dist`). Clique em **Deploy**.
 6. Em um ou dois minutos o site estará no ar em um endereço como `nome-aleatorio.netlify.app`.
-7. Para trocar o nome: **Site configuration → Change site name** (por exemplo, `radar-maranhao.netlify.app`). Se tiver um domínio próprio, use **Domain management → Add a domain**.
+7. Para trocar o nome: **Site configuration → Change site name** (por exemplo, `radar-corridas-maranhao.netlify.app`). Se tiver um domínio próprio, use **Domain management → Add a domain**.
 
 Pronto. A partir daí, toda atualização no GitHub vai para o ar sozinha.
 
@@ -34,7 +34,7 @@ Pronto. A partir daí, toda atualização no GitHub vai para o ar sozinha.
 | Arquivo | Para que serve |
 | --- | --- |
 | `public/data/radar.json` | A agenda: provas, novidades e data da última pesquisa. É o único arquivo que muda no dia a dia. |
-| `src/App.tsx` | As telas: agenda, novidades, provas salvas, sobre e a ficha de cada prova. |
+| `src/App.tsx` | As telas: agenda, novidades, minha agenda, sobre e a ficha de cada prova. |
 | `src/styles.css` | Visual do site (cores, letras, layout para computador e celular). |
 | `src/lib.ts` | Datas, status das inscrições, contagem regressiva e exportação para o calendário. |
 | `scripts/` | Ferramentas para atualizar e conferir a agenda (veja abaixo). |
@@ -76,9 +76,9 @@ Outros comandos:
 
 ## Bom saber
 
-- **Provas salvas e novidades lidas** ficam guardadas no navegador de cada pessoa. Quem trocar de celular ou de navegador começa do zero.
+- **Minha agenda (provas salvas) e novidades lidas** ficam guardadas no navegador de cada pessoa, sem banco de dados nem cadastro. Cada pessoa exporta a própria agenda em "Minha agenda → Exportar minha agenda" (arquivo .ics, que abre no Google Agenda, no iPhone e no Outlook). Quem trocar de celular ou limpar o navegador começa do zero.
 - **A pesquisa não acha tudo.** Provas anunciadas só no Instagram ou em grupos fechados podem demorar a aparecer. O site avisa isso aos visitantes.
-- **Pausar a pesquisa diária:** peça ao Claude para pausar a tarefa agendada "Radar Maranhão". O site continua no ar, só para de atualizar sozinho.
+- **Pausar a pesquisa diária:** peça ao Claude para pausar a tarefa agendada "Radar Maranhão: pesquisa diária". O site continua no ar, só para de atualizar sozinho.
 - **O site antigo** (ChatGPT Sites / Cloudflare) e a rotina de lá continuam existindo até você desativá-los. Desative a rotina antiga para não receber avisos duplicados.
 
 ## O que mudou em relação à versão original

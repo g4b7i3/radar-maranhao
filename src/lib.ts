@@ -73,9 +73,9 @@ export function icsFor(events: Race[]) {
       `LOCATION:${esc(e.location + ', ' + e.city + ' - MA')}`, `DESCRIPTION:${esc(e.notes + '\nFonte: ' + e.sourceUrl)}`,
       ...(e.officialUrl ? [`URL:${e.officialUrl}`] : []), 'END:VEVENT'].join('\r\n');
   });
-  const body = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Radar Maranhao//Corridas//PT-BR', ...items, 'END:VCALENDAR'].join('\r\n');
+  const body = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Radar Corridas Maranhao//Corridas//PT-BR', ...items, 'END:VCALENDAR'].join('\r\n');
   const url = URL.createObjectURL(new Blob([body], { type: 'text/calendar;charset=utf-8' }));
-  const a = document.createElement('a'); a.href = url; a.download = events.length === 1 ? events[0].id + '.ics' : 'radar-maranhao.ics'; a.click();
+  const a = document.createElement('a'); a.href = url; a.download = events.length === 1 ? events[0].id + '.ics' : 'minhas-corridas-maranhao.ics'; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
