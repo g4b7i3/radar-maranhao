@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
+import { HeroBackdrop, CountUp } from './HeroFx';
 import { detect } from './install';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink } from './lib';
 
@@ -65,6 +66,7 @@ export default function App() {
     window.history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params : '') + window.location.hash);
   }, []);
   const [isApp] = useState(() => detect().standalone);
+  const heroRef = useRef<HTMLElement>(null);
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<'Todas' | 'Rua' | 'Trail'>('Todas');
   const [dist, setDist] = useState<number | null>(null);
@@ -112,7 +114,8 @@ export default function App() {
   const next = upcoming.find(e => e.date && status(e) !== 'Cancelada');
   const unread = (data?.changes ?? []).filter(c => !seen.includes(c.id)).length;
   const cities = useMemo(() => [...new Set(events.map(e => e.city))].sort((a, b) => a === 'São Luís' ? -1 : b === 'São Luís' ? 1 : a.localeCompare(b)), [events]);
-  const distances = useMemo(() => [...new Set(events.flatMap(e => e.distances))].sort((a, b) => a - b), [events]);
+  // Só as distâncias mais procuradas viram botão; as outras continuam na ficha de cada prova.
+  const distances = useMemo(() => { const has = new Set(events.flatMap(e => e.distances)); return [3, 5, 10, 15, 21, 42].filter(d => has.has(d)); }, [events]);
 
   const filtered = useMemo(() => events
     .filter(e => tab !== 'salvas' || favorites.includes(e.id))
@@ -173,10 +176,12 @@ export default function App() {
       {!data && !error && <p className="loading">Carregando a agenda…</p>}
 
       {data && tab === 'agenda' && (
-        <section className="hero" aria-labelledby="next-title">
+        <section className="hero" aria-labelledby="next-title" ref={heroRef}>
+          <HeroBackdrop hostRef={heroRef} />
           <div className="hero-inner">
             {next ? <>
               <div className="hero-text">
+                <p className="live"><span className="live-dot" aria-hidden="true" />Radar ativo, conferido {fmt.checked(data.lastChecked)}</p>
                 <p className="hero-kicker">Próxima largada</p>
                 <h1 id="next-title"><button onClick={() => setSelected(next)}>{next.name}</button></h1>
                 <p className="hero-when">{fmt.long(next.date)}</p>
@@ -189,7 +194,7 @@ export default function App() {
                 </div>
               </div>
               <div className="clock" aria-label={'Faltam ' + (daysUntil(next.date) ?? '') + ' dias'}>
-                <span className="clock-n">{countdown(next.date)!.n}</span>
+                <span className="clock-n"><CountUp value={countdown(next.date)!.n} /></span>
                 <span className="clock-unit">{countdown(next.date)!.unit ? countdown(next.date)!.unit + ' para a largada' : 'é dia de prova'}</span>
               </div>
             </> : <div className="hero-text"><h1 id="next-title">Nenhuma prova futura na agenda ainda.</h1><p className="hero-when">A pesquisa diária adiciona novas provas assim que forem anunciadas.</p></div>}
@@ -312,7 +317,7 @@ export default function App() {
           <div className="about">
             <div className="page-head"><h1>Como funciona</h1><p>O Radar reúne corridas de rua e trail de São Luís e de todo o Maranhão, com a fonte de cada informação.</p></div>
             <div className="about-status">
-              <span className={data.monitoring ? 'pulse on' : 'pulse'} aria-hidden="true" />
+              <span className={data.monitoring ? 'live-dot big' : 'pulse'} aria-hidden="true" />
               <div>
                 <h2>{data.monitoring ? 'Pesquisa diária ativa' : 'Pesquisa diária pausada'}</h2>
                 <p>{data.monitoring ? 'Todo dia às 8h (horário de São Luís) as fontes são conferidas e a agenda é atualizada.' : 'A agenda mostra a última pesquisa feita.'} Última conferência em {fmt.full(data.lastChecked, true)}.</p>

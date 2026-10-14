@@ -28,6 +28,13 @@ export const fmt = {
   year: (key: string) => key.slice(0, 4),
   long: (d: string | null) => d ? new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ }).format(asDate(d)) : 'Data a confirmar',
   short: (d: string | null) => d ? new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', timeZone: TZ }).format(asDate(d)).replace('.', '') : 'não divulgado',
+  /** "hoje às 12:58", "ontem às 8:02" ou "14 de out às 8:02". */
+  checked: (d: string) => {
+    const hm = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(new Date(d));
+    const day = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(d));
+    const n = daysUntil(day);
+    return n === 0 ? `hoje às ${hm}` : n === -1 ? `ontem às ${hm}` : `${fmt.short(day)} às ${hm}`;
+  },
   full: (d: string | null, time = false) => d ? new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', ...(time ? { hour: '2-digit', minute: '2-digit' } : {}), timeZone: TZ }).format(asDate(d)) : 'Não divulgado',
 };
 
