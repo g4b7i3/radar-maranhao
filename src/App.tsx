@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
@@ -383,6 +383,7 @@ export default function App() {
         </footer>
       )}
 
+      <a className="insta-fab" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
       <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
       {selected && <Sheet race={selected} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
       {toast && <div className="toast" role="status"><Check size={16} aria-hidden="true" />{toast}</div>}

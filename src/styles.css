@@ -461,3 +461,17 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 
 /* texto do destaque legível sobre a bandeira mais forte */
 .hero-text h1, .hero-when, .hero-where, .hero-kicker, .clock, .hero-sum { text-shadow: 0 1px 2px rgba(5, 15, 50, .45), 0 0 18px rgba(5, 15, 50, .35); }
+
+/* Botão flutuante do Instagram (@radarcorridasma): pequeno, no canto, sobe quando a janela de instalar aparece */
+.insta-fab {
+  position: fixed; z-index: 30; right: max(16px, env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom));
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: #fff; text-decoration: none;
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  box-shadow: 0 6px 18px rgba(0,0,0,.22); transition: transform .2s ease, box-shadow .2s ease;
+  animation: fx-in .5s .8s cubic-bezier(.2,.8,.2,1) backwards;
+}
+html:has(.install) .insta-fab { bottom: calc(28px + var(--install-h, 0px) + env(safe-area-inset-bottom)); }
+.insta-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 10px 24px rgba(0,0,0,.28); }
+.insta-fab:focus-visible { outline: 3px solid var(--brand, #1D3FBF); outline-offset: 3px; }
+@media (max-width: 420px) { .insta-fab { width: 44px; height: 44px; right: max(12px, env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); } }
+@media print { .insta-fab { display: none; } }
