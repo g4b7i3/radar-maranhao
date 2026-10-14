@@ -76,6 +76,17 @@ Arquivos envolvidos: `public/manifest.webmanifest` (nome, cores e ícones do app
 
 Se mudar algo grande no `sw.js`, troque a linha `const VERSION = 'v1'` para `'v2'` para os celulares descartarem a versão antiga guardada.
 
+## Coleta automática das plataformas
+
+Todo dia às 6h15 o GitHub abre com navegador a Crono Esportes, a SA Crono, a Central da Corrida e o calendário da Topchip (sites que só funcionam com JavaScript) e salva o texto em `coleta/`. A pesquisa diária das 7h47 lê esses arquivos primeiro. Mudanças só em `coleta/` não republicam o site.
+
+**Se a notificação disser que a coleta falhou:**
+
+1. O site continua no ar com a agenda anterior; nada quebra.
+2. Para tentar de novo na hora: GitHub → repositório **radar-maranhao** → aba **Actions** → **Coletar plataformas de inscrição** → **Run workflow** → **Run workflow**. Leva uns 5 minutos.
+3. Se falhar de novo, peça ao Claude: "a coleta falhou, veja o erro no GitHub Actions e conserte". Normalmente é uma plataforma que mudou o visual; o ajuste fica em `scripts/coletar-plataformas.mjs`.
+4. Enquanto isso, provas daquela plataforma podem ser enviadas pelo botão "Falta alguma corrida?" do site.
+
 ## Rodar no computador (opcional)
 
 Só é necessário se você quiser mexer no visual. Precisa do Node.js 20 ou mais novo.
