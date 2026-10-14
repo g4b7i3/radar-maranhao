@@ -2111,9 +2111,39 @@
       "notes": "Largada às 6h30.",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
       "firstSeenAt": "2026-10-14T16:33:38.073Z"
+    },
+    {
+      "id": "corrida-dos-professores-2026-acailandia",
+      "name": "Corrida dos Professores",
+      "edition": "2026",
+      "city": "Açailândia",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-10-24",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip (data ainda prevista); detalhes na página da plataforma.",
+      "verifiedAt": "2026-10-14T20:44:16.663Z",
+      "firstSeenAt": "2026-10-14T20:44:16.663Z"
     }
   ],
   "changes": [
+    {
+      "id": "3f2b841e-7884-4fa9-b39d-eb1e1e6ee114",
+      "eventId": "corrida-dos-professores-2026-acailandia",
+      "version": "[\"2026-10-24\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-14T20:44:16.663Z",
+      "notifiedAt": null
+    },
     {
       "id": "fb4573b8-5ac6-4b2c-a6f0-69c60a035871",
       "eventId": "salvar-vidas-2027-imperatriz",
@@ -2995,7 +3025,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-14T16:33:38.073Z",
+  "lastChecked": "2026-10-14T20:44:16.663Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
