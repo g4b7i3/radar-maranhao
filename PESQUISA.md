@@ -39,6 +39,15 @@ Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirm
 
 Armadilhas já encontradas: cidade homônima em outro estado (Paraíso Run é em São João do Paraíso/**BA**); evento que não é prova (PACER é programa de treino; Forge Beach é competição de fitness); prova cancelada que continua nos calendários (White Sand Running); a mesma prova com dois nomes (Corrida Sicoob = Hiper Farma, em Açailândia); data errada no CorridasBR (Corrida Unimed de Imperatriz é 29/11, não 20/11); cidade errada (Corrida da Saúde é em Presidente Vargas, não Dutra); distância inventada (BJ Running não tem 42 km) — a página da cronometragem vale mais que o calendário. Instagram não pode ser lido automaticamente; anúncios só de Instagram chegam pelo botão "Falta alguma corrida?" do site (WhatsApp do desenvolvedor). Prova vista em uma única fonte entra com `confidence` "Fonte única (calendário) · confirmar no organizador".
 
+### Provas anuais para vigiar
+
+Todo dia, confira se já saiu a edição nova destas provas tradicionais (data da última edição entre parênteses):
+
+- **Corrida da UEMA**, São Luís, Campus Paulo VI (VII edição em 07/12/2025, inscrições pela Crono Esportes). A VIII edição deve sair para dezembro de 2026.
+- Corrida São Luís (julho), Maratona Internacional de São Luís (julho), Meia Maratona Internacional SLZ (setembro, aniversário da cidade), Corrida do Aeroporto de São Luís (agosto), Circuito Corrida Vale (junho/julho), Cross Urbano CAIXA (julho), Corrida 100% Você (julho), Circuito Sesc de Corridas (Crono Esportes).
+
+A Crono Esportes (cronoesportes.com.br/evento/<número>/<nome>) carrega por JavaScript: confirme data e status por notícia (UEMA Notícias, Jornal Pequeno, Imirante, O Imparcial) ou outro calendário.
+
 Pesquise São Luís, a Grande Ilha (São José de Ribamar, Paço do Lumiar, Raposa) e as demais cidades (Imperatriz, Barreirinhas, Caxias, Timon, Bacabal, Balsas, Chapadinha, Santa Inês e outras). Inclua trail (Lençóis Maranhenses, Chapada das Mesas).
 
 ## 3. Conferir antes de registrar
