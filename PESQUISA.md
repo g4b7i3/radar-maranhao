@@ -25,6 +25,7 @@ Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirm
 
 | Fonte | Endereço | Observação |
 | --- | --- | --- |
+| **Road Runners (MA)** | https://roadrunners.run/estado/ma/ | **A fonte mais completa (50+ provas)**, puxa direto das plataformas de inscrição (Topchip, SA Crono, Doity, Sympla) e traz o link oficial de cada prova. Comece por aqui. |
 | CorridasBR (MA) | https://www.corridasbr.com.br/MA/Calendario.asp | Lista mais completa do estado, inclusive cidades pequenas. As páginas de detalhe não abrem certo; use só a lista. |
 | Vamu Correr | https://vamucorrer.com.br/corridas/maranhao | Traz o link de inscrição de cada prova. Já errou datas (ex.: Chapadinha). |
 | running.life (por cidade) | https://running.life/running-calendar/brazil/maranhao/<cidade> | **Use as páginas por cidade** (ex.: `/sao-luis`, `/imperatriz`, `/timon`, `/acailandia`, `/barra-do-corda`, `/coroata`, `/estreito`, `/chapadinha`, `/caxias`, `/joao-lisboa`). A página do estado só mostra as 20 primeiras. Cuidado: incluem cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO, Sítio Novo/TO). Cada página de prova traz o link oficial. |
@@ -36,7 +37,7 @@ Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirm
 | Ticket Sports, Sympla, Doity | — | Páginas de prova abrem bem e mostram data, local e status (inclusive cancelamento). |
 | Maranhão Esportes, O Imparcial, Imirante | — | Notícias com data de anúncio, local e entrega de kit. |
 
-Armadilhas já encontradas: cidade homônima em outro estado (Paraíso Run é em São João do Paraíso/**BA**); evento que não é prova (PACER é programa de treino; Forge Beach é competição de fitness); prova cancelada que continua nos calendários (White Sand Running); a mesma prova com dois nomes (Corrida Sicoob = Hiper Farma, em Açailândia); data errada no CorridasBR (Corrida Unimed de Imperatriz é 29/11, não 20/11) — a página da cronometragem vale mais que o calendário. Prova vista em uma única fonte entra com `confidence` "Fonte única (calendário) · confirmar no organizador".
+Armadilhas já encontradas: cidade homônima em outro estado (Paraíso Run é em São João do Paraíso/**BA**); evento que não é prova (PACER é programa de treino; Forge Beach é competição de fitness); prova cancelada que continua nos calendários (White Sand Running); a mesma prova com dois nomes (Corrida Sicoob = Hiper Farma, em Açailândia); data errada no CorridasBR (Corrida Unimed de Imperatriz é 29/11, não 20/11); cidade errada (Corrida da Saúde é em Presidente Vargas, não Dutra); distância inventada (BJ Running não tem 42 km) — a página da cronometragem vale mais que o calendário. Instagram não pode ser lido automaticamente; anúncios só de Instagram chegam pelo botão "Falta alguma corrida?" do site (WhatsApp do desenvolvedor). Prova vista em uma única fonte entra com `confidence` "Fonte única (calendário) · confirmar no organizador".
 
 Pesquise São Luís, a Grande Ilha (São José de Ribamar, Paço do Lumiar, Raposa) e as demais cidades (Imperatriz, Barreirinhas, Caxias, Timon, Bacabal, Balsas, Chapadinha, Santa Inês e outras). Inclua trail (Lençóis Maranhenses, Chapada das Mesas).
 

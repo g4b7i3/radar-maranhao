@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { detect } from './install';
-import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList } from './lib';
+import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink } from './lib';
 
 type Tab = 'agenda' | 'novidades' | 'salvas' | 'sobre';
 const TABS: { id: Tab; label: string }[] = [
@@ -26,6 +26,20 @@ function Logo() {
       <rect width="32" height="32" rx="7" />
       <g fill="none" strokeWidth="2.2"><path d="M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-8 8M12 28a8 8 0 0 0-8-8" /><path d="M16 9l7 7-7 7-7-7z" /></g>
     </svg>
+  );
+}
+
+function MissingRace() {
+  return (
+    <section className="missing" aria-labelledby="missing-title">
+      <div>
+        <h2 id="missing-title">Falta alguma corrida?</h2>
+        <p>Viu uma prova no Maranhão que não está aqui? Mande o nome, a cidade e a data, ou o link do anúncio. Ela entra na agenda assim que for conferida.</p>
+      </div>
+      <a className="btn whats" href={whatsappLink('Olá! Tem uma corrida que não está no Radar Corridas Maranhão: ')} target="_blank" rel="noopener noreferrer">
+        <MessageCircle size={18} aria-hidden="true" />Avisar pelo WhatsApp
+      </a>
+    </section>
   );
 }
 
@@ -237,6 +251,7 @@ export default function App() {
                           <span className="race-meta">
                             <span className="dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d}k</span>) : <span>distâncias a confirmar</span>}</span>
                             <StatusTag e={e} />
+                            {isSingleSource(e) && <span className="tag single" title="Encontrada em uma só fonte. Confirme com a organização.">Fonte única</span>}
                             {dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}
                           </span>
                         </span>
@@ -250,6 +265,8 @@ export default function App() {
               </ol>
             </section>
           ))}
+
+          {tab === 'agenda' && <MissingRace />}
 
           {filtered.length === 0 && (
             <div className="empty">
@@ -313,6 +330,7 @@ export default function App() {
                 <p>Para montar sua agenda, salve as provas que quer correr e use “Exportar minha agenda” em Minha agenda. O arquivo abre no Google Agenda, no calendário do iPhone ou no Outlook. Tudo fica guardado só neste aparelho, sem cadastro. Para levar a lista para outro aparelho, copie o link da sua agenda e abra lá.</p>
               </section>
             </div>
+            <MissingRace />
             <section className="about-install">
               <h2>Use como app</h2>
               {isApp
@@ -381,7 +399,11 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
           <div><dt>Anunciada em</dt><dd>{fmt.full(e.publishedAt)}</dd></div>
           <div><dt>Conferida em</dt><dd>{fmt.full(e.verifiedAt ?? null, true)}</dd></div>
         </dl>
-        <div className="note"><strong>{e.confidence}</strong><p>{e.notes}</p></div>
+        <div className={isSingleSource(e) ? 'note single' : 'note'}>
+          <strong>{e.confidence}</strong>
+          {isSingleSource(e) && <p className="note-warn">Encontramos esta prova em uma só fonte. Confirme data e local com a organização antes de se programar.</p>}
+          <p>{e.notes}</p>
+        </div>
         <div className="sheet-actions">
           {e.officialUrl
             ? <a className="btn solid" href={e.officialUrl} target="_blank" rel="noopener noreferrer">Abrir página oficial<ExternalLink size={15} aria-hidden="true" /></a>
@@ -390,6 +412,7 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
           {e.date && <button className="btn outline" onClick={onCalendar}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>}
         </div>
         <a className="source" href={e.sourceUrl} target="_blank" rel="noopener noreferrer">Fonte: {e.sourceName}<ExternalLink size={13} aria-hidden="true" /></a>
+        <a className="report" href={whatsappLink(`Olá! Sobre a prova "${e.name}" (${e.city}, ${fmt.short(e.date)}) no Radar Corridas Maranhão: `)} target="_blank" rel="noopener noreferrer"><MessageCircle size={15} aria-hidden="true" />Alguma informação errada? Avise pelo WhatsApp</a>
       </div>
     </div>
   );

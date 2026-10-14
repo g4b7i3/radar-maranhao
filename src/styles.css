@@ -167,6 +167,20 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 .tag.check { border: 1px solid var(--line); color: var(--muted); }
 .tag.done { background: var(--done-bg); color: var(--done); }
 .tag.bad { background: var(--bad-bg); color: var(--bad); }
+.tag.single { background: var(--warn-bg); color: var(--warn); }
+
+/* falta alguma corrida? */
+.missing { margin-top: 40px; display: flex; align-items: center; justify-content: space-between; gap: 16px 28px; flex-wrap: wrap; padding: 22px 24px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--cobalt); border-radius: 14px; }
+.missing > div { flex: 1 1 320px; min-width: 0; }
+.missing h2 { font-weight: 850; font-stretch: 68%; font-size: 1.75rem; letter-spacing: -0.01em; }
+.missing p { margin-top: 6px; color: var(--muted); max-width: 60ch; }
+.btn.whats { background: #128c4a; color: #fff; flex: none; }
+.btn.whats:hover { background: #0e723c; }
+.about .missing { margin-top: 36px; }
+.note.single { border-left-color: var(--warn); background: var(--warn-bg); }
+.note-warn { color: var(--warn) !important; font-weight: 650; }
+.report { display: flex; gap: 6px; align-items: center; margin-top: 10px; min-height: 44px; color: var(--cobalt); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+.report:hover { text-decoration: underline; }
 .due { font-size: 0.875rem; color: var(--muted); }
 .due.urgent { color: var(--warn); font-weight: 700; }
 .save { width: 52px; flex: none; display: grid; place-items: center; color: var(--muted); border-radius: 8px; }
@@ -321,6 +335,8 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
   .sheet-actions .btn { flex: 1 1 100%; }
   .list-bar div, .list-bar .btn { width: 100%; }
   .list-bar .btn.solid, .list-bar .btn.outline { flex: 1 1 100%; }
+  .missing { padding: 18px 16px; }
+  .missing .btn { width: 100%; }
 }
 /* abas que não cabem: esmaece a borda para mostrar que dá para deslizar */
 @media (max-width: 380px) {

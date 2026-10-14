@@ -88,8 +88,11 @@ export function store(key: string, v: unknown) { try { localStorage.setItem(key,
 export function placeParts(e: Pick<Race, 'city' | 'location'>) {
   const city = e.city.trim();
   let rest = e.location.trim();
-  if (norm(rest).startsWith(norm(city))) rest = rest.slice(city.length).replace(/^[\s·,–-]+/, '');
-  if (norm(rest).endsWith(norm(city))) rest = rest.slice(0, rest.length - city.length).replace(/[\s·,–-]+$/, '');
+  // Só remove a cidade quando ela vem separada ("Imperatriz · Beira Rio"), nunca de dentro do nome ("São Luís Shopping").
+  const n = norm(rest), c = norm(city);
+  if (n === c) rest = '';
+  else if (n.startsWith(c) && /^[\s]*[·,–-]/.test(rest.slice(city.length))) rest = rest.slice(city.length).replace(/^[\s·,–-]+/, '');
+  else if (n.endsWith(c) && /[·,–-][\s]*$/.test(rest.slice(0, rest.length - city.length))) rest = rest.slice(0, rest.length - city.length).replace(/[\s·,–-]+$/, '');
   if (rest) rest = rest[0].toUpperCase() + rest.slice(1);
   return { city, rest };
 }
@@ -97,3 +100,10 @@ export function placeParts(e: Pick<Race, 'city' | 'location'>) {
 export const placeLabel = (e: Pick<Race, 'city' | 'location'>) => { const { city, rest } = placeParts(e); return rest ? `${rest}, ${city}` : city; };
 /** "Cidade, local" — para a lista, onde a cidade vem primeiro. */
 export const placeList = (e: Pick<Race, 'city' | 'location'>) => { const { city, rest } = placeParts(e); return rest ? `${city}, ${rest}` : city; };
+
+/** Prova encontrada em uma única fonte (ainda sem confirmação do organizador). */
+export const isSingleSource = (e: Pick<Race, 'confidence'>) => /fonte única|instagram/i.test(e.confidence);
+
+/** Link de WhatsApp do desenvolvedor, com mensagem já escrita. */
+export const WHATSAPP = '5598984334880';
+export const whatsappLink = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
