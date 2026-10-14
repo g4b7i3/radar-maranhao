@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2 } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone } from 'lucide-react';
+import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
+import { detect } from './install';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList } from './lib';
 
 type Tab = 'agenda' | 'novidades' | 'salvas' | 'sobre';
@@ -37,7 +39,18 @@ function StatusTag({ e }: { e: Race }) {
 export default function App() {
   const [data, setData] = useState<State | null>(null);
   const [error, setError] = useState('');
-  const [tab, setTab] = useState<Tab>('agenda');
+  // Atalhos do app instalado (?aba=salvas) abrem direto na aba certa.
+  const [tab, setTab] = useState<Tab>(() => {
+    const a = new URLSearchParams(window.location.search).get('aba');
+    return a === 'novidades' || a === 'salvas' || a === 'sobre' ? a : 'agenda';
+  });
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('aba') && !params.has('origem')) return;
+    params.delete('aba'); params.delete('origem');
+    window.history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params : '') + window.location.hash);
+  }, []);
+  const [isApp] = useState(() => detect().standalone);
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<'Todas' | 'Rua' | 'Trail'>('Todas');
   const [dist, setDist] = useState<number | null>(null);
@@ -115,6 +128,7 @@ export default function App() {
     try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
     catch { window.prompt('Copie o link da sua agenda:', url); }
   }
+  const onInstalled = useCallback(() => setToast('App instalado. Procure o ícone Corridas MA na tela inicial.'), []);
   function exportCalendar(list: Race[]) { icsFor(list); setToast(list.length === 1 ? 'Arquivo de calendário baixado.' : `${list.filter(e => e.date).length} provas exportadas para o calendário.`); }
 
   return (
@@ -299,6 +313,13 @@ export default function App() {
                 <p>Para montar sua agenda, salve as provas que quer correr e use “Exportar minha agenda” em Minha agenda. O arquivo abre no Google Agenda, no calendário do iPhone ou no Outlook. Tudo fica guardado só neste aparelho, sem cadastro. Para levar a lista para outro aparelho, copie o link da sua agenda e abra lá.</p>
               </section>
             </div>
+            <section className="about-install">
+              <h2>Use como app</h2>
+              {isApp
+                ? <p>Você já está usando o Radar instalado. Ele se atualiza sozinho.</p>
+                : <><p>Instale o Radar na tela inicial do celular: abre em tela cheia, como um aplicativo, e mostra a agenda mesmo com a internet fraca. Funciona no Android e no iPhone, sem loja de aplicativos.</p>
+                  <button className="btn solid" onClick={openInstallPrompt}><Smartphone size={16} aria-hidden="true" />Instalar o app</button></>}
+            </section>
             <section>
               <h2>Fontes consultadas</h2>
               <ul className="sources">
@@ -315,6 +336,7 @@ export default function App() {
         </footer>
       )}
 
+      <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
       {selected && <Sheet race={selected} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
       {toast && <div className="toast" role="status"><Check size={16} aria-hidden="true" />{toast}</div>}
     </>

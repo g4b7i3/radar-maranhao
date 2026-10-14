@@ -56,6 +56,26 @@ Regras principais de cada prova:
 - `distances`: lista em km, como `[5, 10, 21]`.
 - Links sempre começando com `https://`.
 
+## App no celular
+
+O Radar pode ser instalado como aplicativo, sem loja: ganha ícone na tela inicial (com o nome **Corridas MA**), abre em tela cheia e mostra a última agenda carregada mesmo sem internet.
+
+Ao abrir o site no celular, uma janela flutuante aparece depois de 2 ou 3 segundos com o jeito certo de instalar para cada aparelho:
+
+| Onde a pessoa abriu | O que a janela mostra |
+| --- | --- |
+| Android (Chrome, Samsung Internet, Edge) | Botão **Instalar app**, que abre a instalação do próprio celular |
+| Android (Firefox e outros) | Passo a passo pelo menu ⋮ |
+| iPhone (Safari, Chrome, Firefox, Edge) | Passo a passo do **Compartilhar → Adicionar à Tela de Início** (a Apple não deixa o site instalar sozinho) |
+| Dentro do Instagram, WhatsApp, Facebook, TikTok… | Explica que por ali não dá, com botão **Abrir no Chrome** (Android) e **Copiar link** |
+| Já instalado | Nada aparece |
+
+Se a pessoa fechar a janela, ela só volta depois de 7 dias. A qualquer momento dá para abrir de novo em **Sobre → Instalar o app**.
+
+Arquivos envolvidos: `public/manifest.webmanifest` (nome, cores e ícones do app), `public/icons/`, `public/sw.js` (funcionamento sem internet), `src/install.ts` e `src/InstallPrompt.tsx` (a janela).
+
+Se mudar algo grande no `sw.js`, troque a linha `const VERSION = 'v1'` para `'v2'` para os celulares descartarem a versão antiga guardada.
+
 ## Rodar no computador (opcional)
 
 Só é necessário se você quiser mexer no visual. Precisa do Node.js 20 ou mais novo.
