@@ -86,7 +86,7 @@ p { margin: 0; }
 .hero-inner, .hero-sum { position: relative; z-index: 2; }
 .fx { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .fx-parallax { position: absolute; top: -8%; bottom: -40%; right: -4%; width: min(62%, 820px); will-change: transform; }
-.fx-flag { width: 100%; height: 100%; display: block; opacity: .3;
+.fx-flag { width: 100%; height: 100%; display: block; opacity: .46;
   -webkit-mask-image: radial-gradient(120% 90% at 70% 40%, #000 35%, transparent 75%);
           mask-image: radial-gradient(120% 90% at 70% 40%, #000 35%, transparent 75%); }
 .fx-flag-stripes { animation: fx-wave 7s linear infinite; }
@@ -413,10 +413,13 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 @media (max-width: 760px) {
   .fx-radar { width: 360px; height: 360px; right: -150px; top: 0; margin-top: -40px; opacity: .45; }
   .fx-parallax { top: 0; height: 64%; left: 22%; right: auto; bottom: auto; width: 110%; }
-  .fx-flag { opacity: .34;
+  .fx-flag { opacity: .5;
     -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
             mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* texto do destaque legível sobre a bandeira mais forte */
+.hero-text h1, .hero-when, .hero-where, .hero-kicker, .clock, .hero-sum { text-shadow: 0 1px 2px rgba(5, 15, 50, .45), 0 0 18px rgba(5, 15, 50, .35); }
