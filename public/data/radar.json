@@ -2133,9 +2133,39 @@
       "notes": "Largada às 06h30. Encontrada automaticamente na Topchip (data ainda prevista); detalhes na página da plataforma.",
       "verifiedAt": "2026-10-14T20:44:16.663Z",
       "firstSeenAt": "2026-10-14T20:44:16.663Z"
+    },
+    {
+      "id": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
+      "name": "2ª Corrida do Santuario da Conçeição",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-20",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://centraldacorrida.com.br/",
+      "sourceUrl": "https://centraldacorrida.com.br/",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "verifiedAt": "2026-10-14T23:57:03.900Z",
+      "firstSeenAt": "2026-10-14T23:57:03.900Z"
     }
   ],
   "changes": [
+    {
+      "id": "e8082d14-203f-477d-bcd1-e8d64794679f",
+      "eventId": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
+      "version": "[\"2026-11-20\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-14T23:57:03.900Z",
+      "notifiedAt": null
+    },
     {
       "id": "3f2b841e-7884-4fa9-b39d-eb1e1e6ee114",
       "eventId": "corrida-dos-professores-2026-acailandia",
@@ -3025,7 +3055,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-14T20:44:16.663Z",
+  "lastChecked": "2026-10-14T23:57:03.900Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
