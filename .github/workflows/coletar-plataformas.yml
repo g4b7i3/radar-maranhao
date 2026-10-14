@@ -33,11 +33,16 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Coletar
         run: node scripts/coletar-plataformas.mjs ${{ github.event.inputs.fonte }}
+      - name: Atualizar a agenda com a coleta (sem Claude)
+        run: |
+          # aplica status e provas novas; se algo der errado, a agenda fica como estava
+          node scripts/aplicar-coleta.mjs && node scripts/validar.mjs || git checkout -- public/data/radar.json
       - name: Salvar no repositório
         run: |
           git config user.name "radar-coleta[bot]"
           git config user.email "radar-coleta@users.noreply.github.com"
-          git add coleta/
+          git add coleta/ public/data/radar.json
           if git diff --cached --quiet; then echo "Nada mudou."; exit 0; fi
-          git commit -m "Coleta automática das plataformas ($(date -u +%d/%m))"
+          if git diff --cached --quiet -- public/data/radar.json; then MSG="Coleta automática das plataformas"; else MSG="Agenda atualizada pela coleta automática"; fi
+          git commit -m "$MSG ($(TZ=America/Fortaleza date +%d/%m\ %Hh%M))"
           git pull --rebase origin main && git push
