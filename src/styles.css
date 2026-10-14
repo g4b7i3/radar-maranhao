@@ -412,8 +412,10 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 }
 @media (max-width: 760px) {
   .fx-radar { width: 360px; height: 360px; right: -150px; top: 0; margin-top: -40px; opacity: .45; }
-  .fx-parallax { top: -4%; bottom: -30%; right: -35%; width: 120%; }
-  .fx-flag { opacity: .15; }
+  .fx-parallax { top: 0; height: 64%; left: 22%; right: auto; bottom: auto; width: 110%; }
+  .fx-flag { opacity: .24;
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

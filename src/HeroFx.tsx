@@ -25,7 +25,7 @@ const STAR = (() => {
 
 function Flag() {
   return (
-    <svg className="fx-flag" viewBox={`0 0 ${PERIOD} ${H * 9 + AMP * 2}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <svg className="fx-flag" viewBox={`0 0 ${PERIOD} ${H * 9 + AMP * 2}`} preserveAspectRatio="xMinYMin slice" aria-hidden="true">
       <defs>
         {/* recorta o quadro da estrela: lá a bandeira é azul liso, e o azul do fundo aparece */}
         <mask id="fx-canton-cut" maskUnits="userSpaceOnUse" x="-50" y="-50" width={PERIOD + 100} height={H * 9 + 200}>
