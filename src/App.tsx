@@ -121,7 +121,10 @@ export default function App() {
     <>
       <header className="top">
         <div className="top-inner">
-          <a className="brand" href="/" aria-label="Radar Corridas Maranhão, página inicial"><Logo /><span>Radar Corridas Maranhão</span></a>
+          <div className="brand-wrap">
+            <a className="brand" href="/" aria-label="Radar Corridas Maranhão, página inicial"><Logo /><span>Radar Corridas Maranhão</span></a>
+            <a className="byline" href="https://www.instagram.com/gabriel_vinicius_jj/" target="_blank" rel="noopener noreferrer">Desenvolvido por <strong>@gabriel_vinicius_jj</strong></a>
+          </div>
           <nav className="tabs" aria-label="Seções">
             {TABS.map(x => (
               <button key={x.id} className={tab === x.id ? 'tab on' : 'tab'} aria-current={tab === x.id ? 'page' : undefined} onClick={ev => { setTab(x.id); window.scrollTo({ top: 0 }); ev.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }}>
@@ -309,7 +312,6 @@ export default function App() {
       {data && (
         <footer className="foot">
           <p>Radar Corridas Maranhão. Conferido em {fmt.full(data.lastChecked)}. Confirme as informações com a organização de cada prova.</p>
-          <p className="credit">Desenvolvido por <a href="https://www.instagram.com/gabriel_vinicius_jj/" target="_blank" rel="noopener noreferrer">@gabriel_vinicius_jj</a></p>
         </footer>
       )}
 
