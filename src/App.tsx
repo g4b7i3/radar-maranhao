@@ -5,6 +5,8 @@ import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink } from './lib';
 
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
 type Tab = 'agenda' | 'novidades' | 'salvas' | 'sobre';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'agenda', label: 'Agenda' },
@@ -71,6 +73,8 @@ export default function App() {
   const [mode, setMode] = useState<'Todas' | 'Rua' | 'Trail'>('Todas');
   const [dist, setDist] = useState<number | null>(null);
   const [city, setCity] = useState('Todas');
+  const [year, setYear] = useState('Todos');
+  const [month, setMonth] = useState('Todos');
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [showPast, setShowPast] = useState(false);
   const [favorites, setFavorites] = useState<string[]>(() => load('radar-favorites', []));
@@ -120,12 +124,14 @@ export default function App() {
   const filtered = useMemo(() => events
     .filter(e => tab !== 'salvas' || favorites.includes(e.id))
     .filter(e => showPast || tab === 'salvas' || !e.date || e.date >= t)
-    .filter(e => !query || norm(`${e.name} ${e.city} ${e.location}`).includes(norm(query)))
+    .filter(e => !query || norm(`${e.name} ${e.city} ${e.location} ${e.date ? MESES[Number(e.date.slice(5, 7)) - 1] + ' ' + e.date.slice(0, 4) : ''}`).includes(norm(query)))
     .filter(e => mode === 'Todas' || e.modality === mode)
     .filter(e => dist == null || e.distances.includes(dist))
     .filter(e => city === 'Todas' || e.city === city)
+    .filter(e => year === 'Todos' || e.date?.slice(0, 4) === year)
+    .filter(e => month === 'Todos' || e.date?.slice(5, 7) === month)
     .filter(e => !onlyOpen || isOpen(e))
-    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, tab, favorites, showPast, query, mode, dist, city, onlyOpen, t]);
+    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, tab, favorites, showPast, query, mode, dist, city, year, month, onlyOpen, t]);
 
   const groups = useMemo(() => {
     const m = new Map<string, Race[]>();
@@ -135,7 +141,12 @@ export default function App() {
 
   const openCount = upcoming.filter(isOpen).length;
   const nextDeadline = upcoming.filter(e => isOpen(e) && e.registrationClose).sort((a, b) => a.registrationClose!.localeCompare(b.registrationClose!))[0];
-  const filtersOn = query || mode !== 'Todas' || dist != null || city !== 'Todas' || onlyOpen || showPast;
+  // Anos e meses que têm prova (considera as realizadas só quando o filtro pede)
+  const dated = useMemo(() => events.filter(e => e.date && (showPast || e.date >= t)), [events, showPast, t]);
+  const years = useMemo(() => [...new Set(dated.map(e => e.date!.slice(0, 4)))].sort(), [dated]);
+  const months = useMemo(() => [...new Set(dated.filter(e => year === 'Todos' || e.date!.startsWith(year)).map(e => e.date!.slice(5, 7)))].sort(), [dated, year]);
+  useEffect(() => { if (month !== 'Todos' && !months.includes(month)) setMonth('Todos'); }, [months, month]);
+  const filtersOn = query || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || showPast;
 
   function toggleSave(e: Race) {
     const v = favorites.includes(e.id) ? favorites.filter(id => id !== e.id) : [...favorites, e.id];
@@ -143,7 +154,7 @@ export default function App() {
     setToast(v.includes(e.id) ? 'Prova salva na sua agenda.' : 'Prova removida da sua agenda.');
   }
   function markAllRead() { const v = (data?.changes ?? []).map(c => c.id); setSeen(v); store('radar-seen', v); }
-  function clearFilters() { setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setOnlyOpen(false); setShowPast(false); }
+  function clearFilters() { setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setYear('Todos'); setMonth('Todos'); setOnlyOpen(false); setShowPast(false); }
   async function copyAgendaLink() {
     const url = `${window.location.origin}/?agenda=${favorites.join(',')}`;
     try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
@@ -216,7 +227,7 @@ export default function App() {
             <div className="filters" role="search">
               <label className="search">
                 <Search size={18} aria-hidden="true" />
-                <input type="search" placeholder="Buscar prova, cidade ou local" value={query} onChange={e => setQuery(e.target.value)} aria-label="Buscar prova, cidade ou local" />
+                <input type="search" placeholder="Buscar prova, cidade, local ou mês" value={query} onChange={e => setQuery(e.target.value)} aria-label="Buscar prova, cidade, local ou mês" />
               </label>
               <div className="filter-row">
                 <div className="seg" role="group" aria-label="Modalidade">
@@ -228,6 +239,14 @@ export default function App() {
                 <select value={city} onChange={e => setCity(e.target.value)} aria-label="Cidade">
                   <option value="Todas">Todas as cidades</option>
                   {cities.map(c => <option key={c}>{c}</option>)}
+                </select>
+                <select value={year} onChange={e => setYear(e.target.value)} aria-label="Ano">
+                  <option value="Todos">Todos os anos</option>
+                  {years.map(y => <option key={y}>{y}</option>)}
+                </select>
+                <select value={month} onChange={e => setMonth(e.target.value)} aria-label="Mês">
+                  <option value="Todos">Todos os meses</option>
+                  {months.map(m => <option key={m} value={m}>{MESES[Number(m) - 1]}</option>)}
                 </select>
                 <label className="check"><input type="checkbox" checked={onlyOpen} onChange={e => setOnlyOpen(e.target.checked)} />Só inscrições abertas</label>
                 <label className="check"><input type="checkbox" checked={showPast} onChange={e => setShowPast(e.target.checked)} />Mostrar realizadas</label>

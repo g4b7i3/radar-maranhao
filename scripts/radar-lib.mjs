@@ -38,8 +38,10 @@ export function applyUpdate(state, events, now) {
     const e = validateEvent(input);
     const old = next.events.find(x => x.id === e.id)
       || next.events.find(x => slug(x.name) === slug(e.name) && slug(x.city) === slug(e.city) && x.edition === e.edition)
-      // Mesmo link oficial só conta se for a página específica da prova (não a home da plataforma) e na mesma cidade.
-      || next.events.find(x => e.officialUrl && x.officialUrl === e.officialUrl && new URL(e.officialUrl).pathname.length > 1 && slug(x.city) === slug(e.city) && x.edition === e.edition);
+      // Mesmo link oficial só junta se for a página da prova (não home/calendário), na mesma cidade e na MESMA DATA.
+      // (Várias provas podem apontar para o mesmo calendário da plataforma.)
+      || next.events.find(x => e.officialUrl && x.officialUrl === e.officialUrl && !/^\/(calendario|eventos?)?\/?$/.test(new URL(e.officialUrl).pathname)
+           && slug(x.city) === slug(e.city) && x.date && x.date === e.date);
     if (old) e.id = old.id;
     const record = { ...e, verifiedAt: now, firstSeenAt: old?.firstSeenAt ?? now };
     const version = signature(record);
