@@ -70,7 +70,7 @@ Ao abrir o site no celular, uma janela flutuante aparece depois de 2 ou 3 segund
 | Dentro do Instagram, WhatsApp, Facebook, TikTok… | Explica que por ali não dá, com botão **Abrir no Chrome** (Android) e **Copiar link** |
 | Já instalado | Nada aparece |
 
-Se a pessoa fechar a janela, ela só volta depois de 7 dias. A qualquer momento dá para abrir de novo em **Sobre → Instalar o app**.
+A janela aparece toda vez que a pessoa abre ou recarrega o site, até instalar o app. Fechar a janela vale só para aquela visita. A qualquer momento dá para abrir de novo em **Sobre → Instalar o app**.
 
 Arquivos envolvidos: `public/manifest.webmanifest` (nome, cores e ícones do app), `public/icons/`, `public/sw.js` (funcionamento sem internet), `src/install.ts` e `src/InstallPrompt.tsx` (a janela).
 

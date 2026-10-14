@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Download, X, Link2, ExternalLink, EllipsisVertical, Ellipsis, Share, SquarePlus } from 'lucide-react';
 import { canPromptNative, chromeIntentUrl, detect, promptNative, subscribe, wasJustInstalled, type Platform } from './install';
-import { load, store } from './lib';
 
-const DISMISS_KEY = 'radar-instalar-dispensado';
-const WAIT_DAYS = 7;
 const SHOW_AFTER_MS = 2500;
 const ANDROID_WAIT_MS = 3500; // tempo para o Chrome avisar que o app pode ser instalado
 
@@ -35,11 +32,10 @@ export default function InstallPrompt({ blocked, onInstalled }: { blocked: boole
     if (wasJustInstalled()) { setOpen(false); onInstalled(); }
   }), [onInstalled]);
 
-  // Abertura automática: só no celular (ou computador com instalação nativa), uma vez a cada 7 dias.
+  // Abertura automática a cada visita (abrir ou recarregar o site), enquanto o app não estiver instalado.
+  // Fechar vale só até a próxima visita.
   useEffect(() => {
     if (platform.standalone) return;
-    const last = load<number>(DISMISS_KEY, 0);
-    if (Date.now() - last < WAIT_DAYS * 86400000) return;
     const wait = platform.android && !platform.inApp ? ANDROID_WAIT_MS : SHOW_AFTER_MS;
     const t = setTimeout(() => {
       if (platform.mobile || canPromptNative()) setOpen(true);
@@ -50,7 +46,6 @@ export default function InstallPrompt({ blocked, onInstalled }: { blocked: boole
   // Computador: se o Chrome/Edge avisar mais tarde que dá para instalar, mostra também.
   useEffect(() => {
     if (!nativeReady || platform.mobile || platform.standalone) return;
-    if (Date.now() - load<number>(DISMISS_KEY, 0) < WAIT_DAYS * 86400000) return;
     setOpen(true);
   }, [nativeReady, platform]);
 
@@ -72,7 +67,6 @@ export default function InstallPrompt({ blocked, onInstalled }: { blocked: boole
 
   function dismiss() {
     setOpen(false);
-    if (!manual) store(DISMISS_KEY, Date.now());
     setManual(false);
   }
   async function install() {
