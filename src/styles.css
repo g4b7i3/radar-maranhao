@@ -638,3 +638,30 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .story-voltar { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--cobalt); font-weight: 600; text-decoration: none; align-self: flex-start; }
 .story-info { margin: 0; color: var(--muted); font-size: .9375rem; }
 .story-preview { width: min(100%, 300px); }
+
+/* Card do treino (/?card=treino) */
+.ct-campos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ct-campos label, .ct-cidade { display: flex; flex-direction: column; gap: 4px; font-size: .8125rem; font-weight: 600; color: var(--muted); }
+.ct-campos input, .ct-cidade input { min-height: 48px; padding: 0 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 1.125rem; font-weight: 700; width: 100%; font-variant-numeric: tabular-nums; }
+.ct-campos input:focus, .ct-cidade input:focus { outline: none; border-color: var(--cobalt); }
+.ct-erro { margin: 0; color: var(--bad); font-size: .875rem; }
+.ct-zonas .chip b { font-weight: 800; }
+.ct-zonas .chip[aria-pressed="true"] { background: var(--zona); border-color: var(--zona); color: #0b1530; }
+.euvou-pergunta small { font-weight: 500; color: var(--muted); }
+.ct-xadrez { background-color: #cfd5e3; background-image: linear-gradient(45deg, #b8c0d2 25%, transparent 25%), linear-gradient(-45deg, #b8c0d2 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #b8c0d2 75%), linear-gradient(-45deg, transparent 75%, #b8c0d2 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
+/* botão flutuante e item do menu do card do treino */
+.treino-fab { text-decoration: none; background: #0f1a33; }
+.treino-fab svg { color: #3CE07A; }
+:root[data-theme="dark"] .treino-fab { background: #26314b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .treino-fab { background: #26314b; } }
+.euvou-wrap + .euvou-wrap { animation-delay: 1.15s; }
+.tab-treino { text-decoration: none; color: var(--cobalt); font-weight: 650; }
+.tab-treino svg { flex-shrink: 0; }
+
+.tab-treino .lbl-curto { display: none; }
+@media (max-width: 760px) { .tab-treino .lbl-longo { display: none; } .tab-treino .lbl-curto { display: inline; } .tab-treino { gap: 4px; } }
+@media (max-width: 400px) {
+  .tabs { gap: 0; padding-right: 8px; }
+  .tab { padding-left: 4px; padding-right: 4px; }
+  .tab-treino svg { display: none; }
+}

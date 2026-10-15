@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
@@ -98,6 +98,7 @@ export default function App() {
   const [escolhendo, setEscolhendo] = useState(false);
   const [abrirCard, setAbrirCard] = useState(false);
   const [semFabCard, setSemFabCard] = useState(false); // fechado pelo X: volta na próxima visita
+  const [semFabTreino, setSemFabTreino] = useState(false);
   function abrirProva(e: Race) { setAbrirCard(escolhendo); setEscolhendo(false); setSelected(e); }
   function comecarEuVou() {
     setTab('agenda'); setEscolhendo(true);
@@ -237,6 +238,7 @@ export default function App() {
                 {x.id === 'salvas' && favorites.length > 0 && <span className="count quiet">{favorites.length}</span>}
               </button>
             ))}
+            <a className="tab tab-treino" href="/?card=treino" data-umami-event="Card do treino: abriu pelo menu"><Activity size={16} aria-hidden="true" /><span className="lbl-longo">Meu treino</span><span className="lbl-curto">Treino</span></a>
           </nav>
           <button className="tema-btn" onClick={tema.alternar} aria-label={tema.escuro ? 'Mudar para o modo claro' : 'Mudar para o modo escuro'} title={tema.escuro ? 'Modo claro' : 'Modo escuro'}>
             {tema.escuro ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
@@ -472,6 +474,10 @@ export default function App() {
       )}
 
       <div className="fabs">
+        {!escolhendo && !semFabTreino && <div className="euvou-wrap">
+          <button className="euvou-fechar" onClick={() => setSemFabTreino(true)} aria-label="Fechar o botão do card do treino" data-umami-event="Card do treino: fechou o botão"><X size={12} strokeWidth={3} aria-hidden="true" /></button>
+          <a className="euvou-fab treino-fab" href="/?card=treino" title="Monte o card do seu treino (distância, ritmo, tempo e zona) para os stories" data-umami-event="Card do treino: botão flutuante"><Activity size={18} aria-hidden="true" /><span><b>Meu treino</b><small>Card pro seu story</small></span></a>
+        </div>}
         {!escolhendo && !semFabCard && <div className="euvou-wrap">
           <button className="euvou-fechar" onClick={() => setSemFabCard(true)} aria-label="Fechar o botão do card" data-umami-event="Eu vou: fechou o botão"><X size={12} strokeWidth={3} aria-hidden="true" /></button>
           <button className="euvou-fab" onClick={comecarEuVou} title="Monte um card com a sua foto e a prova que você vai correr, para postar nos stories" data-umami-event="Eu vou: botão flutuante"><PartyPopper size={18} aria-hidden="true" /><span><b>Eu vou!</b><small>Card pro seu story</small></span></button>
