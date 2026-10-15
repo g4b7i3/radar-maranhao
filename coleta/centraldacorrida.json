@@ -15,7 +15,7 @@
   {
    "url": "https://centraldacorrida.com.br/user/hi",
    "status": 200,
-   "body": "{\"bubble_session_uid\":\"1792032327699x312372446308141200\"}"
+   "body": "{\"bubble_session_uid\":\"1792062451778x324703088442756860\"}"
   },
   {
    "url": "https://centraldacorrida.com.br/user/apm",
@@ -25,12 +25,12 @@
   {
    "url": "https://centraldacorrida.com.br/user/hi",
    "status": 200,
-   "body": "{\"bubble_session_uid\":\"1792032327699x312372446308141200\"}"
+   "body": "{\"bubble_session_uid\":\"1792062451778x324703088442756860\"}"
   },
   {
    "url": "https://centraldacorrida.com.br/elasticsearch/msearch",
    "status": 200,
-   "body": "{\"responses\":[{\"hits\":{\"hits\":[],\"total\":0},\"extras\":[],\"at_end\":true,\"search_version\":1792032338270}],\"bulk_watch_results\":[{\"search_ids\":[\"3665a3b815492141ac1ae3bd109028d0\"],\"expires\":1792043476230}]}"
+   "body": "{\"responses\":[{\"hits\":{\"hits\":[],\"total\":0},\"extras\":[],\"at_end\":true,\"search_version\":1792062462398}],\"bulk_watch_results\":[{\"search_ids\":[\"3665a3b815492141ac1ae3bd109028d0\"],\"expires\":1792083762389}]}"
   },
   {
    "url": "https://centraldacorrida.com.br/user/apm",
@@ -39,5 +39,5 @@
   }
  ],
  "totalLinks": 0,
- "coletadoEm": "2026-10-15T02:45:43.892Z"
+ "coletadoEm": "2026-10-15T11:07:48.019Z"
 }
