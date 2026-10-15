@@ -2,9 +2,40 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CalendarPlus, Check, Copy, Download, X } from 'lucide-react';
 import { detect } from './install';
+import { horaLargada } from './Clima';
+import { placeLabel, type Race } from './lib';
 
 /** No iPhone, webcal:// abre o app Calendário direto, em qualquer navegador (Safari, Chrome, Instagram…). */
 export const linkCalendario = (caminho: string) => detect().ios ? `webcal://${location.host}${caminho}` : caminho;
+
+const p2 = (n: number) => String(n).padStart(2, '0');
+
+/** Link de "Adicionar ao calendário" de uma prova, do jeito que cada celular entende:
+ *  - Android: abre o Google Agenda com o evento preenchido (o app usa as notificações padrão dele);
+ *  - iPhone no Safari: importa o .ics, com os dois lembretes;
+ *  - iPhone em outro navegador (Chrome, Instagram…): webcal abre o app Calendário direto. */
+export function linkProva(e: Race) {
+  const p = detect();
+  if (p.android) {
+    const L = horaLargada(e);
+    // sempre com horário (largada informada ou 6h), para o Google avisar antes
+    const ini = `${e.date!.replace(/-/g, '')}T${p2(L.h)}${p2(L.m)}00`;
+    const fimH = L.h + 3;
+    const fim = `${e.date!.replace(/-/g, '')}T${p2(Math.min(23, fimH))}${p2(L.m)}00`;
+    const det = [e.distances.length ? 'Distâncias: ' + e.distances.join(', ') + ' km' : '', e.notes, e.officialUrl ? 'Inscrição: ' + e.officialUrl : '', `Ver no Radar: https://radarcorridasma.com.br/?prova=${e.id}`].filter(Boolean).join('\n');
+    const q = new URLSearchParams({ action: 'TEMPLATE', text: '🏃 ' + e.name, dates: `${ini}/${fim}`, ctz: 'America/Fortaleza', location: placeLabel(e) + ' - MA', details: det });
+    return `https://calendar.google.com/calendar/render?${q}`;
+  }
+  return p.ios && p.iosBrowser !== 'safari' ? linkCalendario(`/calendario/${e.id}.ics`) : `/calendario/${e.id}.ics`;
+}
+
+/** Aviso que aparece embaixo do botão, quando o celular precisa de um toque a mais para o alarme. */
+export function dicaAlarme() {
+  const p = detect();
+  if (p.ios && p.iosBrowser !== 'safari') return 'No Calendário, desligue "Remover alertas" antes de tocar em Adicionar, para receber os lembretes (véspera às 18h e no dia da prova).';
+  if (p.android) return 'Abre no Google Agenda: toque em Salvar. O aviso vem pela notificação do Google Agenda (dá pra ajustar o horário no próprio evento).';
+  return 'Com lembrete na véspera às 18h e outro no dia da prova.';
+}
 
 /** Assinar a agenda completa no calendário do celular. Atualiza sozinha quando entra prova nova. */
 export default function AssinarAgenda({ onExportar, filtradas }: { onExportar: () => void; filtradas: number | null }) {

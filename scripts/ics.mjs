@@ -40,7 +40,12 @@ export function vevent(e, lembrete) {
     `Ver no Radar: ${SITE}/?prova=${e.id}`,
   ].filter(Boolean).join('\n');
   // véspera às 18h (dia inteiro: 6h antes da meia-noite; com horário: 12h antes da largada)
-  const alarme = lembrete ? ['BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc('Amanhã: ' + e.name)}`, `TRIGGER:-PT${L ? 12 : 6}H`, 'END:VALARM'] : [];
+  // Dois alarmes: véspera às 18h e no dia (2h antes da largada; sem horário, 5h da manhã).
+  const al = (gatilho, txt) => ['BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc(txt)}`, `TRIGGER:${gatilho}`, 'END:VALARM'];
+  const alarme = !lembrete ? [] : [
+    ...al(L ? `-PT${L.h + 6}H${L.m ? L.m + 'M' : ''}` : '-PT6H', 'Amanhã tem prova: ' + e.name),
+    ...al(L ? '-PT2H' : 'PT5H', 'Hoje tem prova: ' + e.name),
+  ];
   return ['BEGIN:VEVENT', `UID:${e.id}@radarcorridasma.com.br`, `DTSTAMP:${stamp()}`, ...quando,
     `SUMMARY:${esc('🏃 ' + e.name)}`, `LOCATION:${esc(lugar(e))}`, `DESCRIPTION:${esc(desc)}`,
     `URL:${e.officialUrl || `${SITE}/?prova=${e.id}`}`, ...(e.status === 'Cancelada' ? ['STATUS:CANCELLED'] : []), ...alarme, 'END:VEVENT'];
