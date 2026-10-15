@@ -4,7 +4,7 @@ name: Coletar plataformas de inscrição
 
 on:
   schedule:
-    - cron: "15 9-23/2 * * *"   # de 2 em 2 horas, das 6h15 às 20h15 em São Luís
+    - cron: "37 9-23/2 * * *"   # de 2 em 2 horas, das 6h37 às 20h37 em São Luís (minuto "quebrado": o GitHub pula menos)
   workflow_dispatch:
     inputs:
       fonte:
