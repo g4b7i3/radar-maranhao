@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
+import ClimaLargada from './Clima';
+import EuVou from './EuVou';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -404,6 +406,7 @@ export default function App() {
 
 function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [card, setCard] = useState(false);
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     const onKey = (ev: KeyboardEvent) => {
@@ -433,6 +436,7 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
           {cd && n != null && n >= 0 && <div className="sheet-clock"><b>{cd.n}</b>{cd.unit && <small>{cd.unit}</small>}</div>}
         </div>
         <div className="sheet-dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d} km</span>) : <span>Distâncias a confirmar</span>}</div>
+        <ClimaLargada e={e} />
         <dl className="facts">
           <div><dt>Inscrições</dt><dd><StatusTag e={e} />{dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}</dd></div>
           {e.prize && e.prize.kind !== 'sem' && <div><dt>Premiação</dt><dd className="prize-dd">{e.prize.kind === 'dinheiro' && <Banknote size={16} aria-hidden="true" />}{e.prize.summary}</dd></div>}
@@ -451,8 +455,10 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
             ? <a className="btn solid" href={e.officialUrl} target="_blank" rel="noopener noreferrer" data-umami-event="Página oficial (inscrição)" data-umami-event-prova={e.name}>Abrir página oficial<ExternalLink size={15} aria-hidden="true" /></a>
             : <p className="fine">Ainda sem link oficial confirmado.</p>}
           <button className="btn outline" onClick={onSave} aria-pressed={saved} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva' : 'Salvar'}</button>
+          {n != null && n >= 0 && !card && <button className="btn outline euvou-btn" onClick={() => setCard(true)} data-umami-event="Card Eu vou: abriu" data-umami-event-prova={e.name}><PartyPopper size={16} aria-hidden="true" />Eu vou! Card pro story</button>}
           {e.date && <button className="btn outline" onClick={onCalendar} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>}
         </div>
+        {card && <EuVou e={e} onClose={() => setCard(false)} />}
         <a className="source" href={e.sourceUrl} target="_blank" rel="noopener noreferrer">Fonte: {e.sourceName}<ExternalLink size={13} aria-hidden="true" /></a>
         <a className="report" data-umami-event="WhatsApp: corrigir prova" data-umami-event-prova={e.name} href={whatsappLink(`Olá! Sobre a prova "${e.name}" (${e.city}, ${fmt.short(e.date)}) no Radar Corridas Maranhão: `)} target="_blank" rel="noopener noreferrer"><MessageCircle size={15} aria-hidden="true" />Alguma informação errada? Avise pelo WhatsApp</a>
       </div>

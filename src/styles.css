@@ -483,3 +483,27 @@ html:has(.install) .insta-fab { bottom: calc(28px + var(--install-h, 0px) + env(
 .insta-fab:focus-visible { outline: 3px solid var(--brand, #1D3FBF); outline-offset: 3px; }
 @media (max-width: 420px) { .insta-fab { width: 44px; height: 44px; right: max(12px, env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); } }
 @media print { .insta-fab { display: none; } }
+
+/* Previsão do tempo na largada */
+.clima { margin-top: 18px; padding: 14px 16px; border-radius: 14px; background: var(--cobalt-tint); color: var(--ink); }
+.clima.quente { background: var(--warn-bg); }
+.clima-top { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: .9375rem; }
+.clima-top svg { color: var(--cobalt); flex-shrink: 0; }
+.clima.quente .clima-top svg { color: var(--warn); }
+.clima-nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(68px, 1fr)); gap: 8px; margin-top: 10px; }
+.clima-nums div { display: flex; flex-direction: column; }
+.clima-nums b { font-size: 1.625rem; font-weight: 800; font-stretch: 75%; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.clima-nums small { color: var(--muted); font-size: .75rem; }
+.clima p { margin: 10px 0 0; font-size: .875rem; }
+
+/* Card "Eu vou!" */
+.euvou { margin-top: 18px; padding: 16px; border: 1.5px solid var(--line); border-radius: 16px; display: flex; flex-direction: column; gap: 12px; }
+.euvou-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.euvou-head h3 { margin: 0; font-size: 1.0625rem; }
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 0; background: transparent; color: var(--muted); }
+.icon-btn:hover { background: var(--cobalt-tint); color: var(--ink); }
+.euvou-preview { display: grid; place-items: center; aspect-ratio: 9 / 16; width: min(100%, 240px); margin: 0 auto; border-radius: 14px; overflow: hidden; background: var(--cobalt); color: #fff; box-shadow: 0 10px 30px rgba(10, 25, 80, .25); }
+.euvou-preview img { width: 100%; height: 100%; display: block; }
+.euvou-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.euvou-actions .btn { flex: 1 1 180px; justify-content: center; }
+.euvou .fine { margin: 0; }
