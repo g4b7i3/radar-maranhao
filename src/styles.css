@@ -548,3 +548,10 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .euvou-fechar svg { width: 20px; height: 20px; padding: 4px; box-sizing: border-box; border-radius: 50%; background: rgba(15, 26, 51, .55); color: rgba(255,255,255,.85); transition: background .15s ease; }
 .euvou-fechar:hover svg, .euvou-fechar:focus-visible svg { background: rgba(15, 26, 51, .85); color: #fff; }
 .euvou-fechar:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 1px; border-radius: 50%; }
+
+/* Clima: selo na agenda e linha no destaque */
+.tag.clima-tag { display: inline-flex; align-items: center; gap: 4px; background: var(--cobalt-tint); color: var(--cobalt); font-variant-numeric: tabular-nums; }
+.tag.clima-tag.quente { background: var(--warn-bg); color: var(--warn); }
+.hero-clima { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0 0; padding: 7px 14px 7px 12px; border-radius: 999px; background: rgba(5, 15, 50, .35); border: 1px solid rgba(255,255,255,.18); font-size: .9375rem; color: #fff; }
+.hero-clima svg { flex-shrink: 0; color: #ffd166; }
+.hero-clima b { font-weight: 700; }

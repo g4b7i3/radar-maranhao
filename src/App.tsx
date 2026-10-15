@@ -3,7 +3,7 @@ import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, 
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
-import ClimaLargada from './Clima';
+import ClimaLargada, { ClimaHero, SeloClima, usePrevisoes, type Clima } from './Clima';
 import EuVou from './EuVou';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
@@ -134,6 +134,7 @@ export default function App() {
   const t = today();
   const upcoming = useMemo(() => events.filter(e => !e.date || e.date >= t).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, t]);
   const next = upcoming.find(e => e.date && status(e) !== 'Cancelada');
+  const previsoes = usePrevisoes(upcoming);
   const unread = (data?.changes ?? []).filter(c => !seen.includes(c.id)).length;
   const cities = useMemo(() => [...new Set(events.map(e => e.city))].sort((a, b) => a === 'São Luís' ? -1 : b === 'São Luís' ? 1 : a.localeCompare(b)), [events]);
   // Só as distâncias mais procuradas viram botão; as outras continuam na ficha de cada prova.
@@ -218,6 +219,7 @@ export default function App() {
                 <h1 id="next-title"><button onClick={() => setSelected(next)}>{next.name}</button></h1>
                 <p className="hero-when">{fmt.long(next.date)}</p>
                 <p className="hero-where"><MapPin size={16} aria-hidden="true" />{placeLabel(next)}</p>
+                <ClimaHero c={previsoes[next.id]} />
                 <div className="hero-actions">
                   <button className="btn light" onClick={() => setSelected(next)}>Ver detalhes</button>
                   <button className="btn ghost" onClick={() => toggleSave(next)} aria-pressed={favorites.includes(next.id)}>
@@ -308,6 +310,7 @@ export default function App() {
                           <span className="race-meta">
                             <span className="dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d}k</span>) : <span>distâncias a confirmar</span>}</span>
                             <StatusTag e={e} />
+                            <SeloClima c={previsoes[e.id]} />
                             {hasCashPrize(e) && <span className="tag prize" title={e.prize!.summary}><Banknote size={13} aria-hidden="true" />{money(e.prize!.top!)}</span>}
                             {isSingleSource(e) && <span className="tag single" title="Encontrada em uma só fonte. Confirme com a organização.">Fonte única</span>}
                             {dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}
@@ -420,13 +423,13 @@ export default function App() {
       <a className="insta-fab" data-umami-event="Instagram (botão flutuante)" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
       </div>
       <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
-      {selected && <Sheet race={selected} startCard={abrirCard} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
+      {selected && <Sheet race={selected} clima={previsoes[selected.id]} startCard={abrirCard} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
       {toast && <div className="toast" role="status"><Check size={16} aria-hidden="true" />{toast}</div>}
     </>
   );
 }
 
-function Sheet({ race: e, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
+function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const [card, setCard] = useState(startCard);
   useEffect(() => {
@@ -458,7 +461,7 @@ function Sheet({ race: e, startCard = false, saved, onClose, onSave, onCalendar 
           {cd && n != null && n >= 0 && <div className="sheet-clock"><b>{cd.n}</b>{cd.unit && <small>{cd.unit}</small>}</div>}
         </div>
         <div className="sheet-dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d} km</span>) : <span>Distâncias a confirmar</span>}</div>
-        <ClimaLargada e={e} />
+        <ClimaLargada e={e} c={clima} />
         <dl className="facts">
           <div><dt>Inscrições</dt><dd><StatusTag e={e} />{dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}</dd></div>
           {e.prize && e.prize.kind !== 'sem' && <div><dt>Premiação</dt><dd className="prize-dd">{e.prize.kind === 'dinheiro' && <Banknote size={16} aria-hidden="true" />}{e.prize.summary}</dd></div>}
