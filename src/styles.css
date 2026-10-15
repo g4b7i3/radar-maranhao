@@ -630,3 +630,11 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
   70% { box-shadow: 0 0 0 12px rgba(29, 63, 191, 0); }
   100% { box-shadow: 0 0 0 0 rgba(29, 63, 191, 0); }
 }
+
+/* Gerador do story "Provas da semana" (/?story=semana) */
+.story-semana { max-width: 520px; margin: 0 auto; padding: 20px var(--safe-r) 48px var(--safe-l); display: flex; flex-direction: column; gap: 14px; }
+.story-semana h1 { margin: 4px 0 0; font-size: 2rem; font-weight: 850; font-stretch: 75%; }
+.story-semana .fine { margin: 0; }
+.story-voltar { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--cobalt); font-weight: 600; text-decoration: none; align-self: flex-start; }
+.story-info { margin: 0; color: var(--muted); font-size: .9375rem; }
+.story-preview { width: min(100%, 300px); }

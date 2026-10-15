@@ -5,19 +5,20 @@ import { diasAte, horaLargada } from './Clima';
 
 // Card "Eu vou!" para os stories do Instagram (1080×1920), desenhado no próprio celular, sem servidor.
 
-const W = 1080, H = 1920, AZUL = '#1D3FBF';
-const FONTE = '"Archivo Variable", system-ui, sans-serif';
-const SIMBOLO = ['M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-8 8M12 28a8 8 0 0 0-8-8', 'M16 9l7 7-7 7-7-7z'];
+const W = 1080, H = 1920;
+export const AZUL = '#1D3FBF';
+export const FONTE = '"Archivo Variable", system-ui, sans-serif';
+export const SIMBOLO = ['M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-8 8M12 28a8 8 0 0 0-8-8', 'M16 9l7 7-7 7-7-7z'];
 
-type Ctx = CanvasRenderingContext2D & { fontStretch?: string; letterSpacing?: string };
+export type Ctx = CanvasRenderingContext2D & { fontStretch?: string; letterSpacing?: string };
 
-function fonte(ctx: Ctx, peso: number, px: number, estreita: boolean) {
+export function fonte(ctx: Ctx, peso: number, px: number, estreita: boolean) {
   ctx.font = `${peso} ${px}px ${FONTE}`;
   try { ctx.fontStretch = estreita ? 'extra-condensed' : 'normal'; } catch { /* navegador sem suporte: usa a largura normal */ }
 }
 
 /** Quebra o texto em linhas que cabem na largura, diminuindo a fonte se precisar. */
-function caber(ctx: Ctx, texto: string, peso: number, px: number, min: number, largura: number, maxLinhas: number, estreita: boolean) {
+export function caber(ctx: Ctx, texto: string, peso: number, px: number, min: number, largura: number, maxLinhas: number, estreita: boolean) {
   for (let s = px; s >= min; s -= 4) {
     fonte(ctx, peso, s, estreita);
     const linhas: string[] = []; let atual = '';
