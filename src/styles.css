@@ -471,18 +471,42 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 .hero-text h1, .hero-when, .hero-where, .hero-kicker, .clock, .hero-sum { text-shadow: 0 1px 2px rgba(5, 15, 50, .45), 0 0 18px rgba(5, 15, 50, .35); }
 
 /* Botão flutuante do Instagram (@radarcorridasma): pequeno, no canto, sobe quando a janela de instalar aparece */
-.insta-fab {
+.fabs {
   position: fixed; z-index: 30; right: max(16px, env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px; pointer-events: none;
+}
+.fabs > * { pointer-events: auto; }
+html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-area-inset-bottom)); }
+.insta-fab {
   width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: #fff; text-decoration: none;
   background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
   box-shadow: 0 6px 18px rgba(0,0,0,.22); transition: transform .2s ease, box-shadow .2s ease;
   animation: fx-in .5s .8s cubic-bezier(.2,.8,.2,1) backwards;
 }
-html:has(.install) .insta-fab { bottom: calc(28px + var(--install-h, 0px) + env(safe-area-inset-bottom)); }
 .insta-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 10px 24px rgba(0,0,0,.28); }
-.insta-fab:focus-visible { outline: 3px solid var(--brand, #1D3FBF); outline-offset: 3px; }
-@media (max-width: 420px) { .insta-fab { width: 44px; height: 44px; right: max(12px, env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); } }
-@media print { .insta-fab { display: none; } }
+.insta-fab:focus-visible, .euvou-fab:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; }
+.euvou-fab {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 18px 6px 14px; border: 0; border-radius: 999px;
+  background: var(--cobalt); color: #fff; font: inherit; text-align: left; cursor: pointer;
+  box-shadow: 0 6px 18px rgba(10,25,80,.3); transition: transform .2s ease, box-shadow .2s ease;
+  animation: fx-in .5s 1s cubic-bezier(.2,.8,.2,1) backwards;
+}
+.euvou-fab span { display: flex; flex-direction: column; line-height: 1.15; }
+.euvou-fab b { font-size: 1rem; font-weight: 800; }
+.euvou-fab small { font-size: .75rem; opacity: .9; white-space: nowrap; }
+.euvou-fab:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(10,25,80,.35); }
+@media (max-width: 420px) {
+  .fabs { right: max(12px, env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); gap: 10px; }
+  .insta-fab { width: 44px; height: 44px; }
+}
+@media print { .fabs { display: none; } }
+.escolha { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; padding: 14px 8px 14px 16px; border-radius: 16px; background: var(--cobalt); color: #fff; scroll-margin-top: 140px; animation: fx-in .35s cubic-bezier(.2,.8,.2,1); }
+.escolha > svg { flex-shrink: 0; }
+.escolha > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.escolha strong { font-size: 1.25rem; font-weight: 800; font-stretch: 80%; text-transform: uppercase; letter-spacing: .01em; }
+.escolha span { font-size: .875rem; opacity: .92; }
+.escolha .icon-btn { color: #fff; flex-shrink: 0; }
+.escolha .icon-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
 
 /* Previsão do tempo na largada */
 .clima { margin-top: 18px; padding: 14px 16px; border-radius: 14px; background: var(--cobalt-tint); color: var(--ink); }

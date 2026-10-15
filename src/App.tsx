@@ -83,6 +83,14 @@ export default function App() {
   const [favorites, setFavorites] = useState<string[]>(() => load('radar-favorites', []));
   const [seen, setSeen] = useState<string[]>(() => load('radar-seen', []));
   const [selected, setSelected] = useState<Race | null>(null);
+  // "Eu vou!": a pessoa escolhe a prova na agenda e a ficha já abre com o card do story pronto
+  const [escolhendo, setEscolhendo] = useState(false);
+  const [abrirCard, setAbrirCard] = useState(false);
+  function abrirProva(e: Race) { setAbrirCard(escolhendo); setEscolhendo(false); setSelected(e); }
+  function comecarEuVou() {
+    setTab('agenda'); setEscolhendo(true);
+    requestAnimationFrame(() => document.getElementById('escolha-prova')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
   const [toast, setToast] = useState('');
 
   useEffect(() => {
@@ -266,6 +274,13 @@ export default function App() {
             </div>
           )}
 
+          {escolhendo && tab === 'agenda' && (
+            <div className="escolha" id="escolha-prova" role="status">
+              <PartyPopper size={24} aria-hidden="true" />
+              <div><strong>Qual prova irá correr?</strong><span>Toque na prova aqui embaixo e monte o seu card "Eu vou!", com a sua foto, para postar nos stories do Instagram.</span></div>
+              <button className="icon-btn" onClick={() => setEscolhendo(false)} aria-label="Cancelar"><X size={18} /></button>
+            </div>
+          )}
           <div className="list-bar">
             <p>{filtered.length === 1 ? '1 prova' : filtered.length + ' provas'}{filtersOn && tab === 'agenda' ? ' com esses filtros' : ''}</p>
             <div>
@@ -284,7 +299,7 @@ export default function App() {
                   const dl = deadline(e); const past = status(e) === 'Realizada'; const saved = favorites.includes(e.id);
                   return (
                     <li key={e.id} className={past ? 'race past' : 'race'}>
-                      <button className="race-main" onClick={() => setSelected(e)} data-umami-event="Abrir prova" data-umami-event-prova={e.name}>
+                      <button className="race-main" onClick={() => abrirProva(e)} data-umami-event={escolhendo ? 'Eu vou: escolheu a prova' : 'Abrir prova'} data-umami-event-prova={e.name}>
                         <span className="race-date">{e.date ? <><b>{fmt.day(e.date)}</b><small>{fmt.weekdayShort(e.date)}</small></> : <b className="tbd">?</b>}</span>
                         <span className="race-body">
                           <span className="race-name">{e.name}</span>
@@ -396,17 +411,20 @@ export default function App() {
         </footer>
       )}
 
+      <div className="fabs">
+        {!escolhendo && <button className="euvou-fab" onClick={comecarEuVou} title="Monte um card com a sua foto e a prova que você vai correr, para postar nos stories" data-umami-event="Eu vou: botão flutuante"><PartyPopper size={18} aria-hidden="true" /><span><b>Eu vou!</b><small>Card pro seu story</small></span></button>}
       <a className="insta-fab" data-umami-event="Instagram (botão flutuante)" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
+      </div>
       <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
-      {selected && <Sheet race={selected} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
+      {selected && <Sheet race={selected} startCard={abrirCard} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
       {toast && <div className="toast" role="status"><Check size={16} aria-hidden="true" />{toast}</div>}
     </>
   );
 }
 
-function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
+function Sheet({ race: e, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [card, setCard] = useState(false);
+  const [card, setCard] = useState(startCard);
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     const onKey = (ev: KeyboardEvent) => {

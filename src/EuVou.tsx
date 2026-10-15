@@ -137,6 +137,8 @@ export default function EuVou({ e, onClose }: { e: Race; onClose: () => void }) 
   const [focoY, setFocoY] = useState(0.35);
   const [lendo, setLendo] = useState(false);
   const entrada = useRef<HTMLInputElement>(null);
+  const caixa = useRef<HTMLElement>(null);
+  useEffect(() => { const t = setTimeout(() => caixa.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 250); return () => clearTimeout(t); }, []);
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const blob = useRef<Blob | null>(null);
 
@@ -197,7 +199,7 @@ export default function EuVou({ e, onClose }: { e: Race; onClose: () => void }) 
 
   const podeCompartilhar = typeof navigator !== 'undefined' && !!navigator.canShare;
   return (
-    <section className="euvou" aria-label="Card Eu vou para os stories">
+    <section className="euvou" aria-label="Card Eu vou para os stories" ref={caixa}>
       <div className="euvou-head">
         <h3>Card para o seu story</h3>
         <button className="icon-btn" onClick={onClose} aria-label="Fechar o card"><X size={18} /></button>
