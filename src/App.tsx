@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
@@ -80,6 +80,7 @@ export default function App() {
   const [month, setMonth] = useState('Todos');
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [onlyPrize, setOnlyPrize] = useState(false);
+  const [filtrosAbertos, setFiltrosAbertos] = useState(false); // no celular os filtros ficam recolhidos
   const [showPast, setShowPast] = useState(false);
   const [favorites, setFavorites] = useState<string[]>(() => load('radar-favorites', []));
   const [seen, setSeen] = useState<string[]>(() => load('radar-seen', []));
@@ -185,6 +186,7 @@ export default function App() {
   const months = useMemo(() => [...new Set(dated.filter(e => year === 'Todos' || e.date!.startsWith(year)).map(e => e.date!.slice(5, 7)))].sort(), [dated, year]);
   useEffect(() => { if (month !== 'Todos' && !months.includes(month)) setMonth('Todos'); }, [months, month]);
   const prizeCount = useMemo(() => events.filter(e => hasCashPrize(e) && (showPast || !e.date || e.date >= t)).length, [events, showPast, t]);
+  const filtrosAtivos = [mode !== 'Todas', dist != null, city !== 'Todas', year !== 'Todos', month !== 'Todos', onlyOpen, onlyPrize, showPast].filter(Boolean).length;
   const filtersOn = query || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || onlyPrize || showPast;
 
   function toggleSave(e: Race) {
@@ -267,12 +269,17 @@ export default function App() {
           {tab === 'salvas' && <div className="page-head"><h1>Minha agenda</h1><p>Monte sua agenda: toque no marcador das provas que você quer correr e exporte tudo para o calendário do celular (Google Agenda, iPhone ou Outlook). Sem cadastro: a lista fica guardada neste aparelho. Para levar para outro celular ou mandar para um amigo, use “Copiar link da minha agenda”.</p></div>}
 
           {tab === 'agenda' && (
-            <div className="filters" role="search">
+            <div className={filtrosAbertos ? 'filters aberto' : 'filters'} role="search">
+              <div className="search-row">
               <label className="search">
                 <Search size={18} aria-hidden="true" />
                 <input type="search" placeholder="Buscar prova, cidade, local ou mês" value={query} onChange={e => setQuery(e.target.value)} aria-label="Buscar prova, cidade, local ou mês" />
               </label>
-              <div className="filter-row">
+              <button className="filtros-btn" onClick={() => setFiltrosAbertos(!filtrosAbertos)} aria-expanded={filtrosAbertos} aria-controls="filtros-painel">
+                <SlidersHorizontal size={18} aria-hidden="true" />Filtros{filtrosAtivos > 0 && <span className="filtros-n" aria-label={`${filtrosAtivos} ligados`}>{filtrosAtivos}</span>}
+              </button>
+              </div>
+              <div className="filter-row" id="filtros-painel">
                 <div className="seg" role="group" aria-label="Modalidade">
                   {(['Todas', 'Rua', 'Trail'] as const).map(m => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)}>{m === 'Todas' ? 'Todas' : m === 'Rua' ? 'Rua' : 'Trail'}</button>)}
                 </div>
