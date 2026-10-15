@@ -6,7 +6,8 @@ import type { Race } from './lib';
 // Uma única consulta traz a previsão de todas as cidades com prova nos próximos 15 dias.
 // Se a internet ou o serviço falharem, nada de clima aparece e o resto do site segue normal.
 
-export type Clima = { temp: number; sens: number; umid: number; chuva: number | null; hora: string; horaInformada: boolean };
+/** tipico = média histórica do mês (não é previsão); nesse caso "chuva" é a % de dias com chuva no mês. */
+export type Clima = { temp: number; sens: number; umid: number; chuva: number | null; hora: string; horaInformada: boolean; tipico?: { mes: string; anos: string } };
 type Coord = { lat: number; lon: number };
 
 /** Horário da largada a partir das notas ("Largada às 6h30"); sem isso, usa 6h, o mais comum no Maranhão. */
@@ -99,17 +100,54 @@ export function usePrevisoes(events: Race[]) {
   return mapa;
 }
 
+// ---------- Clima típico (provas a mais de 15 dias) ----------
+type Tipico = { anos: string; horas: number[]; cidades: Record<string, { m: Record<string, { h: Record<string, [number, number, number]>; chuva: number | null }> }> };
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+let tipicoPedido: Promise<Tipico | null> | null = null;
+const carregarTipico = () => (tipicoPedido ??= fetch('/data/clima-tipico.json').then(r => (r.ok ? r.json() : null)).catch(() => null));
+
+function tipicoDe(e: Race, t: Tipico): Clima | null {
+  const cid = t.cidades[e.city];
+  if (!cid || !e.date) return null;
+  const mes = String(Number(e.date.slice(5, 7)));
+  const dados = cid.m[mes];
+  if (!dados) return null;
+  const { h, m, informada } = horaLargada(e);
+  const alvo = h + (m >= 30 ? 1 : 0);
+  const hora = t.horas.reduce((a, b) => (Math.abs(b - alvo) < Math.abs(a - alvo) ? b : a), t.horas[0]);
+  const v = dados.h[String(hora)];
+  if (!v) return null;
+  return { temp: v[0], sens: v[1], umid: v[2], chuva: dados.chuva, hora: `${h}h${m ? String(m).padStart(2, '0') : ''}`, horaInformada: informada, tipico: { mes: MESES[Number(mes) - 1], anos: t.anos } };
+}
+
+/** Previsão (até 15 dias) e, para as outras provas futuras, o clima típico do mês. */
+export function useClimas(events: Race[]) {
+  const previsoes = usePrevisoes(events);
+  const [tipico, setTipico] = useState<Tipico | null>(null);
+  useEffect(() => { let vivo = true; carregarTipico().then(t => { if (vivo) setTipico(t); }); return () => { vivo = false; }; }, []);
+  return useMemo(() => {
+    const out: Record<string, Clima> = { ...previsoes };
+    if (tipico) for (const e of events) {
+      const n = diasAte(e.date);
+      if (out[e.id] || n == null || n < 0) continue;
+      const c = tipicoDe(e, tipico);
+      if (c) out[e.id] = c;
+    }
+    return out;
+  }, [previsoes, tipico, events]);
+}
+
 export const quente = (c: Clima) => c.sens >= 29;
 
 function dica(c: Clima) {
   if (c.sens >= 33) return 'Calor forte: beba água desde a véspera, use boné e segure o ritmo no começo.';
   if (c.sens >= 29) return 'Vai estar quente: hidrate-se bem antes e aproveite todos os postos de água.';
-  if (c.chuva != null && c.chuva >= 50) return 'Chance de chuva: use meia que não encharque e um saco plástico para o pré-largada.';
+  if (!c.tipico && c.chuva != null && c.chuva >= 50) return 'Chance de chuva: use meia que não encharque e um saco plástico para o pré-largada.';
   return 'Temperatura boa para correr. Mesmo assim, não pule os postos de água.';
 }
 
 function Icone({ c, size }: { c: Clima; size: number }) {
-  if (c.chuva != null && c.chuva >= 50) return <CloudRain size={size} aria-hidden="true" />;
+  if (!c.tipico && c.chuva != null && c.chuva >= 50) return <CloudRain size={size} aria-hidden="true" />;
   return quente(c) ? <Sun size={size} aria-hidden="true" /> : <CloudSun size={size} aria-hidden="true" />;
 }
 
@@ -117,8 +155,9 @@ function Icone({ c, size }: { c: Clima; size: number }) {
 export function SeloClima({ c }: { c: Clima | undefined }) {
   if (!c) return null;
   return (
-    <span className={quente(c) ? 'tag clima-tag quente' : 'tag clima-tag'} title={`Previsão na largada: ${c.temp}°, sensação de ${c.sens}°`}>
-      <Icone c={c} size={13} />{c.sens}°
+    <span className={`tag clima-tag${quente(c) ? ' quente' : ''}${c.tipico ? ' tipico' : ''}`}
+      title={c.tipico ? `Clima típico em ${c.tipico.mes} na hora da largada (média ${c.tipico.anos}): ${c.temp}°, sensação de ${c.sens}°. Não é previsão.` : `Previsão na largada: ${c.temp}°, sensação de ${c.sens}°`}>
+      <Icone c={c} size={13} />{c.tipico ? '≈' : ''}{c.sens}°
     </span>
   );
 }
@@ -129,7 +168,9 @@ export function ClimaHero({ c }: { c: Clima | undefined }) {
   return (
     <p className="hero-clima">
       <Icone c={c} size={16} />
-      <span><b>{c.temp}° na largada</b> · sensação {c.sens}°{c.chuva != null && c.chuva >= 30 ? ` · ${c.chuva}% de chuva` : ''}</span>
+      {c.tipico
+        ? <span><b>Costuma fazer {c.temp}°</b> nessa hora em {c.tipico.mes} · sensação {c.sens}°</span>
+        : <span><b>{c.temp}° na largada</b> · sensação {c.sens}°{c.chuva != null && c.chuva >= 30 ? ` · ${c.chuva}% de chuva` : ''}</span>}
     </p>
   );
 }
@@ -138,7 +179,23 @@ export function ClimaHero({ c }: { c: Clima | undefined }) {
 export default function ClimaLargada({ e, c }: { e: Race; c?: Clima }) {
   const mapa = usePrevisoes(c || !noPrazo(e) ? [] : [e]);
   const clima = c ?? mapa[e.id];
-  if (!noPrazo(e) || !clima) return null;
+  if (!clima) return null;
+  if (clima.tipico) return (
+    <section className={quente(clima) ? 'clima tipico quente' : 'clima tipico'} aria-label="Clima típico na largada">
+      <div className="clima-top">
+        <Thermometer size={18} aria-hidden="true" />
+        <span>Clima típico na largada{clima.horaInformada ? ` (${clima.hora})` : ' (por volta das 6h)'}</span>
+      </div>
+      <div className="clima-nums">
+        <div><b>{clima.temp}°</b><small>temperatura</small></div>
+        <div><b>{clima.sens}°</b><small>sensação</small></div>
+        <div><b>{clima.umid}%</b><small>umidade</small></div>
+        {clima.chuva != null && <div><b>{clima.chuva}%</b><small>dos dias com chuva</small></div>}
+      </div>
+      <p>{dica(clima)}</p>
+      <p className="clima-obs">Média de {clima.tipico.mes} em {e.city} ({clima.tipico.anos}). Não é previsão: ela aparece aqui 15 dias antes da prova.</p>
+    </section>
+  );
   return (
     <section className={quente(clima) ? 'clima quente' : 'clima'} aria-label="Previsão do tempo na largada">
       <div className="clima-top">

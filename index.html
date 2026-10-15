@@ -10,6 +10,9 @@
     <meta name="format-detection" content="telephone=no" />
     <!-- avisa navegadores como o Samsung Internet que o site já tem modo escuro próprio (evita escurecimento forçado) -->
     <meta name="color-scheme" content="light dark" />
+    <script>
+      try { var t = localStorage.getItem('radar-tema'); if (t === 'dark' || t === 'light') { document.documentElement.dataset.theme = t; document.querySelector('meta[name="color-scheme"]').content = t; } } catch (e) {}
+    </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="manifest" href="/manifest.webmanifest" />

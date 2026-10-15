@@ -37,11 +37,13 @@ jobs:
         run: |
           # aplica status e provas novas; se algo der errado, a agenda fica como estava
           node scripts/aplicar-coleta.mjs && node scripts/validar.mjs || git checkout -- public/data/radar.json
+      - name: Clima típico das cidades novas (média de 5 anos)
+        run: node scripts/clima-tipico.mjs || echo "Clima típico ficou para a próxima."
       - name: Salvar no repositório
         run: |
           git config user.name "radar-coleta[bot]"
           git config user.email "radar-coleta@users.noreply.github.com"
-          git add coleta/ public/data/radar.json
+          git add coleta/ public/data/
           if git diff --cached --quiet; then echo "Nada mudou."; exit 0; fi
           if git diff --cached --quiet -- public/data/radar.json; then MSG="Coleta automática das plataformas"; else MSG="Agenda atualizada pela coleta automática"; fi
           git commit -m "$MSG ($(TZ=America/Fortaleza date +%d/%m\ %Hh%M))"

@@ -36,6 +36,14 @@
     color-scheme: dark;
   }
 }
+/* escolhido no botão de tema */
+:root[data-theme="dark"] {
+    --paper: #0d1324; --surface: #141c31; --ink: #e8ecf6; --muted: #9aa5bd; --line: #26314b;
+    --cobalt: #3d5fe0; --cobalt-deep: #18307f; --cobalt-tint: #1c2850;
+    --open: #4cc795; --open-bg: #12352a; --warn: #f0b552; --warn-bg: #3a2a0d; --cash: #3cc77f; --cash-ink: #05230f;
+    --bad: #f2867c; --bad-bg: #3d1916; --done: #8d97ab; --done-bg: #1d2538;
+    color-scheme: dark;
+  }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; -webkit-tap-highlight-color: rgba(29, 63, 191, .12); }
@@ -555,3 +563,17 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .hero-clima { display: inline-flex; align-items: center; gap: 8px; margin: 10px 0 0; padding: 7px 14px 7px 12px; border-radius: 999px; background: rgba(5, 15, 50, .35); border: 1px solid rgba(255,255,255,.18); font-size: .9375rem; color: #fff; }
 .hero-clima svg { flex-shrink: 0; color: #ffd166; }
 .hero-clima b { font-weight: 700; }
+
+/* Botão de tema claro/escuro no topo */
+.top-inner { position: relative; }
+.tema-btn { flex-shrink: 0; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+.tema-btn:hover { border-color: var(--muted); }
+.tema-btn:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+.tema-btn svg { transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.tema-btn:active svg { transform: rotate(-30deg) scale(.9); }
+@media (max-width: 760px) { .tema-btn { position: absolute; top: 12px; right: var(--safe-r); } .brand-wrap { padding-right: 52px; } }
+
+.tag.clima-tag.tipico { background: transparent; border: 1px dashed currentColor; padding: 1px 8px; }
+.clima.tipico { background: transparent; border: 1.5px dashed var(--line); }
+.clima.tipico.quente { border-color: var(--warn); }
+.clima .clima-obs { margin-top: 6px; font-size: .75rem; color: var(--muted); }

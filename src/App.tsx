@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
-import ClimaLargada, { ClimaHero, SeloClima, usePrevisoes, type Clima } from './Clima';
+import { useTema } from './tema';
+import ClimaLargada, { ClimaHero, SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
@@ -83,6 +84,7 @@ export default function App() {
   const [favorites, setFavorites] = useState<string[]>(() => load('radar-favorites', []));
   const [seen, setSeen] = useState<string[]>(() => load('radar-seen', []));
   const [selected, setSelected] = useState<Race | null>(null);
+  const tema = useTema();
   // "Eu vou!": a pessoa escolhe a prova na agenda e a ficha já abre com o card do story pronto
   const [escolhendo, setEscolhendo] = useState(false);
   const [abrirCard, setAbrirCard] = useState(false);
@@ -134,7 +136,7 @@ export default function App() {
   const t = today();
   const upcoming = useMemo(() => events.filter(e => !e.date || e.date >= t).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, t]);
   const next = upcoming.find(e => e.date && status(e) !== 'Cancelada');
-  const previsoes = usePrevisoes(upcoming);
+  const previsoes = useClimas(upcoming);
   const unread = (data?.changes ?? []).filter(c => !seen.includes(c.id)).length;
   const cities = useMemo(() => [...new Set(events.map(e => e.city))].sort((a, b) => a === 'São Luís' ? -1 : b === 'São Luís' ? 1 : a.localeCompare(b)), [events]);
   // Só as distâncias mais procuradas viram botão; as outras continuam na ficha de cada prova.
@@ -202,6 +204,9 @@ export default function App() {
               </button>
             ))}
           </nav>
+          <button className="tema-btn" onClick={tema.alternar} aria-label={tema.escuro ? 'Mudar para o modo claro' : 'Mudar para o modo escuro'} title={tema.escuro ? 'Modo claro' : 'Modo escuro'}>
+            {tema.escuro ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
+          </button>
         </div>
       </header>
 
