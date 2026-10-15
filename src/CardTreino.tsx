@@ -12,7 +12,7 @@ export const ZONAS = [
   { id: 'Z4', nome: 'Limiar', cor: '#ff9f43' },
   { id: 'Z5', nome: 'Forte', cor: '#ff5a5f' },
 ] as const;
-const TIPOS = ['Rodagem', 'Longão', 'Intervalado', 'Tiro', 'Regenerativo', 'Prova'] as const;
+const TIPOS = ['Rodagem', 'Longão', 'Intervalado', 'Fartlek', 'Tiro', 'Regenerativo', 'Prova'] as const;
 type Fundo = 'transparente' | 'azul' | 'foto';
 
 // ---------- contas ----------
