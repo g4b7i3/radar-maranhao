@@ -63,7 +63,9 @@ function percurso(ctx: Ctx, cx: number, cy: number, larg: number, semente: numbe
   ctx.restore();
 }
 
-export type DadosCard = { km: number; ritmo: number; tempo: number; zona: typeof ZONAS[number] | null; tipo: string | null; cidade: string; fundo: Fundo; foto: Foto; focoY: number };
+/** pos: deslocamento (px do card) e escala do bloco de informações, quando a pessoa arrasta por cima da foto */
+export type Pos = { x: number; y: number; s: number };
+export type DadosCard = { km: number; ritmo: number; tempo: number; zona: typeof ZONAS[number] | null; tipo: string | null; cidade: string; fundo: Fundo; foto: Foto; focoY: number; pos?: Pos };
 
 export async function desenharTreino(canvas: HTMLCanvasElement, d: DadosCard) {
   try { await Promise.all([document.fonts.load(`800 100px ${FONTE}`), document.fonts.load(`500 40px ${FONTE}`)]); } catch { /* fonte do sistema */ }
@@ -90,6 +92,10 @@ export async function desenharTreino(canvas: HTMLCanvasElement, d: DadosCard) {
     const cores = ['#d52b1e', '#ffffff', '#111111', '#ffffff', '#d52b1e'], fw = W / cores.length;
     cores.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(i * fw, 0, fw + 1, 12); });
   }
+
+  // bloco de informações: na foto, a pessoa pode arrastar e mudar o tamanho
+  const pos = d.fundo === 'foto' && d.pos ? d.pos : null;
+  if (pos) { ctx.save(); ctx.translate(W / 2 + pos.x, H / 2 + pos.y); ctx.scale(pos.s, pos.s); ctx.translate(-W / 2, -H / 2); }
 
   // sombra no texto quando vai por cima de foto (transparente ou foto)
   const sombra = (on: boolean) => { ctx.shadowColor = on ? 'rgba(0,0,0,.45)' : 'transparent'; ctx.shadowBlur = on ? 18 : 0; ctx.shadowOffsetY = on ? 2 : 0; };
@@ -159,6 +165,7 @@ export async function desenharTreino(canvas: HTMLCanvasElement, d: DadosCard) {
   fonte(ctx, 800, 32, true); ctx.fillText('RADAR CORRIDAS', W / 2 - 120, by + 30);
   fonte(ctx, 600, 26, false); ctx.globalAlpha = .9; ctx.fillText('@radarcorridasma', W / 2 - 120, by + 62); ctx.globalAlpha = 1;
   sombra(false);
+  if (pos) ctx.restore();
 }
 
 // ---------- página ----------
@@ -174,6 +181,11 @@ export default function CardTreino() {
   const [foto, setFoto] = useState<Foto>(null);
   const [focoY, setFocoY] = useState(0.4);
   const [url, setUrl] = useState('');
+  const [pos, setPos] = useState<Pos>({ x: 0, y: 0, s: 1 });
+  const [arrastando, setArrastando] = useState(false);
+  const vivo = useRef<HTMLCanvasElement>(null); // prévia que dá para arrastar (modo foto)
+  const toque = useRef<{ id: number; cx: number; cy: number; x0: number; y0: number } | null>(null);
+  const comFoto = fundo === 'foto' && !!foto;
   const [aviso, setAviso] = useState('');
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const blob = useRef<Blob | null>(null);
@@ -194,15 +206,32 @@ export default function CardTreino() {
 
   useEffect(() => {
     if (!ok) return;
-    let vivo = true;
-    const c = canvas.current ?? (canvas.current = document.createElement('canvas'));
-    const t = setTimeout(() => desenharTreino(c, { km: K!, ritmo: ritmoS!, tempo: tempoS!, zona, tipo, cidade, fundo, foto, focoY }).then(() => c.toBlob(b => {
-      if (!vivo || !b) return;
-      blob.current = b;
-      setUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); });
-    }, fundo === 'foto' ? 'image/jpeg' : 'image/png', 0.92)), 120);
-    return () => { vivo = false; clearTimeout(t); };
-  }, [ok, K, ritmoS, tempoS, zona, tipo, cidade, fundo, foto, focoY]);
+    let ativo = true;
+    // com foto, desenha direto na prévia (o arrasto aparece na hora); sem foto, num canvas fora da tela
+    const c = (comFoto && vivo.current) || (canvas.current ??= document.createElement('canvas'));
+    const t = setTimeout(() => desenharTreino(c, { km: K!, ritmo: ritmoS!, tempo: tempoS!, zona, tipo, cidade, fundo, foto, focoY, pos }).then(() => {
+      if (!ativo || arrastando) return; // a imagem final só é gerada quando a pessoa solta o dedo
+      c.toBlob(b => {
+        if (!ativo || !b) return;
+        blob.current = b;
+        setUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); });
+      }, fundo === 'foto' ? 'image/jpeg' : 'image/png', 0.92);
+    }), arrastando ? 0 : 120);
+    return () => { ativo = false; clearTimeout(t); };
+  }, [ok, K, ritmoS, tempoS, zona, tipo, cidade, fundo, foto, focoY, pos, arrastando, comFoto]);
+
+  // arrastar o bloco com o dedo (ou o mouse) por cima da foto
+  function inicioArrasto(e: React.PointerEvent<HTMLCanvasElement>) {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    toque.current = { id: e.pointerId, cx: e.clientX, cy: e.clientY, x0: pos.x, y0: pos.y };
+    setArrastando(true);
+  }
+  function moverArrasto(e: React.PointerEvent<HTMLCanvasElement>) {
+    const t = toque.current; if (!t || t.id !== e.pointerId) return;
+    const k = 1080 / e.currentTarget.getBoundingClientRect().width;
+    setPos(p => ({ ...p, x: Math.max(-540, Math.min(540, t.x0 + (e.clientX - t.cx) * k)), y: Math.max(-960, Math.min(960, t.y0 + (e.clientY - t.cy) * k)) }));
+  }
+  function fimArrasto() { if (!toque.current) return; toque.current = null; setArrastando(false); }
 
   async function escolherFoto(file: File | undefined) {
     if (!file) return;
@@ -267,15 +296,24 @@ export default function CardTreino() {
           <button className="icon-btn" onClick={() => { setFoto(null); setFundo('transparente'); }} aria-label="Tirar a foto"><Trash2 size={18} /></button>
         </div>
       )}
-      {fundo === 'foto' && foto && <label className="euvou-ajuste">Ajustar a posição da foto<input type="range" min={0} max={1} step={0.01} value={focoY} onChange={e => setFocoY(Number(e.target.value))} /></label>}
+      {comFoto && <label className="euvou-ajuste">Ajustar a posição da foto<input type="range" min={0} max={1} step={0.01} value={focoY} onChange={e => setFocoY(Number(e.target.value))} /></label>}
+      {comFoto && <>
+        <p className="fine"><b>Arraste as informações com o dedo</b> para onde ficar melhor na foto.</p>
+        <div className="ct-tamanho">
+          <label className="euvou-ajuste">Tamanho das informações<input type="range" min={0.5} max={1.3} step={0.01} value={pos.s} onChange={e => setPos(p => ({ ...p, s: Number(e.target.value) }))} /></label>
+          <button className="btn outline" onClick={() => setPos({ x: 0, y: 0, s: 1 })}>Centralizar</button>
+        </div>
+      </>}
       {fundo === 'transparente' && <p className="fine">Transparente é como o card do Strava: você coloca por cima da sua própria foto no story.</p>}
 
       <div className={fundo === 'transparente' ? 'euvou-preview story-preview ct-xadrez' : 'euvou-preview story-preview'} style={fundo === 'transparente' ? { aspectRatio: '1080 / 1300' } : undefined}>
-        {url && ok ? <img src={url} alt="Prévia do card do treino" /> : <span>Montando…</span>}
+        {comFoto
+          ? <canvas ref={vivo} className="ct-vivo" aria-label="Prévia do card: arraste as informações para posicionar" onPointerDown={inicioArrasto} onPointerMove={moverArrasto} onPointerUp={fimArrasto} onPointerCancel={fimArrasto} />
+          : url && ok ? <img src={url} alt="Prévia do card do treino" /> : <span>Montando…</span>}
       </div>
       <div className="euvou-actions">
-        {podeCompartilhar && <button className="btn solid" onClick={compartilhar} disabled={!url || !ok}><Share2 size={16} aria-hidden="true" />Compartilhar</button>}
-        <button className={podeCompartilhar ? 'btn outline' : 'btn solid'} onClick={baixar} disabled={!url || !ok}><Download size={16} aria-hidden="true" />Baixar imagem</button>
+        {podeCompartilhar && <button className="btn solid" onClick={compartilhar} disabled={!url || !ok || arrastando}><Share2 size={16} aria-hidden="true" />Compartilhar</button>}
+        <button className={podeCompartilhar ? 'btn outline' : 'btn solid'} onClick={baixar} disabled={!url || !ok || arrastando}><Download size={16} aria-hidden="true" />Baixar imagem</button>
       </div>
       {aviso && <p className="fine" role="status">{aviso}</p>}
       <p className="fine">Nada é enviado: o card e a foto ficam só no seu celular. Marque o <b>@radarcorridasma</b> no story.</p>

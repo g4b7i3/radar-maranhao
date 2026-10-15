@@ -665,3 +665,10 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
   .tab { padding-left: 4px; padding-right: 4px; }
   .tab-treino svg { display: none; }
 }
+
+/* prévia arrastável do card do treino com foto */
+.ct-vivo { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+.ct-vivo:active { cursor: grabbing; }
+.ct-tamanho { display: flex; align-items: flex-end; gap: 10px; }
+.ct-tamanho .euvou-ajuste { flex: 1; }
+.ct-tamanho .btn { flex-shrink: 0; }
