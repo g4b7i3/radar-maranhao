@@ -38,7 +38,7 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
   try { await Promise.all([document.fonts.load(`800 100px ${FONTE}`), document.fonts.load(`500 40px ${FONTE}`)]); } catch { /* segue com a fonte do sistema */ }
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d') as Ctx;
-  const M = 90, FOTO_H = 1430;
+  const M = 90, FOTO_H = 1510;
 
   // fundo azul
   const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2449D6'); g.addColorStop(1, '#14278A');
@@ -84,7 +84,7 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
   try { ctx.letterSpacing = '0px'; } catch { /* */ }
 
   // EU VOU! (encosta no fim da foto)
-  let y = 1450;
+  let y = 1530;
   const eu = caber(ctx, 'EU VOU!', 800, 170, 120, W - 2 * M, 1, true);
   ctx.fillText(eu.linhas[0], M - 4, y);
 
