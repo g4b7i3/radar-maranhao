@@ -202,11 +202,12 @@ export default function EuVou({ e, onClose }: { e: Race; onClose: () => void }) 
         <h3>Card para o seu story</h3>
         <button className="icon-btn" onClick={onClose} aria-label="Fechar o card"><X size={18} /></button>
       </div>
-      {e.distances.length > 1 && (
-        <div className="chips" role="group" aria-label="Qual distância você vai correr?">
+      {e.distances.length > 1 && (<>
+        <p className="euvou-pergunta" id="euvou-dist">Em qual distância você vai?</p>
+        <div className="chips" role="group" aria-labelledby="euvou-dist">
           {e.distances.map(d => <button key={d} className="chip" aria-pressed={dist === d} onClick={() => setDist(d)}>{d} km</button>)}
         </div>
-      )}
+      </>)}
       <div className="euvou-foto">
         <input ref={entrada} type="file" accept="image/*" hidden onChange={ev => escolherFoto(ev.target.files?.[0])} />
         <button className="btn outline" onClick={() => entrada.current?.click()} disabled={lendo}><Camera size={16} aria-hidden="true" />{lendo ? 'Abrindo a foto…' : foto ? 'Trocar foto' : 'Pôr minha foto'}</button>
