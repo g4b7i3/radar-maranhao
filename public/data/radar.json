@@ -204,10 +204,10 @@
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página oficial de inscrição",
-      "notes": "Inscrições até 17/10 ou esgotamento. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15.",
-      "verifiedAt": "2026-10-14T11:06:50.977Z",
-      "firstSeenAt": "2026-10-14T11:06:50.977Z",
-      "prize": null
+      "notes": "Inscrições até 17/10 ou esgotamento. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento).",
+      "prize": null,
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T11:06:50.977Z"
     },
     {
       "id": "gp-grand-premium-2026-sao-luis",
@@ -539,16 +539,16 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Adiada",
       "officialUrl": null,
-      "sourceUrl": "https://crcma.org.br/noticias/i-corrida-da-contabilidade-do-maranhao-tem-nova-data-evento-sera-realizado-em-02-de-novembro",
-      "sourceName": "CRC-MA",
+      "sourceUrl": "https://crcma.org.br/noticias/i-corrida-da-contabilidade-do-maranhao-e-adiada-para-2027",
+      "sourceName": "CRCMA",
       "publishedAt": "2026-08-11",
-      "confidence": "Anúncio oficial · inscrições a divulgar",
-      "notes": "Prova do Conselho Regional de Contabilidade, adiada de 19/09 para 02/11. Tem caminhada. O CRC-MA ainda não divulgou o link de inscrição.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "confidence": "Nota oficial do organizador (CRCMA, 09/10/2026)",
+      "notes": "O CRCMA adiou a I Corrida da Contabilidade, prevista para 02/11/2026, para 2027; a nova data ainda não foi definida e será divulgada nos canais oficiais. A nota não fala de reembolso.",
+      "prize": null,
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "sao-pedro-agua-branca-2026",
@@ -797,9 +797,13 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Vagas esgotadas (limite técnico atingido), segundo a SA Crono. Largada às 6h na Igreja Nossa Senhora das Graças.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "6 km geral masc. e fem.: R$ 500, R$ 300 e R$ 200 + troféu aos 3 primeiros; troféus por faixa etária. Os 3 km são recreativos (só medalha)."
+      },
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "lupo-sport-2026-sao-luis",
@@ -1731,9 +1735,13 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Inscrições encerradas em 12/10. Inscrição solidária com 2 kg de alimentos.",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "5 e 10 km comunidade: troféu + R$ 500, R$ 300 e R$ 200 aos 3 primeiros (masc. e fem.); 4º e 5º com troféu + voucher Lupo Sport."
+      },
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "sesc-2026-caxias",
@@ -1779,9 +1787,13 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Corrida e caminhada de 5 km, R$ 120 (R$ 99 para sócios SBP), kids R$ 80, kit família R$ 170. Mais a taxa do site.",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Troféus aos 3 primeiros gerais dos 5 km (masc. e fem.) e da categoria PCD, sem premiação em dinheiro."
+      },
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "blue-wave-2026-sao-luis",
@@ -1832,9 +1844,13 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada dos 10 km às 5h45; 3 e 5 km às 6h. 2º lote: R$ 90 comunidade, R$ 60 alunos da UEMA, doação de 1 kg de alimento. Kit em 10 e 11/12.",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 700,
+        "summary": "5 e 10 km comunidade: troféu + R$ 700, R$ 500 e R$ 300 aos 3 primeiros (masc. e fem.); troféus nas categorias UEMA e PCD."
+      },
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "edufor-2027-sao-luis",
@@ -1858,9 +1874,13 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Comunidade R$ 130; idoso e PcD R$ 65. Kit em 28 e 29/01 na Faculdade Edufor.",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Troféus aos 3 primeiros gerais dos 5 e 10 km e PCD (masc. e fem.); medalhas por faixa etária, sem premiação em dinheiro."
+      },
+      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "pib-run-2026-rosario",
@@ -2258,12 +2278,20 @@
   ],
   "changes": [
     {
+      "id": "5c55b068-2816-4f87-9485-2e8c90b3700b",
+      "eventId": "contabilidade-2026-sao-luis",
+      "version": "[\"2026-11-02\",[5,10],\"Local a confirmar\",null,null,\"Adiada\",null]",
+      "kind": "Alteração importante",
+      "at": "2026-10-15T11:31:38.796Z",
+      "notifiedAt": "2026-10-15T11:32:12.156Z"
+    },
+    {
       "id": "e8082d14-203f-477d-bcd1-e8d64794679f",
       "eventId": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
       "version": "[\"2026-11-20\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
       "kind": "Nova prova",
       "at": "2026-10-14T23:57:03.900Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-15T11:32:12.156Z"
     },
     {
       "id": "3f2b841e-7884-4fa9-b39d-eb1e1e6ee114",
@@ -2271,7 +2299,7 @@
       "version": "[\"2026-10-24\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-10-14T20:44:16.663Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-15T11:32:12.156Z"
     },
     {
       "id": "fb4573b8-5ac6-4b2c-a6f0-69c60a035871",
@@ -3154,7 +3182,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-14T23:57:03.900Z",
+  "lastChecked": "2026-10-15T11:31:38.796Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
