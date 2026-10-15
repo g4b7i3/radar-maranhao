@@ -14,6 +14,13 @@
   [headers.values]
     Cache-Control = "no-cache"
 
+# Calendário: o iPhone abre "Adicionar ao Calendário" e a agenda assinada busca a versão nova.
+[[headers]]
+  for = "/calendario/*"
+  [headers.values]
+    Content-Type = "text/calendar; charset=utf-8"
+    Cache-Control = "public, max-age=1800"
+
 # O service worker e o manifesto nunca ficam presos em cache, para o app se atualizar sozinho.
 [[headers]]
   for = "/sw.js"

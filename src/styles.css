@@ -691,3 +691,11 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .alti-eixo { display: flex; justify-content: space-between; font-size: .75rem; opacity: .7; margin-top: 2px; }
 .alti p { margin: 8px 0 0; font-size: .875rem; }
 .alti a { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: .875rem; font-weight: 700; color: var(--sub); }
+
+/* Assinar a agenda no calendário */
+.sheet.assinar h2 { margin: 4px 40px 10px 0; font-size: 1.5rem; line-height: 1.15; }
+.sheet.assinar p { margin: 0; color: var(--ink); }
+.assinar-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.assinar-btns .btn { width: 100%; }
+.assinar-passos { margin: 16px 0 0; padding-left: 20px; color: var(--muted); font-size: .9375rem; display: grid; gap: 6px; }
+.assinar-extra { display: flex; flex-direction: column; align-items: flex-start; margin-top: 12px; }

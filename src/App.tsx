@@ -7,6 +7,7 @@ import { useTema } from './tema';
 import ClimaLargada, { ClimaHero, SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
 import Altimetria, { SeloSubida } from './Altimetria';
+import AssinarAgenda from './Calendario';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -343,7 +344,7 @@ export default function App() {
               {filtersOn && tab === 'agenda' && <button className="btn text" onClick={clearFilters}><RotateCcw size={15} aria-hidden="true" />Limpar filtros</button>}
               {filtered.some(e => e.date) && (tab === 'salvas'
                 ? <><button className="btn outline" onClick={copyAgendaLink} data-umami-event="Copiar link da agenda"><Link2 size={15} aria-hidden="true" />Copiar link da minha agenda</button><button className="btn solid" onClick={() => exportCalendar(filtered)} data-umami-event="Exportar minha agenda"><Download size={15} aria-hidden="true" />Exportar minha agenda</button></>
-                : <button className="btn text" onClick={() => exportCalendar(filtered)} data-umami-event="Exportar agenda filtrada"><Download size={15} aria-hidden="true" />Exportar para o calendário</button>)}
+                : <AssinarAgenda onExportar={() => exportCalendar(filtered)} filtradas={filtersOn ? filtered.filter(e => e.date).length : null} />)}
             </div>
           </div>
 
@@ -549,7 +550,9 @@ function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCa
             : <p className="fine">Ainda sem link oficial confirmado.</p>}
           <button className="btn outline" onClick={onSave} aria-pressed={saved} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva' : 'Salvar'}</button>
           {n != null && n >= 0 && !card && <button className="btn outline euvou-btn" onClick={() => setCard(true)} data-umami-event="Card Eu vou: abriu" data-umami-event-prova={e.name}><PartyPopper size={16} aria-hidden="true" />Eu vou! Card pro story</button>}
-          {e.date && <button className="btn outline" onClick={onCalendar} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>}
+          {e.date && (n != null && n >= -45
+            ? <a className="btn outline" href={`/calendario/${e.id}.ics`} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</a>
+            : <button className="btn outline" onClick={onCalendar} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>)}
         </div>
         {card && <EuVou e={e} onClose={() => setCard(false)} />}
         <a className="source" href={e.sourceUrl} target="_blank" rel="noopener noreferrer">Fonte: {e.sourceName}<ExternalLink size={13} aria-hidden="true" /></a>

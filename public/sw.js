@@ -22,7 +22,8 @@ async function networkFirst(request, cacheName, fallbackUrl) {
   const cache = await caches.open(cacheName);
   try {
     const fresh = await fetch(request);
-    if (fresh.ok) cache.put(fallbackUrl || request, fresh.clone());
+    // só guarda como página inicial quando é ela mesma (não as páginas de cidade)
+    if (fresh.ok && (!fallbackUrl || new URL(request.url).pathname === fallbackUrl)) cache.put(fallbackUrl || request, fresh.clone());
     return fresh;
   } catch {
     return (await cache.match(fallbackUrl || request, { ignoreSearch: true })) || Response.error();
@@ -43,6 +44,7 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith('/calendario/')) return; // arquivos de calendário vão direto pro aparelho
 
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request, SHELL, '/'));
