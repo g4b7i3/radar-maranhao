@@ -4,7 +4,8 @@
 // ("corridas em Imperatriz 2026"). O site principal continua igual.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 
-const SITE = 'https://radarcorridas.netlify.app';
+// Endereço oficial (o radarcorridas.netlify.app continua funcionando igual para quem instalou o app)
+const SITE = 'https://radarcorridasma.com.br';
 const DIST = 'dist';
 if (!existsSync(DIST)) { console.error('Rode depois do vite build (pasta dist não existe).'); process.exit(1); }
 

@@ -119,3 +119,10 @@ Outros comandos:
 - A gravação pela internet (`POST /api/radar`) deixou de existir. Só quem tem acesso ao repositório do GitHub muda a agenda, o que resolve o problema de segurança que a versão anterior apontava.
 - A agenda, o histórico de novidades e o controle de avisos foram mantidos (9 provas e 3 novidades em 14 de outubro de 2026).
 - A regra que juntava provas com o mesmo link foi corrigida: provas diferentes que usam o mesmo site de inscrição não são mais confundidas.
+
+## Endereços do site
+
+- **Oficial:** https://radarcorridasma.com.br (domínio no Registro.br, apontado para o Netlify: registro A `75.2.60.5` e CNAME `www` → `radarcorridas.netlify.app`).
+- **Antigo, que continua funcionando:** https://radarcorridas.netlify.app — não tem redirecionamento de propósito, para quem instalou o app por ele continuar recebendo tudo. As páginas dizem ao Google que o endereço oficial é o .com.br.
+- O domínio vence uma vez por ano: renove no Registro.br, senão o .com.br sai do ar (o netlify.app continua).
+

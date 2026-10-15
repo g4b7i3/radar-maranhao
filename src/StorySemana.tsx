@@ -4,7 +4,7 @@ import type { Race, State } from './lib';
 import { AZUL, FONTE, SIMBOLO, caber, fonte, type Ctx } from './EuVou';
 
 // Story "Provas da semana" (1080×1920), montado na hora com a agenda atual.
-// Abra radarcorridas.netlify.app/?story=semana, baixe e poste. Sem servidor, sem custo.
+// Abra radarcorridasma.com.br/?story=semana (ou pelo radarcorridas.netlify.app), baixe e poste. Sem servidor, sem custo.
 
 const W = 1080, H = 1920, M = 80;
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
