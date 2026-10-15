@@ -553,7 +553,7 @@ function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCa
           <button className="btn outline" onClick={onSave} aria-pressed={saved} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva' : 'Salvar'}</button>
           {n != null && n >= 0 && !card && <button className="btn outline euvou-btn" onClick={() => setCard(true)} data-umami-event="Card Eu vou: abriu" data-umami-event-prova={e.name}><PartyPopper size={16} aria-hidden="true" />Eu vou! Card pro story</button>}
           {e.date && (n != null && n >= -45
-            ? <a className="btn outline" href={linkProva(e)} target={detect().android ? '_blank' : undefined} rel="noopener" data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário e alarme</a>
+            ? <a className="btn outline" href={linkProva(e)} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário e alarme</a>
             : <button className="btn outline" onClick={onCalendar} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>)}
         </div>
         {e.date && n != null && n >= 0 && <p className="fine dica-alarme">{dicaAlarme()}</p>}
