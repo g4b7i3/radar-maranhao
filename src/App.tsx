@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal } from 'lucide-react';
+import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
 import { detect } from './install';
@@ -81,6 +81,12 @@ export default function App() {
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [onlyPrize, setOnlyPrize] = useState(false);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false); // no celular os filtros ficam recolhidos
+  // dica "use os Filtros" até a pessoa abrir os filtros pela primeira vez neste aparelho
+  const [filtrosVistos, setFiltrosVistos] = useState(() => { try { return localStorage.getItem('radar-filtros-visto') === '1'; } catch { return false; } });
+  function alternarFiltros() {
+    setFiltrosAbertos(!filtrosAbertos);
+    if (!filtrosVistos) { setFiltrosVistos(true); try { localStorage.setItem('radar-filtros-visto', '1'); } catch { /* */ } }
+  }
   const [showPast, setShowPast] = useState(false);
   const [favorites, setFavorites] = useState<string[]>(() => load('radar-favorites', []));
   const [seen, setSeen] = useState<string[]>(() => load('radar-seen', []));
@@ -275,10 +281,16 @@ export default function App() {
                 <Search size={18} aria-hidden="true" />
                 <input type="search" placeholder="Buscar prova, cidade, local ou mês" value={query} onChange={e => setQuery(e.target.value)} aria-label="Buscar prova, cidade, local ou mês" />
               </label>
-              <button className="filtros-btn" onClick={() => setFiltrosAbertos(!filtrosAbertos)} aria-expanded={filtrosAbertos} aria-controls="filtros-painel">
+              <button className={filtrosVistos ? 'filtros-btn' : 'filtros-btn chamando'} onClick={alternarFiltros} aria-expanded={filtrosAbertos} aria-controls="filtros-painel">
                 <SlidersHorizontal size={18} aria-hidden="true" />Filtros{filtrosAtivos > 0 && <span className="filtros-n" aria-label={`${filtrosAtivos} ligados`}>{filtrosAtivos}</span>}
               </button>
               </div>
+              {!filtrosVistos && !filtrosAbertos && (
+                <button className="filtros-dica" onClick={alternarFiltros}>
+                  <span>Toque em <b>Filtros</b> para achar sua prova por <b>cidade</b>, <b>distância</b> e <b>mês</b></span>
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </button>
+              )}
               <div className="filter-row" id="filtros-painel">
                 <div className="seg" role="group" aria-label="Modalidade">
                   {(['Todas', 'Rua', 'Trail'] as const).map(m => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)}>{m === 'Todas' ? 'Todas' : m === 'Rua' ? 'Rua' : 'Trail'}</button>)}
