@@ -6,7 +6,11 @@ export type Race = {
   confidence: string; notes: string; verifiedAt?: string; firstSeenAt?: string;
   /** null = premiação ainda não conferida */
   prize?: { kind: 'dinheiro' | 'trofeu' | 'sem'; top: number | null; summary: string } | null;
+  /** null = percurso ainda não conferido */
+  elevation?: { level: Subida; gain: number | null; km: number | null; profile: number[] | null; routeUrl: string | null; summary: string } | null;
 };
+export type Subida = 'plano' | 'poucas' | 'varias' | 'muitas';
+export const SUBIDA: Record<Subida, string> = { plano: 'Plano', poucas: 'Poucas subidas', varias: 'Algumas subidas', muitas: 'Muitas subidas' };
 export type Change = { id: string; eventId: string; kind: string; at: string; notifiedAt: string | null };
 export type State = { events: Race[]; changes: Change[]; lastChecked: string; monitoring: boolean; scheduleLabel: string | null };
 

@@ -8,7 +8,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { readState, writeState, applyUpdate, slug } from './radar-lib.mjs';
 
 const SIMULAR = process.argv.includes('--simular');
-const KEYS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize'];
+const KEYS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize', 'elevation'];
 const ler = f => existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : null;
 const iso = dmy => { const m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(dmy || ''); return m ? `${m[3]}-${m[2]}-${m[1]}` : null; };
 const PEQ = new Set(['de', 'da', 'do', 'das', 'dos', 'e', 'em', 'a', 'o', 'na', 'no', 'com', 'para']);

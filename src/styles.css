@@ -674,3 +674,20 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .ct-tamanho .btn { flex-shrink: 0; }
 
 .ct-dica { margin: -4px 0 0; font-size: .8125rem; }
+
+/* Altimetria */
+.s-plano { --sub: var(--cobalt); --sub-bg: var(--cobalt-tint); }
+.s-poucas { --sub: var(--open); --sub-bg: var(--open-bg); }
+.s-varias { --sub: var(--warn); --sub-bg: var(--warn-bg); }
+.s-muitas { --sub: var(--bad); --sub-bg: var(--bad-bg); }
+.tag.subida { display: inline-flex; align-items: center; gap: 4px; background: var(--sub-bg); color: var(--sub); }
+.alti { margin-top: 12px; padding: 14px 16px; border-radius: 14px; background: var(--sub-bg); color: var(--ink); }
+.alti-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.alti-nivel { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; color: var(--sub); }
+.alti-num { font-size: .875rem; font-variant-numeric: tabular-nums; }
+.alti-graf { display: block; width: 100%; height: 84px; margin-top: 10px; }
+.alti-graf polygon { fill: var(--sub); opacity: .18; }
+.alti-graf polyline { fill: none; stroke: var(--sub); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.alti-eixo { display: flex; justify-content: space-between; font-size: .75rem; opacity: .7; margin-top: 2px; }
+.alti p { margin: 8px 0 0; font-size: .875rem; }
+.alti a { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: .875rem; font-weight: 700; color: var(--sub); }

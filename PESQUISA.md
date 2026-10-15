@@ -100,6 +100,7 @@ Pesquise São Luís, a Grande Ilha (São José de Ribamar, Paço do Lumiar, Rapo
 - `officialUrl`: só se for página do organizador ou da plataforma de inscrição. Calendário de terceiros vai em `sourceUrl`.
 - `publishedAt`: data real do anúncio, quando encontrada. Não use a data da pesquisa.
 - `prize` (premiação, opcional): deixe de fora ou `null` se não conferiu. Veja a seção 4.1.
+- `elevation` (altimetria, opcional): deixe de fora ou `null` se não conferiu. Veja a seção 4.2.
 
 ### 4.1. Premiação (preencher aos poucos, até 10 provas por dia)
 
@@ -113,6 +114,19 @@ Todo dia, depois da pesquisa normal, pegue **até 10 provas futuras com `prize` 
 - Não achou o regulamento ou ele não fala de premiação: **deixe `null`** (tenta de novo em outro dia). Nunca deduza premiação de provas parecidas ou de edições passadas.
 
 Para registrar, mande a prova inteira com o mesmo `id` na lista do `npm run atualizar`. Premiação não gera aviso de novidade sozinha. A coleta automática nunca apaga uma premiação já pesquisada.
+
+### 4.2. Altimetria (preencher aos poucos, até 10 provas por dia)
+
+O site mostra um selo ("Plano", "Poucas subidas", "Algumas subidas" ou "Muitas subidas") no card da prova e, na ficha, o gráfico de altimetria com a subida acumulada e o link do percurso.
+
+Todo dia, junto com a premiação, pegue **até 10 provas futuras com `elevation` null**, das mais próximas para as mais distantes, e procure o **percurso oficial**: regulamento, página da inscrição, site do organizador, link de GPX, rota do Strava, Garmin Connect, Wikiloc ou Google Maps (My Maps).
+
+1. **Achou um GPX** (arquivo ou link https que baixa o .gpx): rode `node scripts/altimetria.mjs <link-do-gpx> [link-da-página-do-percurso]`. Ele imprime o `elevation` pronto (nível, subida, km, gráfico). Copie para a prova. Se souber um detalhe útil do percurso (ex.: "subida da ponte no km 3 e no km 8"), acrescente no fim do `summary`. Use o GPX da distância mais longa da prova e diga isso no `summary` se houver mais de uma.
+2. **Achou a subida acumulada escrita** (ex.: rota pública do Strava mostrando "Ganho de elevação 85 m", ou regulamento com a altimetria): `"elevation": { "gain": 85, "km": 10, "profile": null, "routeUrl": "<link>", "summary": "Rota oficial no Strava." }` — o nível é calculado sozinho pela subida por km.
+3. **Só tem imagem do percurso ou o regulamento descreve o terreno** (ex.: "percurso plano pela Litorânea"): `"elevation": { "level": "plano", "gain": null, "km": null, "profile": null, "routeUrl": "<link da imagem ou da página>", "summary": "Regulamento: percurso plano pela Avenida Litorânea." }`. Só use isso quando a fonte oficial disser o tipo de terreno; nunca deduza pela cidade ou pela edição passada.
+4. **Não achou o percurso:** deixe `null` (tenta de novo em outro dia). Organizadores costumam publicar o percurso na semana da prova, então vale repetir as provas dos próximos 10 dias.
+
+Níveis pela subida acumulada por km: menos de 5 m/km = plano; 5 a 12 = poucas subidas; 12 a 25 = algumas subidas; 25 ou mais = muitas subidas. Altimetria não gera aviso de novidade e a coleta automática nunca apaga uma altimetria já pesquisada.
 
 ## 5. Aplicar
 

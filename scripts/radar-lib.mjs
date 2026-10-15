@@ -7,9 +7,12 @@ export const DATA_FILE = fileURLToPath(new URL('../public/data/radar.json', impo
 
 // Campos que, quando mudam, geram um aviso de "Alteração importante".
 export const SIGNIFICANT = ['date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl'];
-const FIELDS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize'];
+const FIELDS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize', 'elevation'];
 // Premiação: null = ainda não conferida; 'dinheiro' (com o maior valor em top); 'trofeu' (troféu/brinde, sem dinheiro); 'sem' (conferida: só medalha de participação)
 export const PRIZE_KINDS = ['dinheiro', 'trofeu', 'sem'];
+// Altimetria: null = percurso ainda não conferido. Nível pela subida acumulada por km.
+export const ELEVATION_LEVELS = ['plano', 'poucas', 'varias', 'muitas'];
+export const nivelSubida = (gain, km) => { const r = gain / km; return r < 5 ? 'plano' : r < 12 ? 'poucas' : r < 25 ? 'varias' : 'muitas'; };
 const STATUSES = ['Abertas', 'Em breve', 'Consultar', 'Encerradas', 'Esgotadas', 'Cancelada', 'Adiada'];
 
 export const signature = e => JSON.stringify(SIGNIFICANT.map(k => e[k] ?? null));
@@ -38,6 +41,20 @@ export function validateEvent(e) {
     if (p.kind === 'dinheiro' && p.top == null) throw Error(`${who}: premiação em dinheiro precisa do maior valor em prize.top`);
     e = { ...e, prize: { kind: p.kind, top: p.kind === 'dinheiro' ? p.top : null, summary: p.summary.trim() } };
   }
+  if (e.elevation != null) {
+    const a = e.elevation;
+    if (typeof a !== 'object') throw Error(`${who}: elevation deve ser um objeto (ou null se o percurso ainda não foi conferido)`);
+    const num = (v, max) => v == null || (typeof v === 'number' && v >= 0 && v <= max);
+    if (!num(a.gain, 20000)) throw Error(`${who}: elevation.gain é a subida acumulada em metros (número) ou null`);
+    if (!num(a.km, 1000) || a.km === 0) throw Error(`${who}: elevation.km é a distância do percurso medido (número) ou null`);
+    if (a.profile != null && (!Array.isArray(a.profile) || a.profile.length < 2 || a.profile.length > 120 || a.profile.some(v => typeof v !== 'number' || v < -100 || v > 3000)))
+      throw Error(`${who}: elevation.profile é uma lista de 2 a 120 altitudes em metros (use scripts/altimetria.mjs) ou null`);
+    if (a.routeUrl != null && new URL(a.routeUrl).protocol !== 'https:') throw Error(`${who}: elevation.routeUrl precisa ser um link https`);
+    if (typeof a.summary !== 'string' || !a.summary.trim() || a.summary.length > 300) throw Error(`${who}: elevation.summary precisa de um texto curto (até 300 caracteres)`);
+    const level = a.gain != null && a.km ? nivelSubida(a.gain, a.km) : a.level;
+    if (!ELEVATION_LEVELS.includes(level)) throw Error(`${who}: elevation.level deve ser um de ${ELEVATION_LEVELS.join(', ')} (ou informe gain e km)`);
+    e = { ...e, elevation: { level, gain: a.gain == null ? null : Math.round(a.gain), km: a.km ?? null, profile: a.profile?.map(v => Math.round(v)) ?? null, routeUrl: a.routeUrl ?? null, summary: a.summary.trim() } };
+  }
   return Object.fromEntries(FIELDS.map(k => [k, e[k] ?? null]));
 }
 
@@ -55,6 +72,7 @@ export function applyUpdate(state, events, now) {
     if (old) e.id = old.id;
     // Quem não informa a premiação (ex.: coleta automática) não apaga a que já foi pesquisada.
     if (input.prize === undefined && old) e.prize = old.prize ?? null;
+    if (input.elevation === undefined && old) e.elevation = old.elevation ?? null;
     const record = { ...e, verifiedAt: now, firstSeenAt: old?.firstSeenAt ?? now };
     const version = signature(record);
     if (old) next.events[next.events.findIndex(x => x.id === old.id)] = record; else next.events.push(record);

@@ -6,6 +6,7 @@ import { detect } from './install';
 import { useTema } from './tema';
 import ClimaLargada, { ClimaHero, SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
+import Altimetria, { SeloSubida } from './Altimetria';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -363,6 +364,7 @@ export default function App() {
                             <span className="dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d}k</span>) : <span>distâncias a confirmar</span>}</span>
                             <StatusTag e={e} />
                             <SeloClima c={previsoes[e.id]} />
+                            <SeloSubida e={e} />
                             {hasCashPrize(e) && <span className="tag prize" title={e.prize!.summary}><Banknote size={13} aria-hidden="true" />{money(e.prize!.top!)}</span>}
                             {isSingleSource(e) && <span className="tag single" title="Encontrada em uma só fonte. Confirme com a organização.">Fonte única</span>}
                             {dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}
@@ -527,6 +529,7 @@ function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCa
         </div>
         <div className="sheet-dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d} km</span>) : <span>Distâncias a confirmar</span>}</div>
         <ClimaLargada e={e} c={clima} />
+        <Altimetria e={e} />
         <dl className="facts">
           <div><dt>Inscrições</dt><dd><StatusTag e={e} />{dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}</dd></div>
           {e.prize && e.prize.kind !== 'sem' && <div><dt>Premiação</dt><dd className="prize-dd">{e.prize.kind === 'dinheiro' && <Banknote size={16} aria-hidden="true" />}{e.prize.summary}</dd></div>}
