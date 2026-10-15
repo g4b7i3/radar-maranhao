@@ -83,6 +83,8 @@ export default function App() {
   const [filtrosAbertos, setFiltrosAbertos] = useState(false); // no celular os filtros ficam recolhidos
   // dica "use os Filtros" até a pessoa abrir os filtros pela primeira vez neste aparelho
   const [filtrosVistos, setFiltrosVistos] = useState(() => { try { return localStorage.getItem('radar-filtros-visto') === '1'; } catch { return false; } });
+  // Contador: qual filtro as pessoas usam (para decidir atalhos depois)
+  function rastrear(nome: string, valor?: string) { try { (window as unknown as { umami?: { track: (n: string, d?: object) => void } }).umami?.track(nome, valor ? { valor } : undefined); } catch { /* contador fora do ar não atrapalha */ } }
   function alternarFiltros() {
     setFiltrosAbertos(!filtrosAbertos);
     if (!filtrosVistos) { setFiltrosVistos(true); try { localStorage.setItem('radar-filtros-visto', '1'); } catch { /* */ } }
@@ -148,6 +150,14 @@ export default function App() {
     const t = setTimeout(() => { try { (window as unknown as { umami?: { track: (n: string, d?: object) => void } }).umami?.track('Aba aberta', { aba: nomes[tab] ?? tab }); } catch { /* contador fora do ar não atrapalha */ } }, 1500);
     return () => clearTimeout(t);
   }, [tab]);
+  // busca: registra o que foi procurado (só o texto, sem nada da pessoa), depois que ela para de digitar
+  useEffect(() => {
+    const termo = query.trim().toLowerCase();
+    if (termo.length < 3) return;
+    const t = setTimeout(() => rastrear('Busca', termo.slice(0, 40)), 1500);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(''), 4000); return () => clearTimeout(t); }, [toast]);
 
   const events = data?.events ?? [];
@@ -293,26 +303,26 @@ export default function App() {
               )}
               <div className="filter-row" id="filtros-painel">
                 <div className="seg" role="group" aria-label="Modalidade">
-                  {(['Todas', 'Rua', 'Trail'] as const).map(m => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)}>{m === 'Todas' ? 'Todas' : m === 'Rua' ? 'Rua' : 'Trail'}</button>)}
+                  {(['Todas', 'Rua', 'Trail'] as const).map(m => <button key={m} aria-pressed={mode === m} onClick={() => { setMode(m); if (m !== 'Todas' && m !== mode) rastrear('Filtro: modalidade', m); }}>{m === 'Todas' ? 'Todas' : m === 'Rua' ? 'Rua' : 'Trail'}</button>)}
                 </div>
                 <div className="chips" role="group" aria-label="Distância">
-                  {distances.map(d => <button key={d} className="chip" aria-pressed={dist === d} onClick={() => setDist(dist === d ? null : d)}>{d} km</button>)}
+                  {distances.map(d => <button key={d} className="chip" aria-pressed={dist === d} onClick={() => { setDist(dist === d ? null : d); if (dist !== d) rastrear('Filtro: distância', `${d} km`); }}>{d} km</button>)}
                 </div>
-                <select value={city} onChange={e => setCity(e.target.value)} aria-label="Cidade">
+                <select value={city} onChange={e => { setCity(e.target.value); if (e.target.value !== 'Todas') rastrear('Filtro: cidade', e.target.value); }} aria-label="Cidade">
                   <option value="Todas">Todas as cidades</option>
                   {cities.map(c => <option key={c}>{c}</option>)}
                 </select>
-                <select value={year} onChange={e => setYear(e.target.value)} aria-label="Ano">
+                <select value={year} onChange={e => { setYear(e.target.value); if (e.target.value !== 'Todos') rastrear('Filtro: ano', e.target.value); }} aria-label="Ano">
                   <option value="Todos">Todos os anos</option>
                   {years.map(y => <option key={y}>{y}</option>)}
                 </select>
-                <select value={month} onChange={e => setMonth(e.target.value)} aria-label="Mês">
+                <select value={month} onChange={e => { setMonth(e.target.value); if (e.target.value !== 'Todos') rastrear('Filtro: mês', MESES[Number(e.target.value) - 1]); }} aria-label="Mês">
                   <option value="Todos">Todos os meses</option>
                   {months.map(m => <option key={m} value={m}>{MESES[Number(m) - 1]}</option>)}
                 </select>
                 <button className="chip prize-chip" aria-pressed={onlyPrize} onClick={() => setOnlyPrize(!onlyPrize)} data-umami-event={onlyPrize ? undefined : 'Filtro: premiação em dinheiro'}><Banknote size={16} aria-hidden="true" />Premiação em dinheiro{prizeCount > 0 && <small>{prizeCount}</small>}</button>
-                <label className="check"><input type="checkbox" checked={onlyOpen} onChange={e => setOnlyOpen(e.target.checked)} />Só inscrições abertas</label>
-                <label className="check"><input type="checkbox" checked={showPast} onChange={e => setShowPast(e.target.checked)} />Mostrar realizadas</label>
+                <label className="check"><input type="checkbox" checked={onlyOpen} onChange={e => { setOnlyOpen(e.target.checked); if (e.target.checked) rastrear('Filtro: só inscrições abertas'); }} />Só inscrições abertas</label>
+                <label className="check"><input type="checkbox" checked={showPast} onChange={e => { setShowPast(e.target.checked); if (e.target.checked) rastrear('Filtro: mostrar realizadas'); }} />Mostrar realizadas</label>
               </div>
             </div>
           )}

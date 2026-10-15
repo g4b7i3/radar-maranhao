@@ -596,19 +596,16 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
   .filters:not(.aberto) .filter-row { display: none; }
   .filters.aberto .filter-row { animation: fx-in .25s cubic-bezier(.2,.8,.2,1); }
 
-  /* destaque do topo mais compacto no celular */
-  .hero-inner { padding-top: 18px; padding-bottom: 16px; gap: 4px; }
-  .clock-n { font-size: 4.25rem; }
-  .clock-unit { font-size: 1rem; }
-  .live { margin-bottom: 8px; font-size: .8125rem; padding: 5px 11px 5px 9px; }
-  .hero-kicker { margin-bottom: 4px; font-size: .9375rem; }
-  .hero h1 { font-size: clamp(2rem, 9.5vw, 2.75rem); }
-  .hero-when { margin-top: 10px; font-size: 1.0625rem; }
-  .hero-where { font-size: .9375rem; }
-  .hero-clima { margin-top: 8px; font-size: .875rem; padding: 6px 12px 6px 10px; }
-  .hero-actions { margin-top: 14px; }
-  .hero-sum { flex-direction: row; flex-wrap: wrap; gap: 2px 14px; padding-top: 10px; padding-bottom: 12px; font-size: .875rem; }
-  .hero-sum strong { font-size: .9375rem; }
+  /* destaque do topo no celular: um pouco mais baixo que o original, mas com respiro */
+  .hero-inner { padding-top: 28px; padding-bottom: 24px; gap: 8px; }
+  .clock-n { font-size: 4.75rem; }
+  .live { margin-bottom: 12px; }
+  .hero-kicker { margin-bottom: 8px; }
+  .hero h1 { font-size: clamp(2.25rem, 10.5vw, 3rem); }
+  .hero-when { margin-top: 14px; }
+  .hero-clima { margin-top: 12px; }
+  .hero-actions { margin-top: 20px; }
+  .hero-sum { padding-top: 14px; padding-bottom: 18px; gap: 6px 28px; }
 }
 
 /* Celular: "91 provas" e "Exportar para o calendário" na mesma linha (na agenda geral) */
