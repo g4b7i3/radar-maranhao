@@ -672,3 +672,5 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .ct-tamanho { display: flex; align-items: flex-end; gap: 10px; }
 .ct-tamanho .euvou-ajuste { flex: 1; }
 .ct-tamanho .btn { flex-shrink: 0; }
+
+.ct-dica { margin: -4px 0 0; font-size: .8125rem; }

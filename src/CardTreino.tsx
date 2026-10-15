@@ -42,6 +42,19 @@ export function fmtTempo(s: number) {
 }
 const tempoCampo = (s: number) => { s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}` : `${m}:${String(x).padStart(2, '0')}`; };
 
+/** Máscara: a pessoa digita só números e os dois-pontos entram sozinhos (415 → 4:15; 1013 → 10:13) */
+export function mascaraRitmo(t: string) {
+  const d = t.replace(/\D/g, '').slice(0, 4);
+  return d.length <= 2 ? d : `${d.slice(0, -2)}:${d.slice(-2)}`;
+}
+/** 3000 → 30:00; 12500 → 1:25:00; 325 → 3:25 (os dois últimos são sempre os segundos) */
+export function mascaraTempo(t: string) {
+  const d = t.replace(/\D/g, '').replace(/^0+(?=\d{3})/, '').slice(0, 6);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, -2)}:${d.slice(-2)}`;
+  return `${d.slice(0, -4)}:${d.slice(-4, -2)}:${d.slice(-2)}`;
+}
+
 // ---------- desenho ----------
 function percurso(ctx: Ctx, cx: number, cy: number, larg: number, semente: number, cor: string) {
   // traço estilizado e suave (não é o percurso real): muda conforme a distância
@@ -198,11 +211,21 @@ export default function CardTreino() {
   const ritmoS = manda === 'ritmo' ? R : K && T ? T / K : null;
   const tempoS = manda === 'tempo' ? T : K && R ? K * R : null;
   const ok = !!(K && ritmoS && tempoS && ritmoS >= 120 && ritmoS <= 1800);
-  useEffect(() => {
-    if (manda === 'ritmo' && K && R) setTempo(tempoCampo(K * R));
-    if (manda === 'tempo' && K && T) setRitmo(fmtRitmo(T / K));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [km, ritmo, tempo, manda]);
+  // recalcula o outro campo na mesma hora em que a pessoa digita (sem ficar um passo atrasado)
+  function mudarKm(v: string) {
+    setKm(v);
+    const k = lerKm(v); if (!k) return;
+    if (manda === 'ritmo' && R) setTempo(tempoCampo(k * R));
+    if (manda === 'tempo' && T) setRitmo(fmtRitmo(T / k));
+  }
+  function mudarRitmo(v: string) {
+    const m = mascaraRitmo(v); setManda('ritmo'); setRitmo(m);
+    const r = lerRitmo(m); if (K && r && r >= 120 && r <= 1800) setTempo(tempoCampo(K * r));
+  }
+  function mudarTempo(v: string) {
+    const m = mascaraTempo(v); setManda('tempo'); setTempo(m);
+    const t = lerTempo(m); if (K && t) { const r = t / K; if (r >= 120 && r <= 1800) setRitmo(fmtRitmo(r)); }
+  }
 
   useEffect(() => {
     if (!ok) return;
@@ -267,11 +290,12 @@ export default function CardTreino() {
       <p className="fine">Coloque a distância e o ritmo (ou o tempo): o resto a gente calcula. Depois é só postar no story.</p>
 
       <div className="ct-campos">
-        <label>Distância (km)<input inputMode="decimal" value={km} onChange={e => setKm(e.target.value)} placeholder="4,5" /></label>
-        <label>Ritmo (min/km)<input inputMode="numeric" value={ritmo} onChange={e => { setManda('ritmo'); setRitmo(e.target.value); }} placeholder="7:13" /></label>
-        <label>Tempo<input inputMode="numeric" value={tempo} onChange={e => { setManda('tempo'); setTempo(e.target.value); }} placeholder="32:31" /></label>
+        <label>Distância (km)<input inputMode="decimal" value={km} onChange={e => mudarKm(e.target.value)} placeholder="4,5" /></label>
+        <label>Ritmo (min/km)<input inputMode="numeric" pattern="[0-9:]*" value={ritmo} onChange={e => mudarRitmo(e.target.value)} placeholder="7:13" /></label>
+        <label>Tempo<input inputMode="numeric" pattern="[0-9:]*" value={tempo} onChange={e => mudarTempo(e.target.value)} placeholder="32:31" /></label>
       </div>
-      {!ok && <p className="ct-erro" role="alert">Confira os números: distância em km (ex.: 4,5), ritmo como 7:13 e tempo como 32:31 ou 1:05:20.</p>}
+      <p className="fine ct-dica">Digite só os números: os dois-pontos entram sozinhos (<b>713</b> vira <b>7:13</b>; <b>3231</b> vira <b>32:31</b>; <b>10520</b> vira <b>1:05:20</b>).</p>
+      {!ok && <p className="ct-erro" role="alert">Confira os números: a distância em km (ex.: 4,5) e o ritmo entre 2:00 e 30:00 por km.</p>}
 
       <p className="euvou-pergunta">Zona do treino</p>
       <div className="chips ct-zonas" role="group" aria-label="Zona do treino">
