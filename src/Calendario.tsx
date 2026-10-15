@@ -3,6 +3,9 @@ import { createPortal } from 'react-dom';
 import { CalendarPlus, Check, Copy, Download, X } from 'lucide-react';
 import { detect } from './install';
 
+/** No iPhone, webcal:// abre o app Calendário direto, em qualquer navegador (Safari, Chrome, Instagram…). */
+export const linkCalendario = (caminho: string) => detect().ios ? `webcal://${location.host}${caminho}` : caminho;
+
 /** Assinar a agenda completa no calendário do celular. Atualiza sozinha quando entra prova nova. */
 export default function AssinarAgenda({ onExportar, filtradas }: { onExportar: () => void; filtradas: number | null }) {
   const [aberto, setAberto] = useState(false);

@@ -3,54 +3,9 @@
 //  - dist/calendario/radar.ics: agenda completa para ASSINAR (iPhone, Google Agenda, Outlook). Atualiza sozinha.
 //  - dist/calendario/<id>.ics: uma prova, com lembrete na véspera (o iPhone abre "Adicionar ao Calendário").
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { cal, vevent } from './ics.mjs';
 
-const SITE = 'https://radarcorridasma.com.br';
 const { events } = JSON.parse(await readFile('public/data/radar.json', 'utf8'));
-const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
-function lugar(e) {
-  const city = e.city.trim(); let rest = e.location.trim();
-  const n = norm(rest), c = norm(city);
-  if (n === c) rest = '';
-  else if (n.startsWith(c) && /^\s*[·,–-]/.test(rest.slice(city.length))) rest = rest.slice(city.length).replace(/^[\s·,–-]+/, '');
-  else if (n.endsWith(c) && /[·,–-]\s*$/.test(rest.slice(0, rest.length - city.length))) rest = rest.slice(0, rest.length - city.length).replace(/[\s·,–-]+$/, '');
-  return (rest ? `${rest}, ${city}` : city) + ' - MA';
-}
-// mesma regra do site (src/Clima.tsx)
-function largada(e) {
-  const r = /largada[^0-9]{0,12}(\d{1,2})\s*h\s*(\d{2})?/i.exec(e.notes || '');
-  if (r) { const h = +r[1], m = +(r[2] || 0); if (h < 24 && m < 60) return { h, m }; }
-  return null;
-}
-const esc = s => s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
-// dobra linhas longas (limite de 75 bytes do formato)
-const fold = l => { const out = []; let cur = '', bytes = 0; for (const ch of l) { const b = Buffer.byteLength(ch); if (bytes + b > 73) { out.push(cur); cur = ' '; bytes = 1; } cur += ch; bytes += b; } out.push(cur); return out.join('\r\n'); };
-const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-const ymd = d => d.toISOString().slice(0, 10).replace(/-/g, '');
-const utc = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-
-function vevent(e, lembrete) {
-  const L = largada(e);
-  const quando = [];
-  if (L) {
-    const ini = new Date(`${e.date}T${String(L.h).padStart(2, '0')}:${String(L.m).padStart(2, '0')}:00-03:00`);
-    quando.push(`DTSTART:${utc(ini)}`, `DTEND:${utc(new Date(+ini + 3 * 3600e3))}`);
-  } else {
-    const fim = new Date(e.date + 'T12:00:00Z'); fim.setUTCDate(fim.getUTCDate() + 1);
-    quando.push(`DTSTART;VALUE=DATE:${e.date.replace(/-/g, '')}`, `DTEND;VALUE=DATE:${ymd(fim)}`);
-  }
-  const desc = [
-    e.distances.length ? 'Distâncias: ' + e.distances.map(d => String(d).replace('.', ',') + ' km').join(', ') : null,
-    'Inscrições: ' + e.status, e.notes, e.officialUrl ? 'Inscrição: ' + e.officialUrl : null,
-    `Ver no Radar: ${SITE}/?prova=${e.id}`,
-  ].filter(Boolean).join('\n');
-  // véspera às 18h (dia inteiro: 6h antes da meia-noite; com horário: 12h antes da largada)
-  const alarme = lembrete ? ['BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc('Amanhã: ' + e.name)}`, `TRIGGER:-PT${L ? 12 : 6}H`, 'END:VALARM'] : [];
-  return ['BEGIN:VEVENT', `UID:${e.id}@radarcorridasma.com.br`, `DTSTAMP:${stamp}`, ...quando,
-    `SUMMARY:${esc('🏃 ' + e.name)}`, `LOCATION:${esc(lugar(e))}`, `DESCRIPTION:${esc(desc)}`,
-    `URL:${e.officialUrl || `${SITE}/?prova=${e.id}`}`, ...(e.status === 'Cancelada' ? ['STATUS:CANCELLED'] : []), ...alarme, 'END:VEVENT'];
-}
-const cal = (linhas, extra = []) => ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Radar Corridas Maranhao//PT-BR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', ...extra, ...linhas, 'END:VCALENDAR'].map(fold).join('\r\n') + '\r\n';
 
 const limite = new Date(Date.now() - 45 * 864e5).toISOString().slice(0, 10);
 const comData = events.filter(e => e.date && e.date >= limite).sort((a, b) => a.date.localeCompare(b.date));
@@ -59,5 +14,5 @@ await writeFile('dist/calendario/radar.ics', cal(comData.flatMap(e => vevent(e, 
   'X-WR-CALNAME:Corridas no Maranhão', 'X-WR-CALDESC:Agenda de corridas de rua e trail do Maranhão - Radar Corridas Maranhão',
   'X-WR-TIMEZONE:America/Fortaleza', 'REFRESH-INTERVAL;VALUE=DURATION:PT12H', 'X-PUBLISHED-TTL:PT12H',
 ]));
-for (const e of comData) await writeFile(`dist/calendario/${e.id}.ics`, cal(vevent(e, true)));
+for (const e of comData) await writeFile(`dist/calendario/${e.id}.ics`, cal(vevent(e, true), [`X-WR-CALNAME:Corrida: ${e.name.replace(/[,;]/g, ' ')}`]));
 console.log(`Calendário: agenda completa com ${comData.length} provas + ${comData.length} arquivos individuais.`);
