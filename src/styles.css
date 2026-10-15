@@ -507,3 +507,8 @@ html:has(.install) .insta-fab { bottom: calc(28px + var(--install-h, 0px) + env(
 .euvou-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .euvou-actions .btn { flex: 1 1 180px; justify-content: center; }
 .euvou .fine { margin: 0; }
+
+.euvou-foto { display: flex; gap: 8px; align-items: center; }
+.euvou-foto .btn { flex: 1; justify-content: center; }
+.euvou-ajuste { display: flex; flex-direction: column; gap: 6px; font-size: .875rem; color: var(--muted); }
+.euvou-ajuste input { width: 100%; min-height: 44px; accent-color: var(--cobalt); }
