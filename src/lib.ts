@@ -4,6 +4,8 @@ export type Race = {
   registrationOpen: string | null; registrationClose: string | null; status: string;
   officialUrl: string | null; sourceUrl: string; sourceName: string; publishedAt: string | null;
   confidence: string; notes: string; verifiedAt?: string; firstSeenAt?: string;
+  /** null = premiação ainda não conferida */
+  prize?: { kind: 'dinheiro' | 'trofeu' | 'sem'; top: number | null; summary: string } | null;
 };
 export type Change = { id: string; eventId: string; kind: string; at: string; notifiedAt: string | null };
 export type State = { events: Race[]; changes: Change[]; lastChecked: string; monitoring: boolean; scheduleLabel: string | null };
@@ -114,3 +116,6 @@ export const isSingleSource = (e: Pick<Race, 'confidence'>) => /fonte única|ins
 /** Link de WhatsApp do desenvolvedor, com mensagem já escrita. */
 export const WHATSAPP = '5598984334880';
 export const whatsappLink = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+
+export const hasCashPrize = (e: Race) => e.prize?.kind === 'dinheiro';
+export const money = (n: number) => 'R$ ' + n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });

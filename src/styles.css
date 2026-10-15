@@ -14,6 +14,7 @@
   --open-bg: #e1f4ea;
   --warn: #a35f00;
   --warn-bg: #fdf0d9;
+  --cash: #0f7a43; --cash-ink: #ffffff;
   --bad: #b42318;
   --bad-bg: #fde7e5;
   --done: #6b7486;
@@ -30,7 +31,7 @@
   :root:not([data-theme="light"]) {
     --paper: #0d1324; --surface: #141c31; --ink: #e8ecf6; --muted: #9aa5bd; --line: #26314b;
     --cobalt: #3d5fe0; --cobalt-deep: #18307f; --cobalt-tint: #1c2850;
-    --open: #4cc795; --open-bg: #12352a; --warn: #f0b552; --warn-bg: #3a2a0d;
+    --open: #4cc795; --open-bg: #12352a; --warn: #f0b552; --warn-bg: #3a2a0d; --cash: #3cc77f; --cash-ink: #05230f;
     --bad: #f2867c; --bad-bg: #3d1916; --done: #8d97ab; --done-bg: #1d2538;
     color-scheme: dark;
   }
@@ -210,6 +211,13 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 .tag.done { background: var(--done-bg); color: var(--done); }
 .tag.bad { background: var(--bad-bg); color: var(--bad); }
 .tag.single { background: var(--warn-bg); color: var(--warn); }
+.tag.prize { display: inline-flex; align-items: center; gap: 4px; background: var(--cash); color: var(--cash-ink); font-variant-numeric: tabular-nums; }
+.prize-chip { display: inline-flex; align-items: center; gap: 7px; }
+.prize-chip small { font-size: .75rem; font-weight: 700; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; display: inline-grid; place-items: center; background: var(--cash); color: var(--cash-ink); }
+.prize-chip[aria-pressed="true"] { background: var(--cash); border-color: var(--cash); color: var(--cash-ink); }
+.prize-chip[aria-pressed="true"] small { background: var(--cash-ink); color: var(--cash); }
+.prize-dd { display: flex; align-items: flex-start; gap: 6px; }
+.prize-dd svg { flex-shrink: 0; margin-top: 2px; color: var(--cash); }
 
 /* falta alguma corrida? */
 .missing { margin-top: 40px; display: flex; align-items: center; justify-content: space-between; gap: 16px 28px; flex-wrap: wrap; padding: 22px 24px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--cobalt); border-radius: 14px; }

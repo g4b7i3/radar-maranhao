@@ -99,6 +99,20 @@ Pesquise São Luís, a Grande Ilha (São José de Ribamar, Paço do Lumiar, Rapo
 - `status`: `Abertas`, `Em breve`, `Consultar`, `Encerradas`, `Esgotadas`, `Cancelada` ou `Adiada`.
 - `officialUrl`: só se for página do organizador ou da plataforma de inscrição. Calendário de terceiros vai em `sourceUrl`.
 - `publishedAt`: data real do anúncio, quando encontrada. Não use a data da pesquisa.
+- `prize` (premiação, opcional): deixe de fora ou `null` se não conferiu. Veja a seção 4.1.
+
+### 4.1. Premiação (preencher aos poucos, até 10 provas por dia)
+
+O site tem o botão "Premiação em dinheiro" e mostra um selo verde com o maior prêmio (ex.: "R$ 500") no card da prova.
+
+Todo dia, depois da pesquisa normal, pegue **até 10 provas futuras com `prize` null**, das mais próximas para as mais distantes, e procure a premiação no **regulamento** (PDF ou página da prova), na página da plataforma de inscrição (a Crono Esportes e a SA Crono costumam ter a seção "PREMIAÇÃO") ou no post oficial do organizador. Registre assim:
+
+- Dinheiro: `"prize": { "kind": "dinheiro", "top": 500, "summary": "R$ 500, R$ 300 e R$ 200 para os 3 primeiros dos 5 km, masculino e feminino." }` — `top` é o **maior valor em reais** (número).
+- Troféu ou brinde, sem dinheiro: `"prize": { "kind": "trofeu", "top": null, "summary": "Troféus do 1º ao 5º lugar geral nos 5 e 10 km." }`
+- Regulamento conferido e sem premiação (só medalha de participação): `"prize": { "kind": "sem", "top": null, "summary": "Só medalha de participação." }`
+- Não achou o regulamento ou ele não fala de premiação: **deixe `null`** (tenta de novo em outro dia). Nunca deduza premiação de provas parecidas ou de edições passadas.
+
+Para registrar, mande a prova inteira com o mesmo `id` na lista do `npm run atualizar`. Premiação não gera aviso de novidade sozinha. A coleta automática nunca apaga uma premiação já pesquisada.
 
 ## 5. Aplicar
 

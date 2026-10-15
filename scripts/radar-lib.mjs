@@ -7,7 +7,9 @@ export const DATA_FILE = fileURLToPath(new URL('../public/data/radar.json', impo
 
 // Campos que, quando mudam, geram um aviso de "Alteração importante".
 export const SIGNIFICANT = ['date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl'];
-const FIELDS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes'];
+const FIELDS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize'];
+// Premiação: null = ainda não conferida; 'dinheiro' (com o maior valor em top); 'trofeu' (troféu/brinde, sem dinheiro); 'sem' (conferida: só medalha de participação)
+export const PRIZE_KINDS = ['dinheiro', 'trofeu', 'sem'];
 const STATUSES = ['Abertas', 'Em breve', 'Consultar', 'Encerradas', 'Esgotadas', 'Cancelada', 'Adiada'];
 
 export const signature = e => JSON.stringify(SIGNIFICANT.map(k => e[k] ?? null));
@@ -28,6 +30,14 @@ export function validateEvent(e) {
       throw Error(`${who}: data inválida em "${k}" (use AAAA-MM-DD ou null)`);
   for (const k of ['sourceUrl', 'officialUrl'])
     if (e[k] != null && new URL(e[k]).protocol !== 'https:') throw Error(`${who}: "${k}" precisa ser um link https`);
+  if (e.prize != null) {
+    const p = e.prize;
+    if (typeof p !== 'object' || !PRIZE_KINDS.includes(p.kind)) throw Error(`${who}: prize.kind deve ser um de ${PRIZE_KINDS.join(', ')} (ou prize null se ainda não foi conferido)`);
+    if (typeof p.summary !== 'string' || !p.summary.trim() || p.summary.length > 300) throw Error(`${who}: prize.summary precisa de um texto curto (até 300 caracteres)`);
+    if (p.top != null && (typeof p.top !== 'number' || p.top <= 0 || p.top > 1e6)) throw Error(`${who}: prize.top deve ser o maior prêmio em reais (número) ou null`);
+    if (p.kind === 'dinheiro' && p.top == null) throw Error(`${who}: premiação em dinheiro precisa do maior valor em prize.top`);
+    e = { ...e, prize: { kind: p.kind, top: p.kind === 'dinheiro' ? p.top : null, summary: p.summary.trim() } };
+  }
   return Object.fromEntries(FIELDS.map(k => [k, e[k] ?? null]));
 }
 
@@ -43,6 +53,8 @@ export function applyUpdate(state, events, now) {
       || next.events.find(x => e.officialUrl && x.officialUrl === e.officialUrl && !/^\/(calendario|eventos?)?\/?$/.test(new URL(e.officialUrl).pathname)
            && slug(x.city) === slug(e.city) && x.date && x.date === e.date);
     if (old) e.id = old.id;
+    // Quem não informa a premiação (ex.: coleta automática) não apaga a que já foi pesquisada.
+    if (input.prize === undefined && old) e.prize = old.prize ?? null;
     const record = { ...e, verifiedAt: now, firstSeenAt: old?.firstSeenAt ?? now };
     const version = signature(record);
     if (old) next.events[next.events.findIndex(x => x.id === old.id)] = record; else next.events.push(record);
