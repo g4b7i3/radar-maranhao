@@ -38,7 +38,7 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
   try { await Promise.all([document.fonts.load(`800 100px ${FONTE}`), document.fonts.load(`500 40px ${FONTE}`)]); } catch { /* segue com a fonte do sistema */ }
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d') as Ctx;
-  const M = 90, FOTO_H = 1040;
+  const M = 90, FOTO_H = 1270;
 
   // fundo azul
   const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2449D6'); g.addColorStop(1, '#14278A');
@@ -54,12 +54,12 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
   } else {
     // sem foto: arte do radar no lugar
     ctx.strokeStyle = 'rgba(255,255,255,.14)'; ctx.lineWidth = 2;
-    for (let r = 120; r <= 600; r += 120) { ctx.beginPath(); ctx.arc(W / 2, 560, r, 0, Math.PI * 2); ctx.stroke(); }
-    ctx.beginPath(); ctx.moveTo(W / 2 - 640, 560); ctx.lineTo(W / 2 + 640, 560); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, FOTO_H); ctx.stroke();
+    for (let r = 120; r <= 720; r += 120) { ctx.beginPath(); ctx.arc(W / 2, 640, r, 0, Math.PI * 2); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(W / 2 - 640, 640); ctx.lineTo(W / 2 + 640, 640); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, FOTO_H); ctx.stroke();
     ctx.fillStyle = 'rgba(120,255,170,.16)';
-    ctx.beginPath(); ctx.moveTo(W / 2, 560); ctx.arc(W / 2, 560, 600, -Math.PI * 0.5, -Math.PI * 0.18); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(W / 2, 640); ctx.arc(W / 2, 640, 720, -Math.PI * 0.5, -Math.PI * 0.18); ctx.closePath(); ctx.fill();
     ctx.fillStyle = '#3CE07A'; ctx.shadowColor = '#3CE07A'; ctx.shadowBlur = 30;
-    ctx.beginPath(); ctx.arc(W / 2 + 230, 380, 16, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(W / 2 + 260, 440, 16, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
   }
   // sombra em cima (para a marca) e degradê embaixo (a foto se funde com o azul)
   const top = ctx.createLinearGradient(0, 0, 0, 330); top.addColorStop(0, 'rgba(5,12,40,.55)'); top.addColorStop(1, 'rgba(5,12,40,0)');
@@ -84,23 +84,23 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
   try { ctx.letterSpacing = '0px'; } catch { /* */ }
 
   // EU VOU! (encosta no fim da foto)
-  let y = 1110;
-  const eu = caber(ctx, 'EU VOU!', 800, 210, 140, W - 2 * M, 1, true);
+  let y = 1295;
+  const eu = caber(ctx, 'EU VOU!', 800, 190, 130, W - 2 * M, 1, true);
   ctx.fillText(eu.linhas[0], M - 4, y);
 
   // nome da prova
-  const nome = caber(ctx, e.name, 750, 78, 50, W - 2 * M, 2, true);
-  y += 16;
+  const nome = caber(ctx, e.name, 750, 72, 48, W - 2 * M, 2, true);
+  y += 10;
   for (const l of nome.linhas) { y += nome.px * 1.04; ctx.fillText(l, M, y); }
-  y += 40;
+  y += 30;
 
   // distância + contagem na mesma linha
   let x = M;
   if (dist != null) {
-    fonte(ctx, 800, 76, true);
+    fonte(ctx, 800, 70, true);
     const txt = `${String(dist).replace('.', ',')} KM`; const tw = ctx.measureText(txt).width;
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(x, y, tw + 52, 100, 22); ctx.fill();
-    ctx.fillStyle = AZUL; ctx.fillText(txt, x + 26, y + 78);
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(x, y, tw + 52, 90, 20); ctx.fill();
+    ctx.fillStyle = AZUL; ctx.fillText(txt, x + 26, y + 72);
     x += tw + 52 + 18;
   }
   const n = diasAte(e.date);
@@ -108,11 +108,11 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
     const txt = n === 0 ? 'É HOJE!' : n === 1 ? 'É AMANHÃ!' : `FALTAM ${n} DIAS`;
     fonte(ctx, 800, 46, true); const tw = ctx.measureText(txt).width;
     ctx.fillStyle = 'rgba(5,15,50,.38)'; ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.roundRect(x, y, tw + 96, 100, 50); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#3CE07A'; ctx.beginPath(); ctx.arc(x + 40, y + 50, 10, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.fillText(txt, x + 66, y + 66);
+    ctx.beginPath(); ctx.roundRect(x, y, tw + 96, 90, 45); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#3CE07A'; ctx.beginPath(); ctx.arc(x + 40, y + 45, 10, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.fillText(txt, x + 66, y + 61);
   }
-  y += 100 + 66;
+  y += 90 + 58;
 
   // data, hora e cidade
   const { h, m, informada } = horaLargada(e);
@@ -120,16 +120,16 @@ export async function desenharCard(canvas: HTMLCanvasElement, e: Race, dist: num
   const quando = (e.date ? cap(fmt.long(e.date)) : 'Data a confirmar') + (e.date && informada ? ` · ${h}h${m ? String(m).padStart(2, '0') : ''}` : '');
   ctx.fillStyle = '#fff';
   const q = caber(ctx, quando, 600, 44, 32, W - 2 * M, 1, false);
-  ctx.fillText(q.linhas[0], M, y); y += 56;
+  ctx.fillText(q.linhas[0], M, y); y += 52;
   ctx.globalAlpha = .85; fonte(ctx, 500, 38, false); ctx.fillText(e.city, M, y); ctx.globalAlpha = 1;
 
   // faixa da bandeira e @
-  const fy = Math.max(y + 50, 1600), cores = ['#d52b1e', '#ffffff', '#111111', '#ffffff', '#d52b1e'], fw = (W - 2 * M) / cores.length;
+  const fy = y + 44, cores = ['#d52b1e', '#ffffff', '#111111', '#ffffff', '#d52b1e'], fw = (W - 2 * M) / cores.length;
   cores.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(M + i * fw, fy, fw + 1, 10); });
   ctx.fillStyle = '#fff'; fonte(ctx, 700, 34, false);
-  ctx.fillText('@radarcorridasma', M, fy + 70);
+  ctx.fillText('@radarcorridasma', M, fy + 64);
   ctx.textAlign = 'right'; ctx.globalAlpha = .8; fonte(ctx, 500, 28, false);
-  ctx.fillText('agenda de corridas do MA', W - M, fy + 68); ctx.textAlign = 'left'; ctx.globalAlpha = 1;
+  ctx.fillText('agenda de corridas do MA', W - M, fy + 62); ctx.textAlign = 'left'; ctx.globalAlpha = 1;
 }
 
 export default function EuVou({ e, onClose }: { e: Race; onClose: () => void }) {
