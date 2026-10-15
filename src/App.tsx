@@ -106,6 +106,17 @@ export default function App() {
       })
       .catch(() => setError('A agenda não carregou. Confira sua conexão e recarregue a página.'));
   }, []);
+  // Link direto para uma prova (/?prova=id), usado pelas páginas de cada cidade: abre a ficha da prova.
+  useEffect(() => {
+    if (!data) return;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('prova');
+    if (id == null) return;
+    params.delete('prova');
+    window.history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params : '') + window.location.hash);
+    const e = data.events.find(x => x.id === id);
+    if (e) { setTab('agenda'); setSelected(e); } else setToast('Essa prova não está mais na agenda.');
+  }, [data]);
   // Link de agenda compartilhada: /?agenda=id1,id2 soma as provas à agenda deste aparelho.
   useEffect(() => {
     if (!data) return;
@@ -137,6 +148,11 @@ export default function App() {
   const upcoming = useMemo(() => events.filter(e => !e.date || e.date >= t).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, t]);
   const next = upcoming.find(e => e.date && status(e) !== 'Cancelada');
   const previsoes = useClimas(upcoming);
+  const cidadesFuturas = useMemo(() => {
+    const m = new Map<string, number>();
+    upcoming.filter(e => e.date && e.status !== 'Cancelada').forEach(e => m.set(e.city, (m.get(e.city) ?? 0) + 1));
+    return [...m].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
+  }, [upcoming]);
   const unread = (data?.changes ?? []).filter(c => !seen.includes(c.id)).length;
   const cities = useMemo(() => [...new Set(events.map(e => e.city))].sort((a, b) => a === 'São Luís' ? -1 : b === 'São Luís' ? 1 : a.localeCompare(b)), [events]);
   // Só as distâncias mais procuradas viram botão; as outras continuam na ficha de cada prova.
@@ -333,6 +349,12 @@ export default function App() {
           ))}
 
           {tab === 'agenda' && <MissingRace />}
+          {tab === 'agenda' && cidadesFuturas.length > 0 && (
+            <nav className="por-cidade" aria-labelledby="por-cidade-titulo">
+              <h2 id="por-cidade-titulo">Corridas por cidade</h2>
+              <ul>{cidadesFuturas.map(([c, n]) => <li key={c}><a href={`/corridas/${slugCidade(c)}/`}>{c}<small>{n}</small></a></li>)}</ul>
+            </nav>
+          )}
 
           {filtered.length === 0 && (
             <div className="empty">
@@ -433,6 +455,9 @@ export default function App() {
     </>
   );
 }
+
+/** Mesmo formato de endereço das páginas geradas em scripts/paginas-cidades.mjs */
+const slugCidade = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
   const ref = useRef<HTMLDivElement>(null);

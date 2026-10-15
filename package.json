@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/validar.mjs && tsc --noEmit && vite build",
+    "build": "node scripts/validar.mjs && tsc --noEmit && vite build && node scripts/paginas-cidades.mjs",
     "preview": "vite preview",
     "validar": "node scripts/validar.mjs",
     "atualizar": "node scripts/atualizar.mjs",

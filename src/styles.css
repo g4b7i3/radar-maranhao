@@ -497,7 +497,6 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
   display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 18px 6px 14px; border: 0; border-radius: 999px;
   background: var(--cobalt); color: #fff; font: inherit; text-align: left; cursor: pointer;
   box-shadow: 0 6px 18px rgba(10,25,80,.3); transition: transform .2s ease, box-shadow .2s ease;
-  animation: fx-in .5s 1s cubic-bezier(.2,.8,.2,1) backwards;
 }
 .euvou-fab span { display: flex; flex-direction: column; line-height: 1.15; }
 .euvou-fab b { font-size: 1rem; font-weight: 800; }
@@ -548,7 +547,7 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .euvou-pergunta { margin: 0 0 -4px; font-weight: 600; font-size: .9375rem; }
 
 /* X discreto para fechar o botão do card */
-.euvou-wrap { position: relative; }
+.euvou-wrap { position: relative; animation: fx-in .5s 1s cubic-bezier(.2,.8,.2,1) backwards; } /* botão e X entram juntos */
 .euvou-fechar {
   position: absolute; top: -14px; left: -14px; z-index: 1; width: 34px; height: 34px; padding: 0; border: 0; background: transparent;
   display: grid; place-items: center; cursor: pointer;
@@ -577,3 +576,11 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .clima.tipico { background: transparent; border: 1.5px dashed var(--line); }
 .clima.tipico.quente { border-color: var(--warn); }
 .clima .clima-obs { margin-top: 6px; font-size: .75rem; color: var(--muted); }
+
+/* Links das páginas por cidade (no fim da agenda) */
+.por-cidade { margin: 32px 0 8px; }
+.por-cidade h2 { font-size: 1.125rem; margin: 0 0 12px; }
+.por-cidade ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.por-cidade a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .9375rem; }
+.por-cidade a:hover { border-color: var(--cobalt); }
+.por-cidade small { color: var(--muted); font-weight: 500; }
