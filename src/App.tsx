@@ -86,6 +86,7 @@ export default function App() {
   // "Eu vou!": a pessoa escolhe a prova na agenda e a ficha já abre com o card do story pronto
   const [escolhendo, setEscolhendo] = useState(false);
   const [abrirCard, setAbrirCard] = useState(false);
+  const [semFabCard, setSemFabCard] = useState(false); // fechado pelo X: volta na próxima visita
   function abrirProva(e: Race) { setAbrirCard(escolhendo); setEscolhendo(false); setSelected(e); }
   function comecarEuVou() {
     setTab('agenda'); setEscolhendo(true);
@@ -412,7 +413,10 @@ export default function App() {
       )}
 
       <div className="fabs">
-        {!escolhendo && <button className="euvou-fab" onClick={comecarEuVou} title="Monte um card com a sua foto e a prova que você vai correr, para postar nos stories" data-umami-event="Eu vou: botão flutuante"><PartyPopper size={18} aria-hidden="true" /><span><b>Eu vou!</b><small>Card pro seu story</small></span></button>}
+        {!escolhendo && !semFabCard && <div className="euvou-wrap">
+          <button className="euvou-fechar" onClick={() => setSemFabCard(true)} aria-label="Fechar o botão do card" data-umami-event="Eu vou: fechou o botão"><X size={12} strokeWidth={3} aria-hidden="true" /></button>
+          <button className="euvou-fab" onClick={comecarEuVou} title="Monte um card com a sua foto e a prova que você vai correr, para postar nos stories" data-umami-event="Eu vou: botão flutuante"><PartyPopper size={18} aria-hidden="true" /><span><b>Eu vou!</b><small>Card pro seu story</small></span></button>
+        </div>}
       <a className="insta-fab" data-umami-event="Instagram (botão flutuante)" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
       </div>
       <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
