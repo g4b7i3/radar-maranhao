@@ -556,7 +556,7 @@ function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCa
             ? <a className="btn outline" href={linkProva(e)} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário e alarme</a>
             : <button className="btn outline" onClick={onCalendar} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>)}
         </div>
-        {e.date && n != null && n >= 0 && <p className="fine dica-alarme">{dicaAlarme()}</p>}
+        {e.date && n != null && n >= 0 && dicaAlarme() && <p className="fine dica-alarme">{dicaAlarme()}</p>}
         {card && <EuVou e={e} onClose={() => setCard(false)} />}
         <a className="source" href={e.sourceUrl} target="_blank" rel="noopener noreferrer">Fonte: {e.sourceName}<ExternalLink size={13} aria-hidden="true" /></a>
         <a className="report" data-umami-event="WhatsApp: corrigir prova" data-umami-event-prova={e.name} href={whatsappLink(`Olá! Sobre a prova "${e.name}" (${e.city}, ${fmt.short(e.date)}) no Radar Corridas Maranhão: `)} target="_blank" rel="noopener noreferrer"><MessageCircle size={15} aria-hidden="true" />Alguma informação errada? Avise pelo WhatsApp</a>

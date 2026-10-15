@@ -19,8 +19,7 @@ export function linkProva(e: Race) {
 export function dicaAlarme() {
   const p = detect();
   if (p.ios && p.iosBrowser !== 'safari') return 'No Calendário, desligue "Remover alertas" antes de tocar em Adicionar, para receber os lembretes (véspera às 18h e no dia da prova).';
-  if (p.android) return 'Toque em Abrir quando o arquivo baixar e escolha o Calendário. Vem com lembrete na véspera às 18h e outro no dia da prova.';
-  return 'Com lembrete na véspera às 18h e outro no dia da prova.';
+  return null;
 }
 
 /** Assinar a agenda completa no calendário do celular. Atualiza sozinha quando entra prova nova. */
