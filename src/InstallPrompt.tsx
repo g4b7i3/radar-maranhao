@@ -71,6 +71,7 @@ export default function InstallPrompt({ blocked, onInstalled }: { blocked: boole
   }
   async function install() {
     const r = await promptNative();
+    try { (window as unknown as { umami?: { track: (n: string, d?: object) => void } }).umami?.track('Instalar app', { resultado: r === 'accepted' ? 'instalou' : 'recusou' }); } catch { /* contador fora do ar não atrapalha */ }
     if (r === 'accepted') { setOpen(false); onInstalled(); }
     else if (r === 'dismissed') dismiss();
   }

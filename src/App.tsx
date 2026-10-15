@@ -39,7 +39,7 @@ function MissingRace() {
         <h2 id="missing-title">Falta alguma corrida?</h2>
         <p>Viu uma prova no Maranhão que não está aqui? Mande o nome, a cidade e a data, ou o link do anúncio. Ela entra na agenda assim que for conferida.</p>
       </div>
-      <a className="btn whats" href={whatsappLink('Olá! Tem uma corrida que não está no Radar Corridas Maranhão: ')} target="_blank" rel="noopener noreferrer">
+      <a className="btn whats" data-umami-event="WhatsApp: falta corrida" href={whatsappLink('Olá! Tem uma corrida que não está no Radar Corridas Maranhão: ')} target="_blank" rel="noopener noreferrer">
         <MessageCircle size={18} aria-hidden="true" />Avisar pelo WhatsApp
       </a>
     </section>
@@ -111,6 +111,12 @@ export default function App() {
     });
     setTab('salvas');
   }, [data]);
+  // Contador: registra cada aba aberta (as visitas ao site o Umami já conta sozinho)
+  useEffect(() => {
+    const nomes: Record<string, string> = { agenda: 'Agenda', novidades: 'Novidades', salvas: 'Minha agenda', sobre: 'Sobre' };
+    const t = setTimeout(() => { try { (window as unknown as { umami?: { track: (n: string, d?: object) => void } }).umami?.track('Aba aberta', { aba: nomes[tab] ?? tab }); } catch { /* contador fora do ar não atrapalha */ } }, 1500);
+    return () => clearTimeout(t);
+  }, [tab]);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(''), 4000); return () => clearTimeout(t); }, [toast]);
 
   const events = data?.events ?? [];
@@ -251,7 +257,7 @@ export default function App() {
                   <option value="Todos">Todos os meses</option>
                   {months.map(m => <option key={m} value={m}>{MESES[Number(m) - 1]}</option>)}
                 </select>
-                <button className="chip prize-chip" aria-pressed={onlyPrize} onClick={() => setOnlyPrize(!onlyPrize)}><Banknote size={16} aria-hidden="true" />Premiação em dinheiro{prizeCount > 0 && <small>{prizeCount}</small>}</button>
+                <button className="chip prize-chip" aria-pressed={onlyPrize} onClick={() => setOnlyPrize(!onlyPrize)} data-umami-event={onlyPrize ? undefined : 'Filtro: premiação em dinheiro'}><Banknote size={16} aria-hidden="true" />Premiação em dinheiro{prizeCount > 0 && <small>{prizeCount}</small>}</button>
                 <label className="check"><input type="checkbox" checked={onlyOpen} onChange={e => setOnlyOpen(e.target.checked)} />Só inscrições abertas</label>
                 <label className="check"><input type="checkbox" checked={showPast} onChange={e => setShowPast(e.target.checked)} />Mostrar realizadas</label>
               </div>
@@ -263,8 +269,8 @@ export default function App() {
             <div>
               {filtersOn && tab === 'agenda' && <button className="btn text" onClick={clearFilters}><RotateCcw size={15} aria-hidden="true" />Limpar filtros</button>}
               {filtered.some(e => e.date) && (tab === 'salvas'
-                ? <><button className="btn outline" onClick={copyAgendaLink}><Link2 size={15} aria-hidden="true" />Copiar link da minha agenda</button><button className="btn solid" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar minha agenda</button></>
-                : <button className="btn text" onClick={() => exportCalendar(filtered)}><Download size={15} aria-hidden="true" />Exportar para o calendário</button>)}
+                ? <><button className="btn outline" onClick={copyAgendaLink} data-umami-event="Copiar link da agenda"><Link2 size={15} aria-hidden="true" />Copiar link da minha agenda</button><button className="btn solid" onClick={() => exportCalendar(filtered)} data-umami-event="Exportar minha agenda"><Download size={15} aria-hidden="true" />Exportar minha agenda</button></>
+                : <button className="btn text" onClick={() => exportCalendar(filtered)} data-umami-event="Exportar agenda filtrada"><Download size={15} aria-hidden="true" />Exportar para o calendário</button>)}
             </div>
           </div>
 
@@ -276,7 +282,7 @@ export default function App() {
                   const dl = deadline(e); const past = status(e) === 'Realizada'; const saved = favorites.includes(e.id);
                   return (
                     <li key={e.id} className={past ? 'race past' : 'race'}>
-                      <button className="race-main" onClick={() => setSelected(e)}>
+                      <button className="race-main" onClick={() => setSelected(e)} data-umami-event="Abrir prova" data-umami-event-prova={e.name}>
                         <span className="race-date">{e.date ? <><b>{fmt.day(e.date)}</b><small>{fmt.weekdayShort(e.date)}</small></> : <b className="tbd">?</b>}</span>
                         <span className="race-body">
                           <span className="race-name">{e.name}</span>
@@ -290,7 +296,7 @@ export default function App() {
                           </span>
                         </span>
                       </button>
-                      <button className={saved ? 'save on' : 'save'} onClick={() => toggleSave(e)} aria-pressed={saved} aria-label={(saved ? 'Remover das salvas: ' : 'Salvar: ') + e.name}>
+                      <button className={saved ? 'save on' : 'save'} onClick={() => toggleSave(e)} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name} aria-pressed={saved} aria-label={(saved ? 'Remover das salvas: ' : 'Salvar: ') + e.name}>
                         <Bookmark size={20} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />
                       </button>
                     </li>
@@ -388,7 +394,7 @@ export default function App() {
         </footer>
       )}
 
-      <a className="insta-fab" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
+      <a className="insta-fab" data-umami-event="Instagram (botão flutuante)" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
       <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
       {selected && <Sheet race={selected} saved={favorites.includes(selected.id)} onClose={() => setSelected(null)} onSave={() => toggleSave(selected)} onCalendar={() => exportCalendar([selected])} />}
       {toast && <div className="toast" role="status"><Check size={16} aria-hidden="true" />{toast}</div>}
@@ -442,13 +448,13 @@ function Sheet({ race: e, saved, onClose, onSave, onCalendar }: { race: Race; sa
         </div>
         <div className="sheet-actions">
           {e.officialUrl
-            ? <a className="btn solid" href={e.officialUrl} target="_blank" rel="noopener noreferrer">Abrir página oficial<ExternalLink size={15} aria-hidden="true" /></a>
+            ? <a className="btn solid" href={e.officialUrl} target="_blank" rel="noopener noreferrer" data-umami-event="Página oficial (inscrição)" data-umami-event-prova={e.name}>Abrir página oficial<ExternalLink size={15} aria-hidden="true" /></a>
             : <p className="fine">Ainda sem link oficial confirmado.</p>}
-          <button className="btn outline" onClick={onSave} aria-pressed={saved}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva' : 'Salvar'}</button>
-          {e.date && <button className="btn outline" onClick={onCalendar}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>}
+          <button className="btn outline" onClick={onSave} aria-pressed={saved} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva' : 'Salvar'}</button>
+          {e.date && <button className="btn outline" onClick={onCalendar} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário</button>}
         </div>
         <a className="source" href={e.sourceUrl} target="_blank" rel="noopener noreferrer">Fonte: {e.sourceName}<ExternalLink size={13} aria-hidden="true" /></a>
-        <a className="report" href={whatsappLink(`Olá! Sobre a prova "${e.name}" (${e.city}, ${fmt.short(e.date)}) no Radar Corridas Maranhão: `)} target="_blank" rel="noopener noreferrer"><MessageCircle size={15} aria-hidden="true" />Alguma informação errada? Avise pelo WhatsApp</a>
+        <a className="report" data-umami-event="WhatsApp: corrigir prova" data-umami-event-prova={e.name} href={whatsappLink(`Olá! Sobre a prova "${e.name}" (${e.city}, ${fmt.short(e.date)}) no Radar Corridas Maranhão: `)} target="_blank" rel="noopener noreferrer"><MessageCircle size={15} aria-hidden="true" />Alguma informação errada? Avise pelo WhatsApp</a>
       </div>
     </div>
   );
