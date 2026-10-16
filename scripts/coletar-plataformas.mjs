@@ -12,7 +12,7 @@ const MA = /\bMA\b|Maranh[aã]o|S[aã]o Lu[ií]s|Imperatriz|Timon|Caxias|Bacabal
 const FONTES = [
   { id: 'cronoesportes', lista: ['https://www.cronoesportes.com.br/eventos'], prova: /cronoesportes\.com\.br\/evento\/\d+/ },
   { id: 'sacrono', lista: ['https://www.sacrono.com.br/'], prova: /sacrono\.com\.br\/evento\/\d{4}\// },
-  { id: 'centraldacorrida', lista: ['https://centraldacorrida.com.br/', 'https://centraldacorrida.com.br/eventos'], prova: /centraldacorrida\.com\.br\/evento\/[^/?#]+$/ },
+  { id: 'centraldacorrida', lista: ['https://centraldacorrida.com.br/', 'https://centraldacorrida.com.br/eventos'], prova: /centraldacorrida\.com\.br\/evento\/[^/?#]+$/, clicarMA: true },
   // GuardaLugar: sistema de reservas/inscrições usado por organizadores do Maranhão (indicado pelo Vinik em 15/10/2026)
   { id: 'guardalugar', lista: ['https://guardalugar.com/', 'https://guardalugar.com/eventos'], extra: ['https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q'], prova: /guardalugar\.com\/evento\/[A-Za-z0-9_-]{6,}$/ },
   { id: 'topchip', lista: ['https://topchip.com.br/', 'https://topchip.com.br/calendario'], prova: /^https:\/\/(www\.)?topchip\.com\.br\/(?!calendario|resultados|contato|sobre|login|cadastro|minha-conta|termos|politica|eventos?$)[a-z0-9-]{4,}\/?$/ },
@@ -48,7 +48,25 @@ async function coletar(browser, fonte) {
       const { page, api } = await abrir(ctx, url, true);
       const hrefs = await page.$$eval('a[href]', as => as.map(a => a.href.split('#')[0].split('?')[0]));
       hrefs.filter(h => fonte.prova.test(h)).forEach(h => links.add(h));
-      resultado.listas.push({ url, texto: limpa(await page.innerText('body')).slice(0, 40_000) });
+      const textoLista = limpa(await page.innerText('body'));
+      resultado.listas.push({ url, texto: textoLista.slice(0, 40_000) });
+      // Sites em que o cartão da prova não é um link (<a>): clica nos cartões do Maranhão para descobrir o endereço de cada prova.
+      if (fonte.clicarMA) {
+        const L = textoLista.split('\n');
+        const titulos = [...new Set(L.filter((_, i) => /^\d{2}\/\d{2}\/\d{4}/.test(L[i + 1] || '') && /- MA$/i.test((L[i + 2] || '').trim())).map(t => t.trim()))];
+        for (const t of titulos.slice(0, 60)) {
+          if ([...links].some(h => h.includes('#' + t))) continue;
+          try {
+            const alvo = page.getByText(t, { exact: true }).first();
+            await alvo.scrollIntoViewIfNeeded({ timeout: 5000 });
+            await Promise.all([page.waitForURL(u => u.href !== url, { timeout: 15_000 }), alvo.click({ timeout: 5000 })]);
+            const destino = page.url().split('#')[0].split('?')[0];
+            if (destino !== url) links.add(destino);
+            await page.goBack({ waitUntil: 'networkidle', timeout: 30_000 }).catch(() => page.goto(url, { waitUntil: 'networkidle' }));
+            await page.waitForTimeout(800);
+          } catch { /* cartão não clicável: segue */ }
+        }
+      }
       resultado.api.push(...api.slice(0, 20));
       await page.close();
     } catch (e) { resultado.listas.push({ url, erro: String(e).slice(0, 300) }); }

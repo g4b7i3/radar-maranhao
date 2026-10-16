@@ -63,7 +63,9 @@ for (const [arq, fonte] of [['coleta/cronoesportes.json', 'Crono Esportes'], ['c
     const nome = L[i].trim(); const st = (L[i + 3] || '').trim().toLowerCase();
     if (/virtual|desafio .*no seu tempo|movalt/i.test(nome)) continue;
     const status = /esgotad/.test(st) ? 'Esgotadas' : /encerrad/.test(st) ? 'Encerradas' : /em breve/.test(st) ? 'Em breve' : /inscreva|abertas|últimas/.test(st) ? 'Abertas' : 'Consultar';
-    candidatos.push({ fonte: 'Central da Corrida', url: null, nome: titulo(nome.replace(/\s+-\s+[A-ZÁ-Ú/ ]+\/MA$/i, '')), data: iso(m[1]), hora: m[2].replace(':', 'h').replace('h00', 'h'), cidade: cidadeBonita(c[1]), status, completo: false });
+    // link da página da prova, quando a coleta conseguiu abrir o cartão
+    const pag = (d.provas || []).find(p => p.texto && p.texto.toUpperCase().includes(nome.toUpperCase()));
+    candidatos.push({ fonte: 'Central da Corrida', url: pag?.url || null, nome: titulo(nome.replace(/\s+-\s+[A-ZÁ-Ú/ ]+\/MA$/i, '')), data: iso(m[1]), hora: m[2].replace(':', 'h').replace('h00', 'h'), cidade: cidadeBonita(c[1]), status, completo: false });
   }
 }
 
@@ -109,7 +111,7 @@ for (const c of candidatos) {
     if (c.status && c.status !== x.status && !(x.status === 'Abertas' && c.status === 'Consultar')) { x.status = c.status; mudou = true; }
     if (c.fim && c.fim !== x.registrationClose) { x.registrationClose = c.fim; mudou = true; }
     if (c.completo && c.data !== x.date) { x.date = c.data; mudou = true; x.notes = `${x.notes} Data atualizada pela ${c.fonte}.`.trim(); }
-    if (c.completo && (!x.officialUrl || /calendario|centraldacorrida\.com\.br\/?$/.test(x.officialUrl))) { x.officialUrl = c.url; mudou = true; }
+    if (c.url && (!x.officialUrl || /calendario|centraldacorrida\.com\.br\/?$/.test(x.officialUrl))) { x.officialUrl = c.url; mudou = true; }
     if (c.completo && x.distances.length === 0 && c.dist.length) { x.distances = c.dist; mudou = true; }
     if (c.completo && /a confirmar/i.test(x.location) && c.largada) { x.location = c.largada; mudou = true; }
     if (mudou) { entrada.push(x); mudadas.push(`${x.name} (${x.city}, ${x.date}): ${x.status}`); }
