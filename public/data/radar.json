@@ -47,10 +47,11 @@
       "sourceName": "Maranhão Esportes",
       "publishedAt": "2026-09-25",
       "confidence": "Notícia + site oficial",
-      "notes": "Corrida noturna. Inscrições abertas no site oficial. Kit em 23/10 (10h–19h) e 24/10 (10h–15h) na Centauro do Shopping da Ilha. Local de largada informado como São Luís Shopping, ainda a confirmar.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-13T02:25:00Z",
-      "prize": null
+      "notes": "Corrida noturna. Inscrições abertas no site oficial. Kit em 23/10 (10h–19h) e 24/10 (10h–15h) na Centauro do Shopping da Ilha. Local de largada informado como São Luís Shopping, ainda a confirmar. Segundo o Maranhão Esportes, troféus para os três primeiros (masculino e feminino) nas duas distâncias e medalha para quem concluir.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T11:15:29.440Z",
+      "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
       "id": "cro-run-2026-sao-luis",
@@ -177,10 +178,11 @@
       "sourceName": "TJMA · Ascom",
       "publishedAt": "2026-10-06",
       "confidence": "Anúncio oficial · disponibilidade a confirmar",
-      "notes": "Vagas remanescentes reabertas em 07/10/2026 às 13h. Também há caminhada de 3 km. Público externo: R$ 120. O anúncio não informa encerramento; confirme vagas na Brasil Corrida. Concentração às 5h30; largada anunciada às 6h.",
-      "verifiedAt": "2026-10-13T11:02:20.868Z",
-      "firstSeenAt": "2026-10-13T11:02:20.868Z",
-      "prize": null
+      "notes": "Vagas remanescentes reabertas em 07/10/2026 às 13h. Também há caminhada de 3 km. Público externo: R$ 120. O anúncio não informa encerramento; confirme vagas na Brasil Corrida. Concentração às 5h30; largada anunciada às 6h. Segundo o Jornal Pequeno (13/10), haverá troféus e premiação em dinheiro para os três primeiros colocados; valores não divulgados.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T11:15:29.440Z",
+      "firstSeenAt": "2026-10-13T11:02:20.868Z"
     },
     {
       "id": "hotbel-2026-imperatriz",
@@ -205,9 +207,10 @@
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página oficial de inscrição",
-      "notes": "Inscrições até 17/10 ou esgotamento. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento).",
+      "notes": "Inscrições até 17/10 ou esgotamento. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento). O site da Hotbel diz que nesta edição os percursos passam por dentro de Imperatriz; mapa e altimetria ainda não publicados.",
       "prize": null,
-      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "elevation": null,
+      "verifiedAt": "2026-10-16T11:15:29.440Z",
       "firstSeenAt": "2026-10-14T11:06:50.977Z"
     },
     {
@@ -3322,7 +3325,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T10:58:05.494Z",
+  "lastChecked": "2026-10-16T11:15:29.440Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
