@@ -841,6 +841,7 @@
       "modality": "Rua",
       "date": "2026-11-15",
       "distances": [
+        2.5,
         5
       ],
       "location": "Local a confirmar",
@@ -852,10 +853,10 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 6h. Inscrições abertas na Central da Corrida (busque pelo nome da prova).",
+      "notes": "Largada às 6h. Corrida de 5 km, caminhada de 2,5 km e corrida kids, organizada pela Primeira Igreja Batista de Pinheiro. Kits em 13 e 14/11 (9h–11h e 14h–17h) na igreja, no Centro de Pinheiro. Local de largada a confirmar.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -908,10 +909,10 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 6h. Inscrições na Central da Corrida (busque pelo nome da prova).",
+      "notes": "Largada às 6h. Corrida de 4 km (com categoria 60+), em alusão ao Outubro Rosa e Novembro Azul. Vagas limitadas. Local de largada e entrega de kits ainda não divulgados.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1893,7 +1894,10 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-01",
-      "distances": [],
+      "distances": [
+        3,
+        5
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -1903,10 +1907,10 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 6h. Inscrições abertas na Central da Corrida (busque pelo nome da prova).",
+      "notes": "Largada às 6h. Corrida de 5 km e caminhada de 3 km, organizada pela 1ª Igreja Batista em Rosário. Inscrições na Central da Corrida; entrega de kits e local de largada a definir (serão divulgados nas redes da igreja).",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -1917,20 +1921,24 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-06",
-      "distances": [],
+      "distances": [
+        3,
+        5,
+        10
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Adiada",
       "officialUrl": "https://centraldacorrida.com.br/evento/i-corrida-calabriana-",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
-      "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 5h30. Inscrições em breve na Central da Corrida.",
+      "confidence": "Comunicado oficial na plataforma de inscrição (Central da Corrida)",
+      "notes": "A Paróquia São João Calábria adiou a I Corrida Calabriana, que seria em 12/10 na Avenida Metropolitana, porque a avenida não foi liberada e por questões administrativas. A página da Central da Corrida já mostra 06/12/2026 às 5h30, mas o comunicado diz que a nova data ainda será divulgada: confirmar data e local. Inscrições feitas continuam valendo; quem não quiser mais correr pode pedir reembolso no Painel do Atleta da Central da Corrida. Distâncias: 5 e 10 km, mais caminhada livre de 3 km.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -2247,15 +2255,16 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
-      "officialUrl": "https://topchip.com.br/calendario",
+      "officialUrl": "https://topchip.com.br/professoresacailandia",
       "sourceUrl": "https://topchip.com.br/calendario",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip (data ainda prevista); detalhes na página da plataforma.",
-      "verifiedAt": "2026-10-14T20:44:16.663Z",
-      "firstSeenAt": "2026-10-14T20:44:16.663Z",
-      "prize": null
+      "notes": "Sábado, largada às 6h30. A Topchip marca a prova como confirmada, com inscrições pelo Inscrição Fácil (inscricaofacil.com/corridadoprofessor). Distâncias e local de largada ainda não conferidos.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T10:58:05.494Z",
+      "firstSeenAt": "2026-10-14T20:44:16.663Z"
     },
     {
       "id": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
@@ -2265,7 +2274,10 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-20",
-      "distances": [],
+      "distances": [
+        4,
+        8
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -2275,10 +2287,10 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "notes": "Sexta-feira (feriado da Consciência Negra), largada às 5h30. Integra o Festejo do Santuário de Nossa Senhora da Conceição. Percursos de 4 e 8 km. Kits em 17 e 18/11, das 9h às 19h30, na Sala Padre Dehon do Santuário (Av. Getúlio Vargas, 2655, Monte Castelo). Local de largada a confirmar.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T23:57:03.900Z"
     },
     {
@@ -2310,12 +2322,52 @@
   ],
   "changes": [
     {
+      "id": "d1885a89-d23d-43cf-b2c4-eda3e5f67dfe",
+      "eventId": "corrida-dos-professores-2026-acailandia",
+      "version": "[\"2026-10-24\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/professoresacailandia\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T10:58:05.494Z",
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
+    },
+    {
+      "id": "a844dd04-0925-46cd-b365-697c40cfa73b",
+      "eventId": "pinheiro-corre-para-cristo-2026",
+      "version": "[\"2026-11-15\",[2.5,5],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/pinheiro-corre-para-cristo\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T10:58:05.494Z",
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
+    },
+    {
+      "id": "43802c10-b0d0-4a1b-97b2-345886f34bf5",
+      "eventId": "pib-run-2026-rosario",
+      "version": "[\"2026-11-01\",[3,5],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridapibrun2026rosario\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T10:58:05.494Z",
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
+    },
+    {
+      "id": "c54ac058-bb7e-48b6-9df8-96e873d8badd",
+      "eventId": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
+      "version": "[\"2026-11-20\",[4,8],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T10:58:05.494Z",
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
+    },
+    {
+      "id": "d8cc521a-9c64-461d-b558-ecc4dd0b10f9",
+      "eventId": "calabriana-2026-sao-luis",
+      "version": "[\"2026-12-06\",[3,5,10],\"Local a confirmar\",null,null,\"Adiada\",\"https://centraldacorrida.com.br/evento/i-corrida-calabriana-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T10:58:05.494Z",
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
+    },
+    {
       "id": "b00f8d55-0e9a-465f-b1ed-c0dd5bdbfed8",
       "eventId": "calabriana-2026-sao-luis",
       "version": "[\"2026-12-06\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/i-corrida-calabriana-\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T01:34:40.269Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "a74ea5b9-ad79-4a63-8b86-d493ef6366f4",
@@ -2323,7 +2375,7 @@
       "version": "[\"2026-11-20\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T01:34:40.269Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "29925f86-48f5-44f8-a83d-bc61c0faf8ea",
@@ -2331,7 +2383,7 @@
       "version": "[\"2026-11-15\",[4],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/dmrun%E2%80%93etapasaude\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T01:34:40.269Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "368dbdad-1f93-4915-b334-68a601f94ebf",
@@ -2339,7 +2391,7 @@
       "version": "[\"2026-11-15\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/pinheiro-corre-para-cristo\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T01:34:40.269Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "7fa7823f-f393-4cff-a73b-b0f829d23f9b",
@@ -2347,7 +2399,7 @@
       "version": "[\"2026-11-01\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridapibrun2026rosario\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T01:34:40.269Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "4333570d-7105-4a22-b45d-ab25526096b7",
@@ -2355,7 +2407,7 @@
       "version": "[\"2026-10-31\",[5],\"Complexo do Porto do Itaqui\",\"2026-10-13T12:00:00-03:00\",null,\"Abertas\",\"https://centraldacorrida.com.br/evento/4acorridaportoitaqui\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T01:34:40.269Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "a3f98d9a-a90c-4f55-ae0f-c1ecf3ea2fdc",
@@ -2363,7 +2415,7 @@
       "version": "[\"2026-12-12\",[5],\"Parque dos Buritis (percurso na Av. Castelo Branco)\",null,null,\"Abertas\",\"https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q\"]",
       "kind": "Nova prova",
       "at": "2026-10-16T00:09:14.290Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-16T10:58:49.103Z"
     },
     {
       "id": "5c55b068-2816-4f87-9485-2e8c90b3700b",
@@ -3270,7 +3322,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T01:34:40.269Z",
+  "lastChecked": "2026-10-16T10:58:05.494Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
