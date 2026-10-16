@@ -13,7 +13,7 @@ De 2 em 2 horas (6h15 às 20h15) o GitHub Actions (`.github/workflows/coletar-pl
 - `coleta/cronoesportes.json` — Crono Esportes (São Luís, Sesc, UEMA…): lista + página completa de cada prova (data, horário, largada, preços, "INSCRIÇÕES ENCERRADAS", "VAGAS ESGOTADAS").
 - `coleta/sacrono.json` — SA Crono (Caxias, Coelho Neto, Coroatá, Barra do Corda…): lista + página de cada prova.
 - `coleta/centraldacorrida.json` — Central da Corrida: lista nacional com data, cidade e status ("Inscreva-se", "Inscrições abertas", "Em breve", "Inscrições esgotadas"); pegue as linhas "- MA".
-- `coleta/topchip.json` — calendário da Topchip (Imperatriz e região tocantina) até o ano seguinte; pegue as linhas "/ MA".
+- `coleta/topchip.json, coleta/guardalugar.json` — calendário da Topchip (Imperatriz e região tocantina) até o ano seguinte; pegue as linhas "/ MA".
 
 O GitHub já aplica sozinho (`scripts/aplicar-coleta.mjs`) o status e as provas novas dessas plataformas; as novidades dele ficam pendentes de aviso (`npm run marcar-avisados`) — inclua-as no aviso do dia. Revise as provas que ele criou (nome, distâncias, local) e complete o que faltar. Compare com `public/data/radar.json`: prova nova, mudança de data/local/status (abertas → encerradas/esgotadas) entram pelo `npm run atualizar`. Confira `coletadoEm` de cada arquivo; se for de outro dia, a coleta falhou — siga só com a web e avise no resumo final. Ignore provas de outros estados (PI, TO, PA) e desafios virtuais.
 

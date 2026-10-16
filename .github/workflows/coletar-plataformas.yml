@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       fonte:
-        description: "Só uma fonte (cronoesportes, sacrono, centraldacorrida, topchip). Vazio = todas."
+        description: "Só uma fonte (cronoesportes, sacrono, centraldacorrida, topchip, guardalugar). Vazio = todas."
         required: false
 
 permissions:

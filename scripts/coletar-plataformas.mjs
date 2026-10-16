@@ -1,5 +1,5 @@
 // Coleta diária das plataformas de inscrição que só funcionam com JavaScript
-// (Crono Esportes, SA Crono, Central da Corrida, Topchip).
+// (Crono Esportes, SA Crono, Central da Corrida, Topchip, GuardaLugar).
 // Roda no GitHub Actions, que tem navegador e internet. Salva o texto de cada prova em coleta/<plataforma>.json.
 // A pesquisa diária (PESQUISA.md) lê esses arquivos, confere e atualiza a agenda.
 import { chromium } from 'playwright';
@@ -13,6 +13,8 @@ const FONTES = [
   { id: 'cronoesportes', lista: ['https://www.cronoesportes.com.br/eventos'], prova: /cronoesportes\.com\.br\/evento\/\d+/ },
   { id: 'sacrono', lista: ['https://www.sacrono.com.br/'], prova: /sacrono\.com\.br\/evento\/\d{4}\// },
   { id: 'centraldacorrida', lista: ['https://centraldacorrida.com.br/', 'https://centraldacorrida.com.br/eventos'], prova: /centraldacorrida\.com\.br\/evento\/[^/?#]+$/ },
+  // GuardaLugar: sistema de reservas/inscrições usado por organizadores do Maranhão (indicado pelo Vinik em 15/10/2026)
+  { id: 'guardalugar', lista: ['https://guardalugar.com/', 'https://guardalugar.com/eventos'], extra: ['https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q'], prova: /guardalugar\.com\/evento\/[A-Za-z0-9_-]{6,}$/ },
   { id: 'topchip', lista: ['https://topchip.com.br/', 'https://topchip.com.br/calendario'], prova: /^https:\/\/(www\.)?topchip\.com\.br\/(?!calendario|resultados|contato|sobre|login|cadastro|minha-conta|termos|politica|eventos?$)[a-z0-9-]{4,}\/?$/ },
 ];
 
@@ -40,7 +42,7 @@ async function abrir(ctx, url, coletarApi) {
 async function coletar(browser, fonte) {
   const ctx = await browser.newContext({ userAgent: UA, locale: 'pt-BR', timezoneId: 'America/Fortaleza' });
   const resultado = { fonte: fonte.id, listas: [], provas: [], api: [] };
-  const links = new Set();
+  const links = new Set(fonte.extra || []);
   for (const url of fonte.lista) {
     try {
       const { page, api } = await abrir(ctx, url, true);
