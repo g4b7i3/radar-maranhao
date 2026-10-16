@@ -42,6 +42,7 @@ Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirm
 | Vamu Correr | https://vamucorrer.com.br/corridas/maranhao | Traz o link de inscrição de cada prova. Já errou datas (ex.: Chapadinha). |
 | running.life (por cidade) | https://running.life/running-calendar/brazil/maranhao/<cidade> | **Use as páginas por cidade** (ex.: `/sao-luis`, `/imperatriz`, `/timon`, `/acailandia`, `/barra-do-corda`, `/coroata`, `/estreito`, `/chapadinha`, `/caxias`, `/joao-lisboa`). A página do estado só mostra as 20 primeiras. Cuidado: incluem cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO, Sítio Novo/TO). Cada página de prova traz o link oficial. |
 | Sou Corredor (MA) | https://soucorredor.com.br/calendario?pais=31&localidade=nacional&estado=10 | Bom para São Luís; páginas de prova trazem local de largada. |
+| GuardaLugar | https://guardalugar.com/evento/<código> | Plataforma de inscrição usada por organizadores do interior (ex.: 1ª VG Run, Vargem Grande). O site é um app e não abre texto: já vem pronto em `coleta/guardalugar.json` (campo `api`, lista pública de eventos com cidade, data, hora e descrição). |
 | Topchip | https://topchip.com.br/<prova> | Cronometragem de Imperatriz e região tocantina. A lista geral não abre, mas cada página de prova abre (data, hora e status). |
 | PHB Crono | https://phbcrono.com.br/ | Lista "Próximos eventos" com provas do leste do MA e Lençóis (trail). |
 | SA Crono, Central da Corrida, Crono Esportes | — | Carregam por JavaScript: já vêm prontas em `coleta/` (passo 0). |

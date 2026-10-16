@@ -1,5 +1,5 @@
 // Aplica a coleta automática (coleta/*.json) à agenda, sem precisar do Claude.
-// Roda no GitHub Actions logo depois da coleta, de 2 em 2 horas.
+// Roda no GitHub Actions logo depois da coleta, de 2 em 2 horas. Fontes: Crono Esportes, SA Crono, Central da Corrida, Topchip e GuardaLugar.
 // - Prova já existente: atualiza só o status de inscrição (e data/horário se a plataforma mudou).
 // - Prova nova do Maranhão: entra com os dados da plataforma.
 // Só grava o radar.json se algo mudou de verdade (assim o Netlify só republica quando precisa).
@@ -76,6 +76,25 @@ for (const [arq, fonte] of [['coleta/cronoesportes.json', 'Crono Esportes'], ['c
   for (const m of texto.matchAll(re)) {
     const k = m[2] + m[5]; if (vistos.has(k)) continue; vistos.add(k);
     candidatos.push({ fonte: 'Topchip', url: null, nome: titulo(m[2]), data: iso(m[5]), hora: m[6].replace(':', 'h').replace('h00', 'h'), cidade: cidadeBonita(m[4]), status: null, trilha: m[3] !== 'Corrida de Rua', previsto: m[1] === 'PREVISTO', completo: false });
+  }
+}
+
+// GuardaLugar: lista pública da API (o site é um app Flutter, sem texto na página)
+{
+  const d = ler('coleta/guardalugar.json');
+  const resp = (d?.api || []).find(a => /events\/public\/list\?is_test=false&ended=false/.test(a.url));
+  let lista = []; try { lista = JSON.parse(resp?.body || '[]'); } catch { /* resposta cortada */ }
+  const CORRIDA = /corrida|run\b|running|maratona|meia|trail|km\b|rústica|rustica/i;
+  for (const e of lista) {
+    if (e.state_code !== 'MA' || e.is_ended || e.is_test || !CORRIDA.test(`${e.name} ${e.description || ''}`)) continue;
+    const desc = e.description || '';
+    const dist = [...new Set(desc.split('\n').filter(l => !/caminhada/i.test(l)).flatMap(l => [...l.matchAll(/(\d+(?:[.,]\d+)?)\s*KM\b/gi)].map(m => Number(m[1].replace(',', '.')))))].filter(x => x > 0 && x < 200).sort((a, b) => a - b);
+    const [h, m] = (e.date || '').slice(11, 16).split(':');
+    candidatos.push({
+      fonte: 'GuardaLugar', url: `https://guardalugar.com/evento/${e.event_link}`, nome: e.name.trim(), data: (e.date || '').slice(0, 10),
+      hora: h ? `${Number(h)}h${m !== '00' ? m : ''}` : '', cidade: e.city_name, largada: e.address || '', dist,
+      status: e.force_sold_out ? 'Esgotadas' : e.advance_sales_closed ? 'Encerradas' : e.has_registrations || e.has_ticketing ? 'Abertas' : 'Consultar', completo: true,
+    });
   }
 }
 
