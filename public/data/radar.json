@@ -2274,9 +2274,43 @@
       "verifiedAt": "2026-10-14T23:57:03.900Z",
       "firstSeenAt": "2026-10-14T23:57:03.900Z",
       "prize": null
+    },
+    {
+      "id": "vg-run-2026-vargem-grande",
+      "name": "1ª VG Run",
+      "edition": "2026",
+      "city": "Vargem Grande",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-12",
+      "distances": [
+        5
+      ],
+      "location": "Parque dos Buritis (percurso na Av. Castelo Branco)",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q",
+      "sourceUrl": "https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q",
+      "sourceName": "GuardaLugar (página de inscrição)",
+      "publishedAt": "2026-09-24",
+      "confidence": "Página oficial de inscrição (GuardaLugar)",
+      "notes": "Sábado à noite: largada às 18h30, com concentração, largada e chegada no Parque dos Buritis. Corrida de 5 km com premiação nas categorias Geral e Local (moradores de Vargem Grande), masculino e feminino; também há caminhada de 3 km sem classificação. Inscrição a partir de R$ 79,90, 200 vagas. Kit: camisa, sacochila, número de peito, copo e brindes; medalha para quem terminar.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T00:09:14.290Z",
+      "firstSeenAt": "2026-10-16T00:09:14.290Z"
     }
   ],
   "changes": [
+    {
+      "id": "a3f98d9a-a90c-4f55-ae0f-c1ecf3ea2fdc",
+      "eventId": "vg-run-2026-vargem-grande",
+      "version": "[\"2026-12-12\",[5],\"Parque dos Buritis (percurso na Av. Castelo Branco)\",null,null,\"Abertas\",\"https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-16T00:09:14.290Z",
+      "notifiedAt": null
+    },
     {
       "id": "5c55b068-2816-4f87-9485-2e8c90b3700b",
       "eventId": "contabilidade-2026-sao-luis",
@@ -3182,7 +3216,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-15T11:31:38.796Z",
+  "lastChecked": "2026-10-16T00:09:14.290Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
