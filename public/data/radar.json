@@ -15,15 +15,16 @@
       "registrationOpen": "2026-10-13T12:00:00-03:00",
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": null,
+      "officialUrl": "https://centraldacorrida.com.br/evento/4acorridaportoitaqui",
       "sourceUrl": "https://www.portodoitaqui.com.br/imprensa/noticia/inscricoes-para-4-corrida-do-porto-do-itaqui-abrem-no-dia-13-de-outubro",
       "sourceName": "EMAP · Porto do Itaqui",
       "publishedAt": "2026-10-09",
       "confidence": "Anúncio oficial · disponibilidade a confirmar",
       "notes": "Largada às 6h. Inscrições abertas na Central da Corrida, R$ 70 para o público geral.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-13T02:25:00Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
       "id": "night-run-2026-sao-luis",
@@ -846,15 +847,16 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/pinheiro-corre-para-cristo",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 6h. Inscrições abertas na Central da Corrida (busque pelo nome da prova).",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "saude-2026-presidente-dutra",
@@ -901,15 +903,16 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/dmrun%E2%80%93etapasaude",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 6h. Inscrições na Central da Corrida (busque pelo nome da prova).",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "negro-cosme-2026-imperatriz",
@@ -1895,15 +1898,16 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/corridapibrun2026rosario",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 6h. Inscrições abertas na Central da Corrida (busque pelo nome da prova).",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:58:57.274Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
       "id": "calabriana-2026-sao-luis",
@@ -1918,15 +1922,16 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Em breve",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/i-corrida-calabriana-",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 5h30. Inscrições em breve na Central da Corrida.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:58:57.274Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
       "id": "com-proposito-2027-sao-luis",
@@ -2265,15 +2270,16 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
-      "verifiedAt": "2026-10-14T23:57:03.900Z",
-      "firstSeenAt": "2026-10-14T23:57:03.900Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "firstSeenAt": "2026-10-14T23:57:03.900Z"
     },
     {
       "id": "vg-run-2026-vargem-grande",
@@ -2303,6 +2309,54 @@
     }
   ],
   "changes": [
+    {
+      "id": "b00f8d55-0e9a-465f-b1ed-c0dd5bdbfed8",
+      "eventId": "calabriana-2026-sao-luis",
+      "version": "[\"2026-12-06\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/i-corrida-calabriana-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T01:34:40.269Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "a74ea5b9-ad79-4a63-8b86-d493ef6366f4",
+      "eventId": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
+      "version": "[\"2026-11-20\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T01:34:40.269Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "29925f86-48f5-44f8-a83d-bc61c0faf8ea",
+      "eventId": "dm-run-saude-2026-sao-luis",
+      "version": "[\"2026-11-15\",[4],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/dmrun%E2%80%93etapasaude\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T01:34:40.269Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "368dbdad-1f93-4915-b334-68a601f94ebf",
+      "eventId": "pinheiro-corre-para-cristo-2026",
+      "version": "[\"2026-11-15\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/pinheiro-corre-para-cristo\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T01:34:40.269Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "7fa7823f-f393-4cff-a73b-b0f829d23f9b",
+      "eventId": "pib-run-2026-rosario",
+      "version": "[\"2026-11-01\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridapibrun2026rosario\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T01:34:40.269Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "4333570d-7105-4a22-b45d-ab25526096b7",
+      "eventId": "itaqui-2026-sao-luis",
+      "version": "[\"2026-10-31\",[5],\"Complexo do Porto do Itaqui\",\"2026-10-13T12:00:00-03:00\",null,\"Abertas\",\"https://centraldacorrida.com.br/evento/4acorridaportoitaqui\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T01:34:40.269Z",
+      "notifiedAt": null
+    },
     {
       "id": "a3f98d9a-a90c-4f55-ae0f-c1ecf3ea2fdc",
       "eventId": "vg-run-2026-vargem-grande",
@@ -3216,7 +3270,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T00:09:14.290Z",
+  "lastChecked": "2026-10-16T01:34:40.269Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
