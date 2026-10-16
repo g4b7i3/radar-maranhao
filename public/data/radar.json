@@ -201,16 +201,16 @@
       "location": "Haras Hotbel",
       "registrationOpen": null,
       "registrationClose": "2026-10-17",
-      "status": "Abertas",
-      "officialUrl": "https://www.metasportoficial.com.br/eventos/maratona-hotbel-2026?id=37-2o-TREINAO-DA-CORRIDA-16-DE-JULHO",
+      "status": "Esgotadas",
+      "officialUrl": "https://metasportoficial.com.br/eventos/maratona-hotbel-2026",
       "sourceUrl": "https://www.metasportoficial.com.br/eventos/maratona-hotbel-2026?id=37-2o-TREINAO-DA-CORRIDA-16-DE-JULHO",
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página oficial de inscrição",
-      "notes": "Inscrições até 17/10 ou esgotamento. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento). O site da Hotbel diz que nesta edição os percursos passam por dentro de Imperatriz; mapa e altimetria ainda não publicados.",
+      "notes": "Inscrições esgotadas (página da Meta Sport em 16/10); o prazo era até 17/10. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento). O site da Hotbel diz que nesta edição os percursos passam por dentro de Imperatriz; mapa e altimetria ainda não publicados.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T11:15:29.440Z",
+      "verifiedAt": "2026-10-16T11:55:03.983Z",
       "firstSeenAt": "2026-10-14T11:06:50.977Z"
     },
     {
@@ -306,7 +306,7 @@
         5,
         10
       ],
-      "location": "Beira Rio",
+      "location": "Beira Rio (Concha Acústica)",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
@@ -315,10 +315,15 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30 na Beira Rio. Categorias Kids, PcD e trabalhadores do transporte. Página com botão de inscrição; prazo não informado.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "notes": "Largada às 6h30 na Beira Rio, na Concha Acústica. Distâncias de 3, 5 e 10 km, mais kids (cerca de 500 m); categorias PcD e trabalhadores do transporte. Inscrições pelo Inscrição Fácil (inscricaofacil.com/sestsenat2026); prazo não informado. Regulamento: percurso será divulgado pela organização.",
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus do 1º ao 3º lugar no geral, categoria Transporte e faixas etárias dos 5 e 10 km (PcD: 1º e 2º); 3 km só medalha. Sem dinheiro."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "labteste-run-2026-caxias",
@@ -357,24 +362,36 @@
       "city": "Chapadinha",
       "state": "MA",
       "modality": "Rua",
-      "date": "2026-10-25",
+      "date": "2026-11-01",
       "distances": [
         3,
         5
       ],
-      "location": "Local a confirmar",
+      "location": "Outset Academia",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
-      "officialUrl": "https://phbcrono.com.br/outset-run-2a-edicao/",
-      "sourceUrl": "https://running.life/en/event/outset-run",
-      "sourceName": "running.life",
+      "officialUrl": "https://souatleta.com/ingresso/outset-run/",
+      "sourceUrl": "https://souatleta.com/wp-content/uploads/2026/09/Regulamento_Outset_Run_2a_Edicao-6.pdf",
+      "sourceName": "Sou Atleta (inscrição e regulamento)",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Data e distâncias do running.life. A página da PHB Crono não mostra a data em texto.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "confidence": "Página oficial de inscrição e regulamento · data a confirmar",
+      "notes": "Data mudou: a página de inscrição (Sou Atleta) e a capa do regulamento dizem domingo, 01/11/2026, às 5h, na Outset Academia; um trecho antigo do regulamento ainda fala em 25/10 e calendários seguem com 25/10. Confirmar com o organizador. Percursos de 3 e 5 km. Status e prazo de inscrição não informados.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "R$ 3.000 no geral dos 5 km, masc. e fem.: R$ 500, 400, 300, 200 e 100 do 1º ao 5º, com troféu. Troféus por faixa etária e para alunos da academia."
+      },
+      "elevation": {
+        "level": "plano",
+        "gain": null,
+        "km": null,
+        "profile": null,
+        "routeUrl": "https://souatleta.com/wp-content/uploads/2026/09/Regulamento_Outset_Run_2a_Edicao-6.pdf",
+        "summary": "Regulamento: percursos de 3 e 5 km em trajeto plano e urbano."
+      },
+      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "corrida-do-chopp-2026-santa-ines",
@@ -663,20 +680,25 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-08",
-      "distances": [],
-      "location": "Local a confirmar",
+      "distances": [
+        3,
+        5,
+        10
+      ],
+      "location": "Imperatriz Medical Center, Av. Bernardo Sayão, 3650, Maranhão Novo",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
       "officialUrl": "https://topchip.com.br/bari-run-2026",
-      "sourceUrl": "https://topchip.com.br/bari-run-2026",
-      "sourceName": "Topchip",
+      "sourceUrl": "https://www.tfsports.com.br/tf-experience/experience-254/",
+      "sourceName": "TFSports (Track&Field Experience)",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Distâncias não informadas na página.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "notes": "Também anunciada como \"Porto Saúde Track&Field Experience Running BariRun | Imperatriz\" (TFSports). Arena abre às 6h; largadas: 10 km às 6h30, 5 km às 6h40 e caminhada de 3 km às 6h45. Kits em 06 e 07/11, das 10h às 22h, na Loja Track&Field do Imperial Shopping. Inscrição pelo app TFSports (também listada na Topchip); valores e prazo não informados. Premiação \"a definir\".",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "adventista-run-2026-imperatriz",
@@ -2253,20 +2275,27 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-10-24",
-      "distances": [],
-      "location": "Local a confirmar",
-      "registrationOpen": null,
+      "distances": [
+        3,
+        5
+      ],
+      "location": "Espaço Cultural José Carlos Brandão, Parque Planalto",
+      "registrationOpen": "2026-10-15",
       "registrationClose": null,
       "status": "Consultar",
       "officialUrl": "https://topchip.com.br/professoresacailandia",
-      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/professoresacailandia",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Sábado, largada às 6h30. A Topchip marca a prova como confirmada, com inscrições pelo Inscrição Fácil (inscricaofacil.com/corridadoprofessor). Distâncias e local de largada ainda não conferidos.",
-      "prize": null,
+      "confidence": "Página oficial da cronometragem (Topchip)",
+      "notes": "Sábado: concentração às 6h e largada às 6h30, com percurso pela Avenida Alexandre Costa (trajeto detalhado ainda não divulgado). Corrida de 5 km cronometrada, caminhada de 3 km e PcD 3 km. Inscrição solidária (itens de higiene e limpeza para o Lar Frei Daniel) pelo Inscrição Fácil: 1º lote em 15 e 16/10 só para a rede municipal de educação; 2º lote, para a comunidade, a partir de 19/10 (300 vagas mais as sobras). Prazo final não informado.",
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Sem dinheiro (\"o evento não terá premiação em dinheiro\"). Troféus aos 3 primeiros dos 5 km no geral (educação e visitantes) e por faixa etária; 3 km com medalha de participação."
+      },
       "elevation": null,
-      "verifiedAt": "2026-10-16T10:58:05.494Z",
+      "verifiedAt": "2026-10-16T11:55:03.983Z",
       "firstSeenAt": "2026-10-14T20:44:16.663Z"
     },
     {
@@ -2321,9 +2350,81 @@
       "elevation": null,
       "verifiedAt": "2026-10-16T00:09:14.290Z",
       "firstSeenAt": "2026-10-16T00:09:14.290Z"
+    },
+    {
+      "id": "salvar-vidas-2026-imperatriz",
+      "name": "Corrida Salvar Vidas 2026",
+      "edition": "2026",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-10-25",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.topchip.com.br/corrida-salvar-vidas-2026",
+      "sourceUrl": "https://roadrunners.run/evento/2026-corrida-salvar-vidas-2026/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Listada pelo Road Runners com cronometragem da Topchip, mas não aparece no calendário atual da Topchip (que já mostra a edição 2027, em 08/08/2027) e a página da prova não abriu. Distâncias, horário e local não informados: confirmar se a edição 2026 vai acontecer.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "firstSeenAt": "2026-10-16T11:55:03.983Z"
     }
   ],
   "changes": [
+    {
+      "id": "4f264724-c1b1-4bb7-ad69-87c11d48a51b",
+      "eventId": "salvar-vidas-2026-imperatriz",
+      "version": "[\"2026-10-25\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://www.topchip.com.br/corrida-salvar-vidas-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-16T11:55:03.983Z",
+      "notifiedAt": "2026-10-16T11:55:21.752Z"
+    },
+    {
+      "id": "36648c18-1ad4-49ba-83e9-bb8bc6b62486",
+      "eventId": "bari-run-2026-imperatriz",
+      "version": "[\"2026-11-08\",[3,5,10],\"Imperatriz Medical Center, Av. Bernardo Sayão, 3650, Maranhão Novo\",null,null,\"Consultar\",\"https://topchip.com.br/bari-run-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T11:55:03.983Z",
+      "notifiedAt": "2026-10-16T11:55:21.752Z"
+    },
+    {
+      "id": "9f198a21-d4c9-476a-83df-55b8f85ef706",
+      "eventId": "hotbel-2026-imperatriz",
+      "version": "[\"2026-10-18\",[5,10,21,42],\"Haras Hotbel\",null,\"2026-10-17\",\"Esgotadas\",\"https://metasportoficial.com.br/eventos/maratona-hotbel-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T11:55:03.983Z",
+      "notifiedAt": "2026-10-16T11:55:21.752Z"
+    },
+    {
+      "id": "999bf9c0-2c6c-4735-870f-06a23544f269",
+      "eventId": "outset-run-2026-chapadinha",
+      "version": "[\"2026-11-01\",[3,5],\"Outset Academia\",null,null,\"Consultar\",\"https://souatleta.com/ingresso/outset-run/\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T11:55:03.983Z",
+      "notifiedAt": "2026-10-16T11:55:21.752Z"
+    },
+    {
+      "id": "1ee2752e-7035-4956-ad0f-ae6f524a6a51",
+      "eventId": "sest-senat-2026-imperatriz",
+      "version": "[\"2026-10-25\",[3,5,10],\"Beira Rio (Concha Acústica)\",null,null,\"Consultar\",\"https://topchip.com.br/corrida-sest-senat-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T11:55:03.983Z",
+      "notifiedAt": "2026-10-16T11:55:21.752Z"
+    },
+    {
+      "id": "f12225eb-a0fe-46d3-9b04-30f200477411",
+      "eventId": "corrida-dos-professores-2026-acailandia",
+      "version": "[\"2026-10-24\",[3,5],\"Espaço Cultural José Carlos Brandão, Parque Planalto\",\"2026-10-15\",null,\"Consultar\",\"https://topchip.com.br/professoresacailandia\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T11:55:03.983Z",
+      "notifiedAt": "2026-10-16T11:55:21.752Z"
+    },
     {
       "id": "d1885a89-d23d-43cf-b2c4-eda3e5f67dfe",
       "eventId": "corrida-dos-professores-2026-acailandia",
@@ -3325,7 +3426,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T11:15:29.440Z",
+  "lastChecked": "2026-10-16T11:55:03.983Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
