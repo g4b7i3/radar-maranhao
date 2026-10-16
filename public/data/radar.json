@@ -67,16 +67,17 @@
       "location": "Praça do Pescador · Avenida Litorânea",
       "registrationOpen": null,
       "registrationClose": "2026-10-15",
-      "status": "Abertas",
+      "status": "Em breve",
       "officialUrl": "https://centraldacorrida.com.br/evento/crorun2026",
       "sourceUrl": "https://todascorridas.com.br/corrida/ma/sao-luis/corrida-cro-run-2026-inscricoes-e-percurso-em-sao-luis/",
       "sourceName": "Todas Corridas / Central da Corrida",
       "publishedAt": "2026-09-21",
-      "verifiedAt": "2026-10-13T02:25:00Z",
       "confidence": "Detalhes em fonte secundária",
       "notes": "Exclusiva para profissionais e acadêmicos de odontologia. Prazo informado por Todas Corridas; confirme no regulamento. Inscrição solidária: 2 kg de alimentos.",
-      "firstSeenAt": "2026-10-13T02:25:00Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T14:16:43.019Z",
+      "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
       "id": "meia-pf-2026-sao-luis",
@@ -1954,7 +1955,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Adiada",
+      "status": "Em breve",
       "officialUrl": "https://centraldacorrida.com.br/evento/i-corrida-calabriana-",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
@@ -1963,7 +1964,7 @@
       "notes": "A Paróquia São João Calábria adiou a I Corrida Calabriana, que seria em 12/10 na Avenida Metropolitana, porque a avenida não foi liberada e por questões administrativas. A página da Central da Corrida já mostra 06/12/2026 às 5h30, mas o comunicado diz que a nova data ainda será divulgada: confirmar data e local. Inscrições feitas continuam valendo; quem não quiser mais correr pode pedir reembolso no Painel do Atleta da Central da Corrida. Distâncias: 5 e 10 km, mais caminhada livre de 3 km.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T10:58:05.494Z",
+      "verifiedAt": "2026-10-16T14:16:43.019Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -2377,6 +2378,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "56dc8fc3-152d-4206-a508-980066ee0ba6",
+      "eventId": "calabriana-2026-sao-luis",
+      "version": "[\"2026-12-06\",[3,5,10],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/i-corrida-calabriana-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T14:16:43.019Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "ca8bd2b5-c128-4179-9b61-c9a68f914e11",
+      "eventId": "cro-run-2026-sao-luis",
+      "version": "[\"2026-10-25\",[5],\"Praça do Pescador · Avenida Litorânea\",null,\"2026-10-15\",\"Em breve\",\"https://centraldacorrida.com.br/evento/crorun2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-16T14:16:43.019Z",
+      "notifiedAt": null
+    },
     {
       "id": "4f264724-c1b1-4bb7-ad69-87c11d48a51b",
       "eventId": "salvar-vidas-2026-imperatriz",
@@ -3426,7 +3443,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T11:55:03.983Z",
+  "lastChecked": "2026-10-16T14:16:43.019Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
