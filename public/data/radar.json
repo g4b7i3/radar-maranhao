@@ -2375,9 +2375,41 @@
       "elevation": null,
       "verifiedAt": "2026-10-16T11:55:03.983Z",
       "firstSeenAt": "2026-10-16T11:55:03.983Z"
+    },
+    {
+      "id": "corrida-pge-2026-2026-sao-luis",
+      "name": "Corrida Pge 2026",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-08",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Em breve",
+      "officialUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
+      "sourceUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 06h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-16T22:16:48.414Z",
+      "firstSeenAt": "2026-10-16T22:16:48.414Z"
     }
   ],
   "changes": [
+    {
+      "id": "611dae34-9c78-40f4-9244-d42cee56957f",
+      "eventId": "corrida-pge-2026-2026-sao-luis",
+      "version": "[\"2026-11-08\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-16T22:16:48.414Z",
+      "notifiedAt": null
+    },
     {
       "id": "56dc8fc3-152d-4206-a508-980066ee0ba6",
       "eventId": "calabriana-2026-sao-luis",
@@ -3443,7 +3475,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T14:16:43.019Z",
+  "lastChecked": "2026-10-16T22:16:48.414Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
