@@ -67,7 +67,7 @@
       "location": "Praça do Pescador · Avenida Litorânea",
       "registrationOpen": null,
       "registrationClose": "2026-10-15",
-      "status": "Em breve",
+      "status": "Encerradas",
       "officialUrl": "https://centraldacorrida.com.br/evento/crorun2026",
       "sourceUrl": "https://todascorridas.com.br/corrida/ma/sao-luis/corrida-cro-run-2026-inscricoes-e-percurso-em-sao-luis/",
       "sourceName": "Todas Corridas / Central da Corrida",
@@ -76,7 +76,7 @@
       "notes": "Exclusiva para profissionais e acadêmicos de odontologia. Prazo informado por Todas Corridas; confirme no regulamento. Inscrição solidária: 2 kg de alimentos.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T14:16:43.019Z",
+      "verifiedAt": "2026-10-17T12:54:54.806Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -2403,6 +2403,14 @@
   ],
   "changes": [
     {
+      "id": "e1fa2edb-f697-4494-b925-a937122e2d38",
+      "eventId": "cro-run-2026-sao-luis",
+      "version": "[\"2026-10-25\",[5],\"Praça do Pescador · Avenida Litorânea\",null,\"2026-10-15\",\"Encerradas\",\"https://centraldacorrida.com.br/evento/crorun2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-17T12:54:54.806Z",
+      "notifiedAt": null
+    },
+    {
       "id": "611dae34-9c78-40f4-9244-d42cee56957f",
       "eventId": "corrida-pge-2026-2026-sao-luis",
       "version": "[\"2026-11-08\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
@@ -3475,7 +3483,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-16T22:16:48.414Z",
+  "lastChecked": "2026-10-17T12:54:54.806Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
