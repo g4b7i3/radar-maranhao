@@ -19,15 +19,20 @@ const FONTES = [
   { id: 'topchip', lista: ['https://topchip.com.br/', 'https://topchip.com.br/calendario'], prova: /^https:\/\/(www\.)?topchip\.com\.br\/(?!calendario|resultados|contato|sobre|login|cadastro|minha-conta|termos|politica|eventos?$)[a-z0-9-]{4,}\/?$/ },
   // Calendários de terceiros (só para descobrir provas; a confirmação é na página oficial).
   // Mudam devagar: coletados no máximo a cada 8 horas. Guardam os links externos de cada prova (link oficial de inscrição).
-  { id: 'roadrunners', intervaloHoras: 8, guardarLinks: true, max: 120,
+  { id: 'roadrunners', intervaloHoras: 8, guardarLinks: true, semApi: true, max: 120,
     lista: ['https://roadrunners.run/estado/ma/', 'https://roadrunners.run/estado/ma/page/2/', 'https://roadrunners.run/estado/ma/page/3/'],
     prova: /^https:\/\/(www\.)?roadrunners\.run\/evento\/[^/]+\/?$/ },
-  { id: 'runninglife', intervaloHoras: 8, guardarLinks: true, max: 150,
+  { id: 'runninglife', intervaloHoras: 8, guardarLinks: true, semApi: true, max: 150,
     lista: ['sao-luis', 'sao-jose-de-ribamar', 'paco-do-lumiar', 'imperatriz', 'timon', 'caxias', 'acailandia', 'barra-do-corda', 'coroata', 'estreito',
       'chapadinha', 'joao-lisboa', 'balsas', 'bacabal', 'santa-ines', 'barreirinhas', 'codo', 'pinheiro', 'carolina', 'porto-franco']
       .map(c => `https://running.life/running-calendar/brazil/maranhao/${c}`).concat('https://running.life/running-calendar/brazil/maranhao'),
     prova: /^https:\/\/(www\.)?running\.life\/([a-z]{2}(-[a-z]{2})?\/)?event\/[^/]+\/?$/ },
 ];
+
+// Chaves de API que os sites embutem nas páginas (ex.: token do Mapbox no Road Runners) não podem ir para o repositório:
+// o GitHub recusa o push. Troca por [chave removida] em tudo o que for salvo.
+const SEGREDOS = [/\b[ps]k\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, /\bAIza[0-9A-Za-z_-]{35}\b/g, /\b(access_token|api_key|apikey|token)=[A-Za-z0-9._-]{16,}/gi];
+const semSegredos = t => SEGREDOS.reduce((s, re) => s.replace(re, m => (m.includes('=') ? m.split('=')[0] + '=' : '') + '[chave removida]'), t);
 
 const limpa = t => (t || '').replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
 
@@ -60,7 +65,7 @@ async function coletar(browser, fonte) {
   const links = new Set(fonte.extra || []);
   for (const url of fonte.lista) {
     try {
-      const { page, api } = await abrir(ctx, url, true);
+      const { page, api } = await abrir(ctx, url, !fonte.semApi);
       const hrefs = await page.$$eval('a[href]', as => as.map(a => a.href.split('#')[0].split('?')[0]));
       if (page.url() !== url && fonte.intervaloHoras && /\/page\/\d+/.test(url)) { await page.close(); continue; } // página da lista que não existe
       hrefs.filter(h => fonte.prova.test(h)).forEach(h => links.add(h));
@@ -119,7 +124,7 @@ for (const fonte of FONTES.filter(f => !so || f.id === so)) {
   if (recente(fonte)) { console.log(`${fonte.id}: coletado há menos de ${fonte.intervaloHoras}h, fica para a próxima.`); continue; }
   const r = await coletar(browser, fonte);
   r.coletadoEm = new Date().toISOString();
-  writeFileSync(`coleta/${fonte.id}.json`, JSON.stringify(r, null, 1) + '\n');
+  writeFileSync(`coleta/${fonte.id}.json`, semSegredos(JSON.stringify(r, null, 1)) + '\n');
   console.log(`${fonte.id}: ${r.totalLinks} provas encontradas, ${r.provas.filter(p => p.maranhao).length} no Maranhão`);
 }
 await browser.close();
