@@ -2406,9 +2406,41 @@
       "elevation": null,
       "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
+    },
+    {
+      "id": "16-corrida-da-virada-2026-sao-luis",
+      "name": "16ª Corrida da Virada",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-31",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Em breve",
+      "officialUrl": "https://centraldacorrida.com.br/evento/16acorridaviradaslz",
+      "sourceUrl": "https://centraldacorrida.com.br/evento/16acorridaviradaslz",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-17T23:41:12.413Z",
+      "firstSeenAt": "2026-10-17T23:41:12.413Z"
     }
   ],
   "changes": [
+    {
+      "id": "afb66f79-83a0-401e-b986-ff7ca9b8fb82",
+      "eventId": "16-corrida-da-virada-2026-sao-luis",
+      "version": "[\"2026-12-31\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/16acorridaviradaslz\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-17T23:41:12.413Z",
+      "notifiedAt": null
+    },
     {
       "id": "aedbca5f-9198-4d91-a613-d5196475811b",
       "eventId": "corrida-pge-2026-2026-sao-luis",
@@ -3498,7 +3530,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-17T13:27:41.206Z",
+  "lastChecked": "2026-10-17T23:41:12.413Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
