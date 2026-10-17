@@ -16,6 +16,13 @@ De 2 em 2 horas (6h15 às 20h15) o GitHub Actions (`.github/workflows/coletar-pl
 - `coleta/topchip.json` — calendário da Topchip (Imperatriz e região tocantina) até o ano seguinte; pegue as linhas "/ MA".
 - `coleta/guardalugar.json` — GuardaLugar (sistema de inscrições/reservas usado por organizadores do Maranhão); confira as provas com `maranhao: true` e a página de cada evento.
 
+Os calendários de terceiros que a sessão do Claude não consegue abrir (a rede da sessão bloqueia os sites) também vêm prontos, coletados no máximo a cada 8 horas:
+
+- `coleta/roadrunners.json` — Road Runners (MA): lista do estado + página de cada prova; o campo `links` de cada prova traz os links externos (inscrição oficial, regulamento, Instagram).
+- `coleta/runninglife.json` — running.life, páginas por cidade do Maranhão + página de cada prova, com `links` externos. Inclui cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO): confira a cidade.
+
+Esses dois servem para **descobrir** provas e mudanças; não são aplicados sozinhos na agenda. Para cada prova do Maranhão que não está na agenda, confirme pelo link oficial (campo `links`) ou por outra fonte; se só houver o calendário, registre como "Fonte única (calendário)".
+
 O GitHub já aplica sozinho (`scripts/aplicar-coleta.mjs`) o status e as provas novas dessas plataformas; as novidades dele ficam pendentes de aviso (`npm run marcar-avisados`) — inclua-as no aviso do dia. Revise as provas que ele criou (nome, distâncias, local) e complete o que faltar. Compare com `public/data/radar.json`: prova nova, mudança de data/local/status (abertas → encerradas/esgotadas) entram pelo `npm run atualizar`. Confira `coletadoEm` de cada arquivo; se for de outro dia, a coleta falhou — siga só com a web e avise no resumo final. Ignore provas de outros estados (PI, TO, PA) e desafios virtuais.
 
 ## 1. Ler a agenda atual
@@ -37,10 +44,10 @@ Comece sempre pelos calendários, que juntos cobrem quase tudo, e depois confirm
 
 | Fonte | Endereço | Observação |
 | --- | --- | --- |
-| **Road Runners (MA)** | https://roadrunners.run/estado/ma/ | **A fonte mais completa (50+ provas)**, puxa direto das plataformas de inscrição (Topchip, SA Crono, Doity, Sympla) e traz o link oficial de cada prova. Comece por aqui. |
+| **Road Runners (MA)** | https://roadrunners.run/estado/ma/ | Já vem pronto em `coleta/roadrunners.json`. **A fonte mais completa (50+ provas)**, puxa direto das plataformas de inscrição (Topchip, SA Crono, Doity, Sympla) e traz o link oficial de cada prova. Comece por aqui. |
 | CorridasBR (MA) | https://www.corridasbr.com.br/MA/Calendario.asp | Lista mais completa do estado, inclusive cidades pequenas. As páginas de detalhe não abrem certo; use só a lista. |
 | Vamu Correr | https://vamucorrer.com.br/corridas/maranhao | Traz o link de inscrição de cada prova. Já errou datas (ex.: Chapadinha). |
-| running.life (por cidade) | https://running.life/running-calendar/brazil/maranhao/<cidade> | **Use as páginas por cidade** (ex.: `/sao-luis`, `/imperatriz`, `/timon`, `/acailandia`, `/barra-do-corda`, `/coroata`, `/estreito`, `/chapadinha`, `/caxias`, `/joao-lisboa`). A página do estado só mostra as 20 primeiras. Cuidado: incluem cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO, Sítio Novo/TO). Cada página de prova traz o link oficial. |
+| running.life (por cidade) | https://running.life/running-calendar/brazil/maranhao/<cidade> | Já vem pronto em `coleta/runninglife.json` (20 cidades). **Use as páginas por cidade** (ex.: `/sao-luis`, `/imperatriz`, `/timon`, `/acailandia`, `/barra-do-corda`, `/coroata`, `/estreito`, `/chapadinha`, `/caxias`, `/joao-lisboa`). A página do estado só mostra as 20 primeiras. Cuidado: incluem cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO, Sítio Novo/TO). Cada página de prova traz o link oficial. |
 | Sou Corredor (MA) | https://soucorredor.com.br/calendario?pais=31&localidade=nacional&estado=10 | Bom para São Luís; páginas de prova trazem local de largada. |
 | GuardaLugar | https://guardalugar.com/evento/<código> | Plataforma de inscrição usada por organizadores do interior (ex.: 1ª VG Run, Vargem Grande). O site é um app e não abre texto: já vem pronto em `coleta/guardalugar.json` (campo `api`, lista pública de eventos com cidade, data, hora e descrição). |
 | Topchip | https://topchip.com.br/<prova> | Cronometragem de Imperatriz e região tocantina. A lista geral não abre, mas cada página de prova abre (data, hora e status). |

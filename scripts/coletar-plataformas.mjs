@@ -1,9 +1,10 @@
 // Coleta diária das plataformas de inscrição que só funcionam com JavaScript
-// (Crono Esportes, SA Crono, Central da Corrida, Topchip, GuardaLugar).
+// (Crono Esportes, SA Crono, Central da Corrida, Topchip, GuardaLugar)
+// e dos calendários que a sessão do Claude não consegue abrir (Road Runners, running.life).
 // Roda no GitHub Actions, que tem navegador e internet. Salva o texto de cada prova em coleta/<plataforma>.json.
 // A pesquisa diária (PESQUISA.md) lê esses arquivos, confere e atualiza a agenda.
 import { chromium } from 'playwright';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36';
 const MAX_PROVAS = Number(process.env.MAX_PROVAS || 150);
@@ -16,6 +17,16 @@ const FONTES = [
   // GuardaLugar: sistema de reservas/inscrições usado por organizadores do Maranhão (indicado pelo Vinik em 15/10/2026)
   { id: 'guardalugar', lista: ['https://guardalugar.com/', 'https://guardalugar.com/eventos'], extra: ['https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q'], prova: /guardalugar\.com\/evento\/[A-Za-z0-9_-]{6,}$/ },
   { id: 'topchip', lista: ['https://topchip.com.br/', 'https://topchip.com.br/calendario'], prova: /^https:\/\/(www\.)?topchip\.com\.br\/(?!calendario|resultados|contato|sobre|login|cadastro|minha-conta|termos|politica|eventos?$)[a-z0-9-]{4,}\/?$/ },
+  // Calendários de terceiros (só para descobrir provas; a confirmação é na página oficial).
+  // Mudam devagar: coletados no máximo a cada 8 horas. Guardam os links externos de cada prova (link oficial de inscrição).
+  { id: 'roadrunners', intervaloHoras: 8, guardarLinks: true, max: 120,
+    lista: ['https://roadrunners.run/estado/ma/', 'https://roadrunners.run/estado/ma/page/2/', 'https://roadrunners.run/estado/ma/page/3/'],
+    prova: /^https:\/\/(www\.)?roadrunners\.run\/evento\/[^/]+\/?$/ },
+  { id: 'runninglife', intervaloHoras: 8, guardarLinks: true, max: 150,
+    lista: ['sao-luis', 'sao-jose-de-ribamar', 'paco-do-lumiar', 'imperatriz', 'timon', 'caxias', 'acailandia', 'barra-do-corda', 'coroata', 'estreito',
+      'chapadinha', 'joao-lisboa', 'balsas', 'bacabal', 'santa-ines', 'barreirinhas', 'codo', 'pinheiro', 'carolina', 'porto-franco']
+      .map(c => `https://running.life/running-calendar/brazil/maranhao/${c}`).concat('https://running.life/running-calendar/brazil/maranhao'),
+    prova: /^https:\/\/(www\.)?running\.life\/([a-z]{2}(-[a-z]{2})?\/)?event\/[^/]+\/?$/ },
 ];
 
 const limpa = t => (t || '').replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
@@ -39,6 +50,10 @@ async function abrir(ctx, url, coletarApi) {
   return { page, api };
 }
 
+// Links para fora do site (inscrição, regulamento, Instagram), sem repetir e sem redes de compartilhamento.
+const linksExternos = (hrefs, host) => [...new Set(hrefs.filter(h => /^https?:/.test(h) && !h.includes(host)
+  && !/facebook\.com\/sharer|twitter\.com\/intent|x\.com\/intent|wa\.me\/\?|api\.whatsapp|linkedin\.com\/share|t\.me\/share|pinterest\.com\/pin/.test(h)))].slice(0, 40);
+
 async function coletar(browser, fonte) {
   const ctx = await browser.newContext({ userAgent: UA, locale: 'pt-BR', timezoneId: 'America/Fortaleza' });
   const resultado = { fonte: fonte.id, listas: [], provas: [], api: [] };
@@ -47,6 +62,7 @@ async function coletar(browser, fonte) {
     try {
       const { page, api } = await abrir(ctx, url, true);
       const hrefs = await page.$$eval('a[href]', as => as.map(a => a.href.split('#')[0].split('?')[0]));
+      if (page.url() !== url && fonte.intervaloHoras && /\/page\/\d+/.test(url)) { await page.close(); continue; } // página da lista que não existe
       hrefs.filter(h => fonte.prova.test(h)).forEach(h => links.add(h));
       const textoLista = limpa(await page.innerText('body'));
       resultado.listas.push({ url, texto: textoLista.slice(0, 40_000) });
@@ -71,11 +87,13 @@ async function coletar(browser, fonte) {
       await page.close();
     } catch (e) { resultado.listas.push({ url, erro: String(e).slice(0, 300) }); }
   }
-  for (const url of [...links].slice(0, MAX_PROVAS)) {
+  for (const url of [...links].slice(0, fonte.max || MAX_PROVAS)) {
     try {
       const { page } = await abrir(ctx, url, false);
       const texto = limpa(await page.innerText('body')).slice(0, 8000);
-      resultado.provas.push({ url, titulo: await page.title(), maranhao: MA.test(texto), texto });
+      const prova = { url, titulo: await page.title(), maranhao: MA.test(texto), texto };
+      if (fonte.guardarLinks) prova.links = linksExternos(await page.$$eval('a[href]', as => as.map(a => a.href)), new URL(url).hostname.replace(/^www\./, ''));
+      resultado.provas.push(prova);
       await page.close();
     } catch (e) { resultado.provas.push({ url, erro: String(e).slice(0, 300) }); }
   }
@@ -87,7 +105,18 @@ async function coletar(browser, fonte) {
 const browser = await chromium.launch();
 mkdirSync('coleta', { recursive: true });
 const so = process.argv[2];
+// Fonte com intervaloHoras: pula se a última coleta boa for recente (a não ser que seja pedida pelo nome).
+const recente = fonte => {
+  if (!fonte.intervaloHoras || so) return false;
+  try {
+    const f = `coleta/${fonte.id}.json`;
+    if (!existsSync(f)) return false;
+    const d = JSON.parse(readFileSync(f, 'utf8'));
+    return d.provas?.length > 0 && Date.now() - Date.parse(d.coletadoEm) < fonte.intervaloHoras * 3600_000;
+  } catch { return false; }
+};
 for (const fonte of FONTES.filter(f => !so || f.id === so)) {
+  if (recente(fonte)) { console.log(`${fonte.id}: coletado há menos de ${fonte.intervaloHoras}h, fica para a próxima.`); continue; }
   const r = await coletar(browser, fonte);
   r.coletadoEm = new Date().toISOString();
   writeFileSync(`coleta/${fonte.id}.json`, JSON.stringify(r, null, 1) + '\n');

@@ -1,4 +1,5 @@
 # Abre todo dia as plataformas de inscrição que só funcionam com JavaScript
+# (e os calendários Road Runners e running.life, que a sessão do Claude não abre)
 # e salva o que encontrar em coleta/. A pesquisa diária do Claude lê esses arquivos.
 name: Coletar plataformas de inscrição
 
@@ -8,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       fonte:
-        description: "Só uma fonte (cronoesportes, sacrono, centraldacorrida, topchip, guardalugar). Vazio = todas."
+        description: "Só uma fonte (cronoesportes, sacrono, centraldacorrida, topchip, guardalugar, roadrunners, runninglife). Vazio = todas."
         required: false
 
 permissions:
@@ -21,7 +22,7 @@ concurrency:
 jobs:
   coletar:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
