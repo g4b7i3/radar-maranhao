@@ -20,10 +20,10 @@
       "sourceName": "EMAP · Porto do Itaqui",
       "publishedAt": "2026-10-09",
       "confidence": "Anúncio oficial · disponibilidade a confirmar",
-      "notes": "Largada às 6h. Inscrições abertas na Central da Corrida, R$ 70 para o público geral.",
+      "notes": "Largada às 6h. Inscrições abertas na Central da Corrida, R$ 70 para o público geral. A página de inscrição (Central da Corrida) diz que o kit sai na Fit Store (Av. dos Holandeses, Calhau) em 28 e 29/10, das 10h às 20h; notícias citaram 29 e 30/10: confirmar.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T01:34:40.269Z",
+      "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -48,9 +48,13 @@
       "publishedAt": "2026-09-25",
       "confidence": "Notícia + site oficial",
       "notes": "Corrida noturna. Inscrições abertas no site oficial. Kit em 23/10 (10h–19h) e 24/10 (10h–15h) na Centauro do Shopping da Ilha. Local de largada informado como São Luís Shopping, ainda a confirmar. Segundo o Maranhão Esportes, troféus para os três primeiros (masculino e feminino) nas duas distâncias e medalha para quem concluir.",
-      "prize": null,
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Troféus para os 3 primeiros no masculino e no feminino nos 5 e nos 10 km; medalha para quem concluir (segundo o Maranhão Esportes; regulamento não aberto)."
+      },
       "elevation": null,
-      "verifiedAt": "2026-10-16T11:15:29.440Z",
+      "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -208,10 +212,10 @@
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página oficial de inscrição",
-      "notes": "Inscrições esgotadas (página da Meta Sport em 16/10); o prazo era até 17/10. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento). O site da Hotbel diz que nesta edição os percursos passam por dentro de Imperatriz; mapa e altimetria ainda não publicados.",
+      "notes": "Inscrições esgotadas (página da Meta Sport em 16/10); o prazo era até 17/10. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento). O site da Hotbel diz que nesta edição os percursos passam por dentro de Imperatriz; mapa e altimetria ainda não publicados. A página da Meta Sport anuncia premiação total de R$ 130.000, sem detalhar valores por colocação.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-14T11:06:50.977Z"
     },
     {
@@ -2378,13 +2382,16 @@
     },
     {
       "id": "corrida-pge-2026-2026-sao-luis",
-      "name": "Corrida Pge 2026",
+      "name": "Corrida PGE 2026",
       "edition": "2026",
       "city": "São Luís",
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-08",
-      "distances": [],
+      "distances": [
+        5,
+        10
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -2394,21 +2401,29 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 06h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "notes": "Domingo, 08/11/2026, largada às 6h. Organização: EuCorro Eventos Esportivos / PGE. Percursos de 5 e 10 km, mais caminhada de 2,5 km sem caráter competitivo. Kit na loja Biomundo (Av. dos Holandeses, Galeria Luminy Plaza, Olho d’Água) em 06/11, das 9h às 20h; não há entrega no dia. Inscrições ainda em breve; local de largada, abertura e prazo não informados.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T22:16:48.414Z",
+      "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
     }
   ],
   "changes": [
+    {
+      "id": "aedbca5f-9198-4d91-a613-d5196475811b",
+      "eventId": "corrida-pge-2026-2026-sao-luis",
+      "version": "[\"2026-11-08\",[5,10],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-17T13:27:41.206Z",
+      "notifiedAt": "2026-10-17T13:28:07.556Z"
+    },
     {
       "id": "e1fa2edb-f697-4494-b925-a937122e2d38",
       "eventId": "cro-run-2026-sao-luis",
       "version": "[\"2026-10-25\",[5],\"Praça do Pescador · Avenida Litorânea\",null,\"2026-10-15\",\"Encerradas\",\"https://centraldacorrida.com.br/evento/crorun2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-17T12:54:54.806Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-17T13:28:07.556Z"
     },
     {
       "id": "611dae34-9c78-40f4-9244-d42cee56957f",
@@ -2416,7 +2431,7 @@
       "version": "[\"2026-11-08\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
       "kind": "Nova prova",
       "at": "2026-10-16T22:16:48.414Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-17T13:28:07.556Z"
     },
     {
       "id": "56dc8fc3-152d-4206-a508-980066ee0ba6",
@@ -2424,7 +2439,7 @@
       "version": "[\"2026-12-06\",[3,5,10],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/i-corrida-calabriana-\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T14:16:43.019Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-17T13:28:07.556Z"
     },
     {
       "id": "ca8bd2b5-c128-4179-9b61-c9a68f914e11",
@@ -2432,7 +2447,7 @@
       "version": "[\"2026-10-25\",[5],\"Praça do Pescador · Avenida Litorânea\",null,\"2026-10-15\",\"Em breve\",\"https://centraldacorrida.com.br/evento/crorun2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-16T14:16:43.019Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-17T13:28:07.556Z"
     },
     {
       "id": "4f264724-c1b1-4bb7-ad69-87c11d48a51b",
@@ -3483,7 +3498,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-17T12:54:54.806Z",
+  "lastChecked": "2026-10-17T13:27:41.206Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
