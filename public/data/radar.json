@@ -419,9 +419,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Corrida às 17h, com evento até 22h30. Vagas limitadas; prazo e valor não informados na página.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 400,
+        "summary": "Categoria geral dos 5 km: R$ 400 + troféu + barril de chopp de 30 L (1º), R$ 300 + troféu + 2 growlers (2º) e R$ 200 + troféu + 1 growler (3º). Texto do organizador na página do evento (reproduzido no Road Runners)."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-18T10:59:56.483Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "ju-birthday-run-2026-santa-ines",
@@ -2415,7 +2420,11 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-31",
-      "distances": [],
+      "distances": [
+        5,
+        10,
+        15
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -2425,21 +2434,93 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "notes": "Quinta-feira, 31/12, largada às 5h30. Percursos de 5, 10 e 15 km (mais categorias 60+ e PCD 5 km) na página da Central da Corrida, organizada pela EuCorro Eventos Esportivos; inscrições ainda \"Em breve\". Local de largada, preço e prazo a confirmar.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-17T23:41:12.413Z",
+      "verifiedAt": "2026-10-18T11:00:21.790Z",
       "firstSeenAt": "2026-10-17T23:41:12.413Z"
+    },
+    {
+      "id": "ecorun-2026-chapadinha",
+      "name": "EcoRun · Edição Chapadinha",
+      "edition": "2026",
+      "city": "Chapadinha",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-08",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026",
+      "sourceUrl": "https://www.sacrono.com.br/eventos",
+      "sourceName": "SA Crono (lista de eventos)",
+      "publishedAt": null,
+      "confidence": "Fonte única (plataforma de inscrição SA Crono, só a lista) · confirmar distâncias e local",
+      "notes": "Corrida de rua listada na SA Crono para domingo, 8/11/2026, às 6h30, em Chapadinha, com botão \"Inscreva-se\" na lista. A página da prova não foi lida: distâncias, local de largada, preço e prazo de inscrição a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-18T10:59:56.483Z",
+      "firstSeenAt": "2026-10-18T10:59:56.483Z"
+    },
+    {
+      "id": "reis-sotense-2027-sao-joao-do-soter",
+      "name": "Corrida de Reis Sotense",
+      "edition": "2027",
+      "city": "São João do Sóter",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-01-10",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027",
+      "sourceUrl": "https://www.sacrono.com.br/eventos",
+      "sourceName": "SA Crono (lista de eventos)",
+      "publishedAt": null,
+      "confidence": "Fonte única (plataforma de inscrição SA Crono, só a lista) · confirmar distâncias e local",
+      "notes": "Corrida de rua listada na SA Crono para domingo, 10/01/2027, às 6h30, em São João do Sóter, com botão \"Inscreva-se\" na lista. A página da prova não foi lida: distâncias, local de largada, preço e prazo de inscrição a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-18T10:59:56.483Z",
+      "firstSeenAt": "2026-10-18T10:59:56.483Z"
     }
   ],
   "changes": [
+    {
+      "id": "961b6cf9-b140-4cf4-8361-3f66927b3708",
+      "eventId": "16-corrida-da-virada-2026-sao-luis",
+      "version": "[\"2026-12-31\",[5,10,15],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/16acorridaviradaslz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-18T11:00:21.790Z",
+      "notifiedAt": "2026-10-18T11:00:49.650Z"
+    },
+    {
+      "id": "ca029926-c4d3-4dac-b0cc-c93090031002",
+      "eventId": "reis-sotense-2027-sao-joao-do-soter",
+      "version": "[\"2027-01-10\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-18T10:59:56.483Z",
+      "notifiedAt": "2026-10-18T11:00:49.650Z"
+    },
+    {
+      "id": "621f3faa-9217-4e8f-b4ee-071487808cb9",
+      "eventId": "ecorun-2026-chapadinha",
+      "version": "[\"2026-11-08\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-18T10:59:56.483Z",
+      "notifiedAt": "2026-10-18T11:00:49.650Z"
+    },
     {
       "id": "afb66f79-83a0-401e-b986-ff7ca9b8fb82",
       "eventId": "16-corrida-da-virada-2026-sao-luis",
       "version": "[\"2026-12-31\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/16acorridaviradaslz\"]",
       "kind": "Nova prova",
       "at": "2026-10-17T23:41:12.413Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-18T11:00:49.650Z"
     },
     {
       "id": "aedbca5f-9198-4d91-a613-d5196475811b",
@@ -3530,7 +3611,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-17T23:41:12.413Z",
+  "lastChecked": "2026-10-18T11:00:21.790Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
