@@ -1,0 +1,17 @@
+# Uso único: baixa as tabelas públicas de idade (WMA / Alan Jones) para a calculadora "Nota por idade".
+name: Baixar tabelas de idade
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git clone --depth 1 https://github.com/AlanLyttonJones/Age-Grading /tmp/ag
+          mkdir -p dados-idade
+          (cd /tmp/ag && git log -1 --format='%H %cd' && find . -type f -not -path './.git/*' | sort) > dados-idade/LISTA.txt
+          find /tmp/ag -type f \( -iname '*road*' -o -iname '*license*' -o -iname 'readme*' \) -not -path '*/.git/*' -exec cp --parents {} dados-idade/ \;
+          git config user.name g4b7i3 && git config user.email vinikautor@gmail.com
+          git add dados-idade && git commit -m "Tabelas de idade (WMA/Alan Jones) para a calculadora" && git push
