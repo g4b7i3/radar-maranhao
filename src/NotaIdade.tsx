@@ -32,7 +32,8 @@ const NIVEIS = [
   { min: 80, nome: 'Nível nacional', cor: '#3CE07A', texto: 'Brigaria por pódio em provas nacionais da sua faixa.' },
   { min: 70, nome: 'Nível regional', cor: '#4cc9f0', texto: 'Brigaria por pódio em provas regionais da sua faixa.' },
   { min: 60, nome: 'Nível local', cor: '#a5b4fc', texto: 'Acima da média: bom corredor de provas locais.' },
-  { min: 0, nome: 'Em evolução', cor: '#cbd5e1', texto: 'Todo mundo começa aqui. Cada treino sobe essa nota.' },
+  { min: 50, nome: 'Bom ritmo', cor: '#cbd5e1', texto: 'Você corre bem pra sua idade e tá no caminho certo. Com treino, o nível local tá logo ali.' },
+  { min: 0, nome: 'Correndo firme', cor: '#cbd5e1', texto: 'Você tá correndo, e isso já te coloca na frente de muita gente. Cada treino sobe essa nota.' },
 ];
 const nivel = (pct: number) => NIVEIS.find(n => pct >= n.min)!;
 const fmtKmNome = (km: number) => DIST.find(d => Math.abs(d.km - km) < 0.01)?.nome ?? `${String(Math.round(km * 100) / 100).replace('.', ',')} km`;
@@ -152,7 +153,7 @@ export default function NotaIdade() {
           <div className="ni-pct"><b>{ok.pct.toFixed(1).replace('.', ',')}%</b><span className="ni-nivel">{n.nome}</span></div>
           <p className="ni-frase">{n.texto}</p>
           <div className="ni-barra" aria-hidden="true">
-            {[[40, 60, 'Em evolução'], [60, 70, 'Local'], [70, 80, 'Regional'], [80, 90, 'Nacional'], [90, 100, 'Mundial']].map(([a, b, t]) => <span key={t as string} style={{ flex: (b as number) - (a as number) }}><i>{t}</i></span>)}
+            {[[40, 60, 'Bom ritmo'], [60, 70, 'Local'], [70, 80, 'Regional'], [80, 90, 'Nacional'], [90, 100, 'Mundial']].map(([a, b, t]) => <span key={t as string} style={{ flex: (b as number) - (a as number) }}><i>{t}</i></span>)}
             <em style={{ left: `${Math.max(0, Math.min(100, (ok.pct - 40) / 60 * 100))}%` }} />
           </div>
           <dl className="ni-dl">
