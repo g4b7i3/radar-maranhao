@@ -2495,9 +2495,49 @@
       "elevation": null,
       "verifiedAt": "2026-10-18T11:39:34.838Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
+    },
+    {
+      "id": "corrida-natalina-2026-pindare-mirim",
+      "name": "Corrida Natalina de Pindaré-Mirim",
+      "edition": "2026",
+      "city": "Pindaré-Mirim",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://correma.com.br/corridas/corrida-natalina",
+      "sourceUrl": "https://correma.com.br/corridas/corrida-natalina",
+      "sourceName": "Correma",
+      "publishedAt": null,
+      "confidence": "Fonte única: página da Correma informada ao Radar (o site não permite leitura automática)",
+      "notes": "Data informada ao Radar. Distâncias, local, horário e inscrições: ver a página da Correma.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-18T16:06:58.871Z",
+      "firstSeenAt": "2026-10-18T16:06:42.729Z"
     }
   ],
   "changes": [
+    {
+      "id": "fb7c8cf9-b5a4-4ade-93c3-8a3af131033a",
+      "eventId": "corrida-natalina-2026-pindare-mirim",
+      "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://correma.com.br/corridas/corrida-natalina\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-18T16:06:58.871Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "1c62910f-9557-4a9e-bcca-093350f824ef",
+      "eventId": "corrida-natalina-2026-pindare-mirim",
+      "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://correma.com.br/corridas/corrida-natalina\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-18T16:06:42.729Z",
+      "notifiedAt": null
+    },
     {
       "id": "371a5279-eeb5-4078-9ff4-18d1389a3512",
       "eventId": "ecorun-2026-chapadinha",
@@ -3651,7 +3691,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-18T11:39:34.838Z",
+  "lastChecked": "2026-10-18T16:06:58.871Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
