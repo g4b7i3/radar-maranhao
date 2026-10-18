@@ -1,0 +1,5 @@
+AlanLyttonJones/Age-Grade-Tables | 57 | 2025-07-27T19:44:11Z | CC0-1.0 | Tables for grading road-running performances based on gender and age
+GunnarKarlsson/sportanalytics | 1 | 2026-09-17T09:50:28Z | MIT | Sport analytics in Rust: A crate for calculating metrics for running (Daniels VDOT, race prediction, USATF MLDR age grading) and cycling (FTP, critical power, Coggan zones, Martin road power–speed).
+AlanLyttonJones/Age-Grade-Tables | master | CC0-1.0
+AlanLyttonJones/RGScienceDiscussion | main | null
+AlanLyttonJones/SeismicMonitor | main | null
