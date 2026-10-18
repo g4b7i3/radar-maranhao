@@ -8,6 +8,7 @@ import { useTema } from './tema';
 import ClimaLargada, { SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
 import Altimetria, { SeloSubida } from './Altimetria';
+import MapaProvas from './MapaProvas';
 import AssinarAgenda, { linkCalendario, linkProva, dicaAlarme } from './Calendario';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
@@ -86,6 +87,7 @@ export default function App() {
   const [mode, setMode] = useState<'Todas' | 'Rua' | 'Trail'>('Todas');
   const [dist, setDist] = useState<number | null>(null);
   const [city, setCity] = useState('Todas');
+  const [vista, setVista] = useState<'lista' | 'mapa'>('lista');
   const [year, setYear] = useState('Todos');
   const [month, setMonth] = useState('Todos');
   const [onlyOpen, setOnlyOpen] = useState(false);
@@ -348,6 +350,12 @@ export default function App() {
               <button className="icon-btn" onClick={() => setEscolhendo(false)} aria-label="Cancelar"><X size={18} /></button>
             </div>
           )}
+          {tab === 'agenda' && (
+            <div className="seg vista-seg" role="group" aria-label="Ver as provas em">
+              <button aria-pressed={vista === 'lista'} onClick={() => setVista('lista')}>Lista</button>
+              <button aria-pressed={vista === 'mapa'} onClick={() => setVista('mapa')} data-umami-event="Mapa: abriu">Mapa</button>
+            </div>
+          )}
           <div className="list-bar">
             <p>{filtered.length === 1 ? '1 prova' : filtered.length + ' provas'}{filtersOn && tab === 'agenda' ? ' com esses filtros' : ''}</p>
             <div>
@@ -360,7 +368,8 @@ export default function App() {
             </div>
           </div>
 
-          {groups.map(([key, list]) => (
+          {tab === 'agenda' && vista === 'mapa' && <MapaProvas events={filtered} onAbrir={e => setSelected(e)} onVerLista={c => { setCity(c); setVista('lista'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
+          {(tab !== 'agenda' || vista === 'lista') && groups.map(([key, list]) => (
             <section className="month" key={key} aria-labelledby={'m-' + key}>
               <h2 id={'m-' + key}>{key === 'sem-data' ? 'Data a confirmar' : fmt.monthName(key)}{key !== 'sem-data' && fmt.year(key) !== t.slice(0, 4) && <small> {fmt.year(key)}</small>}</h2>
               <ol className="races">
