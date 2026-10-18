@@ -286,6 +286,7 @@ export default function CardTreino() {
   return (
     <main className="story-semana card-treino">
       <a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a>
+      <nav className="ni-troca" aria-label="Ferramentas de treino"><a href="/?card=treino" aria-current="page">Card do treino</a><a href="/?nota=idade" data-umami-event="Nota por idade: abriu pelo card do treino">Nota por idade <b>novo</b></a></nav>
       <h1>Card do treino</h1>
       <p className="fine">Coloque a distância e o ritmo (ou o tempo): o resto a gente calcula. Depois é só postar no story.</p>
 
