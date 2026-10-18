@@ -45,7 +45,7 @@ for (const [arq, fonte] of [['coleta/cronoesportes.json', 'Crono Esportes'], ['c
     const [, nome, dataTxt, hora, cidade, largada] = bloco;
     const precos = (/PREÇOS E CATEGORIAS\n([\s\S]*?)\*Taxa/.exec(t) || [, ''])[1];
     const dist = [...new Set([...precos.matchAll(/(\d+(?:[.,]\d+)?)\s*KM/gi)].map(m => Number(m[1].replace(',', '.'))))].filter(x => x > 0 && x < 200).sort((a, b) => a - b);
-    const status = /VAGAS ESGOTADAS/i.test(t) ? 'Esgotadas' : /INSCRI[ÇC][ÕO]ES ENCERRADAS/i.test(t) ? 'Encerradas' : /\nINSCREVA-SE\n/.test(t) ? 'Abertas' : /\nINDISPON[ÍI]VEL\n/.test(t) ? 'Encerradas' : 'Consultar';
+    const status = /VAGAS ESGOTADAS/i.test(t) ? 'Esgotadas' : /INSCRI[ÇC][ÕO]ES ENCERRADAS/i.test(t) ? 'Encerradas' : /INSCRI[ÇC][ÕO]ES EM BREVE/i.test(t) ? 'Em breve' : /\nINSCREVA-SE\n/.test(t) ? 'Abertas' : /\nINDISPON[ÍI]VEL\n/.test(t) ? 'Encerradas' : 'Consultar';
     const fim = iso((/INSCRI[ÇC][ÕO]ES ENCERRADAS EM: (\d{2}\/\d{2}\/\d{4})/i.exec(t) || [])[1]);
     candidatos.push({ fonte, url: p.url, nome, data: iso(dataTxt), hora, cidade: cidadeBonita(cidade), largada: largada.trim(), dist, status, fim, completo: true });
   }
