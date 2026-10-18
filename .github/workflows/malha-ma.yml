@@ -12,5 +12,6 @@ jobs:
           mkdir -p dados-mapa
           curl -fsSL "https://servicodados.ibge.gov.br/api/v3/malhas/estados/21?formato=application/vnd.geo%2Bjson&qualidade=intermediaria" -o dados-mapa/ma.json
           curl -fsSL "https://servicodados.ibge.gov.br/api/v1/localidades/estados/21/municipios" -o dados-mapa/municipios.json
+          curl -fsSL "https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/csv/municipios.csv" | awk -F, 'NR==1 || $6==21' > dados-mapa/municipios-ma.csv || true
           git config user.name g4b7i3 && git config user.email vinikautor@gmail.com
           git add dados-mapa && git commit -m "Contorno do MA (IBGE) para o mapa" && git push
