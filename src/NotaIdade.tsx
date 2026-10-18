@@ -58,7 +58,7 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   fonte(ctx, 600, 20, false); try { ctx.letterSpacing = '6px'; } catch { /* */ } ctx.fillText('NOTA POR IDADE', 182, 166); try { ctx.letterSpacing = '0px'; } catch { /* */ }
   const n = nivel(r.pct);
   // número grande
-  fonte(ctx, 850, 330, true); ctx.fillText(`${r.pct.toFixed(1).replace('.', ',')}%`, 84, 560);
+  fonte(ctx, 850, 330, true); ctx.fillText(`${r.pct.toFixed(1).replace('.', ',')}%`, 84, 505);
   ctx.fillStyle = n.cor;
   fonte(ctx, 800, 64, true); const tw = ctx.measureText(n.nome.toUpperCase()).width;
   ctx.beginPath(); ctx.roundRect(90, 605, tw + 60, 90, 45); ctx.fill();
