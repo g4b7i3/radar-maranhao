@@ -10,7 +10,7 @@ import EuVou from './EuVou';
 import Altimetria, { SeloSubida } from './Altimetria';
 import MapaProvas from './MapaProvas';
 import AssinarAgenda, { linkCalendario, linkProva, dicaAlarme } from './Calendario';
-import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
+import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, jaPassou, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
@@ -174,8 +174,11 @@ export default function App() {
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(''), 4000); return () => clearTimeout(t); }, [toast]);
 
   const events = data?.events ?? [];
-  const t = today();
-  const upcoming = useMemo(() => events.filter(e => !e.date || e.date >= t).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, t]);
+  // de 5 em 5 minutos a página reavalia o que já passou (a prova de hoje sai do início depois da largada)
+  const [relogio, setRelogio] = useState(0);
+  useEffect(() => { const i = setInterval(() => setRelogio(x => x + 1), 5 * 60 * 1000); return () => clearInterval(i); }, []);
+  const t = today() + '|' + relogio;
+  const upcoming = useMemo(() => events.filter(e => !jaPassou(e)).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, t]);
   const next = upcoming.find(e => e.date && status(e) !== 'Cancelada');
   const previsoes = useClimas(upcoming);
   const cidadesFuturas = useMemo(() => {
@@ -190,7 +193,7 @@ export default function App() {
 
   const filtered = useMemo(() => events
     .filter(e => tab !== 'salvas' || favorites.includes(e.id))
-    .filter(e => showPast || tab === 'salvas' || !e.date || e.date >= t)
+    .filter(e => showPast || tab === 'salvas' || !jaPassou(e))
     .filter(e => !query || norm(`${e.name} ${e.city} ${e.location} ${e.date ? MESES[Number(e.date.slice(5, 7)) - 1] + ' ' + e.date.slice(0, 4) : ''}`).includes(norm(query)))
     .filter(e => mode === 'Todas' || e.modality === mode)
     .filter(e => dist == null || e.distances.includes(dist))
@@ -210,11 +213,11 @@ export default function App() {
   const openCount = upcoming.filter(isOpen).length;
   const nextDeadline = upcoming.filter(e => isOpen(e) && e.registrationClose).sort((a, b) => a.registrationClose!.localeCompare(b.registrationClose!))[0];
   // Anos e meses que têm prova (considera as realizadas só quando o filtro pede)
-  const dated = useMemo(() => events.filter(e => e.date && (showPast || e.date >= t)), [events, showPast, t]);
+  const dated = useMemo(() => events.filter(e => e.date && (showPast || !jaPassou(e))), [events, showPast, t]);
   const years = useMemo(() => [...new Set(dated.map(e => e.date!.slice(0, 4)))].sort(), [dated]);
   const months = useMemo(() => [...new Set(dated.filter(e => year === 'Todos' || e.date!.startsWith(year)).map(e => e.date!.slice(5, 7)))].sort(), [dated, year]);
   useEffect(() => { if (month !== 'Todos' && !months.includes(month)) setMonth('Todos'); }, [months, month]);
-  const prizeCount = useMemo(() => events.filter(e => hasCashPrize(e) && (showPast || !e.date || e.date >= t)).length, [events, showPast, t]);
+  const prizeCount = useMemo(() => events.filter(e => hasCashPrize(e) && (showPast || !jaPassou(e))).length, [events, showPast, t]);
   const filtrosAtivos = [mode !== 'Todas', dist != null, city !== 'Todas', year !== 'Todos', month !== 'Todos', onlyOpen, onlyPrize, showPast].filter(Boolean).length;
   const filtersOn = query || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || onlyPrize || showPast;
 

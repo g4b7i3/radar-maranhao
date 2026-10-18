@@ -44,11 +44,30 @@ export const fmt = {
   full: (d: string | null, time = false) => d ? new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', ...(time ? { hour: '2-digit', minute: '2-digit' } : {}), timeZone: TZ }).format(asDate(d)) : 'Não divulgado',
 };
 
+/** Minutos do dia em São Luís (0–1439). */
+const minutosAgora = () => { const [h, m] = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: TZ }).format(new Date()).split(':').map(Number); return h * 60 + m; };
+/** Hora da largada em minutos, lida das notas ("largada às 6h30", "largada 18h"); null se não divulgada. */
+export function horaLargada(e: Race): number | null {
+  const m = `${e.notes ?? ''}`.match(/largada[^.]*?\b(\d{1,2})\s*h\s*(\d{2})?/i) ?? `${e.notes ?? ''}`.match(/\b(\d{1,2}):(\d{2})\b/);
+  if (!m) return null;
+  const h = Number(m[1]), min = Number(m[2] ?? 0);
+  return h < 24 && min < 60 ? h * 60 + min : null;
+}
+/** A prova já aconteceu? No dia da prova, conta 5 horas depois da largada (sem horário: 6h, ou 19h se for noturna). */
+export function jaPassou(e: Race): boolean {
+  if (!e.date) return false;
+  const t = today(), d = e.date.slice(0, 10);
+  if (d !== t) return d < t;
+  const noturna = /noturn|night|à noite|a noite/i.test(`${e.name} ${e.notes ?? ''}`);
+  const largada = horaLargada(e) ?? (noturna ? 19 * 60 : 6 * 60);
+  return minutosAgora() >= Math.min(largada + 5 * 60, 23 * 60 + 59);
+}
+
 export type Status = 'Abertas' | 'Abrem em breve' | 'Consultar' | 'Encerradas' | 'Realizada' | 'Cancelada' | string;
 export function status(e: Race): Status {
   const t = today();
   if (e.status === 'Cancelada') return 'Cancelada';
-  if (e.date && e.date < t) return 'Realizada';
+  if (jaPassou(e)) return 'Realizada';
   if (e.registrationClose && e.registrationClose.slice(0, 10) < t) return 'Encerradas';
   if (e.status === 'Em breve') return e.registrationOpen && new Date(e.registrationOpen) <= new Date() ? 'Abertura anunciada' : 'Abrem em breve';
   return e.status;
