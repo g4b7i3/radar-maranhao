@@ -74,7 +74,7 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   ctx.fillText(`${fmtKmNome(r.km)} em ${fmtTempo(r.tempo)}`, 90, 920);
   fonte(ctx, 500, 40, false); ctx.globalAlpha = .9;
   ctx.fillText(`aos ${r.idade} anos`, 90, 980);
-  ctx.fillText(`Equivale a ${fmtTempo(r.eq)} de um atleta no auge`, 90, 1040);
+  ctx.fillText(`Se tivesse 25 anos, faria em ${fmtTempo(r.eq)}`, 90, 1040);
   ctx.globalAlpha = 1;
   fonte(ctx, 800, 40, true); ctx.fillText('radarcorridasma.com.br', 90, 1230);
   fonte(ctx, 600, 24, false); ctx.globalAlpha = .85; ctx.fillText('Faça a sua: Treino › Nota por idade · @radarcorridasma', 90, 1272); ctx.globalAlpha = 1;
@@ -156,7 +156,7 @@ export default function NotaIdade() {
             <em style={{ left: `${Math.max(0, Math.min(100, (ok.pct - 40) / 60 * 100))}%` }} />
           </div>
           <dl className="ni-dl">
-            <div><dt>Seu tempo equivale a</dt><dd>{fmtTempo(ok.eq)} <small>de um atleta no auge (20 a 30 anos)</small></dd></div>
+            <div><dt>Se você tivesse 25 anos, com o mesmo preparo, faria em</dt><dd>{fmtTempo(ok.eq)}</dd></div>
             <div><dt>Recorde mundial pra sua idade</dt><dd>{fmtTempo(ok.recorde)} <small>= 100%</small></dd></div>
           </dl>
           <div className="ni-card">
