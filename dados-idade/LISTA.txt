@@ -1,0 +1,66 @@
+AlanLyttonJones/Age-Grade-Tables
+4aac6737cb9f216c90a0a610355667cd3d921c61 Sun Jul 27 12:44:11 2025 -0700
+./.gitignore
+./2010 Files/FemaleRoadStd2010.xls
+./2010 Files/MaleRoadStd2010.xls
+./2015 Files/FemaleRoadStd2015.xlsx
+./2015 Files/MaleRoadStd2015.xlsx
+./2020 Files/2020 RunScore.zip
+./2020 Files/CreateRunScoreTables/CreateRunScoreTables.cpp
+./2020 Files/CreateRunScoreTables/CreateRunScoreTables.vcxproj
+./2020 Files/CreateRunScoreTables/CreateRunScoreTables.vcxproj.filters
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/CL.command.1.tlog
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/CL.read.1.tlog
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/CL.write.1.tlog
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/CreateRunScoreTables.lastbuildstate
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/link.command.1.tlog
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/link.read.1.tlog
+./2020 Files/CreateRunScoreTables/Debug/CreateRu.3F0867FA.tlog/link.write.1.tlog
+./2020 Files/CreateRunScoreTables/Debug/CreateRunScoreTables.lastbuildstate
+./2020 Files/CreateRunScoreTables/Debug/CreateRunScoreTables.vcxproj.FileListAbsolute.txt
+./2020 Files/CreateRunScoreTables/Debug/vc142.idb
+./2020 Files/CreateRunScoreTables/ReadMe.txt
+./2020 Files/CreateRunScoreTables/Release/CreateRunScoreTables.vcxproj.FileListAbsolute.txt
+./2020 Files/CreateRunScoreTables/stdafx.cpp
+./2020 Files/CreateRunScoreTables/stdafx.h
+./2020 Files/CreateRunScoreTables/targetver.h
+./2020 Files/FemaleRoadStd2020.xlsx
+./2020 Files/FemaleTrackStdWMA2006.04.28.XLS
+./2020 Files/MaleRoadStd2020.xlsx
+./2020 Files/MaleTrackStdWMA2005.11.05.XLS
+./2020 Files/Men Single Age Bests.xlsx
+./2020 Files/Women Single Age Bests.xlsx
+./2020 Files/femaleRoad2020.xlsx
+./2020 Files/maleRoad2020.xlsx
+./2025 Files/5kmMale.jpg
+./2025 Files/Age-Grade History.pdf
+./2025 Files/AgeGrade.1mi
+./2025 Files/AgeGrade.zip
+./2025 Files/CreateRunScoreTables/CreateRunScoreTables.cpp
+./2025 Files/CreateRunScoreTables/CreateRunScoreTables.sln
+./2025 Files/CreateRunScoreTables/CreateRunScoreTables.vcxproj
+./2025 Files/CreateRunScoreTables/CreateRunScoreTables.vcxproj.filters
+./2025 Files/CreateRunScoreTables/ReadMe.txt
+./2025 Files/CreateRunScoreTables/Readme.txt
+./2025 Files/CreateRunScoreTables/stdafx.cpp
+./2025 Files/CreateRunScoreTables/stdafx.h
+./2025 Files/CreateRunScoreTables/targetver.h
+./2025 Files/Evaluating 2025 Standards Against 2020 Rankings.pdf
+./2025 Files/FemaleRoadStd2025.xlsx
+./2025 Files/FilesInAgeGrade2025Folder.pdf
+./2025 Files/MaleRoadStd2025.xlsx
+./2025 Files/Men Single Age Bests 2025.xlsx
+./2025 Files/Readme.txt
+./2025 Files/RunScore.zip
+./2025 Files/Women Single Age Bests 2025.xlsx
+./2025 Files/age-factor.jpg
+./2025 Files/femaleRoad2025.xlsx
+./2025 Files/maleRoad2025.xlsx
+./Docs/Age-Grade History.pdf
+./Docs/Creating Road Running Age Tables.pdf
+./Docs/Evaluating 2020 Standards Against 2019 Rankings.pdf
+./Docs/Evaluating 2025 Standards Against 2020 Rankings.pdf
+./LICENSE.md
+./Mt.Washington Files/Mt.WashingtonBike.xlsx
+./Mt.Washington Files/Mt.WashingtonBikeAgeGrade.txt
+./README.md
