@@ -2448,8 +2448,10 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-08",
-      "distances": [],
-      "location": "Local a confirmar",
+      "distances": [
+        5
+      ],
+      "location": "Em frente à Cidade Eco de Chapadinha-MA, localizada na Avenida Ataliba Vieira de Almeida.",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
@@ -2461,7 +2463,7 @@
       "notes": "Corrida de rua listada na SA Crono para domingo, 8/11/2026, às 6h30, em Chapadinha, com botão \"Inscreva-se\" na lista. A página da prova não foi lida: distâncias, local de largada, preço e prazo de inscrição a confirmar.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-18T10:59:56.483Z",
+      "verifiedAt": "2026-10-18T11:38:40.248Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
     {
@@ -2472,11 +2474,13 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2027-01-10",
-      "distances": [],
-      "location": "Local a confirmar",
+      "distances": [
+        5
+      ],
+      "location": "Em Frente Ao CasarÃo (na Avenida Principal)",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027",
       "sourceUrl": "https://www.sacrono.com.br/eventos",
       "sourceName": "SA Crono (lista de eventos)",
@@ -2485,11 +2489,27 @@
       "notes": "Corrida de rua listada na SA Crono para domingo, 10/01/2027, às 6h30, em São João do Sóter, com botão \"Inscreva-se\" na lista. A página da prova não foi lida: distâncias, local de largada, preço e prazo de inscrição a confirmar.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-18T10:59:56.483Z",
+      "verifiedAt": "2026-10-18T11:38:40.248Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     }
   ],
   "changes": [
+    {
+      "id": "c733addc-7452-41b7-8981-807999ae0b33",
+      "eventId": "reis-sotense-2027-sao-joao-do-soter",
+      "version": "[\"2027-01-10\",[5],\"Em Frente Ao CasarÃo (na Avenida Principal)\",null,null,\"Encerradas\",\"https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-18T11:38:40.248Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "e160fb44-6bca-4c37-a763-806f5c8fb284",
+      "eventId": "ecorun-2026-chapadinha",
+      "version": "[\"2026-11-08\",[5],\"Em frente à Cidade Eco de Chapadinha-MA, localizada na Avenida Ataliba Vieira de Almeida.\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-18T11:38:40.248Z",
+      "notifiedAt": null
+    },
     {
       "id": "961b6cf9-b140-4cf4-8361-3f66927b3708",
       "eventId": "16-corrida-da-virada-2026-sao-luis",
@@ -3611,7 +3631,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-18T11:00:21.790Z",
+  "lastChecked": "2026-10-18T11:38:40.248Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
