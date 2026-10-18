@@ -1,0 +1,42 @@
+# Uso único: baixa fotos de corrida em DOMÍNIO PÚBLICO (Wikimedia Commons) para as artes do Instagram.
+name: Baixar fotos domínio público
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: |
+          mkdir -p fotos-pd
+          cat > /tmp/f.mjs <<'JS'
+          import { writeFileSync } from 'node:fs';
+          const UA = { 'User-Agent': 'RadarCorridasMA/1.0 (radarcorridasma.com.br; vinikautor@gmail.com)' };
+          const buscas = ['Marine Corps Marathon runners', 'Air Force Marathon runners', 'Army Ten-Miler runners', 'senior runner race', 'veteran runner marathon finish', 'runner checking watch race', 'marathon start line runners', 'older woman running race'];
+          const lista = [];
+          for (const q of buscas) {
+            const u = 'https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=25&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=1400&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap');
+            const j = await (await fetch(u, { headers: UA })).json();
+            for (const p of Object.values(j.query?.pages ?? {})) {
+              const ii = p.imageinfo?.[0]; if (!ii) continue;
+              const lic = ii.extmetadata?.LicenseShortName?.value ?? '';
+              if (!/public domain|cc0|pd-/i.test(lic)) continue;
+              if (ii.width < 1200) continue;
+              lista.push({ busca: q, titulo: p.title, licenca: lic, autor: (ii.extmetadata?.Artist?.value ?? '').replace(/<[^>]+>/g, '').trim(), pagina: ii.descriptionurl, thumb: ii.thumburl, w: ii.width, h: ii.height });
+            }
+          }
+          const vistos = new Set(); const final = lista.filter(x => !vistos.has(x.titulo) && vistos.add(x.titulo)).slice(0, 48);
+          let i = 0;
+          for (const x of final) {
+            i++; x.arquivo = `f${String(i).padStart(2, '0')}.jpg`;
+            const r = await fetch(x.thumb, { headers: UA }); writeFileSync('fotos-pd/' + x.arquivo, Buffer.from(await r.arrayBuffer()));
+          }
+          writeFileSync('fotos-pd/fotos.json', JSON.stringify(final, null, 1));
+          console.log(final.length, 'fotos');
+          JS
+          node /tmp/f.mjs
+          git config user.name g4b7i3 && git config user.email vinikautor@gmail.com
+          git add fotos-pd && git commit -m "Fotos em domínio público para artes (temporário)" && git push
