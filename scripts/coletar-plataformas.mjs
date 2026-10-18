@@ -12,7 +12,7 @@ const MA = /\bMA\b|Maranh[aã]o|S[aã]o Lu[ií]s|Imperatriz|Timon|Caxias|Bacabal
 
 const FONTES = [
   { id: 'cronoesportes', lista: ['https://www.cronoesportes.com.br/eventos'], prova: /cronoesportes\.com\.br\/evento\/\d+/ },
-  { id: 'sacrono', lista: ['https://www.sacrono.com.br/'], prova: /sacrono\.com\.br\/evento\/\d{4}\// },
+  { id: 'sacrono', lista: ['https://www.sacrono.com.br/'], prova: /sacrono\.com\.br\/evento\/(\d{4}\/|[a-z0-9-]+-\d{4}$)/ },
   { id: 'centraldacorrida', lista: ['https://centraldacorrida.com.br/', 'https://centraldacorrida.com.br/eventos'], prova: /centraldacorrida\.com\.br\/evento\/[^/?#]+$/, clicarMA: true },
   // GuardaLugar: sistema de reservas/inscrições usado por organizadores do Maranhão (indicado pelo Vinik em 15/10/2026)
   { id: 'guardalugar', lista: ['https://guardalugar.com/', 'https://guardalugar.com/eventos'], extra: ['https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q'], prova: /guardalugar\.com\/evento\/[A-Za-z0-9_-]{6,}$/ },
