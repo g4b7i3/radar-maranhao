@@ -39,14 +39,17 @@ const NIVEIS = [
 const nivel = (pct: number) => NIVEIS.find(n => pct >= n.min)!;
 const fmtKmNome = (km: number) => DIST.find(d => Math.abs(d.km - km) < 0.01)?.nome ?? `${String(Math.round(km * 100) / 100).replace('.', ',')} km`;
 
-async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; tempo: number; idade: number; eq: number }) {
+type Formato = 'feed' | 'story';
+async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; tempo: number; idade: number; eq: number }, formato: Formato) {
   await document.fonts.load(`800 100px "Archivo Variable"`).catch(() => {});
-  const W = 1080, H = 1350; c.width = W; c.height = H;
+  // feed 4:5 (1080x1350); story 9:16 (1080x1920), com o conteúdo descido para fugir da barra do Instagram
+  const W = 1080, H = formato === 'story' ? 1920 : 1350, dy = formato === 'story' ? 300 : 0; c.width = W; c.height = H;
   const ctx = c.getContext('2d') as Ctx;
   const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2449D6'); g.addColorStop(1, '#14278A');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 2;
-  for (const rr of [160, 320, 480]) { ctx.beginPath(); ctx.arc(W - 90, 230, rr, 0, Math.PI * 2); ctx.stroke(); }
+  for (const rr of [160, 320, 480]) { ctx.beginPath(); ctx.arc(W - 90, 230 + dy, rr, 0, Math.PI * 2); ctx.stroke(); }
+  ctx.save(); ctx.translate(0, dy);
   // marca
   ctx.save(); ctx.translate(90, 90); ctx.scale(2.2, 2.2);
   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(0, 0, 32, 32, 7); ctx.fill();
@@ -78,8 +81,10 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   ctx.fillText(`aos ${r.idade} anos`, 90, 980);
   if (r.tempo - r.eq >= 1) ctx.fillText(`Se tivesse 25 anos, faria em ${fmtTempo(r.eq)}`, 90, 1040);
   ctx.globalAlpha = 1;
-  fonte(ctx, 800, 40, true); ctx.fillText('radarcorridasma.com.br', 90, 1230);
-  fonte(ctx, 600, 24, false); ctx.globalAlpha = .85; ctx.fillText('Faça a sua: Treino › Nota por idade · @radarcorridasma', 90, 1272); ctx.globalAlpha = 1;
+  ctx.restore(); ctx.fillStyle = '#fff';
+  const fy = formato === 'story' ? H - 330 : 1230;
+  fonte(ctx, 800, 40, true); ctx.fillText('radarcorridasma.com.br', 90, fy);
+  fonte(ctx, 600, 24, false); ctx.globalAlpha = .85; ctx.fillText('Faça a sua: Treino › Nota por idade · @radarcorridasma', 90, fy + 42); ctx.globalAlpha = 1;
 }
 
 export default function NotaIdade() {
@@ -90,7 +95,9 @@ export default function NotaIdade() {
   const [tempo, setTempo] = useState('');
   const [explica, setExplica] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const [url, setUrl] = useState<string | null>(null);
+  const [urls, setUrls] = useState<Record<Formato, string> | null>(null);
+  const [ver, setVer] = useState<Formato>('story');
+  const url = urls?.[ver] ?? null;
 
   const anos = Number(idade);
   const dist = km ?? (Number(outra.replace(',', '.')) || null);
@@ -105,20 +112,28 @@ export default function NotaIdade() {
   const ok = r && !('erro' in r) ? r : null;
 
   useEffect(() => {
-    if (!ok || !canvas.current) { setUrl(null); return; }
+    if (!ok || !canvas.current) { setUrls(null); return; }
     let vivo = true;
-    desenhar(canvas.current, ok).then(() => canvas.current!.toBlob(b => { if (vivo && b) setUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); }); }, 'image/png'));
+    (async () => {
+      const novo = {} as Record<Formato, string>;
+      for (const f of ['feed', 'story'] as Formato[]) {
+        await desenhar(canvas.current!, ok, f);
+        const b = await new Promise<Blob | null>(res => canvas.current!.toBlob(res, 'image/png'));
+        if (b) novo[f] = URL.createObjectURL(b);
+      }
+      if (vivo) setUrls(old => { if (old) Object.values(old).forEach(u => URL.revokeObjectURL(u)); return novo; });
+    })();
     return () => { vivo = false; };
   }, [ok?.pct, ok?.km, ok?.tempo, ok?.idade]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const track = (n: string) => { try { (window as unknown as { umami?: { track: (e: string) => void } }).umami?.track('Nota por idade: ' + n); } catch { /* */ } };
   async function compartilhar() {
-    if (!url) return;
-    const b = await (await fetch(url)).blob(); const f = new File([b], 'nota-por-idade.png', { type: 'image/png' });
-    if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); track('compartilhou'); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }
-    baixar();
+    const u = urls?.[ver]; if (!u) return;
+    const b = await (await fetch(u)).blob(); const f = new File([b], `nota-por-idade-${ver}.png`, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); track('compartilhou ' + ver); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }
+    baixar(ver);
   }
-  function baixar() { if (!url) return; const a = document.createElement('a'); a.href = url; a.download = 'nota-por-idade.png'; document.body.appendChild(a); a.click(); a.remove(); track('baixou'); }
+  function baixar(f: Formato) { const u = urls?.[f]; if (!u) return; const a = document.createElement('a'); a.href = u; a.download = `nota-por-idade-${f}.png`; document.body.appendChild(a); a.click(); a.remove(); track('baixou ' + f); }
   const n = ok ? nivel(ok.pct) : null;
 
   return (
@@ -165,10 +180,15 @@ export default function NotaIdade() {
           </dl>
           <div className="ni-card">
             <canvas ref={canvas} hidden />
-            {url && <img src={url} alt={`Card: ${ok.pct.toFixed(1)}%, ${n.nome}`} />}
+            <div className="seg ni-formato" role="group" aria-label="Formato do card">
+              <button aria-pressed={ver === 'story'} onClick={() => setVer('story')}>Story (9:16)</button>
+              <button aria-pressed={ver === 'feed'} onClick={() => setVer('feed')}>Feed (4:5)</button>
+            </div>
+            {url && <img className={'ni-prev ' + ver} src={url} alt={`Card ${ver === 'story' ? 'para story' : 'para o feed'}: ${ok.pct.toFixed(1)}%, ${n.nome}`} />}
             <div className="sheet-actions">
-              {'canShare' in navigator && <button className="btn solid" onClick={compartilhar} disabled={!url}><Share2 size={16} aria-hidden="true" />Postar no story</button>}
-              <button className={'canShare' in navigator ? 'btn outline' : 'btn solid'} onClick={baixar} disabled={!url}><Download size={16} aria-hidden="true" />Baixar imagem</button>
+              {'canShare' in navigator && <button className="btn solid" onClick={compartilhar} disabled={!url}><Share2 size={16} aria-hidden="true" />{ver === 'story' ? 'Postar no story' : 'Postar no feed'}</button>}
+              <button className="btn outline" onClick={() => baixar('story')} disabled={!urls}><Download size={16} aria-hidden="true" />Baixar pro story</button>
+              <button className="btn outline" onClick={() => baixar('feed')} disabled={!urls}><Download size={16} aria-hidden="true" />Baixar pro feed</button>
             </div>
           </div>
         </section>

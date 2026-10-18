@@ -732,3 +732,8 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .ni-explica-btn { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--cobalt); min-height: 44px; }
 .ni-explica { font-size: .9375rem; display: grid; gap: 8px; }
 .ni-explica p { margin: 0; }
+.ni-formato { width: 100%; margin-bottom: 10px; background: rgba(5,15,60,.35); border-color: rgba(255,255,255,.3); }
+.ni-formato button { flex: 1; color: rgba(255,255,255,.8); }
+.ni-formato button[aria-pressed="true"] { background: #fff; color: #14278A; }
+.ni-prev.story { max-width: 300px; margin: 0 auto; }
+.ni-card .sheet-actions .btn { flex: 1 1 100%; }
