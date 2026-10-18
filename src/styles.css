@@ -717,7 +717,9 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .ni-frase { margin: 0; opacity: .92; }
 .ni-barra { position: relative; display: flex; gap: 3px; margin-top: 18px; }
 .ni-barra span { height: 10px; border-radius: 4px; background: rgba(255,255,255,.25); position: relative; }
-.ni-barra span:nth-child(2) { background: #a5b4fc; } .ni-barra span:nth-child(3) { background: #4cc9f0; } .ni-barra span:nth-child(4) { background: #3CE07A; } .ni-barra span:nth-child(5) { background: #ffd166; }
+.ni-barra span:nth-child(1), .ni-barra span:nth-child(2) { background: rgba(255,255,255,.45); } .ni-barra span:nth-child(3) { background: #cbd5e1; } .ni-barra span:nth-child(4) { background: #a5b4fc; } .ni-barra span:nth-child(5) { background: #4cc9f0; } .ni-barra span:nth-child(6) { background: #3CE07A; } .ni-barra span:nth-child(7) { background: #ffd166; }
+.ni-barra span:nth-child(even) i { top: 30px; }
+.ni-barra { margin-bottom: 30px; }
 .ni-barra i { position: absolute; top: 14px; left: 0; font-style: normal; font-size: .6875rem; opacity: .85; white-space: nowrap; }
 .ni-barra em { position: absolute; top: -12px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 10px solid #fff; transform: translateX(-8px); }
 .ni-dl { margin: 18px 0 0; display: grid; gap: 10px; }

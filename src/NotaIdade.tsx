@@ -33,7 +33,8 @@ const NIVEIS = [
   { min: 70, nome: 'Nível regional', cor: '#4cc9f0', texto: 'Brigaria por pódio em provas regionais da sua faixa.' },
   { min: 60, nome: 'Nível local', cor: '#a5b4fc', texto: 'Acima da média: bom corredor de provas locais.' },
   { min: 50, nome: 'Bom ritmo', cor: '#cbd5e1', texto: 'Você corre bem pra sua idade e tá no caminho certo. Com treino, o nível local tá logo ali.' },
-  { min: 0, nome: 'Correndo firme', cor: '#cbd5e1', texto: 'Você tá correndo, e isso já te coloca na frente de muita gente. Cada treino sobe essa nota.' },
+  { min: 40, nome: 'Corre bem! Parabéns', cor: '#e2e8f0', texto: 'Mandou bem! Você corre bem pra sua idade. Continua treinando que essa nota só sobe.' },
+  { min: 0, nome: 'Em evolução', cor: '#e2e8f0', texto: 'Todo começo é assim. Cada treino sobe essa nota, e o próximo resultado já vai ser melhor.' },
 ];
 const nivel = (pct: number) => NIVEIS.find(n => pct >= n.min)!;
 const fmtKmNome = (km: number) => DIST.find(d => Math.abs(d.km - km) < 0.01)?.nome ?? `${String(Math.round(km * 100) / 100).replace('.', ',')} km`;
@@ -64,8 +65,8 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   ctx.fillStyle = '#0b1530'; ctx.fillText(n.nome.toUpperCase(), 120, 672);
   // barra de níveis
   const bx = 90, by = 760, bw = 900;
-  const escala = (p: number) => bx + bw * Math.max(0, Math.min(1, (p - 40) / 60));
-  for (const [a, b, cor] of [[40, 60, '#cbd5e1'], [60, 70, '#a5b4fc'], [70, 80, '#4cc9f0'], [80, 90, '#3CE07A'], [90, 100, '#ffd166']] as [number, number, string][]) {
+  const escala = (p: number) => bx + bw * Math.max(0, Math.min(1, (p - 30) / 70));
+  for (const [a, b, cor] of [[30, 40, '#e2e8f0'], [40, 50, '#e2e8f0'], [50, 60, '#cbd5e1'], [60, 70, '#a5b4fc'], [70, 80, '#4cc9f0'], [80, 90, '#3CE07A'], [90, 100, '#ffd166']] as [number, number, string][]) {
     ctx.fillStyle = cor; ctx.globalAlpha = .9; ctx.fillRect(escala(a), by, escala(b) - escala(a) - 4, 18);
   }
   ctx.globalAlpha = 1; const mx = escala(r.pct);
@@ -75,7 +76,7 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   ctx.fillText(`${fmtKmNome(r.km)} em ${fmtTempo(r.tempo)}`, 90, 920);
   fonte(ctx, 500, 40, false); ctx.globalAlpha = .9;
   ctx.fillText(`aos ${r.idade} anos`, 90, 980);
-  ctx.fillText(`Se tivesse 25 anos, faria em ${fmtTempo(r.eq)}`, 90, 1040);
+  if (r.tempo - r.eq >= 1) ctx.fillText(`Se tivesse 25 anos, faria em ${fmtTempo(r.eq)}`, 90, 1040);
   ctx.globalAlpha = 1;
   fonte(ctx, 800, 40, true); ctx.fillText('radarcorridasma.com.br', 90, 1230);
   fonte(ctx, 600, 24, false); ctx.globalAlpha = .85; ctx.fillText('Faça a sua: Treino › Nota por idade · @radarcorridasma', 90, 1272); ctx.globalAlpha = 1;
@@ -153,11 +154,13 @@ export default function NotaIdade() {
           <div className="ni-pct"><b>{ok.pct.toFixed(1).replace('.', ',')}%</b><span className="ni-nivel">{n.nome}</span></div>
           <p className="ni-frase">{n.texto}</p>
           <div className="ni-barra" aria-hidden="true">
-            {[[40, 60, 'Bom ritmo'], [60, 70, 'Local'], [70, 80, 'Regional'], [80, 90, 'Nacional'], [90, 100, 'Mundial']].map(([a, b, t]) => <span key={t as string} style={{ flex: (b as number) - (a as number) }}><i>{t}</i></span>)}
-            <em style={{ left: `${Math.max(0, Math.min(100, (ok.pct - 40) / 60 * 100))}%` }} />
+            {[[30, 40, 'Evolução'], [40, 50, 'Corre bem'], [50, 60, 'Bom ritmo'], [60, 70, 'Local'], [70, 80, 'Regional'], [80, 90, 'Nacional'], [90, 100, 'Mundial']].map(([a, b, t]) => <span key={t as string} style={{ flex: (b as number) - (a as number) }}><i>{t}</i></span>)}
+            <em style={{ left: `${Math.max(0, Math.min(100, (ok.pct - 30) / 70 * 100))}%` }} />
           </div>
           <dl className="ni-dl">
-            <div><dt>Se você tivesse 25 anos, com o mesmo preparo, faria em</dt><dd>{fmtTempo(ok.eq)}</dd></div>
+            {ok.tempo - ok.eq >= 1
+              ? <div><dt>Se você tivesse 25 anos, com o mesmo preparo, faria em</dt><dd>{fmtTempo(ok.eq)}</dd></div>
+              : <div><dt>Você está na idade de auge</dt><dd><small>Seu tempo já conta sem nenhum ajuste.</small></dd></div>}
             <div><dt>Recorde mundial pra sua idade</dt><dd>{fmtTempo(ok.recorde)} <small>= 100%</small></dd></div>
           </dl>
           <div className="ni-card">
