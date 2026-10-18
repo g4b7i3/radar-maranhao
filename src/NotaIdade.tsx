@@ -45,9 +45,8 @@ type Formato = 'feed' | 'story';
  *  Também encolhe qualquer texto que passaria da largura máxima. Devolve a largura desenhada. */
 function escrever(ctx: Ctx, t: string, x: number, y: number, peso: number, px: number, estreita: boolean, maxW = 900, desenhar = true) {
   fonte(ctx, peso, px, estreita);
-  const nativo = !estreita || (ctx as unknown as { fontStretch?: string }).fontStretch === 'extra-condensed';
-  const larg = ctx.measureText(t).width;
-  const sx = Math.min(nativo ? 1 : 0.7, maxW / larg);
+  const larg = ctx.measureText(t).width; // já vem com o aperto do iPhone, se for o caso (ver fonte())
+  const sx = Math.min(1, maxW / larg);
   if (desenhar) { ctx.save(); ctx.translate(x, y); ctx.scale(sx, 1); ctx.fillText(t, 0, 0); ctx.restore(); }
   return larg * sx;
 }

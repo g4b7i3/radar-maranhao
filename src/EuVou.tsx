@@ -12,9 +12,38 @@ export const SIMBOLO = ['M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-
 
 export type Ctx = CanvasRenderingContext2D & { fontStretch?: string; letterSpacing?: string };
 
+// O Safari (todo navegador do iPhone) não tem largura de fonte no canvas: o texto "estreito" sairia largo.
+// Nesse caso, os textos estreitos são desenhados com um aperto horizontal que imita a fonte estreita.
+const ESTREITA_NATIVA = typeof CanvasRenderingContext2D !== 'undefined' && 'fontStretch' in CanvasRenderingContext2D.prototype;
+const APERTO = 0.7;
+type CtxAperto = Ctx & { __aperto?: number; __ajustado?: boolean };
+
+function prepararAperto(ctx: CtxAperto) {
+  if (ctx.__ajustado) return;
+  ctx.__ajustado = true;
+  const fill = ctx.fillText.bind(ctx), stroke = ctx.strokeText.bind(ctx), medir = ctx.measureText.bind(ctx);
+  const desenhar = (f: typeof fill) => (t: string, x: number, y: number, max?: number) => {
+    const s = ctx.__aperto ?? 1;
+    if (s === 1) return max == null ? f(t, x, y) : f(t, x, y, max);
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, 1);
+    if (max == null) f(t, 0, 0); else f(t, 0, 0, max / s);
+    ctx.restore();
+  };
+  ctx.fillText = desenhar(fill);
+  ctx.strokeText = desenhar(stroke);
+  ctx.measureText = (t: string) => {
+    const m = medir(t), s = ctx.__aperto ?? 1;
+    if (s === 1) return m;
+    return new Proxy(m, { get: (o, k) => (k === 'width' || k === 'actualBoundingBoxLeft' || k === 'actualBoundingBoxRight') ? (o[k as keyof TextMetrics] as number) * s : o[k as keyof TextMetrics] });
+  };
+}
+
 export function fonte(ctx: Ctx, peso: number, px: number, estreita: boolean) {
   ctx.font = `${peso} ${px}px ${FONTE}`;
-  try { ctx.fontStretch = estreita ? 'extra-condensed' : 'normal'; } catch { /* navegador sem suporte: usa a largura normal */ }
+  if (ESTREITA_NATIVA) { try { ctx.fontStretch = estreita ? 'extra-condensed' : 'normal'; } catch { /* sem suporte */ } return; }
+  const c = ctx as CtxAperto;
+  prepararAperto(c);
+  c.__aperto = estreita ? APERTO : 1;
 }
 
 /** Quebra o texto em linhas que cabem na largura, diminuindo a fonte se precisar. */
