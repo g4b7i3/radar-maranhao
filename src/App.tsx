@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
-import { HeroBackdrop, CountUp, useReveal } from './HeroFx';
+import { CountUp, useReveal } from './HeroFx';
+import { RadarFundo, BandeiraMA } from './HeroRadar';
 import { detect } from './install';
 import { useTema } from './tema';
-import ClimaLargada, { ClimaHero, SeloClima, useClimas, type Clima } from './Clima';
+import ClimaLargada, { SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
 import Altimetria, { SeloSubida } from './Altimetria';
 import AssinarAgenda, { linkCalendario, linkProva, dicaAlarme } from './Calendario';
@@ -252,35 +253,37 @@ export default function App() {
       {!data && !error && <p className="loading">Carregando a agenda…</p>}
 
       {data && tab === 'agenda' && (
-        <section className="hero" aria-labelledby="next-title" ref={heroRef}>
-          <HeroBackdrop hostRef={heroRef} />
-          <div className="hero-inner">
+        <section className="hero rh" aria-labelledby="next-title" ref={heroRef}>
+          <RadarFundo hostRef={heroRef} />
+          <div className="rh-inner">
+            <p className="rh-status"><span className="live-dot" aria-hidden="true" />Radar ativo · <BandeiraMA w={20} h={13} /> MA · {fmt.checked(data.lastChecked).replace(' às ', ' ')}</p>
             {next ? <>
-              <div className="hero-text">
-                <p className="live"><span className="live-dot" aria-hidden="true" />Radar ativo, conferido {fmt.checked(data.lastChecked)}</p>
-                <p className="hero-kicker">Próxima largada</p>
-                <h1 id="next-title"><button onClick={() => setSelected(next)}>{next.name}</button></h1>
-                <p className="hero-when">{fmt.long(next.date)}</p>
-                <p className="hero-where"><MapPin size={16} aria-hidden="true" />{placeLabel(next)}</p>
-                <ClimaHero c={previsoes[next.id]} />
-                <div className="hero-actions">
-                  <button className="btn light" onClick={() => setSelected(next)}>Ver detalhes</button>
-                  <button className="btn ghost" onClick={() => toggleSave(next)} aria-pressed={favorites.includes(next.id)}>
-                    <Bookmark size={16} fill={favorites.includes(next.id) ? 'currentColor' : 'none'} aria-hidden="true" />{favorites.includes(next.id) ? 'Salva' : 'Salvar'}
-                  </button>
-                </div>
+              <p className="rh-rot">Próxima largada</p>
+              <h1 id="next-title"><button onClick={() => setSelected(next)}>{next.name}</button></h1>
+              {(() => { const cd = countdown(next.date)!; return <p className="rh-conta">{cd.unit ? `Faltam ${cd.n} ${cd.unit}` : 'Hoje é dia de prova'}</p>; })()}
+              <div className="rh-hud">
+                <div className="rh-cel"><small>Data</small><b>{next.date ? `${fmt.weekdayShort(next.date).replace(/^./, c => c.toUpperCase())}, ${fmt.short(next.date)}` : 'A confirmar'}</b></div>
+                <div className="rh-cel"><small>Local</small><b>{placeLabel(next)}</b></div>
+                {previsoes[next.id] && (() => { const c = previsoes[next.id]!; return (
+                  <div className="rh-cel larga">
+                    <div><small>{c.tipico ? `Costuma fazer (${c.tipico.mes})` : 'Largada'}</small><div className="rh-clima"><b>{c.temp}°</b><span>sensação {c.sens}°</span></div></div>
+                    {!c.tipico && c.chuva != null && c.chuva >= 30 && <span className="rh-chuva">Chuva {c.chuva}%</span>}
+                  </div>); })()}
               </div>
-              <div className="clock" aria-label={'Faltam ' + (daysUntil(next.date) ?? '') + ' dias'}>
-                <span className="clock-n"><CountUp value={countdown(next.date)!.n} /></span>
-                <span className="clock-unit">{countdown(next.date)!.unit ? countdown(next.date)!.unit + ' para a largada' : 'é dia de prova'}</span>
+              <div className="hero-actions rh-acoes">
+                <button className="btn light" onClick={() => setSelected(next)}>Ver detalhes</button>
+                <button className="btn ghost" onClick={() => toggleSave(next)} aria-pressed={favorites.includes(next.id)}>
+                  <Bookmark size={16} fill={favorites.includes(next.id) ? 'currentColor' : 'none'} aria-hidden="true" />{favorites.includes(next.id) ? 'Salva' : 'Salvar'}
+                </button>
               </div>
-            </> : <div className="hero-text"><h1 id="next-title">Nenhuma prova futura na agenda ainda.</h1><p className="hero-when">A pesquisa diária adiciona novas provas assim que forem anunciadas.</p></div>}
+            </> : <><h1 id="next-title">Nenhuma prova futura na agenda ainda.</h1><p className="rh-vazio">A pesquisa diária adiciona novas provas assim que forem anunciadas.</p></>}
+            <div className="rh-nums">
+              <div><b><CountUp value={String(upcoming.length)} /></b><small>provas pela frente</small></div>
+              <div><b><CountUp value={String(new Set(upcoming.map(e => e.city)).size)} /></b><small>cidades</small></div>
+              <div><b><CountUp value={String(openCount)} /></b><small>inscrições abertas</small></div>
+            </div>
+            {nextDeadline && <p className="rh-prazo">Próximo prazo: <button className="link-inline" onClick={() => setSelected(nextDeadline)}>{nextDeadline.name}</button>, {daysUntil(nextDeadline.registrationClose) === 0 ? 'hoje' : daysUntil(nextDeadline.registrationClose) === 1 ? 'amanhã' : fmt.short(nextDeadline.registrationClose)}</p>}
           </div>
-          <p className="hero-sum">
-            <span><strong><CountUp value={String(upcoming.length)} /></strong> provas pela frente em {new Set(upcoming.map(e => e.city)).size} cidades</span>
-            <span><strong><CountUp value={String(openCount)} /></strong> com inscrições abertas</span>
-            {nextDeadline && <span>Próximo prazo: <button className="link-inline" onClick={() => setSelected(nextDeadline)}>{nextDeadline.name}</button>, {daysUntil(nextDeadline.registrationClose) === 0 ? 'hoje' : daysUntil(nextDeadline.registrationClose) === 1 ? 'amanhã' : fmt.short(nextDeadline.registrationClose)}</span>}
-          </p>
         </section>
       )}
 
