@@ -75,6 +75,13 @@ export default function App() {
   }, []);
   const [isApp] = useState(() => detect().standalone);
   const heroRef = useRef<HTMLElement>(null);
+  // No celular, os botões "Meu treino" e "Eu vou!" só aparecem depois que a pessoa rola um pouco (não cobrem o topo).
+  const [rolou, setRolou] = useState(() => typeof window !== 'undefined' && window.scrollY > 240);
+  useEffect(() => {
+    const f = () => setRolou(window.scrollY > 240);
+    window.addEventListener('scroll', f, { passive: true }); f();
+    return () => window.removeEventListener('scroll', f);
+  }, []);
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<'Todas' | 'Rua' | 'Trail'>('Todas');
   const [dist, setDist] = useState<number | null>(null);
@@ -481,7 +488,7 @@ export default function App() {
         </footer>
       )}
 
-      <div className="fabs">
+      <div className={rolou ? 'fabs rolou' : 'fabs'}>
         {!escolhendo && !semFabTreino && <div className="euvou-wrap">
           <button className="euvou-fechar" onClick={() => setSemFabTreino(true)} aria-label="Fechar o botão do card do treino" data-umami-event="Card do treino: fechou o botão"><X size={12} strokeWidth={3} aria-hidden="true" /></button>
           <a className="euvou-fab treino-fab" href="/?card=treino" title="Monte o card do seu treino (distância, ritmo, tempo e zona) para os stories" data-umami-event="Card do treino: botão flutuante"><Activity size={18} aria-hidden="true" /><span><b>Meu treino</b><small>Card pro seu story</small></span></a>

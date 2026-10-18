@@ -788,3 +788,8 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
   .rh-inner { padding-top: 40px; padding-bottom: 32px; }
 }
 @media (prefers-reduced-motion: reduce) { .rh-feixe, .rh-blip { animation: none; } }
+/* no celular, "Meu treino" e "Eu vou!" esperam a pessoa rolar a tela (não cobrem o destaque) */
+@media (max-width: 760px) {
+  .fabs .euvou-wrap { transition: opacity .25s ease, transform .25s ease; }
+  .fabs:not(.rolou) .euvou-wrap { opacity: 0; transform: translateY(12px); pointer-events: none; visibility: hidden; }
+}
