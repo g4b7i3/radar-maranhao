@@ -40,6 +40,17 @@ const nivel = (pct: number) => NIVEIS.find(n => pct >= n.min)!;
 const fmtKmNome = (km: number) => DIST.find(d => Math.abs(d.km - km) < 0.01)?.nome ?? `${String(Math.round(km * 100) / 100).replace('.', ',')} km`;
 
 type Formato = 'feed' | 'story';
+
+/** O Safari (iPhone) ignora a largura estreita da fonte no canvas: aí a gente estreita na mão.
+ *  Também encolhe qualquer texto que passaria da largura máxima. Devolve a largura desenhada. */
+function escrever(ctx: Ctx, t: string, x: number, y: number, peso: number, px: number, estreita: boolean, maxW = 900, desenhar = true) {
+  fonte(ctx, peso, px, estreita);
+  const nativo = !estreita || (ctx as unknown as { fontStretch?: string }).fontStretch === 'extra-condensed';
+  const larg = ctx.measureText(t).width;
+  const sx = Math.min(nativo ? 1 : 0.7, maxW / larg);
+  if (desenhar) { ctx.save(); ctx.translate(x, y); ctx.scale(sx, 1); ctx.fillText(t, 0, 0); ctx.restore(); }
+  return larg * sx;
+}
 async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; tempo: number; idade: number; eq: number }, formato: Formato) {
   await document.fonts.load(`800 100px "Archivo Variable"`).catch(() => {});
   // feed 4:5 (1080x1350); story 9:16 (1080x1920), com o conteúdo descido para fugir da barra do Instagram
@@ -57,15 +68,15 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   for (const p of SIMBOLO) ctx.stroke(new Path2D(p));
   ctx.restore();
   ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
-  fonte(ctx, 800, 34, true); ctx.fillText('RADAR CORRIDAS', 180, 138);
+  escrever(ctx, 'RADAR CORRIDAS', 180, 138, 800, 34, true);
   fonte(ctx, 600, 20, false); try { ctx.letterSpacing = '6px'; } catch { /* */ } ctx.fillText('NOTA POR IDADE', 182, 166); try { ctx.letterSpacing = '0px'; } catch { /* */ }
   const n = nivel(r.pct);
   // número grande
-  fonte(ctx, 850, 330, true); ctx.fillText(`${r.pct.toFixed(1).replace('.', ',')}%`, 84, 505);
+  escrever(ctx, `${r.pct.toFixed(1).replace('.', ',')}%`, 84, 505, 850, 330, true, 900);
   ctx.fillStyle = n.cor;
-  fonte(ctx, 800, 64, true); const tw = ctx.measureText(n.nome.toUpperCase()).width;
+  const tw = escrever(ctx, n.nome.toUpperCase(), 0, 0, 800, 64, true, 840, false);
   ctx.beginPath(); ctx.roundRect(90, 605, tw + 60, 90, 45); ctx.fill();
-  ctx.fillStyle = '#0b1530'; ctx.fillText(n.nome.toUpperCase(), 120, 672);
+  ctx.fillStyle = '#0b1530'; escrever(ctx, n.nome.toUpperCase(), 120, 672, 800, 64, true, 840);
   // barra de níveis
   const bx = 90, by = 760, bw = 900;
   const escala = (p: number) => bx + bw * Math.max(0, Math.min(1, (p - 30) / 70));
@@ -75,16 +86,16 @@ async function desenhar(c: HTMLCanvasElement, r: { pct: number; km: number; temp
   ctx.globalAlpha = 1; const mx = escala(r.pct);
   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(mx, by - 6); ctx.lineTo(mx - 16, by - 32); ctx.lineTo(mx + 16, by - 32); ctx.fill();
   // detalhes
-  ctx.fillStyle = '#fff'; fonte(ctx, 800, 76, true);
-  ctx.fillText(`${fmtKmNome(r.km)} em ${fmtTempo(r.tempo)}`, 90, 920);
-  fonte(ctx, 500, 40, false); ctx.globalAlpha = .9;
-  ctx.fillText(`aos ${r.idade} anos`, 90, 980);
-  if (r.tempo - r.eq >= 1) ctx.fillText(`Se tivesse 25 anos, faria em ${fmtTempo(r.eq)}`, 90, 1040);
+  ctx.fillStyle = '#fff';
+  escrever(ctx, `${fmtKmNome(r.km)} em ${fmtTempo(r.tempo)}`, 90, 920, 800, 76, true);
+  ctx.globalAlpha = .9;
+  escrever(ctx, `aos ${r.idade} anos`, 90, 980, 500, 40, false);
+  if (r.tempo - r.eq >= 1) escrever(ctx, `Se tivesse 25 anos, faria em ${fmtTempo(r.eq)}`, 90, 1040, 500, 40, false);
   ctx.globalAlpha = 1;
   ctx.restore(); ctx.fillStyle = '#fff';
   const fy = formato === 'story' ? H - 330 : 1230;
-  fonte(ctx, 800, 40, true); ctx.fillText('radarcorridasma.com.br', 90, fy);
-  fonte(ctx, 600, 24, false); ctx.globalAlpha = .85; ctx.fillText('Faça a sua: Treino › Nota por idade · @radarcorridasma', 90, fy + 42); ctx.globalAlpha = 1;
+  escrever(ctx, 'radarcorridasma.com.br', 90, fy, 800, 40, true);
+  ctx.globalAlpha = .85; escrever(ctx, 'Faça a sua: Treino › Nota por idade · @radarcorridasma', 90, fy + 42, 600, 24, false); ctx.globalAlpha = 1;
 }
 
 export default function NotaIdade() {
