@@ -837,3 +837,40 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .mapa-cidade li svg { color: var(--muted); flex-shrink: 0; }
 .mapa-mais { margin-top: 8px; font-weight: 700; color: var(--cobalt); min-height: 44px; }
 .pino text.pino-nome.meio { text-anchor: middle; }
+
+/* ===== Neste fim de semana ===== */
+.fds { margin: 4px 0 18px; }
+.fds-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.fds h2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0; font-weight: 850; font-stretch: 72%; font-size: 1.5rem; letter-spacing: -.005em; }
+.fds h2 svg { color: var(--cobalt); }
+.fds h2 small { font-weight: 600; font-stretch: 100%; font-size: .9rem; color: var(--muted); letter-spacing: 0; }
+.fds-lista { list-style: none; margin: 0 -16px; padding: 2px 16px 8px; display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.fds-lista::-webkit-scrollbar { display: none; }
+.fds-lista li { flex: 0 0 min(250px, 72%); scroll-snap-align: start; }
+.fds-lista button { width: 100%; height: 100%; text-align: left; display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--line); color: var(--ink); }
+.fds-lista button:hover { border-color: var(--cobalt); }
+.fds-dia { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: var(--cobalt); color: #fff; font-size: .8rem; font-weight: 750; text-transform: capitalize; letter-spacing: .02em; }
+.fds-lista b { font-size: 1.02rem; line-height: 1.25; font-weight: 700; }
+.fds-onde { font-size: .88rem; color: var(--muted); }
+.fds-chip svg { vertical-align: -2px; margin-right: 4px; }
+.fds-chip small, .prize-chip small { margin-left: 6px; }
+
+/* ===== Perto de você ===== */
+.perto { margin: 0 0 16px; padding: 14px 16px; border-radius: 16px; border: 1.5px dashed var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 12px; }
+.perto.on { border-style: solid; border-color: var(--cobalt); background: var(--cobalt-tint); }
+.perto-txt { display: flex; align-items: flex-start; gap: 10px; }
+.perto-txt > svg { color: var(--cobalt); flex: none; margin-top: 2px; }
+.perto-txt > div { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.perto-txt b { font-size: 1.05rem; }
+.perto-txt small { color: var(--muted); font-size: .88rem; }
+.perto-txt .icon-btn { margin: -8px -8px 0 0; }
+.perto-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.perto-acoes .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.perto-sel { min-width: 200px; }
+.perto-erro { margin: 0; color: #c2410c; font-size: .9rem; font-weight: 600; }
+.perto-priv { margin: 0; font-size: .78rem; color: var(--muted); }
+.race-km { font-style: normal; font-weight: 700; color: var(--cobalt); }
+.perto-acoes > .btn { flex: 1 1 auto; justify-content: center; }
+.perto.on .perto-acoes .chip { min-height: 38px; padding: 0 12px; font-size: .92rem; }
+.perto.on .perto-acoes { gap: 6px 8px; }
+.fds-topo .btn.text { white-space: nowrap; flex: none; }

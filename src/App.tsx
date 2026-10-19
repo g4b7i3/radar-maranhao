@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
+import { Bookmark, CalendarDays, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
 import { RadarFundo, BandeiraMA } from './HeroRadar';
@@ -9,6 +9,7 @@ import ClimaLargada, { SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
 import Altimetria, { SeloSubida } from './Altimetria';
 import MapaProvas from './MapaProvas';
+import { PertoDeVoce, FimDeSemana, fimDeSemana, ehFimDeSemana, distancia, kmTexto, type Perto } from './PertoFds';
 import AssinarAgenda, { linkCalendario, linkProva, dicaAlarme } from './Calendario';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, jaPassou, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
@@ -102,6 +103,10 @@ export default function App() {
     if (!filtrosVistos) { setFiltrosVistos(true); try { localStorage.setItem('radar-filtros-visto', '1'); } catch { /* */ } }
   }
   const [showPast, setShowPast] = useState(false);
+  const [soFds, setSoFds] = useState(false); // filtro "Este fim de semana"
+  // "Perto de você": cidade de referência e raio; só o nome/posição da cidade fica guardado no aparelho
+  const [perto, setPerto] = useState<Perto | null>(() => load('radar-perto', null));
+  function mudarPerto(p: Perto | null) { setPerto(p); store('radar-perto', p); if (p) rastrear('Perto de você', `${p.cidade} · ${p.raio} km`); }
   const [favorites, setFavorites] = useState<string[]>(() => load('radar-favorites', []));
   const [seen, setSeen] = useState<string[]>(() => load('radar-seen', []));
   const [selected, setSelected] = useState<Race | null>(null);
@@ -191,8 +196,13 @@ export default function App() {
   // Só as distâncias mais procuradas viram botão; as outras continuam na ficha de cada prova.
   const distances = useMemo(() => { const has = new Set(events.flatMap(e => e.distances)); return [3, 5, 10, 15, 21, 42].filter(d => has.has(d)); }, [events]);
 
+  const fds = useMemo(() => fimDeSemana(today()), [t]);
+  const provasFds = useMemo(() => upcoming.filter(e => ehFimDeSemana(e, fds) && status(e) !== 'Cancelada'), [upcoming, fds]);
+  const pertoAtivo = tab === 'agenda' && perto != null;
   const filtered = useMemo(() => events
     .filter(e => tab !== 'salvas' || favorites.includes(e.id))
+    .filter(e => !soFds || tab === 'salvas' || ehFimDeSemana(e, fds))
+    .filter(e => { if (!pertoAtivo) return true; const d = distancia(perto!, e.city); return d != null && d <= perto!.raio; })
     .filter(e => showPast || tab === 'salvas' || !jaPassou(e))
     .filter(e => !query || norm(`${e.name} ${e.city} ${e.location} ${e.date ? MESES[Number(e.date.slice(5, 7)) - 1] + ' ' + e.date.slice(0, 4) : ''}`).includes(norm(query)))
     .filter(e => mode === 'Todas' || e.modality === mode)
@@ -202,7 +212,7 @@ export default function App() {
     .filter(e => month === 'Todos' || e.date?.slice(5, 7) === month)
     .filter(e => !onlyOpen || isOpen(e))
     .filter(e => !onlyPrize || hasCashPrize(e))
-    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, tab, favorites, showPast, query, mode, dist, city, year, month, onlyOpen, onlyPrize, t]);
+    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, tab, favorites, showPast, query, mode, dist, city, year, month, onlyOpen, onlyPrize, t, soFds, fds, pertoAtivo, perto]);
 
   const groups = useMemo(() => {
     const m = new Map<string, Race[]>();
@@ -218,8 +228,8 @@ export default function App() {
   const months = useMemo(() => [...new Set(dated.filter(e => year === 'Todos' || e.date!.startsWith(year)).map(e => e.date!.slice(5, 7)))].sort(), [dated, year]);
   useEffect(() => { if (month !== 'Todos' && !months.includes(month)) setMonth('Todos'); }, [months, month]);
   const prizeCount = useMemo(() => events.filter(e => hasCashPrize(e) && (showPast || !jaPassou(e))).length, [events, showPast, t]);
-  const filtrosAtivos = [mode !== 'Todas', dist != null, city !== 'Todas', year !== 'Todos', month !== 'Todos', onlyOpen, onlyPrize, showPast].filter(Boolean).length;
-  const filtersOn = query || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || onlyPrize || showPast;
+  const filtrosAtivos = [soFds, mode !== 'Todas', dist != null, city !== 'Todas', year !== 'Todos', month !== 'Todos', onlyOpen, onlyPrize, showPast].filter(Boolean).length;
+  const filtersOn = query || soFds || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || onlyPrize || showPast;
 
   function toggleSave(e: Race) {
     const v = favorites.includes(e.id) ? favorites.filter(id => id !== e.id) : [...favorites, e.id];
@@ -227,7 +237,7 @@ export default function App() {
     setToast(v.includes(e.id) ? 'Prova salva na sua agenda.' : 'Prova removida da sua agenda.');
   }
   function markAllRead() { const v = (data?.changes ?? []).map(c => c.id); setSeen(v); store('radar-seen', v); }
-  function clearFilters() { setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setYear('Todos'); setMonth('Todos'); setOnlyOpen(false); setOnlyPrize(false); setShowPast(false); }
+  function clearFilters() { setSoFds(false); setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setYear('Todos'); setMonth('Todos'); setOnlyOpen(false); setOnlyPrize(false); setShowPast(false); }
   async function copyAgendaLink() {
     const url = `${window.location.origin}/?agenda=${favorites.join(',')}`;
     try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
@@ -303,6 +313,8 @@ export default function App() {
         {data && (tab === 'agenda' || tab === 'salvas') && <>
           {tab === 'salvas' && <div className="page-head"><h1>Minha agenda</h1><p>Monte sua agenda: toque no marcador das provas que você quer correr e exporte tudo para o calendário do celular (Google Agenda, iPhone ou Outlook). Sem cadastro: a lista fica guardada neste aparelho. Para levar para outro celular ou mandar para um amigo, use “Copiar link da minha agenda”.</p></div>}
 
+          {tab === 'agenda' && !filtersOn && !perto && <FimDeSemana provas={provasFds} fds={fds} onAbrir={e => abrirProva(e)} onVerTodas={() => { setSoFds(true); setVista('lista'); rastrear('Fim de semana: ver todas'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
+          {tab === 'agenda' && <PertoDeVoce perto={perto} mudar={mudarPerto} total={filtered.length} />}
           {tab === 'agenda' && (
             <div className={filtrosAbertos ? 'filters aberto' : 'filters'} role="search">
               <div className="search-row">
@@ -324,6 +336,7 @@ export default function App() {
                 <div className="seg" role="group" aria-label="Modalidade">
                   {(['Todas', 'Rua', 'Trail'] as const).map(m => <button key={m} aria-pressed={mode === m} onClick={() => { setMode(m); if (m !== 'Todas' && m !== mode) rastrear('Filtro: modalidade', m); }}>{m === 'Todas' ? 'Todas' : m === 'Rua' ? 'Rua' : 'Trail'}</button>)}
                 </div>
+                <button className="chip fds-chip" aria-pressed={soFds} onClick={() => { setSoFds(!soFds); if (!soFds) rastrear('Filtro: fim de semana'); }}><CalendarDays size={15} aria-hidden="true" />Este fim de semana{provasFds.length > 0 && <small>{provasFds.length}</small>}</button>
                 <div className="chips" role="group" aria-label="Distância">
                   {distances.map(d => <button key={d} className="chip" aria-pressed={dist === d} onClick={() => { setDist(dist === d ? null : d); if (dist !== d) rastrear('Filtro: distância', `${d} km`); }}>{d} km</button>)}
                 </div>
@@ -384,7 +397,7 @@ export default function App() {
                         <span className="race-date">{e.date ? <><b>{fmt.day(e.date)}</b><small>{fmt.weekdayShort(e.date)}</small></> : <b className="tbd">?</b>}</span>
                         <span className="race-body">
                           <span className="race-name">{e.name}</span>
-                          <span className="race-place">{e.modality === 'Trail' && <Mountain size={14} aria-label="Trail" />}{placeList(e)}</span>
+                          <span className="race-place">{e.modality === 'Trail' && <Mountain size={14} aria-label="Trail" />}{placeList(e)}{pertoAtivo && (() => { const d = distancia(perto!, e.city); return d != null ? <em className="race-km"> · {kmTexto(d)}</em> : null; })()}</span>
                           <span className="race-meta">
                             <span className="dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d}k</span>) : <span>distâncias a confirmar</span>}</span>
                             <StatusTag e={e} />
