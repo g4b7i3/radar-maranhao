@@ -98,17 +98,22 @@
       ],
       "location": "São Luís · largada a confirmar",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-10-28",
+      "status": "Abertas",
       "officialUrl": "https://www.ticketsports.com.br/e/MEIA%20MARATONA%20DA%20POL%C3%83%C2%8DCIA%20FEDERAL%20DO%20MARANH%C3%83%C6%92O%202026-87936",
       "sourceUrl": "https://soucorredor.com.br/evento/8952/meia_maratona_da_policia_federal_do_maranhao_2026",
       "sourceName": "Sou Corredor",
       "publishedAt": null,
-      "verifiedAt": "2026-10-13T02:25:00Z",
-      "confidence": "Calendário · confirmar regulamento",
-      "notes": "Data e distâncias listadas no calendário. A página oficial está vinculada, mas os prazos não puderam ser confirmados.",
-      "firstSeenAt": "2026-10-13T02:25:00Z",
-      "prize": null
+      "confidence": "Página de inscrição oficial (Ticket Sports)",
+      "notes": "Organização SPORTRI Eventos. Inscrições até 28/10/2026 pela Ticket Sports. Distâncias de 5, 10 e 21 km, mais Corrida Kids e Kids+ (1 km competitivo, 12 e 13 anos). Local da largada e percursos ainda não definidos. Kits em 30/10 (10h às 19h) e 31/10 (10h às 16h), local a definir.",
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Página oficial: troféus no pódio (5 primeiros de 5, 10 e 21 km no geral, 3 primeiros por faixa etária, categorias Policial Federal e PcD); não cita dinheiro."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
       "id": "e-funcional-2026-sao-luis",
@@ -347,15 +352,15 @@
         5
       ],
       "location": "Outset Academia",
-      "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationOpen": "2026-09-26",
+      "registrationClose": "2026-10-30",
+      "status": "Abertas",
       "officialUrl": "https://souatleta.com/ingresso/outset-run/",
       "sourceUrl": "https://souatleta.com/wp-content/uploads/2026/09/Regulamento_Outset_Run_2a_Edicao-6.pdf",
       "sourceName": "Sou Atleta (inscrição e regulamento)",
       "publishedAt": null,
       "confidence": "Página oficial de inscrição e regulamento · data a confirmar",
-      "notes": "Data mudou: a página de inscrição (Sou Atleta) e a capa do regulamento dizem domingo, 01/11/2026, às 5h, na Outset Academia; um trecho antigo do regulamento ainda fala em 25/10 e calendários seguem com 25/10. Confirmar com o organizador. Percursos de 3 e 5 km. Status e prazo de inscrição não informados.",
+      "notes": "A página de inscrição (Sou Atleta) e a capa do regulamento dizem domingo, 01/11/2026, na Outset Academia; um trecho antigo do regulamento ainda fala em 25/10 e calendários seguem com 25/10. Horário: a página diz 5h; o regulamento fala em concentração às 5h e largada às 6h. Percursos de 3 e 5 km. Inscrições de 26/09 a 30/10/2026 ou até as 400 vagas (restavam 13 na página em 19/10): R$ 68 ou R$ 80 + R$ 5 de taxa.",
       "prize": {
         "kind": "dinheiro",
         "top": 500,
@@ -369,7 +374,7 @@
         "routeUrl": "https://souatleta.com/wp-content/uploads/2026/09/Regulamento_Outset_Run_2a_Edicao-6.pdf",
         "summary": "Regulamento: percursos de 3 e 5 km em trajeto plano e urbano."
       },
-      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -385,21 +390,21 @@
       ],
       "location": "Avenida Castelo Branco",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-10-30",
+      "status": "Abertas",
       "officialUrl": "https://www.sympla.com.br/evento/corrida-do-chopp-2a-edicao/3538762",
       "sourceUrl": "https://www.sympla.com.br/evento/corrida-do-chopp-2a-edicao/3538762",
       "sourceName": "Sympla",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial",
-      "notes": "Corrida às 17h, com evento até 22h30. Vagas limitadas; prazo e valor não informados na página.",
+      "confidence": "Página de inscrição oficial (Sympla)",
+      "notes": "Corrida às 17h, com evento até 22h30, na Avenida Castelo Branco. 4º lote a R$ 145 + R$ 14,50 de taxa, com inscrições até 30/10/2026 (lotes 1 a 3 encerrados ou esgotados). Vagas limitadas.",
       "prize": {
         "kind": "dinheiro",
         "top": 400,
         "summary": "Categoria geral dos 5 km: R$ 400 + troféu + barril de chopp de 30 L (1º), R$ 300 + troféu + 2 growlers (2º) e R$ 200 + troféu + 1 growler (3º). Texto do organizador na página do evento (reproduzido no Road Runners)."
       },
       "elevation": null,
-      "verifiedAt": "2026-10-18T10:59:56.483Z",
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -418,16 +423,17 @@
       "location": "Praça das Laranjeiras, Vila Militar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://doity.com.br/27-da-ju-birthday-run",
       "sourceUrl": "https://doity.com.br/27-da-ju-birthday-run",
       "sourceName": "Doity",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h. Prazo e valor não informados na página.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "notes": "Largada às 6h na Praça das Laranjeiras. Inscrição gratuita (lote único) pelo Doity; prazo não informado.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "outubro-rosa-sao-rafael-2026-imperatriz",
@@ -438,6 +444,7 @@
       "modality": "Rua",
       "date": "2026-11-01",
       "distances": [
+        3,
         5,
         10
       ],
@@ -451,9 +458,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Também tem caminhada. Distâncias segundo o running.life.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus aos 3 primeiros no geral, categoria Colaborador e faixas etárias dos 5 e 10 km; medalha para todos."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "uemasul-2026-imperatriz",
@@ -467,7 +479,7 @@
         3,
         5
       ],
-      "location": "Local a confirmar",
+      "location": "Campus I da UEMASUL, Rua Godofredo Viana, 1300, Centro",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
@@ -477,9 +489,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 300,
+        "summary": "Regulamento: público geral masc. e fem. R$ 300, 250 e 150; troféu e medalha aos 3 primeiros de cada categoria (servidores, acadêmicos, público geral); troféus por faixa etária."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "jm-run-2026-coelho-neto",
@@ -567,19 +584,24 @@
       "distances": [
         5
       ],
-      "location": "Local a confirmar",
-      "registrationOpen": null,
+      "location": "Praça São Pedro, Avenida Tancredo Neves, Centro",
+      "registrationOpen": "2026-09-10",
       "registrationClose": null,
       "status": "Consultar",
       "officialUrl": "https://topchip.com.br/ii-corrida-sao-pedro-da-agua-branca",
       "sourceUrl": "https://running.life/en/event/corrida-sao-pedro-da-agua-branca",
       "sourceName": "running.life",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Prova num sábado, às 17h. Organização da prefeitura.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "confidence": "Página e regulamento oficiais (Topchip)",
+      "notes": "Prova num sábado: concentração às 17h e largada às 18h. Aniversário de 32 anos da cidade, organização da prefeitura. Inscrição R$ 100 pela Topchip, a partir de 10/09/2026, até as 600 vagas.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 1000,
+        "summary": "Regulamento: R$ 28 mil no total. Geral e Atleta Local, masc. e fem.: R$ 1.000, 900, 800, 700 e 600 + troféu; faixas etárias: R$ 500, 400, 300, 200 e 100 + troféu."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "iboa-16-anos-2026-sao-luis",
@@ -618,9 +640,9 @@
       "distances": [
         5
       ],
-      "location": "Local a confirmar",
+      "location": "Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-10-30",
       "status": "Consultar",
       "officialUrl": "https://topchip.com.br/acailandiasicoob",
       "sourceUrl": "https://topchip.com.br/acailandiasicoob",
@@ -628,9 +650,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Também tem caminhada de 3 km. Atenção: no mesmo dia há a III Corrida Hiper Farma, outra prova em Açailândia.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 1000,
+        "summary": "Regulamento: só nos 5 km. Geral e Local (Açailândia), masc. e fem.: R$ 1.000, 800, 600, 400 e 200 em PIX + troféu."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "bora-correr-2026-porto-franco",
@@ -643,7 +670,7 @@
       "distances": [
         5
       ],
-      "location": "Local a confirmar",
+      "location": "Praça da Família",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
@@ -651,11 +678,16 @@
       "sourceUrl": "https://running.life/en/event/corrida-bora-correr-porto-franco",
       "sourceName": "running.life",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Largada às 6h30. Corrida e caminhada. Organização: Bora Correr Porto Franco.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "confidence": "Página e regulamento oficiais (Topchip)",
+      "notes": "Largada às 6h30. Corrida de 5 km e caminhada de 3 km (sem premiação). Inscrição R$ 90 pela Topchip ou na Top Sport; 400 vagas. Organização: Bora Correr Porto Franco.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 300,
+        "summary": "Geral e Local (Porto Franco), masc. e fem.: R$ 300, 250, 200, 150 e 100 + troféu; troféus aos 3 primeiros por faixa etária."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "bari-run-2026-imperatriz",
@@ -706,9 +738,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféu do 1º ao 3º lugar da comunidade geral nos 5 km, masc. e fem."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "nascido-para-correr-2026-morros",
@@ -749,16 +786,17 @@
       "location": "Praça Manoel Teteu, Cidade Nova",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Esgotadas",
       "officialUrl": "https://doity.com.br/corrida-32-anos-de-bacabeira",
       "sourceUrl": "https://doity.com.br/corrida-32-anos-de-bacabeira",
       "sourceName": "Doity",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Prova num sábado, largada às 15h. Inscrição com doação de 2 kg de alimentos não perecíveis na entrega do kit (11 a 13/11).",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "notes": "Prova num sábado, das 15h às 19h, na Praça Manoel Teteu. Inscrição gratuita pelo Doity: lote geral e kids esgotados em 19/10. Doação de 2 kg de alimentos não perecíveis na entrega do kit (11 a 13/11).",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "fitness-club-2026-sao-luis",
@@ -828,19 +866,24 @@
         5,
         10
       ],
-      "location": "São Luís Shopping",
-      "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "location": "São Luís Shopping, Av. Prof. Carlos Cunha, 1000",
+      "registrationOpen": "2026-08-06",
+      "registrationClose": "2026-11-10",
+      "status": "Abertas",
       "officialUrl": "https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996",
       "sourceUrl": "https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996",
       "sourceName": "Ticket Sports",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Data e local na Ticket Sports. Distâncias segundo CorridasBR e Vamu Correr.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "notes": "1ª edição. Corrida de 5 e 10 km (percurso em breve). Inscrições de 06/08 a 10/11/2026 pela Ticket Sports: 1º lote R$ 119,90, 2º R$ 129,90, 3º R$ 139,90 + taxa; 60+ com 50% de desconto. Kits de 12 a 14/11 na loja Lupo Sport do São Luís Shopping.",
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Sem dinheiro: vale-compras em produtos da Lupo Sport (R$ 800, 500, 400, 300 e 200 do 1º ao 5º no geral dos 5 e 10 km, masc. e fem.) + troféu; troféus por faixa etária e PcD."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "pinheiro-corre-para-cristo-2026",
@@ -946,9 +989,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus aos 3 primeiros no geral e por faixa etária, masc. e fem."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "unimed-2026-imperatriz",
@@ -965,16 +1013,21 @@
       "location": "Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/unimed2026",
       "sourceUrl": "https://topchip.com.br/unimed2026",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Categoria infantil e PcD (5 km). 1º lote a R$ 90. Data corrigida: a página oficial confirma 29/11 (um calendário trazia 20/11).",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 600,
+        "summary": "Regulamento: 10 km geral R$ 600, 400 e 300 + troféu; 5 km geral R$ 500, 300 e 200 + troféu (masc. e fem.); melhor tempo de médico cooperado e colaborador R$ 300 (5 km) e R$ 400 (10 km); troféus por faixa etária."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "self-run-2026-sao-luis",
@@ -1040,16 +1093,21 @@
       "location": "Praça da Bíblia",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://agendaoffroad.com.br/correparacristo",
       "sourceUrl": "https://agendaoffroad.com.br/correparacristo",
       "sourceName": "Agenda Off Road",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Limite de 300 atletas. 50% de desconto para 60+ e PcD. A página indica largada às 6h e, no topo, 9h; confirme o horário.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "notes": "Largada às 6h na Praça da Bíblia (concentração às 5h; corrida kids no sábado, 28/11, às 18h). Limite de 300 atletas, inscrição pela Agenda Off Road; prazo final a definir. 50% de desconto para 60+ e PcD.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "Geral masc. e fem.: R$ 500, 400, 300, 280 e 230 + troféu; PcD: R$ 200, 100 e 50; faixas etárias: R$ 200, 100 e 50 (4º e 5º troféu)."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "condominial-2026-sao-luis",
@@ -1089,16 +1147,17 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Em breve",
       "officialUrl": "https://topchip.com.br/crea2026",
       "sourceUrl": "https://running.life/en/event/corrida-crea-ma-etapa-imperatriz",
       "sourceName": "running.life",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
       "notes": "Organização do CREA-MA, largada às 6h30. Também aparece como I Corrida CREA-MA – Etapa Imperatriz. Distâncias não divulgadas.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "estacoes-verao-2026-sao-luis",
@@ -1122,9 +1181,14 @@
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
       "notes": "Etapa de São Luís; há outra etapa em Imperatriz em 13/12. Data confirmada no Sou Corredor, CorridasBR e Ahotu.",
-      "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: \"não haverá premiação em dinheiro\". Troféus aos 3 primeiros de cada percurso, masc. e fem.; faixa etária no ranking final do circuito."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "gigantes-2027-paulino-neves",
@@ -1162,7 +1226,7 @@
         10
       ],
       "location": "Local a confirmar",
-      "registrationOpen": null,
+      "registrationOpen": "2026-07-02",
       "registrationClose": null,
       "status": "Consultar",
       "officialUrl": "https://topchip.com.br/aniversario-bora-correr-imperatriz",
@@ -1171,9 +1235,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Distâncias segundo o running.life.",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféu + brindes do 1º ao 5º no geral dos 5 e 10 km; troféus do 1º ao 5º por faixa etária. Sem dinheiro."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "terry-fox-2026-imperatriz",
@@ -1213,16 +1282,21 @@
       "location": "3º Batalhão de Bombeiros Militar, Rua Leôncio Pires Dourado, 1286, Bacuri",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/corrida-do-fogo-2026",
       "sourceUrl": "https://topchip.com.br/corrida-do-fogo-2026",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30, com concentração, largada e chegada no batalhão dos Bombeiros.",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "prize": {
+        "kind": "dinheiro",
+        "top": 1000,
+        "summary": "Regulamento (minuta para aprovação): geral 6 e 10 km, masc. e fem.: R$ 1.000, 800, 600, 400 e 300 + troféu (R$ 12.400 no total); troféus por faixa etária e categorias Bombeiro, Segurança Pública e grupos."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "cruz-vermelha-2026-imperatriz",
@@ -1236,7 +1310,7 @@
         3,
         5
       ],
-      "location": "Local a confirmar",
+      "location": "Em frente ao 50º BIS, Avenida Bernardo Sayão",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
@@ -1246,9 +1320,14 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Também tem caminhada de 3 km. Distâncias segundo o running.life.",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus aos 3 primeiros no geral e por categoria, masc. e fem."
+      },
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "sobra-2027-imperatriz",
@@ -1498,19 +1577,20 @@
         5,
         10
       ],
-      "location": "Local a confirmar",
+      "location": "Praça do Pescador, Avenida Litorânea",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://uticket.com.br/slz-run-inscricao-social-limitada/01M1M6A8YF46EI",
       "sourceUrl": "https://running.life/en/event/slz-run",
       "sourceName": "running.life",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Inscrição social com vagas limitadas, pela Uticket. A página de inscrição não carregou os detalhes; data do running.life.",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "confidence": "Página de inscrição oficial (Uticket)",
+      "notes": "Domingo, largada às 5h30. Inscrição social com vagas limitadas pela Uticket: lote promocional (2º lote) a R$ 69 + taxa. Distâncias segundo o running.life; a página não informa.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "maraui-velho-monge-2027-timon",
@@ -1525,18 +1605,19 @@
         9
       ],
       "location": "Povoado Sagrador, acesso pela BR-226",
-      "registrationOpen": null,
+      "registrationOpen": "2026-10-01",
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://agendaoffroad.com.br/maraui_race2027",
       "sourceUrl": "https://agendaoffroad.com.br/maraui_race2027",
       "sourceName": "Agenda Off Road",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "5ª etapa do Maraui Race: 7 km com obstáculos e 9 km de trail livre. Concentração às 6h, largadas às 7h30 e 7h40. Inscrição R$ 161.",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "hiper-farma-2026-acailandia",
@@ -1556,10 +1637,11 @@
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Organização da Hiper Farma. Mesmo dia da II Corrida Sicoob, também em Açailândia. Distâncias ainda não divulgadas.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "notes": "Organização da Hiper Farma. Mesmo dia da II Corrida Sicoob, também em Açailândia. Distâncias ainda não divulgadas. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "rota-cachoeiras-pedra-caida-2026-carolina",
@@ -1579,10 +1661,11 @@
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Na região da Chapada das Mesas. O link de inscrição se chama Trilha das Águas, então pode ser prova de trilha: confirme a modalidade e as distâncias com a organização (Topchip).",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "notes": "Na região da Chapada das Mesas. O link de inscrição se chama Trilha das Águas, então pode ser prova de trilha: confirme a modalidade e as distâncias com a organização (Topchip). Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "imaculada-2026-lago-do-junco",
@@ -1596,16 +1679,17 @@
       "location": "Igreja Nossa Senhora da Conceição, Comunidade Riachão",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Em breve",
       "officialUrl": "https://doity.com.br/corrida-da-imaculada-2026",
       "sourceUrl": "https://doity.com.br/corrida-da-imaculada-2026",
       "sourceName": "Doity",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Das 5h30 às 8h. Distâncias ainda não divulgadas.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "notes": "Das 5h30 às 8h, na Igreja Nossa Senhora da Conceição, Comunidade Riachão (zona rural). Inscrição de R$ 20 + R$ 2 de taxa no Doity, ainda \"não liberada\" em 19/10. Distâncias ainda não divulgadas.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "unifacimp-2026-imperatriz",
@@ -1625,10 +1709,11 @@
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Organização da Unifacimp. Distâncias ainda não divulgadas.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "notes": "Organização da Unifacimp. Distâncias ainda não divulgadas. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "sitio-novo-2026",
@@ -1642,16 +1727,17 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Em breve",
       "officialUrl": "https://www.topchip.com.br/ii-corrida-sitio-novo-ma-xex8",
       "sourceUrl": "https://roadrunners.run/evento/2026-ii-corrida-sitio-novo-ma/",
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
       "notes": "Sítio Novo do Maranhão (não confundir com Sítio Novo do Tocantins). Data ainda prevista no calendário da Topchip; distâncias não divulgadas.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "bj-running-2027-bom-jardim",
@@ -1667,17 +1753,18 @@
       ],
       "location": "Avenida José Pedro Vasconcelos, Centro",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2027-01-08",
+      "status": "Abertas",
       "officialUrl": "https://www.sympla.com.br/evento/bj-running-2027/3614478",
       "sourceUrl": "https://www.sympla.com.br/evento/bj-running-2027/3614478",
       "sourceName": "Sympla",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "1ª edição. Concentração às 5h, largada às 6h30. Também tem caminhada de 3 km. Um calendário cita 42 km, mas a página oficial mostra só 3 e 5 km.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "cdm-running-2027-campestre",
@@ -1691,16 +1778,17 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Em breve",
       "officialUrl": "https://www.topchip.com.br/6-aniversario-cdm-running",
       "sourceUrl": "https://roadrunners.run/evento/2027-6-aniversario-cdm-running/",
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
       "notes": "Organização da CDM Running. Distâncias ainda não divulgadas.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:18:30.039Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
       "id": "professores-2026-itapecuru",
@@ -2354,10 +2442,10 @@
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Listada pelo Road Runners com cronometragem da Topchip, mas não aparece no calendário atual da Topchip (que já mostra a edição 2027, em 08/08/2027) e a página da prova não abriu. Distâncias, horário e local não informados: confirmar se a edição 2026 vai acontecer.",
+      "notes": "Listada pelo Road Runners com cronometragem da Topchip, mas não aparece no calendário atual da Topchip (que já mostra a edição 2027, em 08/08/2027) e a página da prova não abriu. Distâncias, horário e local não informados: confirmar se a edição 2026 vai acontecer. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-16T11:55:03.983Z"
     },
     {
@@ -2484,25 +2572,217 @@
       ],
       "location": "Pindaré-Mirim (local de largada a confirmar)",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-12-10",
       "status": "Abertas",
       "officialUrl": "https://correma.com.br/corridas/corrida-natalina",
       "sourceUrl": "https://correma.com.br/corridas/corrida-natalina",
       "sourceName": "Correma",
       "publishedAt": null,
       "confidence": "Fonte única: página oficial da prova na Correma (conferida por print)",
-      "notes": "Inscrição no 1º lote: R$ 80 + R$ 8 de taxa (R$ 88). Medalha para todos que concluírem. Horário e local de largada a confirmar.",
+      "notes": "Largada às 5h. Inscrições até 10/12/2026: 1º lote R$ 80 + R$ 8 de taxa (R$ 88). Organização: Liga Desportiva Pindareense. Medalha para todos que concluírem. Local de largada a confirmar.",
       "prize": {
         "kind": "dinheiro",
         "top": 500,
         "summary": "Geral masc. e fem.: R$ 500, 300 e 200. Geral 50+ masc. e fem.: R$ 500, 300 e 200."
       },
       "elevation": null,
-      "verifiedAt": "2026-10-18T16:08:53.402Z",
+      "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-18T16:06:42.729Z"
     }
   ],
   "changes": [
+    {
+      "id": "042b25c9-f12f-4906-a8a1-1fc92f78c270",
+      "eventId": "maraui-velho-monge-2027-timon",
+      "version": "[\"2027-04-11\",[7,9],\"Povoado Sagrador, acesso pela BR-226\",\"2026-10-01\",null,\"Abertas\",\"https://agendaoffroad.com.br/maraui_race2027\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "30e3cc56-024d-4b54-a1dc-e529a6b6a3f2",
+      "eventId": "cdm-running-2027-campestre",
+      "version": "[\"2027-01-24\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://www.topchip.com.br/6-aniversario-cdm-running\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "ddf2c7b1-85fa-4512-abe9-da9e40e62c17",
+      "eventId": "sitio-novo-2026",
+      "version": "[\"2026-12-06\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://www.topchip.com.br/ii-corrida-sitio-novo-ma-xex8\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "34b0de7f-676d-4524-9b7f-7e3827054e5d",
+      "eventId": "crea-2026-imperatriz",
+      "version": "[\"2026-12-06\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://topchip.com.br/crea2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "95509fe4-5099-4ef4-8ae5-31c3d75edf14",
+      "eventId": "corrida-natalina-2026-pindare-mirim",
+      "version": "[\"2026-12-20\",[5],\"Pindaré-Mirim (local de largada a confirmar)\",null,\"2026-12-10\",\"Abertas\",\"https://correma.com.br/corridas/corrida-natalina\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "81edc755-7b8e-4528-bc98-be2f507350df",
+      "eventId": "slz-run-2027-sao-luis",
+      "version": "[\"2027-01-24\",[5,10],\"Praça do Pescador, Avenida Litorânea\",null,null,\"Abertas\",\"https://uticket.com.br/slz-run-inscricao-social-limitada/01M1M6A8YF46EI\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "90670601-0dc8-4239-8761-290d87ec16be",
+      "eventId": "bj-running-2027-bom-jardim",
+      "version": "[\"2027-01-09\",[3,5],\"Avenida José Pedro Vasconcelos, Centro\",null,\"2027-01-08\",\"Abertas\",\"https://www.sympla.com.br/evento/bj-running-2027/3614478\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "9647894a-fd57-4f1f-a81e-85dc4a9a6594",
+      "eventId": "cruz-vermelha-2026-imperatriz",
+      "version": "[\"2026-12-20\",[3,5],\"Em frente ao 50º BIS, Avenida Bernardo Sayão\",null,null,\"Consultar\",\"https://topchip.com.br/i-corrida-cruz-vermelha-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "c6117704-b369-42eb-8810-0c726cea86f9",
+      "eventId": "fogo-2026-imperatriz",
+      "version": "[\"2026-12-13\",[6,10],\"3º Batalhão de Bombeiros Militar, Rua Leôncio Pires Dourado, 1286, Bacuri\",null,null,\"Abertas\",\"https://topchip.com.br/corrida-do-fogo-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "ba1432ae-cc3e-4b18-b658-5e34c0b838c3",
+      "eventId": "bora-correr-aniversario-2026-imperatriz",
+      "version": "[\"2026-11-15\",[5,10],\"Local a confirmar\",\"2026-07-02\",null,\"Consultar\",\"https://topchip.com.br/aniversario-bora-correr-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "e865cb6a-d67a-4064-9b2e-ddc2d051b9ae",
+      "eventId": "outubro-rosa-sao-rafael-2026-imperatriz",
+      "version": "[\"2026-11-01\",[3,5,10],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/ii-corrida-outubro-rosa-sao-rafael\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "a14a93fc-52c5-4db8-92f5-561bc17e9896",
+      "eventId": "uemasul-2026-imperatriz",
+      "version": "[\"2026-11-01\",[3,5],\"Campus I da UEMASUL, Rua Godofredo Viana, 1300, Centro\",null,null,\"Consultar\",\"https://topchip.com.br/iii-corrida-uema-sul\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "70c11890-42db-4f65-9504-b716367fc160",
+      "eventId": "sicoob-2026-acailandia",
+      "version": "[\"2026-11-08\",[5],\"Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto\",null,\"2026-10-30\",\"Consultar\",\"https://topchip.com.br/acailandiasicoob\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "76cb7689-41ce-43b2-8697-9e81b8f23fe1",
+      "eventId": "bora-correr-2026-porto-franco",
+      "version": "[\"2026-11-08\",[5],\"Praça da Família\",null,null,\"Consultar\",\"https://topchip.com.br/ii-corrida-bora-correr-porto-franco\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "02f93076-63f5-48cc-a089-ceca9b85bb2d",
+      "eventId": "sao-pedro-agua-branca-2026",
+      "version": "[\"2026-11-07\",[5],\"Praça São Pedro, Avenida Tancredo Neves, Centro\",\"2026-09-10\",null,\"Consultar\",\"https://topchip.com.br/ii-corrida-sao-pedro-da-agua-branca\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "3ecf7631-1220-40fc-9f49-96f1889b8952",
+      "eventId": "imaculada-2026-lago-do-junco",
+      "version": "[\"2026-11-29\",[],\"Igreja Nossa Senhora da Conceição, Comunidade Riachão\",null,null,\"Em breve\",\"https://doity.com.br/corrida-da-imaculada-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "e2c8586f-ae00-4c8f-b2cd-b66ea03ff3af",
+      "eventId": "corre-para-cristo-2026-chapadinha",
+      "version": "[\"2026-11-29\",[5],\"Praça da Bíblia\",null,null,\"Abertas\",\"https://agendaoffroad.com.br/correparacristo\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "1212193e-0516-4123-96b4-3d788e55eaf2",
+      "eventId": "unimed-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes\",null,null,\"Abertas\",\"https://topchip.com.br/unimed2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "52d3fb06-1f38-4665-bb36-72b72bd40058",
+      "eventId": "lupo-sport-2026-sao-luis",
+      "version": "[\"2026-11-15\",[5,10],\"São Luís Shopping, Av. Prof. Carlos Cunha, 1000\",\"2026-08-06\",\"2026-11-10\",\"Abertas\",\"https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "e6af0081-4a1d-4bd5-9081-c794e26c7176",
+      "eventId": "bacabeira-32-anos-2026",
+      "version": "[\"2026-11-14\",[5],\"Praça Manoel Teteu, Cidade Nova\",null,null,\"Esgotadas\",\"https://doity.com.br/corrida-32-anos-de-bacabeira\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "167ee969-bddf-4982-956e-db19255e0f86",
+      "eventId": "outset-run-2026-chapadinha",
+      "version": "[\"2026-11-01\",[3,5],\"Outset Academia\",\"2026-09-26\",\"2026-10-30\",\"Abertas\",\"https://souatleta.com/ingresso/outset-run/\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "098b7675-4fe0-4f38-8355-9f9346b6f914",
+      "eventId": "meia-pf-2026-sao-luis",
+      "version": "[\"2026-11-01\",[5,10,21],\"São Luís · largada a confirmar\",null,\"2026-10-28\",\"Abertas\",\"https://www.ticketsports.com.br/e/MEIA%20MARATONA%20DA%20POL%C3%83%C2%8DCIA%20FEDERAL%20DO%20MARANH%C3%83%C6%92O%202026-87936\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "75da76eb-bf86-450c-a5da-840b37f49bb9",
+      "eventId": "ju-birthday-run-2026-santa-ines",
+      "version": "[\"2026-10-31\",[3,5,7],\"Praça das Laranjeiras, Vila Militar\",null,null,\"Abertas\",\"https://doity.com.br/27-da-ju-birthday-run\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
+    {
+      "id": "c875978d-7236-4245-8c3f-5dd331e26715",
+      "eventId": "corrida-do-chopp-2026-santa-ines",
+      "version": "[\"2026-10-31\",[5],\"Avenida Castelo Branco\",null,\"2026-10-30\",\"Abertas\",\"https://www.sympla.com.br/evento/corrida-do-chopp-2a-edicao/3538762\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T12:57:04.561Z",
+      "notifiedAt": "2026-10-19T12:57:29.387Z"
+    },
     {
       "id": "c542ecaf-2735-491f-a882-124cce2ab3c3",
       "eventId": "jm-run-2026-coelho-neto",
@@ -3672,7 +3952,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-19T10:57:57.608Z",
+  "lastChecked": "2026-10-19T12:57:04.561Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
