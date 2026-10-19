@@ -27,13 +27,18 @@ const mascaraHora = (t: string) => { const d = t.replace(/\D/g, '').slice(0, 4);
 /** Previsão de Riegel (expoente 1,06): tempo em outra distância, com treino para ela. */
 const riegel = (t: number, d1: number, d2: number) => t * Math.pow(d2 / d1, 1.06);
 
+// Vindo da ficha de uma prova: /?calc=ritmo&km=10&t=3300&largada=5:30 já abre preenchida.
+const qs = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+const kmQs = Number(qs.get('km')) || null, tQs = Number(qs.get('t')) || null;
+const kmLista = kmQs && DIST.find(d => Math.abs(d.km - kmQs) < 0.01) ? DIST.find(d => Math.abs(d.km - kmQs) < 0.01)!.km : null;
+
 export default function CalcRitmo() {
   const [modo, setModo] = useState<Modo>('pace');
-  const [km, setKm] = useState<number | null>(5);
-  const [outra, setOutra] = useState('');
-  const [tempo, setTempo] = useState('');
+  const [km, setKm] = useState<number | null>(kmQs ? kmLista : 5);
+  const [outra, setOutra] = useState(kmQs && !kmLista ? String(kmQs).replace('.', ',') : '');
+  const [tempo, setTempo] = useState(tQs ? relogio(tQs) : '');
   const [pace, setPace] = useState('');
-  const [largada, setLargada] = useState('');
+  const [largada, setLargada] = useState(() => { const l = qs.get('largada'); const m = l?.match(/^(\d{1,2}):(\d{2})$/); return m ? `${m[1].padStart(2, '0')}:${m[2]}` : ''; });
   const [explica, setExplica] = useState(false);
 
   const distEscolhida = km ?? (Number(outra.replace(',', '.')) || null);

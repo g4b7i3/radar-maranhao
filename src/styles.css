@@ -900,3 +900,31 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .cr-prev b { font-size: 1.15rem; font-weight: 850; }
 .cr-prev small { opacity: .75; min-width: 64px; text-align: right; }
 .cr-res .fine { color: inherit; opacity: .8; }
+
+/* ===== Meu ritmo nesta prova (ficha) ===== */
+.rp { margin-top: 12px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); }
+.rp.aberto { border-color: var(--cobalt); }
+.rp-topo { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 14px; text-align: left; color: var(--ink); background: none; border: 0; }
+.rp-topo > svg:first-child { color: var(--cobalt); flex: none; }
+.rp-topo span { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.rp-topo small { color: var(--muted); font-size: .82rem; }
+.rp-topo > svg:last-child { transition: transform .2s; color: var(--muted); }
+.rp.aberto .rp-topo > svg:last-child { transform: rotate(180deg); }
+.rp-corpo { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+.rp-corpo .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.rp-corpo .chip { min-height: 38px; }
+.rp-modo { width: 100%; }
+.rp-modo button { flex: 1; font-size: .9rem; }
+.rp-res { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rp-res div { padding: 10px 12px; border-radius: 12px; background: var(--cobalt); color: #fff; }
+.rp-res small { display: block; font-size: .78rem; opacity: .85; }
+.rp-res b { font-size: 1.35rem; font-weight: 850; font-variant-numeric: tabular-nums; }
+.rp-chegada { display: flex; gap: 8px; align-items: flex-start; margin: 0; padding: 10px 12px; border-radius: 12px; background: #3CE07A; color: #05230f; font-weight: 600; font-size: .95rem; }
+.rp-chegada svg { flex: none; margin-top: 3px; }
+.rp-parc { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
+.rp-parc li { padding: 6px 8px; border-radius: 10px; background: var(--cobalt-tint); font-variant-numeric: tabular-nums; }
+.rp-parc small { display: block; font-size: .72rem; color: var(--muted); }
+.rp-parc b { font-size: .95rem; }
+.rp-parc li.fim { background: #ffd166; color: #2a1a00; }
+.rp-parc li.fim small { color: #2a1a00; opacity: .8; }
+.rp-link { align-self: flex-start; padding: 0; }
