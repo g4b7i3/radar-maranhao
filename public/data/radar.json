@@ -2509,7 +2509,7 @@
       "version": "[\"2026-11-01\",[5],\"Rua Afonso Bacelar\",null,null,\"Esgotadas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio\"]",
       "kind": "Alteração importante",
       "at": "2026-10-19T01:41:07.294Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-19T10:58:26.380Z"
     },
     {
       "id": "b1249bee-c836-4a63-99f6-b19d5225bee0",
@@ -2517,7 +2517,7 @@
       "version": "[\"2026-12-20\",[5],\"Pindaré-Mirim (local de largada a confirmar)\",null,null,\"Abertas\",\"https://correma.com.br/corridas/corrida-natalina\"]",
       "kind": "Alteração importante",
       "at": "2026-10-18T16:08:53.402Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-19T10:58:26.380Z"
     },
     {
       "id": "fb7c8cf9-b5a4-4ade-93c3-8a3af131033a",
@@ -2525,7 +2525,7 @@
       "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://correma.com.br/corridas/corrida-natalina\"]",
       "kind": "Alteração importante",
       "at": "2026-10-18T16:06:58.871Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-19T10:58:26.380Z"
     },
     {
       "id": "1c62910f-9557-4a9e-bcca-093350f824ef",
@@ -2533,7 +2533,7 @@
       "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://correma.com.br/corridas/corrida-natalina\"]",
       "kind": "Nova prova",
       "at": "2026-10-18T16:06:42.729Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-19T10:58:26.380Z"
     },
     {
       "id": "371a5279-eeb5-4078-9ff4-18d1389a3512",
@@ -3672,7 +3672,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-19T01:41:07.294Z",
+  "lastChecked": "2026-10-19T10:57:57.608Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
