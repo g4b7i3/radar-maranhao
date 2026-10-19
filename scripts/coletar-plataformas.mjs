@@ -27,20 +27,22 @@ const FONTES = [
       'chapadinha', 'joao-lisboa', 'balsas', 'bacabal', 'santa-ines', 'barreirinhas', 'codo', 'pinheiro', 'carolina', 'porto-franco']
       .map(c => `https://running.life/running-calendar/brazil/maranhao/${c}`).concat('https://running.life/running-calendar/brazil/maranhao'),
     prova: /^https:\/\/(www\.)?running\.life\/([a-z]{2}(-[a-z]{2})?\/)?event\/[^/]+\/?$/ },
-  // Páginas oficiais das provas futuras da agenda (Topchip, Ticket Sports, Sympla, Doity, sites próprios…), que a sessão do Claude
-  // não consegue abrir. Servem para conferir status, premiação e percurso (links de regulamento, GPX, Strava, mapas).
-  // As plataformas acima já são coletadas por conta própria e ficam de fora.
-  { id: 'oficiais', intervaloHoras: 6, guardarLinks: true, semApi: true, max: 120, limiteTexto: 20_000, lerPdfs: true, lista: [],
-    extra: provasOficiais(), prova: /^$/ },
+  // Páginas oficiais de TODAS as provas futuras da agenda (Topchip, SA Crono, Central da Corrida, Crono Esportes, Ticket Sports,
+  // Sympla, Doity, Night Run, sites próprios…), que a sessão do Claude não consegue abrir. Servem para conferir status, premiação
+  // e percurso: guarda os links (regulamento, GPX, Strava, mapas), lê os PDFs de regulamento (inclusive do Google Drive) e segue
+  // os links de inscrição (Running Land, TF Sports, Ticket Sports…) em "subpaginas".
+  { id: 'oficiais', intervaloHoras: 6, guardarLinks: true, semApi: true, max: 130, limiteTexto: 20_000, lerPdfs: true, seguirInscricao: true, rolagemCurta: true,
+    lista: [], extra: provasOficiais(), prova: /^$/ },
 ];
 
 function provasOficiais() {
   try {
     const hoje = new Date().toISOString().slice(0, 10);
     const { events } = JSON.parse(readFileSync('public/data/radar.json', 'utf8'));
-    const ja = /cronoesportes\.com\.br|sacrono\.com\.br|centraldacorrida\.com\.br|guardalugar\.com|roadrunners\.run|running\.life/;
+    // calendários de terceiros não são página oficial; as plataformas de inscrição entram (as coletas delas não guardam regulamento)
+    const calendario = /roadrunners\.run|running\.life|corridasbr|soucorredor|vamucorrer|corrida1|todascorridas|agendaoffroad\.com\.br\/calendario|\/calendario\/?$/i;
     return [...new Set(events.filter(e => e.date >= hoje).sort((a, b) => a.date.localeCompare(b.date))
-      .map(e => e.officialUrl).filter(u => u && /^https?:\/\/[^/]+\/./.test(u) && !ja.test(u) && !/\/calendario\/?$/.test(u)))];
+      .flatMap(e => [e.officialUrl, e.sourceUrl]).filter(u => u && /^https?:\/\/[^/]+\/./.test(u) && !calendario.test(u)))];
   } catch { return []; }
 }
 
@@ -51,7 +53,7 @@ const semSegredos = t => SEGREDOS.reduce((s, re) => s.replace(re, m => (m.includ
 
 const limpa = t => (t || '').replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
 
-async function abrir(ctx, url, coletarApi) {
+async function abrir(ctx, url, coletarApi, rolagemCurta = false) {
   const page = await ctx.newPage();
   const api = [];
   if (coletarApi) page.on('response', async r => {
@@ -61,7 +63,7 @@ async function abrir(ctx, url, coletarApi) {
   });
   await page.goto(url, { waitUntil: 'networkidle', timeout: 60_000 }).catch(() => page.waitForTimeout(5000));
   // rola até o fim para carregar listas preguiçosas
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < (rolagemCurta ? 6 : 20); i++) {
     const h = await page.evaluate(() => document.body.scrollHeight);
     await page.mouse.wheel(0, 4000); await page.waitForTimeout(700);
     if (await page.evaluate(() => document.body.scrollHeight) === h && i > 3) break;
@@ -78,6 +80,9 @@ const linksExternos = (hrefs, host) => [...new Set(hrefs.filter(h => /^https?:/.
 let pdfjs;
 async function textoPdf(ctx, url) {
   pdfjs ||= await import('pdfjs-dist/legacy/build/pdf.mjs');
+  // Google Drive: troca o link de visualização pelo download direto do arquivo
+  const drive = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?.*id=)([A-Za-z0-9_-]{20,})/);
+  if (drive) url = `https://drive.google.com/uc?export=download&id=${drive[1]}`;
   const r = await ctx.request.get(url, { timeout: 60_000 });
   const buf = await r.body();
   if (!r.ok() || buf.subarray(0, 5).toString() !== '%PDF-') throw new Error(`não é PDF (HTTP ${r.status()})`);
@@ -89,7 +94,17 @@ async function textoPdf(ctx, url) {
   }
   return limpa(t).slice(0, 30_000);
 }
-const ehPdf = u => /\.pdf($|[?#_])/i.test(u) || /\/regulamento\//i.test(u);
+const ehPdf = u => /\.pdf($|[?#_])/i.test(u) || /\/regulamento\//i.test(u) || /drive\.google\.com\/(file\/d\/|open\?id=|uc\?)/.test(u);
+// Links de inscrição para seguir a partir da página oficial (é lá que costumam estar lotes, premiação e regulamento).
+const INSCRICAO = /runningland\.com\.br\/(?!$|\?|politica|faq|customer|redirect|login|cadastro)[a-z0-9-]{6,}|tfsports\.com\.br\/(events|tf-experience)\/|ticketsports\.com\.br\/e\/|sympla\.com\.br\/evento\/|doity\.com\.br\/[a-z0-9-]{6,}|uticket\.com\.br\/evento|minhasinscricoes\.com\.br\/evento|souatleta\.com\/[a-z0-9-]{6,}|brasilquecorre\.com\/|zeroumeventos|ativo\.com\/|centraldacorrida\.com\.br\/evento\/|sacrono\.com\.br\/evento\/|cronoesportes\.com\.br\/evento\/|topchip\.com\.br\/[a-z0-9-]{6,}|guardalugar\.com\/evento\//i;
+async function lerPdfs(ctx, page) {
+  const pdfs = [...new Set(await page.$$eval('a[href], iframe[src], embed[src]', as => as.map(a => a.href || a.src)))].filter(ehPdf).slice(0, 3);
+  const out = [];
+  for (const u of pdfs) {
+    try { out.push({ url: u, texto: await textoPdf(ctx, u) }); } catch (e) { out.push({ url: u, erro: String(e).slice(0, 200) }); }
+  }
+  return out;
+}
 
 async function coletar(browser, fonte) {
   const ctx = await browser.newContext({ userAgent: UA, locale: 'pt-BR', timezoneId: 'America/Fortaleza' });
@@ -126,19 +141,35 @@ async function coletar(browser, fonte) {
   }
   for (const url of [...links].slice(0, fonte.max || MAX_PROVAS)) {
     try {
-      const { page } = await abrir(ctx, url, false);
+      // PDF direto (regulamento como link oficial): lê o texto sem abrir página
+      if (fonte.lerPdfs && ehPdf(url)) {
+        try { const t = await textoPdf(ctx, url); resultado.provas.push({ url, titulo: 'PDF', maranhao: MA.test(t), texto: '', pdfs: [{ url, texto: t }] }); }
+        catch (e) { resultado.provas.push({ url, erro: String(e).slice(0, 300) }); }
+        continue;
+      }
+      const { page } = await abrir(ctx, url, false, fonte.rolagemCurta);
       const texto = limpa(await page.innerText('body')).slice(0, fonte.limiteTexto || 8000);
       const prova = { url, titulo: await page.title(), maranhao: MA.test(texto), texto };
-      if (fonte.guardarLinks) prova.links = linksExternos(await page.$$eval('a[href]', as => as.map(a => a.href)), new URL(url).hostname.replace(/^www\./, ''));
-      if (fonte.lerPdfs) {
-        const pdfs = [...new Set(await page.$$eval('a[href]', as => as.map(a => a.href)))].filter(ehPdf).slice(0, 3);
-        prova.pdfs = [];
-        for (const u of pdfs) {
-          try { prova.pdfs.push({ url: u, texto: await textoPdf(ctx, u) }); } catch (e) { prova.pdfs.push({ url: u, erro: String(e).slice(0, 200) }); }
+      const hrefs = await page.$$eval('a[href]', as => as.map(a => a.href));
+      if (fonte.guardarLinks) prova.links = linksExternos(hrefs, new URL(url).hostname.replace(/^www\./, ''));
+      if (fonte.lerPdfs) prova.pdfs = await lerPdfs(ctx, page);
+      if (prova.links && /^\s*$/.test(texto)) prova.aviso = 'página sem texto (o site pode ter bloqueado o robô)';
+      await page.close();
+      // Segue até 2 links de inscrição de outro site (lotes, premiação e regulamento costumam estar lá).
+      if (fonte.seguirInscricao) {
+        const host = new URL(url).hostname.replace(/^www\./, '');
+        const alvos = [...new Set(hrefs.map(h => h.split('#')[0]))].filter(h => INSCRICAO.test(h) && !h.includes(host) && !links.has(h)).slice(0, 2);
+        prova.subpaginas = [];
+        for (const sub of alvos) {
+          try {
+            const { page: p2 } = await abrir(ctx, sub, false, true);
+            const t2 = limpa(await p2.innerText('body')).slice(0, 12_000);
+            prova.subpaginas.push({ url: sub, titulo: await p2.title(), texto: t2, pdfs: fonte.lerPdfs ? await lerPdfs(ctx, p2) : [] });
+            await p2.close();
+          } catch (e) { prova.subpaginas.push({ url: sub, erro: String(e).slice(0, 200) }); }
         }
       }
       resultado.provas.push(prova);
-      await page.close();
     } catch (e) { resultado.provas.push({ url, erro: String(e).slice(0, 300) }); }
   }
   resultado.totalLinks = links.size;
