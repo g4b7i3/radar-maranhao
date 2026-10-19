@@ -15,7 +15,7 @@ jobs:
           cat > /tmp/f.mjs <<'JS'
           import { writeFileSync } from 'node:fs';
           const UA = { 'User-Agent': 'RadarCorridasMA/1.0 (radarcorridasma.com.br; vinikautor@gmail.com)' };
-          const buscas = ['woman jogging', 'man jogging', 'jogger park', 'jogging beach', 'senior jogging', 'older man jogging', 'runner stretching', 'running shoes laces', 'running track training', 'jogging sunrise', 'jogging exercise outdoors', 'runner sports watch'];
+          const buscas = ['runner smartwatch', 'jogging city street', 'runner tying shoes', 'running group training park', 'trail running forest', 'jogging silhouette sunset', 'woman running road', 'jogger bridge', 'running stairs workout', 'man running beach', 'runner phone map', 'jogging morning city'];
           const prova = /marathon|maratona|race|5k|10k|ten.miler|half|bib|finish|start line|relay|championship|olympic|games|competition|cross country|triathlon|run for|fun run|memorial/i;
           const lista = [];
           for (const q of buscas) {
