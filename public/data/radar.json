@@ -273,32 +273,6 @@
       "prize": null
     },
     {
-      "id": "entre-maos-run-2026-sao-luis",
-      "name": "Entre Mães Run 2026",
-      "edition": "2026",
-      "city": "São Luís",
-      "state": "MA",
-      "modality": "Rua",
-      "date": "2026-10-25",
-      "distances": [
-        5,
-        10
-      ],
-      "location": "Largada no São Luís Shopping",
-      "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
-      "officialUrl": "https://www.godream.com.br/evento/entre-maes-run-2026-6707772",
-      "sourceUrl": "https://roadrunners.run/evento/2026-entre-maes-run-2026/",
-      "sourceName": "Road Runners",
-      "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Três calendários (Road Runners, Vamu Correr e Corrida1) indicam 25/10; dois (Sou Corredor e CorridasBR) indicavam 18/10. A edição de 2024 foi no fim de outubro. Confirme a data com a organização. Inscrições pela GoDream.",
-      "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
-    },
-    {
       "id": "sest-senat-2026-imperatriz",
       "name": "Corrida SEST SENAT 2026",
       "edition": "2026",
@@ -3258,14 +3232,6 @@
       "notifiedAt": "2026-10-14T15:18:30.278Z"
     },
     {
-      "id": "de3c3d47-335a-495f-b107-173f8777a5a3",
-      "eventId": "entre-maos-run-2026-sao-luis",
-      "version": "[\"2026-10-25\",[5,10],\"Largada no São Luís Shopping\",null,null,\"Consultar\",\"https://www.godream.com.br/evento/entre-maes-run-2026-6707772\"]",
-      "kind": "Alteração importante",
-      "at": "2026-10-14T15:18:30.039Z",
-      "notifiedAt": "2026-10-14T15:18:30.278Z"
-    },
-    {
       "id": "cc0e2ace-c2c6-41df-904a-d1f07873b5a3",
       "eventId": "maraui-velho-monge-2027-timon",
       "version": "[\"2027-04-11\",[7,9],\"Povoado Sagrador, acesso pela BR-226\",null,null,\"Consultar\",\"https://agendaoffroad.com.br/maraui_race2027\"]",
@@ -3669,14 +3635,6 @@
       "id": "e986288f-18e0-41c6-8d13-8e07d1db7df2",
       "eventId": "sest-senat-2026-imperatriz",
       "version": "[\"2026-10-25\",[3,5,10],\"Beira Rio\",null,null,\"Consultar\",\"https://topchip.com.br/corrida-sest-senat-2026\"]",
-      "kind": "Nova prova",
-      "at": "2026-10-14T14:56:38.965Z",
-      "notifiedAt": "2026-10-14T14:56:54.581Z"
-    },
-    {
-      "id": "28c87715-2ec1-4c8d-99e5-5cd024ae2ba9",
-      "eventId": "entre-maos-run-2026-sao-luis",
-      "version": "[\"2026-10-18\",[5,10],\"Largada no São Luís Shopping\",null,null,\"Consultar\",\"https://www.godream.com.br/evento/entre-maes-run-2026-6707772\"]",
       "kind": "Nova prova",
       "at": "2026-10-14T14:56:38.965Z",
       "notifiedAt": "2026-10-14T14:56:54.581Z"
