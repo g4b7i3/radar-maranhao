@@ -21,7 +21,7 @@ Os calendários de terceiros que a sessão do Claude não consegue abrir (a rede
 - `coleta/roadrunners.json` — Road Runners (MA): lista do estado + página de cada prova; o campo `links` de cada prova traz os links externos (inscrição oficial, regulamento, Instagram).
 - `coleta/runninglife.json` — running.life, páginas por cidade do Maranhão + página de cada prova, com `links` externos. Inclui cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO): confira a cidade.
 
-- `coleta/oficiais.json` — a página oficial (`officialUrl`) de cada prova futura da agenda que não está nas plataformas acima (Topchip, Ticket Sports, Sympla, Doity, Night Run, sites próprios…), coletada no máximo a cada 6 horas, com até 20 mil caracteres de texto e os `links` externos (regulamento, GPX, Strava, mapas). Use para conferir status, premiação e percurso das provas que a sessão não consegue abrir.
+- `coleta/oficiais.json` — a página oficial (`officialUrl`) de cada prova futura da agenda que não está nas plataformas acima (Topchip, Ticket Sports, Sympla, Doity, Night Run, sites próprios…), coletada no máximo a cada 6 horas, com até 20 mil caracteres de texto, os `links` externos (regulamento, GPX, Strava, mapas) e, em `pdfs`, o texto dos regulamentos em PDF ligados à página. Use para conferir status, premiação e percurso das provas que a sessão não consegue abrir.
 
 Esses dois calendários servem para **descobrir** provas e mudanças; não são aplicados sozinhos na agenda. Para cada prova do Maranhão que não está na agenda, confirme pelo link oficial (campo `links`) ou por outra fonte; se só houver o calendário, registre como "Fonte única (calendário)".
 

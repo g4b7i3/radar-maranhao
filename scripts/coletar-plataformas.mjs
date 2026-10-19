@@ -30,7 +30,7 @@ const FONTES = [
   // Páginas oficiais das provas futuras da agenda (Topchip, Ticket Sports, Sympla, Doity, sites próprios…), que a sessão do Claude
   // não consegue abrir. Servem para conferir status, premiação e percurso (links de regulamento, GPX, Strava, mapas).
   // As plataformas acima já são coletadas por conta própria e ficam de fora.
-  { id: 'oficiais', intervaloHoras: 6, guardarLinks: true, semApi: true, max: 120, limiteTexto: 20_000, lista: [],
+  { id: 'oficiais', intervaloHoras: 6, guardarLinks: true, semApi: true, max: 120, limiteTexto: 20_000, lerPdfs: true, lista: [],
     extra: provasOficiais(), prova: /^$/ },
 ];
 
@@ -74,6 +74,23 @@ async function abrir(ctx, url, coletarApi) {
 const linksExternos = (hrefs, host) => [...new Set(hrefs.filter(h => /^https?:/.test(h) && !h.includes(host)
   && !/facebook\.com\/sharer|twitter\.com\/intent|x\.com\/intent|wa\.me\/\?|api\.whatsapp|linkedin\.com\/share|t\.me\/share|pinterest\.com\/pin/.test(h)))].slice(0, 40);
 
+// Texto dos PDFs (regulamentos) ligados à página da prova: premiação, percurso e prazos costumam estar só neles.
+let pdfjs;
+async function textoPdf(ctx, url) {
+  pdfjs ||= await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const r = await ctx.request.get(url, { timeout: 60_000 });
+  const buf = await r.body();
+  if (!r.ok() || buf.subarray(0, 5).toString() !== '%PDF-') throw new Error(`não é PDF (HTTP ${r.status()})`);
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf), useSystemFonts: true, isEvalSupported: false }).promise;
+  let t = '';
+  for (let i = 1; i <= Math.min(doc.numPages, 30) && t.length < 30_000; i++) {
+    const c = await (await doc.getPage(i)).getTextContent();
+    t += c.items.map(x => x.str + (x.hasEOL ? '\n' : ' ')).join('') + '\n';
+  }
+  return limpa(t).slice(0, 30_000);
+}
+const ehPdf = u => /\.pdf($|[?#_])/i.test(u) || /\/regulamento\//i.test(u);
+
 async function coletar(browser, fonte) {
   const ctx = await browser.newContext({ userAgent: UA, locale: 'pt-BR', timezoneId: 'America/Fortaleza' });
   const resultado = { fonte: fonte.id, listas: [], provas: [], api: [] };
@@ -113,6 +130,13 @@ async function coletar(browser, fonte) {
       const texto = limpa(await page.innerText('body')).slice(0, fonte.limiteTexto || 8000);
       const prova = { url, titulo: await page.title(), maranhao: MA.test(texto), texto };
       if (fonte.guardarLinks) prova.links = linksExternos(await page.$$eval('a[href]', as => as.map(a => a.href)), new URL(url).hostname.replace(/^www\./, ''));
+      if (fonte.lerPdfs) {
+        const pdfs = [...new Set(await page.$$eval('a[href]', as => as.map(a => a.href)))].filter(ehPdf).slice(0, 3);
+        prova.pdfs = [];
+        for (const u of pdfs) {
+          try { prova.pdfs.push({ url: u, texto: await textoPdf(ctx, u) }); } catch (e) { prova.pdfs.push({ url: u, erro: String(e).slice(0, 200) }); }
+        }
+      }
       resultado.provas.push(prova);
       await page.close();
     } catch (e) { resultado.provas.push({ url, erro: String(e).slice(0, 300) }); }
