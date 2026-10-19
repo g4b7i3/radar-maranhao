@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bookmark, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
@@ -8,7 +8,7 @@ import { useTema } from './tema';
 import ClimaLargada, { SeloClima, useClimas, type Clima } from './Clima';
 import EuVou from './EuVou';
 import Altimetria, { SeloSubida } from './Altimetria';
-import MapaProvas from './MapaProvas';
+const MapaProvas = lazy(() => import('./MapaProvas'));
 import AssinarAgenda, { linkCalendario, linkProva, dicaAlarme } from './Calendario';
 import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, jaPassou, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
 
@@ -60,8 +60,9 @@ function StatusTag({ e }: { e: Race }) {
   return <span className={'tag ' + tone}>{label}</span>;
 }
 
-export default function App() {
-  const [data, setData] = useState<State | null>(null);
+export default function App({ inicial = null }: { inicial?: State | null }) {
+  // a agenda já vem dentro da página (pré-renderizada no build); a versão fresca é buscada logo em seguida
+  const [data, setData] = useState<State | null>(inicial);
   const [error, setError] = useState('');
   // Atalhos do app instalado (?aba=salvas) abrem direto na aba certa.
   const [tab, setTab] = useState<Tab>(() => {
@@ -371,7 +372,7 @@ export default function App() {
             </div>
           </div>
 
-          {tab === 'agenda' && vista === 'mapa' && <MapaProvas events={filtered} onAbrir={e => setSelected(e)} onVerLista={c => { setCity(c); setVista('lista'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
+          {tab === 'agenda' && vista === 'mapa' && <Suspense fallback={<div className="mapa-carregando">Carregando o mapa…</div>}><MapaProvas events={filtered} onAbrir={e => setSelected(e)} onVerLista={c => { setCity(c); setVista('lista'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} /></Suspense>}
           {(tab !== 'agenda' || vista === 'lista') && groups.map(([key, list]) => (
             <section className="month" key={key} aria-labelledby={'m-' + key}>
               <h2 id={'m-' + key}>{key === 'sem-data' ? 'Data a confirmar' : fmt.monthName(key)}{key !== 'sem-data' && fmt.year(key) !== t.slice(0, 4) && <small> {fmt.year(key)}</small>}</h2>
