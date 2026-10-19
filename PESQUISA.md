@@ -108,6 +108,8 @@ Pesquise São Luís, a Grande Ilha (São José de Ribamar, Paço do Lumiar, Rapo
 
 - `id`: nome curto + edição + cidade, só minúsculas, números e hífens. Para uma prova que já existe, **use o mesmo id**.
 - `status`: `Abertas`, `Em breve`, `Consultar`, `Encerradas`, `Esgotadas`, `Cancelada` ou `Adiada`.
+- `price`: valor da inscrição que aparece no card, ou `null` se não foi divulgado. `{ "min": 80, "text": "R$ 80 + taxa (1º lote)" }` — `min` é o menor valor em reais (0 = grátis ou solidária, ex.: `{ "min": 0, "text": "Solidária: 2 kg de alimento" }`), `text` tem até 60 caracteres. Atualize quando o lote mudar. Copie o que está escrito na página/regulamento; nunca estime.
+- `start`: horário da largada (a primeira, se houver várias) em `"HH:MM"`, ou `null`. Ex.: `"06:30"`. Os horários por distância continuam em `notes`.
 - `officialUrl`: só se for página do organizador ou da plataforma de inscrição. Calendário de terceiros vai em `sourceUrl`.
 - `publishedAt`: data real do anúncio, quando encontrada. Não use a data da pesquisa.
 - `prize` (premiação, opcional): deixe de fora ou `null` se não conferiu. Veja a seção 4.1.

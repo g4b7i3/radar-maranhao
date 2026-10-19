@@ -7,6 +7,8 @@ export type Race = {
   /** null = premiação ainda não conferida */
   prize?: { kind: 'dinheiro' | 'trofeu' | 'sem'; top: number | null; summary: string } | null;
   /** null = percurso ainda não conferido */
+  price?: { min: number | null; text: string } | null;
+  start?: string | null;
   elevation?: { level: Subida; gain: number | null; km: number | null; profile: number[] | null; routeUrl: string | null; summary: string } | null;
 };
 export type Subida = 'plano' | 'poucas' | 'varias' | 'muitas';
@@ -48,6 +50,7 @@ export const fmt = {
 const minutosAgora = () => { const [h, m] = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: TZ }).format(new Date()).split(':').map(Number); return h * 60 + m; };
 /** Hora da largada em minutos, lida das notas ("largada às 6h30", "largada 18h"); null se não divulgada. */
 export function horaLargada(e: Race): number | null {
+  if (e.start && /^\d{2}:\d{2}$/.test(e.start)) return Number(e.start.slice(0, 2)) * 60 + Number(e.start.slice(3));
   const m = `${e.notes ?? ''}`.match(/largada[^.]*?\b(\d{1,2})\s*h\s*(\d{2})?/i) ?? `${e.notes ?? ''}`.match(/\b(\d{1,2}):(\d{2})\b/);
   if (!m) return null;
   const h = Number(m[1]), min = Number(m[2] ?? 0);
@@ -140,5 +143,8 @@ export const isSingleSource = (e: Pick<Race, 'confidence'>) => /fonte única|ins
 export const WHATSAPP = '5598984334880';
 export const whatsappLink = (msg: string) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 
+export const ehGratis = (e: Race) => e.price?.min === 0;
+/** "5h30" a partir dos minutos do dia. */
+export const fmtHora = (m: number) => `${Math.floor(m / 60)}h${m % 60 ? String(m % 60).padStart(2, '0') : ''}`;
 export const hasCashPrize = (e: Race) => e.prize?.kind === 'dinheiro';
 export const money = (n: number) => 'R$ ' + n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });

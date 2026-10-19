@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarDays, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
+import { Bookmark, CalendarDays, Clock, Ticket, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
 import { RadarFundo, BandeiraMA } from './HeroRadar';
@@ -12,7 +12,7 @@ import RitmoProva from './RitmoProva';
 import MapaProvas from './MapaProvas';
 import { PertoDeVoce, FimDeSemana, fimDeSemana, ehFimDeSemana, distancia, kmTexto, type Perto } from './PertoFds';
 import AssinarAgenda, { linkCalendario, linkProva, dicaAlarme } from './Calendario';
-import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, jaPassou, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money } from './lib';
+import { type Race, type State, countdown, deadline, fmt, icsFor, isOpen, load, norm, status, store, today, jaPassou, daysUntil, placeLabel, placeList, isSingleSource, whatsappLink, hasCashPrize, money, ehGratis, fmtHora, horaLargada } from './lib';
 
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
@@ -93,6 +93,7 @@ export default function App() {
   const [year, setYear] = useState('Todos');
   const [month, setMonth] = useState('Todos');
   const [onlyOpen, setOnlyOpen] = useState(false);
+  const [soGratis, setSoGratis] = useState(false); // filtro "Grátis" (inclui inscrição solidária)
   const [onlyPrize, setOnlyPrize] = useState(false);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false); // no celular os filtros ficam recolhidos
   // dica "use os Filtros" até a pessoa abrir os filtros pela primeira vez neste aparelho
@@ -213,7 +214,8 @@ export default function App() {
     .filter(e => month === 'Todos' || e.date?.slice(5, 7) === month)
     .filter(e => !onlyOpen || isOpen(e))
     .filter(e => !onlyPrize || hasCashPrize(e))
-    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, tab, favorites, showPast, query, mode, dist, city, year, month, onlyOpen, onlyPrize, t, soFds, fds, pertoAtivo, perto]);
+    .filter(e => !soGratis || ehGratis(e))
+    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')), [events, tab, favorites, showPast, query, mode, dist, city, year, month, onlyOpen, onlyPrize, soGratis, t, soFds, fds, pertoAtivo, perto]);
 
   const groups = useMemo(() => {
     const m = new Map<string, Race[]>();
@@ -228,9 +230,10 @@ export default function App() {
   const years = useMemo(() => [...new Set(dated.map(e => e.date!.slice(0, 4)))].sort(), [dated]);
   const months = useMemo(() => [...new Set(dated.filter(e => year === 'Todos' || e.date!.startsWith(year)).map(e => e.date!.slice(5, 7)))].sort(), [dated, year]);
   useEffect(() => { if (month !== 'Todos' && !months.includes(month)) setMonth('Todos'); }, [months, month]);
+  const gratisCount = useMemo(() => upcoming.filter(ehGratis).length, [upcoming]);
   const prizeCount = useMemo(() => events.filter(e => hasCashPrize(e) && (showPast || !jaPassou(e))).length, [events, showPast, t]);
-  const filtrosAtivos = [soFds, mode !== 'Todas', dist != null, city !== 'Todas', year !== 'Todos', month !== 'Todos', onlyOpen, onlyPrize, showPast].filter(Boolean).length;
-  const filtersOn = query || soFds || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || onlyPrize || showPast;
+  const filtrosAtivos = [soFds, soGratis, mode !== 'Todas', dist != null, city !== 'Todas', year !== 'Todos', month !== 'Todos', onlyOpen, onlyPrize, showPast].filter(Boolean).length;
+  const filtersOn = query || soFds || soGratis || mode !== 'Todas' || dist != null || city !== 'Todas' || year !== 'Todos' || month !== 'Todos' || onlyOpen || onlyPrize || showPast;
 
   function toggleSave(e: Race) {
     const v = favorites.includes(e.id) ? favorites.filter(id => id !== e.id) : [...favorites, e.id];
@@ -238,7 +241,7 @@ export default function App() {
     setToast(v.includes(e.id) ? 'Prova salva na sua agenda.' : 'Prova removida da sua agenda.');
   }
   function markAllRead() { const v = (data?.changes ?? []).map(c => c.id); setSeen(v); store('radar-seen', v); }
-  function clearFilters() { setSoFds(false); setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setYear('Todos'); setMonth('Todos'); setOnlyOpen(false); setOnlyPrize(false); setShowPast(false); }
+  function clearFilters() { setSoFds(false); setSoGratis(false); setQuery(''); setMode('Todas'); setDist(null); setCity('Todas'); setYear('Todos'); setMonth('Todos'); setOnlyOpen(false); setOnlyPrize(false); setShowPast(false); }
   async function copyAgendaLink() {
     const url = `${window.location.origin}/?agenda=${favorites.join(',')}`;
     try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
@@ -354,6 +357,7 @@ export default function App() {
                   {months.map(m => <option key={m} value={m}>{MESES[Number(m) - 1]}</option>)}
                 </select>
                 <button className="chip prize-chip" aria-pressed={onlyPrize} onClick={() => setOnlyPrize(!onlyPrize)} data-umami-event={onlyPrize ? undefined : 'Filtro: premiação em dinheiro'}><Banknote size={16} aria-hidden="true" />Premiação em dinheiro{prizeCount > 0 && <small>{prizeCount}</small>}</button>
+                <button className="chip gratis-chip" aria-pressed={soGratis} onClick={() => { setSoGratis(!soGratis); if (!soGratis) rastrear('Filtro: grátis'); }}><Ticket size={15} aria-hidden="true" />Grátis ou solidária{gratisCount > 0 && <small>{gratisCount}</small>}</button>
                 <label className="check"><input type="checkbox" checked={onlyOpen} onChange={e => { setOnlyOpen(e.target.checked); if (e.target.checked) rastrear('Filtro: só inscrições abertas'); }} />Só inscrições abertas</label>
                 <label className="check"><input type="checkbox" checked={showPast} onChange={e => { setShowPast(e.target.checked); if (e.target.checked) rastrear('Filtro: mostrar realizadas'); }} />Mostrar realizadas</label>
               </div>
@@ -401,10 +405,12 @@ export default function App() {
                           <span className="race-place">{e.modality === 'Trail' && <Mountain size={14} aria-label="Trail" />}{placeList(e)}{pertoAtivo && (() => { const d = distancia(perto!, e.city); return d != null ? <em className="race-km"> · {kmTexto(d)}</em> : null; })()}</span>
                           <span className="race-meta">
                             <span className="dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d}k</span>) : <span>distâncias a confirmar</span>}</span>
+                            {e.start && <span className="tag hora"><Clock size={13} aria-hidden="true" />Largada {fmtHora(horaLargada(e)!)}</span>}
+                            {e.price && <span className={ehGratis(e) ? 'tag preco gratis' : 'tag preco'}><Ticket size={13} aria-hidden="true" />{e.price.text}</span>}
                             <StatusTag e={e} />
                             <SeloClima c={previsoes[e.id]} />
                             <SeloSubida e={e} />
-                            {hasCashPrize(e) && <span className="tag prize" title={e.prize!.summary}><Banknote size={13} aria-hidden="true" />{money(e.prize!.top!)}</span>}
+                            {hasCashPrize(e) && <span className="tag prize" title={e.prize!.summary}><Banknote size={13} aria-hidden="true" />Prêmio {money(e.prize!.top!)}</span>}
                             {isSingleSource(e) && <span className="tag single" title="Encontrada em uma só fonte. Confirme com a organização.">Fonte única</span>}
                             {dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}
                           </span>
@@ -573,6 +579,8 @@ function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCa
         <dl className="facts">
           <div><dt>Inscrições</dt><dd><StatusTag e={e} />{dl && <span className={dl.urgent ? 'due urgent' : 'due'}>{dl.text}</span>}</dd></div>
           {e.prize && e.prize.kind !== 'sem' && <div><dt>Premiação</dt><dd className="prize-dd">{e.prize.kind === 'dinheiro' && <Banknote size={16} aria-hidden="true" />}{e.prize.summary}</dd></div>}
+          {e.price && <div><dt>Valor</dt><dd>{e.price.text}</dd></div>}
+          {horaLargada(e) != null && <div><dt>Largada</dt><dd>{fmtHora(horaLargada(e)!)}</dd></div>}
           <div><dt>Abertura</dt><dd>{fmt.full(e.registrationOpen, !!e.registrationOpen?.includes('T'))}</dd></div>
           <div><dt>Prazo final</dt><dd>{fmt.full(e.registrationClose)}</dd></div>
           <div><dt>Anunciada em</dt><dd>{fmt.full(e.publishedAt)}</dd></div>

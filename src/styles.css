@@ -928,3 +928,13 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .rp-parc li.fim { background: #ffd166; color: #2a1a00; }
 .rp-parc li.fim small { color: #2a1a00; opacity: .8; }
 .rp-link { align-self: flex-start; padding: 0; }
+
+/* ===== Preço e largada no card ===== */
+.tag.hora, .tag.preco { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); color: var(--ink); font-weight: 650; }
+.tag.hora svg, .tag.preco svg { color: var(--muted); }
+.tag.preco.gratis { background: #dcfce7; border-color: #86efac; color: #14532d; }
+.tag.preco.gratis svg { color: #15803d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag.preco.gratis { background: #12371f; border-color: #1f6b3a; color: #b7f5c9; } }
+:root[data-theme="dark"] .tag.preco.gratis { background: #12371f; border-color: #1f6b3a; color: #b7f5c9; }
+.gratis-chip svg { vertical-align: -2px; margin-right: 4px; }
+.gratis-chip small { margin-left: 6px; }

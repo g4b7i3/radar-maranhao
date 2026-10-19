@@ -7,7 +7,7 @@ export const DATA_FILE = fileURLToPath(new URL('../public/data/radar.json', impo
 
 // Campos que, quando mudam, geram um aviso de "Alteração importante".
 export const SIGNIFICANT = ['date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl'];
-const FIELDS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize', 'elevation'];
+const FIELDS = ['id', 'name', 'edition', 'city', 'state', 'modality', 'date', 'distances', 'location', 'registrationOpen', 'registrationClose', 'status', 'officialUrl', 'sourceUrl', 'sourceName', 'publishedAt', 'confidence', 'notes', 'prize', 'elevation', 'price', 'start'];
 // Premiação: null = ainda não conferida; 'dinheiro' (com o maior valor em top); 'trofeu' (troféu/brinde, sem dinheiro); 'sem' (conferida: só medalha de participação)
 export const PRIZE_KINDS = ['dinheiro', 'trofeu', 'sem'];
 // Altimetria: null = percurso ainda não conferido. Nível pela subida acumulada por km.
@@ -55,6 +55,16 @@ export function validateEvent(e) {
     if (!ELEVATION_LEVELS.includes(level)) throw Error(`${who}: elevation.level deve ser um de ${ELEVATION_LEVELS.join(', ')} (ou informe gain e km)`);
     e = { ...e, elevation: { level, gain: a.gain == null ? null : Math.round(a.gain), km: a.km ?? null, profile: a.profile?.map(v => Math.round(v)) ?? null, routeUrl: a.routeUrl ?? null, summary: a.summary.trim() } };
   }
+  // Valor da inscrição: min = menor valor em reais (0 = grátis ou solidária); text = como aparece no card ("R$ 80 + taxa").
+  if (e.price != null) {
+    const v = e.price;
+    if (typeof v !== 'object' || typeof v.text !== 'string' || !v.text.trim() || v.text.length > 60) throw Error(`${who}: price.text precisa de um texto curto (até 60 caracteres), ex.: "R$ 80 + taxa"`);
+    if (v.min != null && (typeof v.min !== 'number' || v.min < 0 || v.min > 5000)) throw Error(`${who}: price.min é o menor valor em reais (0 = grátis) ou null`);
+    e = { ...e, price: { min: v.min ?? null, text: v.text.trim() } };
+  }
+  // Horário da largada (a primeira, se houver várias): "HH:MM"
+  if (e.start != null && (typeof e.start !== 'string' || !/^([01]?\d|2[0-3]):[0-5]\d$/.test(e.start))) throw Error(`${who}: start é o horário da largada em "HH:MM" ou null`);
+  if (e.start) e = { ...e, start: e.start.padStart(5, '0') };
   return Object.fromEntries(FIELDS.map(k => [k, e[k] ?? null]));
 }
 
@@ -73,6 +83,8 @@ export function applyUpdate(state, events, now) {
     // Quem não informa a premiação (ex.: coleta automática) não apaga a que já foi pesquisada.
     if (input.prize === undefined && old) e.prize = old.prize ?? null;
     if (input.elevation === undefined && old) e.elevation = old.elevation ?? null;
+    if (input.price === undefined && old) e.price = old.price ?? null;
+    if (input.start === undefined && old) e.start = old.start ?? null;
     const record = { ...e, verifiedAt: now, firstSeenAt: old?.firstSeenAt ?? now };
     const version = signature(record);
     if (old) next.events[next.events.findIndex(x => x.id === old.id)] = record; else next.events.push(record);

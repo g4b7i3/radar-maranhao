@@ -23,6 +23,11 @@
       "notes": "Largada às 6h. Inscrições abertas na Central da Corrida, R$ 70 para o público geral. A página de inscrição (Central da Corrida) diz que o kit sai na Fit Store (Av. dos Holandeses, Calhau) em 28 e 29/10, das 10h às 20h; notícias citaram 29 e 30/10: confirmar.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 70,
+        "text": "R$ 70"
+      },
+      "start": "06:00",
       "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
@@ -54,6 +59,8 @@
         "summary": "Troféus para os 3 primeiros no masculino e no feminino nos 5 e nos 10 km; medalha para quem concluir (segundo o Maranhão Esportes; regulamento não aberto)."
       },
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
@@ -80,6 +87,11 @@
       "notes": "Exclusiva para profissionais e acadêmicos de odontologia. Prazo informado por Todas Corridas; confirme no regulamento. Inscrição solidária: 2 kg de alimentos.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 0,
+        "text": "Solidária: 2 kg de alimento"
+      },
+      "start": null,
       "verifiedAt": "2026-10-17T12:54:54.806Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
@@ -112,6 +124,8 @@
         "summary": "Página oficial: troféus no pódio (5 primeiros de 5, 10 e 21 km no geral, 3 primeiros por faixa etária, categorias Policial Federal e PcD); não cita dinheiro."
       },
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
@@ -135,11 +149,13 @@
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridaefuncional2026",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
-      "verifiedAt": "2026-10-13T02:25:00Z",
       "confidence": "Plataforma oficial",
       "notes": "Organização: EuCorro Eventos Esportivos. Também oferece caminhada participativa de 3 km. Local e horários de kit a divulgar.",
-      "firstSeenAt": "2026-10-13T02:25:00Z",
-      "prize": null
+      "prize": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-13T02:25:00Z",
+      "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
       "id": "estacoes-verao-2026-imperatriz",
@@ -161,11 +177,13 @@
       "sourceUrl": "https://soucorredor.com.br/evento/7003/circuito_das_estacoes_-_etapa_verao_2026_%7C_imperatriz",
       "sourceName": "Sou Corredor",
       "publishedAt": null,
-      "verifiedAt": "2026-10-13T02:25:00Z",
       "confidence": "Calendário · confirmar regulamento",
       "notes": "Data e distâncias listadas no calendário. Consulte o organizador para inscrições, local e regulamento.",
-      "firstSeenAt": "2026-10-13T02:25:00Z",
-      "prize": null
+      "prize": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-13T02:25:00Z",
+      "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
       "id": "tjma-2026-sao-luis",
@@ -191,6 +209,8 @@
       "notes": "Vagas remanescentes reabertas em 07/10/2026 às 13h. Também há caminhada de 3 km. Público externo: R$ 120. O anúncio não informa encerramento; confirme vagas na Brasil Corrida. Concentração às 5h30; largada anunciada às 6h. Segundo o Jornal Pequeno (13/10), haverá troféus e premiação em dinheiro para os três primeiros colocados; valores não divulgados.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-16T11:15:29.440Z",
       "firstSeenAt": "2026-10-13T11:02:20.868Z"
     },
@@ -220,6 +240,8 @@
       "notes": "Inscrições esgotadas (página da Meta Sport em 16/10); o prazo era até 17/10. Pagamentos até 17/10 às 12h. Abertura não informada. Largadas: 42 km às 4h, 21 km às 4h30, 10 km às 5h e 5 km às 5h15. A página da MetaSport anuncia premiação total de R$ 130.000, sem detalhar por colocação (prêmio individual a confirmar no regulamento). O site da Hotbel diz que nesta edição os percursos passam por dentro de Imperatriz; mapa e altimetria ainda não publicados. A página da Meta Sport anuncia premiação total de R$ 130.000, sem detalhar valores por colocação.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "04:00",
       "verifiedAt": "2026-10-17T13:27:41.206Z",
       "firstSeenAt": "2026-10-14T11:06:50.977Z"
     },
@@ -247,9 +269,11 @@
       "publishedAt": null,
       "confidence": "Página oficial · confirmar inconsistência na descrição",
       "notes": "Formulário de inscrição disponível. Abertura e encerramento não encontrados. A página identifica a etapa Maranhão e a Avenida Litorânea, mas contém referência genérica a São Paulo na descrição: confirme com a organização o regulamento local. Corrida de rua, não trail.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T11:06:50.977Z",
-      "firstSeenAt": "2026-10-14T11:06:50.977Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T11:06:50.977Z"
     },
     {
       "id": "azul-marinho-2026-imperatriz",
@@ -273,9 +297,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. A página da Topchip mostra inscrições encerradas. Distâncias de 5 e 10 km segundo o running.life.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "sest-senat-2026-imperatriz",
@@ -306,6 +332,8 @@
         "summary": "Regulamento: troféus do 1º ao 3º lugar no geral, categoria Transporte e faixas etárias dos 5 e 10 km (PcD: 1º e 2º); 3 km só medalha. Sem dinheiro."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-16T11:55:03.983Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -331,13 +359,15 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Premiação em dinheiro nos 5 km (R$ 500, 300 e 200); os 3 km são de participação.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
       "prize": {
         "kind": "dinheiro",
         "top": 500,
         "summary": "R$ 500, R$ 300 e R$ 200 para os 3 primeiros dos 5 km (os 3 km são de participação)."
-      }
+      },
+      "price": null,
+      "start": "06:00",
+      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "outset-run-2026-chapadinha",
@@ -374,6 +404,11 @@
         "routeUrl": "https://souatleta.com/wp-content/uploads/2026/09/Regulamento_Outset_Run_2a_Edicao-6.pdf",
         "summary": "Regulamento: percursos de 3 e 5 km em trajeto plano e urbano."
       },
+      "price": {
+        "min": 68,
+        "text": "R$ 68 a R$ 80 + taxa"
+      },
+      "start": "06:00",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -404,6 +439,11 @@
         "summary": "Categoria geral dos 5 km: R$ 400 + troféu + barril de chopp de 30 L (1º), R$ 300 + troféu + 2 growlers (2º) e R$ 200 + troféu + 1 growler (3º). Texto do organizador na página do evento (reproduzido no Road Runners)."
       },
       "elevation": null,
+      "price": {
+        "min": 145,
+        "text": "R$ 145 + taxa (4º lote)"
+      },
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -432,6 +472,11 @@
       "notes": "Largada às 6h na Praça das Laranjeiras. Inscrição gratuita (lote único) pelo Doity; prazo não informado.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 0,
+        "text": "Grátis"
+      },
+      "start": "06:00",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -464,6 +509,8 @@
         "summary": "Regulamento: troféus aos 3 primeiros no geral, categoria Colaborador e faixas etárias dos 5 e 10 km; medalha para todos."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -495,6 +542,8 @@
         "summary": "Regulamento: público geral masc. e fem. R$ 300, 250 e 150; troféu e medalha aos 3 primeiros de cada categoria (servidores, acadêmicos, público geral); troféus por faixa etária."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -521,6 +570,8 @@
       "notes": "Largada às 6h.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-19T01:41:07.294Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -543,9 +594,11 @@
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
       "notes": "Listada no CorridasBR e no Vamu Correr, que aponta um post no Instagram como inscrição. Distâncias não divulgadas.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "contabilidade-2026-sao-luis",
@@ -570,6 +623,8 @@
       "confidence": "Nota oficial do organizador (CRCMA, 09/10/2026)",
       "notes": "O CRCMA adiou a I Corrida da Contabilidade, prevista para 02/11/2026, para 2027; a nova data ainda não foi definida e será divulgada nos canais oficiais. A nota não fala de reembolso.",
       "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-15T11:31:38.796Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -600,6 +655,11 @@
         "summary": "Regulamento: R$ 28 mil no total. Geral e Atleta Local, masc. e fem.: R$ 1.000, 900, 800, 700 e 600 + troféu; faixas etárias: R$ 500, 400, 300, 200 e 100 + troféu."
       },
       "elevation": null,
+      "price": {
+        "min": 100,
+        "text": "R$ 100"
+      },
+      "start": "18:00",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -625,9 +685,11 @@
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Prova num sábado, largada às 6h. Categorias 60+, PcD e caminhada de 3 km.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "sicoob-2026-acailandia",
@@ -656,6 +718,8 @@
         "summary": "Regulamento: só nos 5 km. Geral e Local (Açailândia), masc. e fem.: R$ 1.000, 800, 600, 400 e 200 em PIX + troféu."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -686,6 +750,11 @@
         "summary": "Geral e Local (Porto Franco), masc. e fem.: R$ 300, 250, 200, 150 e 100 + troféu; troféus aos 3 primeiros por faixa etária."
       },
       "elevation": null,
+      "price": {
+        "min": 90,
+        "text": "R$ 90"
+      },
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -714,6 +783,8 @@
       "notes": "Também anunciada como \"Porto Saúde Track&Field Experience Running BariRun | Imperatriz\" (TFSports). Arena abre às 6h; largadas: 10 km às 6h30, 5 km às 6h40 e caminhada de 3 km às 6h45. Kits em 06 e 07/11, das 10h às 22h, na Loja Track&Field do Imperial Shopping. Inscrição pelo app TFSports (também listada na Topchip); valores e prazo não informados. Premiação \"a definir\".",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-16T11:55:03.983Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -744,6 +815,8 @@
         "summary": "Regulamento: troféu do 1º ao 3º lugar da comunidade geral nos 5 km, masc. e fem."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -768,9 +841,11 @@
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 6h. Inscrições abertas na Central da Corrida.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "bacabeira-32-anos-2026",
@@ -795,6 +870,11 @@
       "notes": "Prova num sábado, das 15h às 19h, na Praça Manoel Teteu. Inscrição gratuita pelo Doity: lote geral e kids esgotados em 19/10. Doação de 2 kg de alimentos não perecíveis na entrega do kit (11 a 13/11).",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 0,
+        "text": "Grátis + 2 kg de alimento"
+      },
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -820,9 +900,11 @@
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Prova num sábado, às 17h, em voltas de 3,2 km. Categorias 60+.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "graca-2026-caxias",
@@ -851,6 +933,8 @@
         "top": 500,
         "summary": "6 km geral masc. e fem.: R$ 500, R$ 300 e R$ 200 + troféu aos 3 primeiros; troféus por faixa etária. Os 3 km são recreativos (só medalha)."
       },
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-15T11:31:38.796Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -882,6 +966,11 @@
         "summary": "Sem dinheiro: vale-compras em produtos da Lupo Sport (R$ 800, 500, 400, 300 e 200 do 1º ao 5º no geral dos 5 e 10 km, masc. e fem.) + troféu; troféus por faixa etária e PcD."
       },
       "elevation": null,
+      "price": {
+        "min": 119.9,
+        "text": "A partir de R$ 119,90 + taxa"
+      },
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -909,6 +998,8 @@
       "notes": "Largada às 6h. Corrida de 5 km, caminhada de 2,5 km e corrida kids, organizada pela Primeira Igreja Batista de Pinheiro. Kits em 13 e 14/11 (9h–11h e 14h–17h) na igreja, no Centro de Pinheiro. Local de largada a confirmar.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -934,13 +1025,15 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h no Balneário Oreste Lima. Troféus do 1º ao 5º lugar nos 4 e 8 km.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Troféus do 1º ao 5º lugar nos 4 e 8 km."
-      }
+      },
+      "price": null,
+      "start": "06:00",
+      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "dm-run-saude-2026-sao-luis",
@@ -965,6 +1058,8 @@
       "notes": "Largada às 6h. Corrida de 4 km (com categoria 60+), em alusão ao Outubro Rosa e Novembro Azul. Vagas limitadas. Local de largada e entrega de kits ainda não divulgados.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -995,6 +1090,8 @@
         "summary": "Regulamento: troféus aos 3 primeiros no geral e por faixa etária, masc. e fem."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -1026,6 +1123,11 @@
         "summary": "Regulamento: 10 km geral R$ 600, 400 e 300 + troféu; 5 km geral R$ 500, 300 e 200 + troféu (masc. e fem.); melhor tempo de médico cooperado e colaborador R$ 300 (5 km) e R$ 400 (10 km); troféus por faixa etária."
       },
       "elevation": null,
+      "price": {
+        "min": 90,
+        "text": "R$ 90 (1º lote)"
+      },
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -1052,9 +1154,11 @@
       "publishedAt": null,
       "confidence": "Site oficial do circuito",
       "notes": "Etapa de São Luís do circuito da Selfit. Inscrições em inscricao.selfrun.com.br; 15% de desconto para estudantes e alunos Selfit.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "sesc-2026-imperatriz",
@@ -1075,9 +1179,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Organização do Sesc, largada às 6h no Senac. Inscrições pela Crono Esportes (a Topchip também lista a prova). Categorias comunidade, comerciário e PcD.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "corre-para-cristo-2026-chapadinha",
@@ -1106,6 +1212,8 @@
         "summary": "Geral masc. e fem.: R$ 500, 400, 300, 280 e 230 + troféu; PcD: R$ 200, 100 e 50; faixas etárias: R$ 200, 100 e 50 (4º e 5º troféu)."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -1131,9 +1239,11 @@
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
       "notes": "Largada às 6h no Itapiracó (São Luís, segundo a Central da Corrida). Inscrições abertas.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "crea-2026-imperatriz",
@@ -1156,6 +1266,8 @@
       "notes": "Organização do CREA-MA, largada às 6h30. Também aparece como I Corrida CREA-MA – Etapa Imperatriz. Distâncias não divulgadas.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -1187,6 +1299,8 @@
         "summary": "Regulamento: \"não haverá premiação em dinheiro\". Troféus aos 3 primeiros de cada percurso, masc. e fem.; faixa etária no ranking final do circuito."
       },
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
@@ -1209,9 +1323,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Trail na região dos Lençóis, largada às 5h30. Percursos e prazos ainda não publicados.",
+      "prize": null,
+      "price": null,
+      "start": "05:30",
       "verifiedAt": "2026-10-14T14:56:38.965Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "bora-correr-aniversario-2026-imperatriz",
@@ -1241,6 +1357,8 @@
         "summary": "Regulamento: troféu + brindes do 1º ao 5º no geral dos 5 e 10 km; troféus do 1º ao 5º por faixa etária. Sem dinheiro."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
@@ -1263,9 +1381,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Organização da escola Maple Bear Imperatriz. Largada às 6h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "fogo-2026-imperatriz",
@@ -1295,6 +1415,8 @@
         "summary": "Regulamento (minuta para aprovação): geral 6 e 10 km, masc. e fem.: R$ 1.000, 800, 600, 400 e 300 + troféu (R$ 12.400 no total); troféus por faixa etária e categorias Bombeiro, Segurança Pública e grupos."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
@@ -1326,6 +1448,8 @@
         "summary": "Regulamento: troféus aos 3 primeiros no geral e por categoria, masc. e fem."
       },
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
@@ -1348,9 +1472,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Página com inscrição disponível; distâncias no regulamento.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "acii-2027-imperatriz",
@@ -1371,9 +1497,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "carna-run-2027-imperatriz",
@@ -1394,9 +1522,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Prova num sábado, às 17h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "mpma-2027-imperatriz",
@@ -1417,9 +1547,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Corrida do Ministério Público do Maranhão. Largada às 6h30. Inscrições em breve. A Topchip informa 14/03/2027; um calendário traz 06/12/2026 — vale a data da página oficial.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:18:30.039Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "forca-tatica-2027-imperatriz",
@@ -1440,9 +1572,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "boaretto-2027-imperatriz",
@@ -1463,9 +1597,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "avb-lasulma-2026-acailandia",
@@ -1486,9 +1622,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Prova num sábado, largada às 6h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "virada-2026-porto-franco",
@@ -1509,9 +1647,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Último dia do ano, largada às 6h30. Inscrições em breve.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T15:08:52.450Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "policia-civil-2026-barra-do-corda",
@@ -1536,9 +1676,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 7h. Categorias 5 km policial e 1 km infantil.",
+      "prize": null,
+      "price": null,
+      "start": "07:00",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "uema-2026-coroata",
@@ -1561,9 +1703,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Categoria geral e UEMA. Junto com a feira Expo UEMA.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:08:52.450Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
       "id": "slz-run-2027-sao-luis",
@@ -1589,6 +1733,11 @@
       "notes": "Domingo, largada às 5h30. Inscrição social com vagas limitadas pela Uticket: lote promocional (2º lote) a R$ 69 + taxa. Distâncias segundo o running.life; a página não informa.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 69,
+        "text": "R$ 69 + taxa"
+      },
+      "start": "05:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
@@ -1616,6 +1765,11 @@
       "notes": "5ª etapa do Maraui Race: 7 km com obstáculos e 9 km de trail livre. Concentração às 6h, largadas às 7h30 e 7h40. Inscrição R$ 161.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 161,
+        "text": "R$ 161"
+      },
+      "start": "07:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
@@ -1640,6 +1794,8 @@
       "notes": "Organização da Hiper Farma. Mesmo dia da II Corrida Sicoob, também em Açailândia. Distâncias ainda não divulgadas. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1664,6 +1820,8 @@
       "notes": "Na região da Chapada das Mesas. O link de inscrição se chama Trilha das Águas, então pode ser prova de trilha: confirme a modalidade e as distâncias com a organização (Topchip). Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1688,6 +1846,11 @@
       "notes": "Das 5h30 às 8h, na Igreja Nossa Senhora da Conceição, Comunidade Riachão (zona rural). Inscrição de R$ 20 + R$ 2 de taxa no Doity, ainda \"não liberada\" em 19/10. Distâncias ainda não divulgadas.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 20,
+        "text": "R$ 20 + taxa"
+      },
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1712,6 +1875,8 @@
       "notes": "Organização da Unifacimp. Distâncias ainda não divulgadas. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1736,6 +1901,8 @@
       "notes": "Sítio Novo do Maranhão (não confundir com Sítio Novo do Tocantins). Data ainda prevista no calendário da Topchip; distâncias não divulgadas.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1763,6 +1930,8 @@
       "notes": "1ª edição. Concentração às 5h, largada às 6h30. Também tem caminhada de 3 km. Um calendário cita 42 km, mas a página oficial mostra só 3 e 5 km.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1787,6 +1956,8 @@
       "notes": "Organização da CDM Running. Distâncias ainda não divulgadas.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
@@ -1811,9 +1982,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Prova num sábado, às 18h. Categorias comunidade e professores de Itapecuru.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "sesc-2026-sao-jose-de-ribamar",
@@ -1842,6 +2015,8 @@
         "top": 500,
         "summary": "5 e 10 km comunidade: troféu + R$ 500, R$ 300 e R$ 200 aos 3 primeiros (masc. e fem.); 4º e 5º com troféu + voucher Lupo Sport."
       },
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-15T11:31:38.796Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
@@ -1864,9 +2039,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Categorias comunidade, comerciário, kids e PcD; distâncias no regulamento.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "prematuridade-2026-sao-luis",
@@ -1894,6 +2071,11 @@
         "top": null,
         "summary": "Troféus aos 3 primeiros gerais dos 5 km (masc. e fem.) e da categoria PCD, sem premiação em dinheiro."
       },
+      "price": {
+        "min": 99,
+        "text": "R$ 99 a R$ 120"
+      },
+      "start": "06:00",
       "verifiedAt": "2026-10-15T11:31:38.796Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
@@ -1919,9 +2101,11 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Categorias PcD, kids e médicos sócios da SBU-MA.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T15:54:43.321Z",
-      "firstSeenAt": "2026-10-14T15:54:43.321Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
       "id": "uema-viii-2026-sao-luis",
@@ -1951,6 +2135,11 @@
         "top": 700,
         "summary": "5 e 10 km comunidade: troféu + R$ 700, R$ 500 e R$ 300 aos 3 primeiros (masc. e fem.); troféus nas categorias UEMA e PCD."
       },
+      "price": {
+        "min": 60,
+        "text": "R$ 60 a R$ 90 + 1 kg de alimento"
+      },
+      "start": "05:45",
       "verifiedAt": "2026-10-15T11:31:38.796Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
@@ -1981,6 +2170,11 @@
         "top": null,
         "summary": "Troféus aos 3 primeiros gerais dos 5 e 10 km e PCD (masc. e fem.); medalhas por faixa etária, sem premiação em dinheiro."
       },
+      "price": {
+        "min": 65,
+        "text": "R$ 130 (idoso e PcD R$ 65)"
+      },
+      "start": "06:00",
       "verifiedAt": "2026-10-15T11:31:38.796Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
@@ -2008,6 +2202,8 @@
       "notes": "Largada às 6h. Corrida de 5 km e caminhada de 3 km, organizada pela 1ª Igreja Batista em Rosário. Inscrições na Central da Corrida; entrega de kits e local de largada a definir (serão divulgados nas redes da igreja).",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
@@ -2036,6 +2232,8 @@
       "notes": "A Paróquia São João Calábria adiou a I Corrida Calabriana, que seria em 12/10 na Avenida Metropolitana, porque a avenida não foi liberada e por questões administrativas. A página da Central da Corrida já mostra 06/12/2026 às 5h30, mas o comunicado diz que a nova data ainda será divulgada: confirmar data e local. Inscrições feitas continuam valendo; quem não quiser mais correr pode pedir reembolso no Painel do Atleta da Central da Corrida. Distâncias: 5 e 10 km, mais caminhada livre de 3 km.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-16T14:16:43.019Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
@@ -2058,9 +2256,11 @@
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Largada às 6h. Inscrições abertas na Central da Corrida.",
+      "prize": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:58:57.274Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
       "id": "igreja-batista-2026-campestre",
@@ -2081,9 +2281,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30. Distâncias ainda não divulgadas.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:58:57.274Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
       "id": "rei-rainha-piramide-2027-carolina",
@@ -2104,9 +2306,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Corrida com obstáculos na região da Chapada das Mesas, largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:58:57.274Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
       "id": "medrun-2027-imperatriz",
@@ -2127,9 +2331,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T15:58:57.274Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
       "id": "faca-bonito-2027-imperatriz",
@@ -2150,9 +2356,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "policia-federal-2027-imperatriz",
@@ -2173,9 +2381,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Prova num sábado, às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "contra-drogas-2027-imperatriz",
@@ -2196,9 +2406,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "meia-chapada-mesas-2027-carolina",
@@ -2221,9 +2433,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Meia maratona em estrada de terra na Chapada das Mesas, largada às 5h45.",
+      "prize": null,
+      "price": null,
+      "start": "05:45",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "acorda-brasil-2027-imperatriz",
@@ -2244,9 +2458,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "ct-ireni-camargo-2027-imperatriz",
@@ -2267,9 +2483,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "16-de-julho-2027-imperatriz",
@@ -2290,9 +2508,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Aniversário de Imperatriz, largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "lagoa-verde-2027-imperatriz",
@@ -2313,9 +2533,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "salvar-vidas-2027-imperatriz",
@@ -2336,9 +2558,11 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30.",
+      "prize": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T16:33:38.073Z",
-      "prize": null
+      "firstSeenAt": "2026-10-14T16:33:38.073Z"
     },
     {
       "id": "corrida-dos-professores-2026-acailandia",
@@ -2368,6 +2592,11 @@
         "summary": "Sem dinheiro (\"o evento não terá premiação em dinheiro\"). Troféus aos 3 primeiros dos 5 km no geral (educação e visitantes) e por faixa etária; 3 km com medalha de participação."
       },
       "elevation": null,
+      "price": {
+        "min": 0,
+        "text": "Solidária: itens de higiene"
+      },
+      "start": "06:30",
       "verifiedAt": "2026-10-16T11:55:03.983Z",
       "firstSeenAt": "2026-10-14T20:44:16.663Z"
     },
@@ -2395,6 +2624,8 @@
       "notes": "Sexta-feira (feriado da Consciência Negra), largada às 5h30. Integra o Festejo do Santuário de Nossa Senhora da Conceição. Percursos de 4 e 8 km. Kits em 17 e 18/11, das 9h às 19h30, na Sala Padre Dehon do Santuário (Av. Getúlio Vargas, 2655, Monte Castelo). Local de largada a confirmar.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "05:30",
       "verifiedAt": "2026-10-16T10:58:05.494Z",
       "firstSeenAt": "2026-10-14T23:57:03.900Z"
     },
@@ -2421,6 +2652,11 @@
       "notes": "Sábado à noite: largada às 18h30, com concentração, largada e chegada no Parque dos Buritis. Corrida de 5 km com premiação nas categorias Geral e Local (moradores de Vargem Grande), masculino e feminino; também há caminhada de 3 km sem classificação. Inscrição a partir de R$ 79,90, 200 vagas. Kit: camisa, sacochila, número de peito, copo e brindes; medalha para quem terminar.",
       "prize": null,
       "elevation": null,
+      "price": {
+        "min": 79.9,
+        "text": "A partir de R$ 79,90"
+      },
+      "start": "18:30",
       "verifiedAt": "2026-10-16T00:09:14.290Z",
       "firstSeenAt": "2026-10-16T00:09:14.290Z"
     },
@@ -2445,6 +2681,8 @@
       "notes": "Listada pelo Road Runners com cronometragem da Topchip, mas não aparece no calendário atual da Topchip (que já mostra a edição 2027, em 08/08/2027) e a página da prova não abriu. Distâncias, horário e local não informados: confirmar se a edição 2026 vai acontecer. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-16T11:55:03.983Z"
     },
@@ -2472,6 +2710,8 @@
       "notes": "Domingo, 08/11/2026, largada às 6h. Organização: EuCorro Eventos Esportivos / PGE. Percursos de 5 e 10 km, mais caminhada de 2,5 km sem caráter competitivo. Kit na loja Biomundo (Av. dos Holandeses, Galeria Luminy Plaza, Olho d’Água) em 06/11, das 9h às 20h; não há entrega no dia. Inscrições ainda em breve; local de largada, abertura e prazo não informados.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:00",
       "verifiedAt": "2026-10-19T16:43:09.116Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
     },
@@ -2500,6 +2740,8 @@
       "notes": "Quinta-feira, 31/12, largada às 5h30. Percursos de 5, 10 e 15 km (mais categorias 60+ e PCD 5 km) na página da Central da Corrida, organizada pela EuCorro Eventos Esportivos; inscrições ainda \"Em breve\". Local de largada, preço e prazo a confirmar.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "05:30",
       "verifiedAt": "2026-10-18T11:00:21.790Z",
       "firstSeenAt": "2026-10-17T23:41:12.413Z"
     },
@@ -2526,6 +2768,8 @@
       "notes": "Domingo, 08/11/2026, às 6h30, corrida de rua de 5 km. Inscrições abertas na SA Crono; preço e prazo não aparecem no texto da página. Regulamento publicado na página (PDF), premiação não informada no texto.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-18T11:39:34.838Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
@@ -2556,6 +2800,8 @@
         "summary": "Geral masculino e feminino: R$ 2.000, R$ 1.000 e R$ 500. Categorias por idade (16-29 a 60+): R$ 200, R$ 100 e R$ 50. Melhor sotense: R$ 2.000 (masc. e fem.). Bônus de R$ 1.000 para quem bater o recorde da prova."
       },
       "elevation": null,
+      "price": null,
+      "start": null,
       "verifiedAt": "2026-10-18T11:39:34.838Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
@@ -2586,6 +2832,11 @@
         "summary": "Geral masc. e fem.: R$ 500, 300 e 200. Geral 50+ masc. e fem.: R$ 500, 300 e 200."
       },
       "elevation": null,
+      "price": {
+        "min": 80,
+        "text": "R$ 80 + taxa (1º lote)"
+      },
+      "start": "05:00",
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-18T16:06:42.729Z"
     },
@@ -2610,6 +2861,8 @@
       "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
       "prize": null,
       "elevation": null,
+      "price": null,
+      "start": "06:30",
       "verifiedAt": "2026-10-19T16:43:09.116Z",
       "firstSeenAt": "2026-10-19T16:43:09.116Z"
     }
