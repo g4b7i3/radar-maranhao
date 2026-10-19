@@ -2463,7 +2463,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
       "sourceName": "Central da Corrida",
@@ -2472,7 +2472,7 @@
       "notes": "Domingo, 08/11/2026, largada às 6h. Organização: EuCorro Eventos Esportivos / PGE. Percursos de 5 e 10 km, mais caminhada de 2,5 km sem caráter competitivo. Kit na loja Biomundo (Av. dos Holandeses, Galeria Luminy Plaza, Olho d’Água) em 06/11, das 9h às 20h; não há entrega no dia. Inscrições ainda em breve; local de largada, abertura e prazo não informados.",
       "prize": null,
       "elevation": null,
-      "verifiedAt": "2026-10-17T13:27:41.206Z",
+      "verifiedAt": "2026-10-19T16:43:09.116Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
     },
     {
@@ -2588,9 +2588,49 @@
       "elevation": null,
       "verifiedAt": "2026-10-19T12:57:04.561Z",
       "firstSeenAt": "2026-10-18T16:06:42.729Z"
+    },
+    {
+      "id": "ii-corrida-ultramef-2027-imperatriz",
+      "name": "II Corrida Ultramef",
+      "edition": "2027",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-10-10",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T16:43:09.116Z",
+      "firstSeenAt": "2026-10-19T16:43:09.116Z"
     }
   ],
   "changes": [
+    {
+      "id": "a4322116-1b1c-48f7-943c-90122933b330",
+      "eventId": "ii-corrida-ultramef-2027-imperatriz",
+      "version": "[\"2027-10-10\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-19T16:43:09.116Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "0f0e462f-ea64-49bb-9d2d-98433151c9b3",
+      "eventId": "corrida-pge-2026-2026-sao-luis",
+      "version": "[\"2026-11-08\",[5,10],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T16:43:09.116Z",
+      "notifiedAt": null
+    },
     {
       "id": "042b25c9-f12f-4906-a8a1-1fc92f78c270",
       "eventId": "maraui-velho-monge-2027-timon",
@@ -3952,7 +3992,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-19T13:54:17.419Z",
+  "lastChecked": "2026-10-19T16:43:09.116Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
