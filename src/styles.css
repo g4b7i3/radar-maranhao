@@ -874,3 +874,29 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .perto.on .perto-acoes .chip { min-height: 38px; padding: 0 12px; font-size: .92rem; }
 .perto.on .perto-acoes { gap: 6px 8px; }
 .fds-topo .btn.text { white-space: nowrap; flex: none; }
+
+/* ===== Calculadora de ritmo ===== */
+.ni-troca { overflow-x: auto; scrollbar-width: none; }
+.ni-troca::-webkit-scrollbar { display: none; }
+.ni-troca a { padding: 10px 14px; }
+.cr-modo { width: 100%; }
+.cr-modo button { flex: 1; }
+.cr-rot { margin: 0 0 6px; font-size: .8125rem; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
+.cr-un { font-size: 1.5rem; font-weight: 800; opacity: .85; }
+.cr-dl { grid-template-columns: 1fr 1fr; }
+.cr-larg { margin-top: 18px; color: inherit; }
+.cr-larg small { font-weight: 500; opacity: .75; }
+.cr-chegada { display: flex; align-items: center; gap: 10px; margin: 12px 0 0; padding: 12px 14px; border-radius: 12px; background: #3CE07A; color: #05230f; font-weight: 600; }
+.cr-chegada b { font-weight: 850; font-size: 1.15rem; }
+.cr-h2 { margin: 22px 0 10px; font-size: 1.25rem; font-weight: 850; font-stretch: 72%; text-transform: uppercase; letter-spacing: .01em; }
+.cr-tab { border-radius: 12px; overflow: hidden; background: rgba(5,15,60,.35); }
+.cr-lin { display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 9px 14px; font-variant-numeric: tabular-nums; border-top: 1px solid rgba(255,255,255,.08); }
+.cr-lin span:not(:first-child) { text-align: right; font-weight: 700; }
+.cr-cab { font-size: .75rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; opacity: .75; border-top: 0; }
+.cr-lin.meia { background: rgba(255,255,255,.08); }
+.cr-lin.fim { background: rgba(255,209,102,.18); font-weight: 800; }
+.cr-prev { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 8px; }
+.cr-prev li { display: grid; grid-template-columns: 1fr auto auto; align-items: baseline; gap: 12px; padding: 10px 14px; border-radius: 12px; background: rgba(5,15,60,.35); font-variant-numeric: tabular-nums; }
+.cr-prev b { font-size: 1.15rem; font-weight: 850; }
+.cr-prev small { opacity: .75; min-width: 64px; text-align: right; }
+.cr-res .fine { color: inherit; opacity: .8; }

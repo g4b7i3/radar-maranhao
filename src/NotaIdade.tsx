@@ -149,7 +149,7 @@ export default function NotaIdade() {
   return (
     <main className="story-semana card-treino nota-idade">
       <a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a>
-      <nav className="ni-troca" aria-label="Ferramentas de treino"><a href="/?card=treino">Card do treino</a><a href="/?nota=idade" aria-current="page">Nota por idade</a></nav>
+      <nav className="ni-troca" aria-label="Ferramentas de treino"><a href="/?card=treino">Card do treino</a><a href="/?nota=idade" aria-current="page">Nota por idade</a><a href="/?calc=ritmo" data-umami-event="Ritmo: abriu pela nota">Ritmo</a></nav>
       <h1>Nota por idade</h1>
       <p className="fine">Descubra quanto vale o seu tempo levando em conta a sua idade. Assim dá pra comparar de igual pra igual um corredor de 25 com um de 60 anos.</p>
 
