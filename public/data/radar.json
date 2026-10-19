@@ -521,16 +521,17 @@
       "location": "Rua Afonso Bacelar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio",
       "sourceUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio",
       "sourceName": "SA Crono",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h.",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
-      "firstSeenAt": "2026-10-14T14:56:38.965Z",
-      "prize": null
+      "prize": null,
+      "elevation": null,
+      "verifiedAt": "2026-10-19T01:41:07.294Z",
+      "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
       "id": "ginasio-80-anos-2026-carolina",
@@ -2529,6 +2530,14 @@
   ],
   "changes": [
     {
+      "id": "c542ecaf-2735-491f-a882-124cce2ab3c3",
+      "eventId": "jm-run-2026-coelho-neto",
+      "version": "[\"2026-11-01\",[5],\"Rua Afonso Bacelar\",null,null,\"Esgotadas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T01:41:07.294Z",
+      "notifiedAt": null
+    },
+    {
       "id": "b1249bee-c836-4a63-99f6-b19d5225bee0",
       "eventId": "corrida-natalina-2026-pindare-mirim",
       "version": "[\"2026-12-20\",[5],\"Pindaré-Mirim (local de largada a confirmar)\",null,null,\"Abertas\",\"https://correma.com.br/corridas/corrida-natalina\"]",
@@ -3705,7 +3714,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-18T16:08:53.402Z",
+  "lastChecked": "2026-10-19T01:41:07.294Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
