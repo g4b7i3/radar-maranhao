@@ -88,8 +88,8 @@ export default function CalcRitmo() {
 
       <p className="euvou-pergunta">O que você quer saber?</p>
       <div className="seg ni-seg cr-modo" role="group" aria-label="O que calcular">
-        <button aria-pressed={modo === 'pace'} onClick={() => setModo('pace')}>Meu pace</button>
-        <button aria-pressed={modo === 'tempo'} onClick={() => setModo('tempo')}>Meu tempo</button>
+        <button aria-pressed={modo === 'pace'} onClick={() => setModo('pace')}>Pace</button>
+        <button aria-pressed={modo === 'tempo'} onClick={() => setModo('tempo')}>Tempo</button>
         <button aria-pressed={modo === 'dist'} onClick={() => setModo('dist')}>Distância</button>
       </div>
 
