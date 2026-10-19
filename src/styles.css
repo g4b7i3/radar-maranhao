@@ -938,3 +938,16 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 :root[data-theme="dark"] .tag.preco.gratis { background: #12371f; border-color: #1f6b3a; color: #b7f5c9; }
 .gratis-chip svg { vertical-align: -2px; margin-right: 4px; }
 .gratis-chip small { margin-left: 6px; }
+
+/* ===== Enviar uma corrida ===== */
+.missing-acoes { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.envio { flex: 1 1 100%; display: flex; flex-direction: column; gap: 12px; }
+.envio label { display: flex; flex-direction: column; gap: 6px; font-weight: 650; font-size: .92rem; }
+.envio input, .envio textarea { font: inherit; font-size: 1rem; min-height: 46px; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); }
+.envio textarea { resize: vertical; }
+.envio input:focus, .envio textarea:focus { outline: 2px solid var(--cobalt); outline-offset: 1px; border-color: var(--cobalt); }
+.envio-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 420px) { .envio-dupla { grid-template-columns: 1fr; } }
+.envio-robo { position: absolute !important; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.envio .fine { margin: 0; }
+.envio-ok { flex: 1 1 100%; display: flex; align-items: center; gap: 8px; margin: 0; padding: 12px 14px; border-radius: 12px; background: #dcfce7; color: #14532d !important; font-weight: 650; }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarDays, Clock, Ticket, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
+import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
 import { RadarFundo, BandeiraMA } from './HeroRadar';
@@ -42,19 +42,58 @@ function Logo() {
 }
 
 function MissingRace() {
+  // "Enviar uma corrida": formulário que guarda a sugestão no site; a pesquisa diária confere antes de entrar na agenda.
+  const [aberto, setAberto] = useState(false);
+  const [f, setF] = useState({ prova: '', cidade: '', data: '', link: '', obs: '', site: '' });
+  const [estado, setEstado] = useState<'' | 'enviando' | 'ok' | string>('');
+  const muda = (k: keyof typeof f) => (ev: { target: { value: string } }) => { setF({ ...f, [k]: ev.target.value }); if (estado && estado !== 'enviando') setEstado(''); };
+  async function enviar(ev: { preventDefault: () => void }) {
+    ev.preventDefault();
+    if (f.prova.trim().length < 3) { setEstado('Informe o nome da prova.'); return; }
+    if (!f.cidade.trim() && !f.link.trim()) { setEstado('Informe a cidade ou o link do anúncio.'); return; }
+    setEstado('enviando');
+    try {
+      const r = await fetch('/api/sugestao', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw Error(d.erro || 'Não deu para enviar agora.');
+      setEstado('ok'); setF({ prova: '', cidade: '', data: '', link: '', obs: '', site: '' });
+      try { (window as unknown as { umami?: { track: (n: string) => void } }).umami?.track('Enviou uma corrida'); } catch { /* */ }
+    } catch (e) { setEstado((e as Error).message || 'Não deu para enviar agora. Tente pelo WhatsApp.'); }
+  }
   return (
     <section className="missing" aria-labelledby="missing-title">
       <div>
         <h2 id="missing-title">Falta alguma corrida?</h2>
-        <p>Viu uma prova no Maranhão que não está aqui? Mande o nome, a cidade e a data, ou o link do anúncio. Ela entra na agenda assim que for conferida.</p>
+        <p>Viu uma prova no Maranhão que não está aqui? Envie o nome, a cidade e a data, ou o link do anúncio. Ela entra na agenda assim que for conferida.</p>
       </div>
-      <a className="btn whats" data-umami-event="WhatsApp: falta corrida" href={whatsappLink('Olá! Tem uma corrida que não está no Radar Corridas Maranhão: ')} target="_blank" rel="noopener noreferrer">
-        <MessageCircle size={18} aria-hidden="true" />Avisar pelo WhatsApp
-      </a>
+      {!aberto && estado !== 'ok' && (
+        <div className="missing-acoes">
+          <button className="btn solid" onClick={() => setAberto(true)} data-umami-event="Enviar corrida: abriu"><Send size={17} aria-hidden="true" />Enviar uma corrida</button>
+          <a className="btn whats" data-umami-event="WhatsApp: falta corrida" href={whatsappLink('Olá! Tem uma corrida que não está no Radar Corridas Maranhão: ')} target="_blank" rel="noopener noreferrer"><MessageCircle size={18} aria-hidden="true" />Pelo WhatsApp</a>
+        </div>
+      )}
+      {estado === 'ok' && <p className="envio-ok" role="status"><Check size={18} aria-hidden="true" />Recebido, obrigado! A prova entra na agenda assim que for conferida.</p>}
+      {aberto && estado !== 'ok' && (
+        <form className="envio" onSubmit={enviar} noValidate>
+          <label>Nome da prova *<input value={f.prova} onChange={muda('prova')} maxLength={120} placeholder="Ex.: Corrida da Graça" required /></label>
+          <div className="envio-dupla">
+            <label>Cidade<input value={f.cidade} onChange={muda('cidade')} maxLength={80} placeholder="Ex.: São Luís" /></label>
+            <label>Data<input value={f.data} onChange={muda('data')} maxLength={40} placeholder="Ex.: 20/12/2026" /></label>
+          </div>
+          <label>Link do anúncio ou da inscrição<input value={f.link} onChange={muda('link')} maxLength={400} inputMode="url" placeholder="Instagram, site ou página de inscrição" /></label>
+          <label>Mais alguma informação?<textarea value={f.obs} onChange={muda('obs')} maxLength={600} rows={3} placeholder="Distâncias, valor, horário, organizador…" /></label>
+          <input className="envio-robo" tabIndex={-1} autoComplete="off" value={f.site} onChange={muda('site')} aria-hidden="true" />
+          {estado && estado !== 'enviando' && <p className="ct-erro" role="alert">{estado}</p>}
+          <div className="missing-acoes">
+            <button className="btn solid" type="submit" disabled={estado === 'enviando'}><Send size={17} aria-hidden="true" />{estado === 'enviando' ? 'Enviando…' : 'Enviar'}</button>
+            <button className="btn text" type="button" onClick={() => { setAberto(false); setEstado(''); }}>Cancelar</button>
+          </div>
+          <p className="fine">Não pedimos nome, telefone nem e-mail. A prova é conferida na fonte antes de aparecer no site.</p>
+        </form>
+      )}
     </section>
   );
 }
-
 function StatusTag({ e }: { e: Race }) {
   const s = status(e);
   const tone = s === 'Abertas' || s === 'Abertura anunciada' ? 'open' : s === 'Cancelada' ? 'bad' : s === 'Realizada' || s === 'Encerradas' ? 'done' : s === 'Abrem em breve' ? 'soon' : 'check';
