@@ -2787,7 +2787,7 @@
       "location": "Em frente ao Casarão, na Avenida Principal",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027",
       "sourceUrl": "https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027",
       "sourceName": "SA Crono (página da prova)",
@@ -2802,7 +2802,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-18T11:39:34.838Z",
+      "verifiedAt": "2026-10-19T22:48:12.332Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
     {
@@ -2865,9 +2865,51 @@
       "start": "06:30",
       "verifiedAt": "2026-10-19T16:43:09.116Z",
       "firstSeenAt": "2026-10-19T16:43:09.116Z"
+    },
+    {
+      "id": "iii-corrida-do-autismo-2027-imperatriz",
+      "name": "III Corrida do Autismo",
+      "edition": "2027",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-04-25",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-19T22:48:12.332Z",
+      "firstSeenAt": "2026-10-19T22:48:12.332Z"
     }
   ],
   "changes": [
+    {
+      "id": "8eeaafb4-c981-4c4f-a688-db9f4992dcc9",
+      "eventId": "iii-corrida-do-autismo-2027-imperatriz",
+      "version": "[\"2027-04-25\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-19T22:48:12.332Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "0e436582-966a-4380-8ff8-80e05f0770d6",
+      "eventId": "reis-sotense-2027-sao-joao-do-soter",
+      "version": "[\"2027-01-10\",[5],\"Em frente ao Casarão, na Avenida Principal\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-19T22:48:12.332Z",
+      "notifiedAt": null
+    },
     {
       "id": "a4322116-1b1c-48f7-943c-90122933b330",
       "eventId": "ii-corrida-ultramef-2027-imperatriz",
@@ -4245,7 +4287,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-19T16:43:09.116Z",
+  "lastChecked": "2026-10-19T22:48:12.332Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
