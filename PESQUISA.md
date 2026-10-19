@@ -21,7 +21,9 @@ Os calendários de terceiros que a sessão do Claude não consegue abrir (a rede
 - `coleta/roadrunners.json` — Road Runners (MA): lista do estado + página de cada prova; o campo `links` de cada prova traz os links externos (inscrição oficial, regulamento, Instagram).
 - `coleta/runninglife.json` — running.life, páginas por cidade do Maranhão + página de cada prova, com `links` externos. Inclui cidades vizinhas de outros estados (Teresina/PI, Tocantinópolis/TO): confira a cidade.
 
-Esses dois servem para **descobrir** provas e mudanças; não são aplicados sozinhos na agenda. Para cada prova do Maranhão que não está na agenda, confirme pelo link oficial (campo `links`) ou por outra fonte; se só houver o calendário, registre como "Fonte única (calendário)".
+- `coleta/oficiais.json` — a página oficial (`officialUrl`) de cada prova futura da agenda que não está nas plataformas acima (Topchip, Ticket Sports, Sympla, Doity, Night Run, sites próprios…), coletada no máximo a cada 6 horas, com até 20 mil caracteres de texto e os `links` externos (regulamento, GPX, Strava, mapas). Use para conferir status, premiação e percurso das provas que a sessão não consegue abrir.
+
+Esses dois calendários servem para **descobrir** provas e mudanças; não são aplicados sozinhos na agenda. Para cada prova do Maranhão que não está na agenda, confirme pelo link oficial (campo `links`) ou por outra fonte; se só houver o calendário, registre como "Fonte única (calendário)".
 
 O GitHub já aplica sozinho (`scripts/aplicar-coleta.mjs`) o status e as provas novas dessas plataformas; as novidades dele ficam pendentes de aviso (`npm run marcar-avisados`) — inclua-as no aviso do dia. Revise as provas que ele criou (nome, distâncias, local) e complete o que faltar. Compare com `public/data/radar.json`: prova nova, mudança de data/local/status (abertas → encerradas/esgotadas) entram pelo `npm run atualizar`. Confira `coletadoEm` de cada arquivo; se for de outro dia, a coleta falhou — siga só com a web e avise no resumo final. Ignore provas de outros estados (PI, TO, PA) e desafios virtuais.
 

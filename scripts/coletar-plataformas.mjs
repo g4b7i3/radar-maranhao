@@ -1,5 +1,5 @@
 // Coleta diária das plataformas de inscrição que só funcionam com JavaScript
-// (Crono Esportes, SA Crono, Central da Corrida, Topchip, GuardaLugar)
+// (Crono Esportes, SA Crono, Central da Corrida, Topchip, GuardaLugar), as páginas oficiais das provas da agenda
 // e dos calendários que a sessão do Claude não consegue abrir (Road Runners, running.life).
 // Roda no GitHub Actions, que tem navegador e internet. Salva o texto de cada prova em coleta/<plataforma>.json.
 // A pesquisa diária (PESQUISA.md) lê esses arquivos, confere e atualiza a agenda.
@@ -27,7 +27,22 @@ const FONTES = [
       'chapadinha', 'joao-lisboa', 'balsas', 'bacabal', 'santa-ines', 'barreirinhas', 'codo', 'pinheiro', 'carolina', 'porto-franco']
       .map(c => `https://running.life/running-calendar/brazil/maranhao/${c}`).concat('https://running.life/running-calendar/brazil/maranhao'),
     prova: /^https:\/\/(www\.)?running\.life\/([a-z]{2}(-[a-z]{2})?\/)?event\/[^/]+\/?$/ },
+  // Páginas oficiais das provas futuras da agenda (Topchip, Ticket Sports, Sympla, Doity, sites próprios…), que a sessão do Claude
+  // não consegue abrir. Servem para conferir status, premiação e percurso (links de regulamento, GPX, Strava, mapas).
+  // As plataformas acima já são coletadas por conta própria e ficam de fora.
+  { id: 'oficiais', intervaloHoras: 6, guardarLinks: true, semApi: true, max: 120, limiteTexto: 20_000, lista: [],
+    extra: provasOficiais(), prova: /^$/ },
 ];
+
+function provasOficiais() {
+  try {
+    const hoje = new Date().toISOString().slice(0, 10);
+    const { events } = JSON.parse(readFileSync('public/data/radar.json', 'utf8'));
+    const ja = /cronoesportes\.com\.br|sacrono\.com\.br|centraldacorrida\.com\.br|guardalugar\.com|roadrunners\.run|running\.life/;
+    return [...new Set(events.filter(e => e.date >= hoje).sort((a, b) => a.date.localeCompare(b.date))
+      .map(e => e.officialUrl).filter(u => u && /^https?:\/\/[^/]+\/./.test(u) && !ja.test(u) && !/\/calendario\/?$/.test(u)))];
+  } catch { return []; }
+}
 
 // Chaves de API que os sites embutem nas páginas (ex.: token do Mapbox no Road Runners) não podem ir para o repositório:
 // o GitHub recusa o push. Troca por [chave removida] em tudo o que for salvo.
@@ -95,7 +110,7 @@ async function coletar(browser, fonte) {
   for (const url of [...links].slice(0, fonte.max || MAX_PROVAS)) {
     try {
       const { page } = await abrir(ctx, url, false);
-      const texto = limpa(await page.innerText('body')).slice(0, 8000);
+      const texto = limpa(await page.innerText('body')).slice(0, fonte.limiteTexto || 8000);
       const prova = { url, titulo: await page.title(), maranhao: MA.test(texto), texto };
       if (fonte.guardarLinks) prova.links = linksExternos(await page.$$eval('a[href]', as => as.map(a => a.href)), new URL(url).hostname.replace(/^www\./, ''));
       resultado.provas.push(prova);
