@@ -14,7 +14,7 @@
       "location": "Complexo do Porto do Itaqui",
       "registrationOpen": "2026-10-13T12:00:00-03:00",
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://centraldacorrida.com.br/evento/4acorridaportoitaqui",
       "sourceUrl": "https://www.portodoitaqui.com.br/imprensa/noticia/inscricoes-para-4-corrida-do-porto-do-itaqui-abrem-no-dia-13-de-outubro",
       "sourceName": "EMAP · Porto do Itaqui",
@@ -28,7 +28,7 @@
         "text": "R$ 70"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-20T16:18:41.197Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -2943,9 +2943,85 @@
       "start": "06:00",
       "verifiedAt": "2026-10-20T13:15:02.306Z",
       "firstSeenAt": "2026-10-20T13:15:02.306Z"
+    },
+    {
+      "id": "mega-evento-2027-imperatriz",
+      "name": "Mega Evento",
+      "edition": "2027",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-09-26",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-20T16:18:41.197Z",
+      "firstSeenAt": "2026-10-20T16:18:41.197Z"
+    },
+    {
+      "id": "mega-evento-2028-2028-imperatriz",
+      "name": "Mega Evento 2028",
+      "edition": "2028",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2028-09-24",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-20T16:18:41.197Z",
+      "firstSeenAt": "2026-10-20T16:18:41.197Z"
     }
   ],
   "changes": [
+    {
+      "id": "ed359209-d1c5-42cf-ad3f-a2b530c1e004",
+      "eventId": "mega-evento-2028-2028-imperatriz",
+      "version": "[\"2028-09-24\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-20T16:18:41.197Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "31976a28-207f-402f-9017-e09cf6988e40",
+      "eventId": "mega-evento-2027-imperatriz",
+      "version": "[\"2027-09-26\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-20T16:18:41.197Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "b483d567-ba7c-4949-b890-ba9b61ac2e30",
+      "eventId": "itaqui-2026-sao-luis",
+      "version": "[\"2026-10-31\",[5],\"Complexo do Porto do Itaqui\",\"2026-10-13T12:00:00-03:00\",null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/4acorridaportoitaqui\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-20T16:18:41.197Z",
+      "notifiedAt": null
+    },
     {
       "id": "f6fbee7f-664b-4f9e-afa0-7b70670ec7c0",
       "eventId": "portal-fitness-2026-morros",
@@ -4363,7 +4439,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T13:15:02.306Z",
+  "lastChecked": "2026-10-20T16:18:41.197Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
