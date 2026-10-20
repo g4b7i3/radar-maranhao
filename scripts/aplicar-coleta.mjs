@@ -65,7 +65,12 @@ for (const [arq, fonte] of [['coleta/cronoesportes.json', 'Crono Esportes'], ['c
     const status = /esgotad/.test(st) ? 'Esgotadas' : /encerrad/.test(st) ? 'Encerradas' : /em breve/.test(st) ? 'Em breve' : /inscreva|abertas|últimas/.test(st) ? 'Abertas' : 'Consultar';
     // link da página da prova, quando a coleta conseguiu abrir o cartão
     const pag = (d.provas || []).find(p => p.texto && p.texto.toUpperCase().includes(nome.toUpperCase()));
-    candidatos.push({ fonte: 'Central da Corrida', url: pag?.url || null, nome: titulo(nome.replace(/\s+-\s+[A-ZÁ-Ú/ ]+\/MA$/i, '')), data: iso(m[1]), hora: m[2].replace(':', 'h').replace('h00', 'h'), cidade: cidadeBonita(c[1]), status, completo: false });
+    // distâncias da página da prova (bloco "PERCURSOS/ DISTÂNCIAS")
+    const bloco = pag?.texto?.split(/PERCURSOS\/?\s*DIST[ÂA]NCIAS/i)[1]?.split(/ENTREGA DE KIT|Compartilhe/i)[0] || '';
+    const dist = [...new Set(bloco.split('\n').map(t => /^(\d{1,2}(?:[.,]\d+)?)\s?km?$/i.exec(t.trim())?.[1]).filter(Boolean).map(x => Number(x.replace(',', '.'))))].sort((a, b) => a - b);
+    // 00:00 é o que a Central mostra quando o organizador ainda não informou o horário
+    const hora = m[2] === '00:00' ? null : m[2];
+    candidatos.push({ fonte: 'Central da Corrida', url: pag?.url || null, nome: titulo(nome.replace(/\s+-\s+[A-ZÁ-Ú/ ]+\/MA$/i, '')), data: iso(m[1]), hora: hora && hora.replace(':', 'h').replace('h00', 'h'), inicio: hora, dist: dist.length ? dist : undefined, cidade: cidadeBonita(c[1]), status, completo: false });
   }
 }
 
@@ -119,7 +124,7 @@ for (const c of candidatos) {
   }
   // prova nova
   const link = c.url || (c.fonte === 'Topchip' ? 'https://topchip.com.br/calendario' : 'https://centraldacorrida.com.br/');
-  const id = `${slug(c.nome).slice(0, 60)}-${c.data.slice(0, 4)}-${slug(c.cidade)}`.replace(/-+/g, '-');
+  const id = `${slug(c.nome.replace(new RegExp(`\\b${c.data.slice(0, 4)}\\b`), '')).slice(0, 60)}-${c.data.slice(0, 4)}-${slug(c.cidade)}`.replace(/-+/g, '-');
   if (estado.events.some(e => e.id === id) || entrada.some(e => e.id === id)) continue;
   entrada.push({
     id, name: c.nome, edition: c.data.slice(0, 4), city: c.cidade, state: 'MA', modality: c.trilha ? 'Trail' : 'Rua', date: c.data,
@@ -127,7 +132,8 @@ for (const c of candidatos) {
     status: c.status || 'Consultar', officialUrl: link, sourceUrl: link, sourceName: c.fonte,
     publishedAt: null,
     confidence: c.completo ? 'Página de inscrição oficial' : c.fonte === 'Topchip' ? 'Calendário oficial da cronometragem (Topchip)' : 'Plataforma de inscrição (Central da Corrida)',
-    notes: `Largada às ${c.hora}. Encontrada automaticamente na ${c.fonte}${c.previsto ? ' (data ainda prevista)' : ''}; detalhes na página da plataforma.`,
+    start: c.inicio || null,
+    notes: `${c.hora ? `Largada às ${c.hora}.` : 'Horário da largada a confirmar.'} Encontrada automaticamente na ${c.fonte}${c.previsto ? ' (data ainda prevista)' : ''}; detalhes na página da plataforma.`,
   });
   novas.push(`${c.nome} (${c.cidade}, ${c.data})`);
 }
