@@ -81,6 +81,7 @@ export default function Pro() {
       <nav className="ni-troca pro-abas" aria-label="Radar Pro">
         {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}>{a.nome}</a>)}
       </nav>
+      <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { setAba('conta'); window.scrollTo(0, 0); }} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} />}
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
@@ -222,6 +223,23 @@ export function Assinar({ perfil, pronto }: { perfil: Perfil; pronto: () => void
       </>}
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       <p className="fine pro-centro">Sem renovação automática: você paga um Pix por mês, só se quiser continuar. A agenda segue grátis.</p>
+    </div>
+  );
+}
+
+/* Faixa de aviso nos últimos 3 dias da assinatura */
+function AvisoVencimento({ validaAte, renovar }: { validaAte: string | null; renovar: () => void }) {
+  if (!validaAte) return null;
+  const ms = new Date(validaAte).getTime() - Date.now();
+  if (ms <= 0 || ms > 3 * 86400_000) return null;
+  // conta por dia do calendário (vence amanhã às 9h = "amanhã", mesmo faltando menos de 24 h)
+  const meiaNoite = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const dias = Math.round((meiaNoite(new Date(validaAte)) - meiaNoite(new Date())) / 86400_000);
+  const quando = dias <= 0 ? 'hoje' : dias === 1 ? 'amanhã' : `em ${dias} dias`;
+  return (
+    <div className="pro-vence" role="status">
+      <span>Seu Radar Pro vence <b>{quando}</b> ({new Date(validaAte).toLocaleDateString('pt-BR')}). Renove para não perder o acesso.</span>
+      <button className="btn solid" onClick={renovar}>Renovar com Pix</button>
     </div>
   );
 }

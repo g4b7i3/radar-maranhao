@@ -130,3 +130,8 @@
   .pro-mini b { font-size: 1.35rem; }
   .pro-abas a { padding: 10px 11px; }
 }
+
+/* aviso de vencimento */
+.pro-vence { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 14px; background: var(--warn-bg); border: 1.5px solid var(--warn); font-size: .9rem; }
+.pro-vence span { flex: 1 1 200px; }
+.pro-vence .btn { min-height: 40px; padding: 0 16px; }
