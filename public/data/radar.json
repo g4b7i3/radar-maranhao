@@ -28,7 +28,7 @@
         "text": "R$ 70"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-17T13:27:41.206Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -61,7 +61,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-17T13:27:41.206Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -92,7 +92,7 @@
         "text": "Solidária: 2 kg de alimento"
       },
       "start": null,
-      "verifiedAt": "2026-10-17T12:54:54.806Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -126,7 +126,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -334,7 +334,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -364,9 +364,10 @@
         "top": 500,
         "summary": "R$ 500, R$ 300 e R$ 200 para os 3 primeiros dos 5 km (os 3 km são de participação)."
       },
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -444,7 +445,7 @@
         "text": "R$ 145 + taxa (4º lote)"
       },
       "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -477,7 +478,7 @@
         "text": "Grátis"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -572,7 +573,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-19T01:41:07.294Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -686,9 +687,10 @@
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Prova num sábado, largada às 6h. Categorias 60+, PcD e caminhada de 3 km.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -785,7 +787,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1676,10 +1678,18 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 7h. Categorias 5 km policial e 1 km infantil.",
-      "prize": null,
-      "price": null,
+      "prize": {
+        "kind": "dinheiro",
+        "top": 400,
+        "summary": "Regulamento: adulto masc. e fem. R$ 400, 250 e 150; master R$ 300, 200 e 100; infantil R$ 200, 150 e 100; força policial e melhor barra-cordense R$ 200 (1º). Todos com troféu."
+      },
+      "elevation": null,
+      "price": {
+        "min": 70,
+        "text": "R$ 70 (1º lote), R$ 80 e R$ 90"
+      },
       "start": "07:00",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -2204,7 +2214,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-16T10:58:05.494Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -2597,7 +2607,7 @@
         "text": "Solidária: itens de higiene"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-16T11:55:03.983Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-14T20:44:16.663Z"
     },
     {
@@ -2683,7 +2693,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-16T11:55:03.983Z"
     },
     {
@@ -2707,12 +2717,12 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Domingo, 08/11/2026, largada às 6h. Organização: EuCorro Eventos Esportivos / PGE. Percursos de 5 e 10 km, mais caminhada de 2,5 km sem caráter competitivo. Kit na loja Biomundo (Av. dos Holandeses, Galeria Luminy Plaza, Olho d’Água) em 06/11, das 9h às 20h; não há entrega no dia. Inscrições ainda em breve; local de largada, abertura e prazo não informados.",
+      "notes": "Domingo, 08/11/2026, largada às 6h. Organização: EuCorro Eventos Esportivos / PGE. Percursos de 5 e 10 km (e 5 km PCD), mais caminhada de 2,5 km sem caráter competitivo. Inscrições esgotadas na Central da Corrida (20/10). Kit na loja Biomundo (Av. dos Holandeses, Galeria Luminy Plaza, Olho d’Água) em 06/11, das 9h às 20h; não há entrega no dia. Manchete do Jornal Pequeno de 19/10 cita a Avenida Litorânea, mas o ponto de largada não foi confirmado na página da prova.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-20T02:08:00.640Z",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
     },
     {
@@ -2758,19 +2768,26 @@
       ],
       "location": "Em frente à Cidade Eco, Avenida Ataliba Vieira de Almeida",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-11-01",
       "status": "Abertas",
       "officialUrl": "https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026",
       "sourceUrl": "https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026",
       "sourceName": "SA Crono (página da prova)",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição oficial (SA Crono)",
-      "notes": "Domingo, 08/11/2026, às 6h30, corrida de rua de 5 km. Inscrições abertas na SA Crono; preço e prazo não aparecem no texto da página. Regulamento publicado na página (PDF), premiação não informada no texto.",
-      "prize": null,
+      "notes": "Domingo, 08/11/2026, às 6h30, corrida de rua de 5 km (ida e volta de 2,5 km na Av. Ataliba Vieira de Almeida), largada e chegada em frente à Cidade Eco. Regulamento: inscrição solidária (5 kg de alimentos: arroz, óleo, feijão, macarrão e flocão) até 01/11/2026 ou até acabarem as 800 vagas; idade mínima 18 anos. Kits em 06 e 07/11 no estande da Cidade Eco (BR-222, em frente ao Posto Vermassa), com a entrega dos alimentos.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 600,
+        "summary": "Regulamento: geral masc. e fem. R$ 600, 500 e 400; faixa etária (18-29, 30-39, 40-49, 50+) R$ 300, 200 e 100, com troféus."
+      },
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-18T11:39:34.838Z",
+      "price": {
+        "min": 0,
+        "text": "Solidária: 5 kg de alimentos"
+      },
+      "start": "06:30",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
     {
@@ -2793,7 +2810,7 @@
       "sourceName": "SA Crono (página da prova)",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição oficial (SA Crono)",
-      "notes": "Domingo, 10/01/2027, às 6h30. Corrida de rua tradicional de São João do Sóter, percurso de 5 km. A página mostra \"Aguarde: inscrições em breve\"; preço, abertura e prazo ainda não informados. Regulamento publicado na página.",
+      "notes": "Domingo, 10/01/2027, às 6h30. Corrida de rua tradicional de São João do Sóter, percurso de 5 km, largada em frente ao Casarão (Avenida Principal). A página da SA Crono já mostra o botão de inscrição (20/10); preço, abertura e prazo não aparecem no texto. Regulamento publicado na página.",
       "prize": {
         "kind": "dinheiro",
         "top": 2000,
@@ -2801,8 +2818,8 @@
       },
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-19T22:48:12.332Z",
+      "start": "06:30",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
     {
@@ -2884,23 +2901,31 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "notes": "Largada às 6h30. Organização: AMA (Associação Maranhense dos Autistas de Imperatriz), cronometragem Topchip. Distâncias, local e inscrições ainda não divulgados.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-19T22:48:12.332Z",
+      "start": "06:30",
+      "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-19T22:48:12.332Z"
     }
   ],
   "changes": [
+    {
+      "id": "2f84ecb0-aac9-449e-8e17-8aba77a2dcc9",
+      "eventId": "ecorun-2026-chapadinha",
+      "version": "[\"2026-11-08\",[5],\"Em frente à Cidade Eco, Avenida Ataliba Vieira de Almeida\",null,\"2026-11-01\",\"Abertas\",\"https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-20T10:59:04.116Z",
+      "notifiedAt": "2026-10-20T10:59:35.575Z"
+    },
     {
       "id": "fac6fb2f-23ff-4ee5-8763-52a567b095ee",
       "eventId": "corrida-pge-2026-2026-sao-luis",
       "version": "[\"2026-11-08\",[5,10],\"Local a confirmar\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-20T02:08:00.640Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-20T10:59:35.575Z"
     },
     {
       "id": "8eeaafb4-c981-4c4f-a688-db9f4992dcc9",
@@ -2908,7 +2933,7 @@
       "version": "[\"2027-04-25\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-10-19T22:48:12.332Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-20T10:59:35.575Z"
     },
     {
       "id": "0e436582-966a-4380-8ff8-80e05f0770d6",
@@ -2916,7 +2941,7 @@
       "version": "[\"2027-01-10\",[5],\"Em frente ao Casarão, na Avenida Principal\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027\"]",
       "kind": "Alteração importante",
       "at": "2026-10-19T22:48:12.332Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-20T10:59:35.575Z"
     },
     {
       "id": "a4322116-1b1c-48f7-943c-90122933b330",
@@ -2924,7 +2949,7 @@
       "version": "[\"2027-10-10\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-10-19T16:43:09.116Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-20T10:59:35.575Z"
     },
     {
       "id": "0f0e462f-ea64-49bb-9d2d-98433151c9b3",
@@ -2932,7 +2957,7 @@
       "version": "[\"2026-11-08\",[5,10],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-19T16:43:09.116Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-20T10:59:35.575Z"
     },
     {
       "id": "042b25c9-f12f-4906-a8a1-1fc92f78c270",
@@ -4295,7 +4320,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T02:08:00.640Z",
+  "lastChecked": "2026-10-20T10:59:04.116Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
