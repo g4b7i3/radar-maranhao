@@ -6,6 +6,7 @@ import StorySemana from './StorySemana';
 import CardTreino from './CardTreino';
 import NotaIdade from './NotaIdade';
 const CalcRitmo = lazy(() => import('./CalcRitmo')); // só baixa quando alguém abre
+const Pro = lazy(() => import('./pro/Pro')); // Radar Pro: login e temporada, só baixa em /?pro
 import "@fontsource-variable/archivo/wdth.css";
 import "./styles.css";
 // /?story=semana abre o gerador do story "Provas da semana"; o resto é o Radar normal.
@@ -14,7 +15,9 @@ const story = qs.get('story') === 'semana';
 const treino = qs.get('card') === 'treino'; // /?card=treino abre o card do treino
 const nota = qs.get('nota') === 'idade'; // /?nota=idade abre a calculadora de nota por idade
 const ritmo = qs.get('calc') === 'ritmo'; // /?calc=ritmo abre a calculadora de ritmo
-createRoot(document.getElementById('root')!).render(<StrictMode>{story ? <StorySemana /> : treino ? <CardTreino /> : nota ? <NotaIdade /> : ritmo ? <Suspense fallback={null}><CalcRitmo /></Suspense> : <App />}</StrictMode>);
+// /?pro abre o Radar Pro; a volta do login (com #access_token ou ?code) também cai aqui
+const pro = qs.has('pro') || /access_token=|error_description=/.test(window.location.hash);
+createRoot(document.getElementById('root')!).render(<StrictMode>{pro ? <Suspense fallback={null}><Pro /></Suspense> : story ? <StorySemana /> : treino ? <CardTreino /> : nota ? <NotaIdade /> : ritmo ? <Suspense fallback={null}><CalcRitmo /></Suspense> : <App />}</StrictMode>);
 
 // App instalável e offline: registra o service worker só na versão publicada.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
