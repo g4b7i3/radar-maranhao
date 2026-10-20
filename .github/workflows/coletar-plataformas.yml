@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   coletar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # fixo: o ubuntu-latest virou Ubuntu 26 (out/2026) e o Playwright ainda não instala nele
     timeout-minutes: 110
     steps:
       - uses: actions/checkout@v4

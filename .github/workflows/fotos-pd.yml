@@ -5,7 +5,7 @@ permissions:
   contents: write
 jobs:
   baixar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # fixo: o ubuntu-latest virou Ubuntu 26 (out/2026) e o Playwright ainda não instala nele
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
