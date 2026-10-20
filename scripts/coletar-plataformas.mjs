@@ -13,7 +13,9 @@ const MA = /\bMA\b|Maranh[aã]o|S[aã]o Lu[ií]s|Imperatriz|Timon|Caxias|Bacabal
 const FONTES = [
   { id: 'cronoesportes', lista: ['https://www.cronoesportes.com.br/eventos'], prova: /cronoesportes\.com\.br\/evento\/\d+/ },
   { id: 'sacrono', lista: ['https://www.sacrono.com.br/'], prova: /sacrono\.com\.br\/evento\/(\d{4}\/|[a-z0-9-]+-\d{4}$)/ },
-  { id: 'centraldacorrida', lista: ['https://centraldacorrida.com.br/', 'https://centraldacorrida.com.br/eventos'], prova: /centraldacorrida\.com\.br\/evento\/[^/?#]+$/, clicarMA: true },
+  { id: 'centraldacorrida', lista: ['https://centraldacorrida.com.br/', 'https://centraldacorrida.com.br/eventos'], prova: /centraldacorrida\.com\.br\/evento\/[^/?#]+$/, clicarMA: true, filtroEstado: 'MA',
+    // provas avisadas pelo Vinik que não apareciam na vitrine da Central (20/10/2026)
+    extra: ['https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026'] },
   // GuardaLugar: sistema de reservas/inscrições usado por organizadores do Maranhão (indicado pelo Vinik em 15/10/2026)
   { id: 'guardalugar', lista: ['https://guardalugar.com/', 'https://guardalugar.com/eventos'], extra: ['https://guardalugar.com/evento/3fE0hu-6dzmimmjZC_1O-Q'], prova: /guardalugar\.com\/evento\/[A-Za-z0-9_-]{6,}$/ },
   { id: 'topchip', lista: ['https://topchip.com.br/', 'https://topchip.com.br/calendario'], prova: /^https:\/\/(www\.)?topchip\.com\.br\/(?!calendario|resultados|contato|sobre|login|cadastro|minha-conta|termos|politica|eventos?$)[a-z0-9-]{4,}\/?$/ },
@@ -72,6 +74,29 @@ async function abrir(ctx, url, coletarApi, rolagemCurta = false) {
   return { page, api };
 }
 
+// Escolhe o estado no filtro da página (caixa "Selecione o Estado") e recarrega a lista inteira.
+async function filtrarEstado(page, uf) {
+  try {
+    const sel = page.locator('select', { has: page.locator('option', { hasText: new RegExp(`^\\s*${uf}\\s*$`) }) }).first();
+    if (!(await sel.count())) return 'sem caixa de estado';
+    await sel.selectOption({ label: uf }, { timeout: 10_000 });
+    await page.waitForLoadState('networkidle', { timeout: 20_000 }).catch(() => {});
+    await page.waitForTimeout(2500);
+    // alguns sites só filtram ao tocar em buscar/filtrar
+    const botao = page.getByRole('button', { name: /^(buscar|pesquisar|filtrar)$/i }).first();
+    if (await botao.count()) { await botao.click({ timeout: 5000 }).catch(() => {}); await page.waitForTimeout(2500); }
+    for (let i = 0; i < 20; i++) {
+      const h = await page.evaluate(() => document.body.scrollHeight);
+      await page.mouse.wheel(0, 4000); await page.waitForTimeout(700);
+      if (await page.evaluate(() => document.body.scrollHeight) === h && i > 3) break;
+    }
+    const linhas = (await page.innerText('body')).split('\n').map(t => t.trim());
+    const doEstado = linhas.filter(t => new RegExp(`[-/]\\s*${uf}$`, 'i').test(t)).length;
+    const outros = linhas.filter(t => /\s-\s[A-Z]{2}$/.test(t) && !new RegExp(`-\\s*${uf}$`, 'i').test(t)).length;
+    return `estado ${uf} aplicado: ${doEstado} do ${uf}, ${outros} de outros estados`;
+  } catch (e) { return 'filtro falhou: ' + String(e).slice(0, 150); }
+}
+
 // Links para fora do site (inscrição, regulamento, Instagram), sem repetir e sem redes de compartilhamento.
 const linksExternos = (hrefs, host) => [...new Set(hrefs.filter(h => /^https?:/.test(h) && !h.includes(host)
   && !/facebook\.com\/sharer|twitter\.com\/intent|x\.com\/intent|wa\.me\/\?|api\.whatsapp|linkedin\.com\/share|t\.me\/share|pinterest\.com\/pin/.test(h)))].slice(0, 40);
@@ -113,11 +138,14 @@ async function coletar(browser, fonte) {
   for (const url of fonte.lista) {
     try {
       const { page, api } = await abrir(ctx, url, !fonte.semApi);
+      // Central da Corrida: a vitrine não mostra todas as provas; com o filtro de estado aparecem todas as do Maranhão.
+      let filtro = null;
+      if (fonte.filtroEstado) filtro = await filtrarEstado(page, fonte.filtroEstado);
       const hrefs = await page.$$eval('a[href]', as => as.map(a => a.href.split('#')[0].split('?')[0]));
       if (page.url() !== url && fonte.intervaloHoras && /\/page\/\d+/.test(url)) { await page.close(); continue; } // página da lista que não existe
       hrefs.filter(h => fonte.prova.test(h)).forEach(h => links.add(h));
       const textoLista = limpa(await page.innerText('body'));
-      resultado.listas.push({ url, texto: textoLista.slice(0, 40_000) });
+      resultado.listas.push({ url, ...(filtro ? { filtro } : {}), texto: textoLista.slice(0, 40_000) });
       // Sites em que o cartão da prova não é um link (<a>): clica nos cartões do Maranhão para descobrir o endereço de cada prova.
       if (fonte.clicarMA) {
         const L = textoLista.split('\n');
