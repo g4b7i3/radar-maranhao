@@ -2995,9 +2995,43 @@
       "start": null,
       "verifiedAt": "2026-10-20T16:18:41.197Z",
       "firstSeenAt": "2026-10-20T16:18:41.197Z"
+    },
+    {
+      "id": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
+      "name": "Corrida Combate Ao Feminicidio 2026",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-14",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Em breve",
+      "officialUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
+      "sourceUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 00h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-20T17:54:26.033Z",
+      "firstSeenAt": "2026-10-20T17:54:26.033Z"
     }
   ],
   "changes": [
+    {
+      "id": "76a8490a-5714-4da1-b663-3c6bb05b6898",
+      "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
+      "version": "[\"2026-11-14\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-20T17:54:26.033Z",
+      "notifiedAt": null
+    },
     {
       "id": "ed359209-d1c5-42cf-ad3f-a2b530c1e004",
       "eventId": "mega-evento-2028-2028-imperatriz",
@@ -4439,7 +4473,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T16:18:41.197Z",
+  "lastChecked": "2026-10-20T17:54:26.033Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
