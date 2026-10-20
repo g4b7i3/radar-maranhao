@@ -3017,12 +3017,12 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Fonte única: página oficial da prova na Central da Corrida",
-      "notes": "Inscrições ainda não abertas: a Central da Corrida mostra \"Em breve\", sem data de abertura. Distâncias: 5 km, 10 km e 5 km PCD. Horário da largada a confirmar. Organização: EuCorro Eventos Esportivos. A entrega do kit será divulgada nas redes sociais da organização; não haverá entrega no dia da prova.",
+      "notes": "Inscrições abertas na Central da Corrida (abriram em 20/10/2026). Distâncias: 5 km, 10 km e 5 km PCD. Horário da largada a confirmar. Organização: EuCorro Eventos Esportivos. A entrega do kit será divulgada nas redes sociais da organização; não haverá entrega no dia da prova.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-20T18:06:16.038Z",
+      "verifiedAt": "2026-10-20T18:06:44.443Z",
       "firstSeenAt": "2026-10-20T17:54:26.033Z"
     }
   ],
@@ -4492,7 +4492,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T18:06:16.038Z",
+  "lastChecked": "2026-10-20T18:06:44.443Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
