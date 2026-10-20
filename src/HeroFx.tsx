@@ -116,12 +116,14 @@ const REVEAL = '.race, .month h2, .missing, .feed li, .about-status, .about sect
 /**
  * Faz cada item aparecer suavemente quando entra na tela (uma vez só).
  * Um único IntersectionObserver para a página toda: leve mesmo com 80 provas.
+ * Um MutationObserver percebe qualquer item que aparece depois (trocar Mapa/Lista,
+ * filtros, abas...), então nada fica escondido por ter sido desenhado de novo.
  */
-export function useReveal(deps: unknown[]) {
+export function useReveal() {
   useEffect(() => {
     const root = document.documentElement;
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !('IntersectionObserver' in window)) return;
+    if (reduce || !('IntersectionObserver' in window) || !('MutationObserver' in window)) { root.classList.remove('reveal-on'); return; }
     root.classList.add('reveal-on');
     const io = new IntersectionObserver(entries => {
       const visible = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -132,10 +134,20 @@ export function useReveal(deps: unknown[]) {
         io.unobserve(el);
       });
     }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
-    document.querySelectorAll<HTMLElement>(REVEAL).forEach(el => { if (!el.classList.contains('in')) io.observe(el); });
-    // segurança: nada fica escondido se algo der errado
-    const t = setTimeout(() => document.querySelectorAll(REVEAL).forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight) el.classList.add('in'); }), 1500);
-    return () => { io.disconnect(); clearTimeout(t); };
+    const observar = (base: ParentNode) => base.querySelectorAll<HTMLElement>(REVEAL).forEach(el => { if (!el.classList.contains('in')) io.observe(el); });
+    observar(document);
+    const mo = new MutationObserver(lista => {
+      for (const m of lista) m.addedNodes.forEach(n => {
+        if (!(n instanceof HTMLElement)) return;
+        if (n.matches(REVEAL) && !n.classList.contains('in')) io.observe(n);
+        observar(n);
+      });
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+    // segurança: o que já está na tela aparece de qualquer jeito
+    const seguro = () => document.querySelectorAll(REVEAL).forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); });
+    const t = setInterval(seguro, 1500);
+    return () => { io.disconnect(); mo.disconnect(); clearInterval(t); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, []);
 }

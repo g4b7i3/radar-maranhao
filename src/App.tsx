@@ -286,7 +286,7 @@ export default function App() {
     try { await navigator.clipboard.writeText(url); setToast('Link copiado. Abra em outro aparelho ou envie para alguém.'); }
     catch { window.prompt('Copie o link da sua agenda:', url); }
   }
-  useReveal([tab, filtered, data]);
+  useReveal();
   const onInstalled = useCallback(() => setToast('App instalado. Procure o ícone Corridas MA na tela inicial.'), []);
   function exportCalendar(list: Race[]) { icsFor(list); setToast(list.length === 1 ? 'Arquivo de calendário baixado.' : `${list.filter(e => e.date).length} provas exportadas para o calendário.`); }
 
