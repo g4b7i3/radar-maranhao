@@ -78,7 +78,62 @@ function percurso(ctx: Ctx, cx: number, cy: number, larg: number, semente: numbe
 
 /** pos: deslocamento (px do card) e escala do bloco de informações, quando a pessoa arrasta por cima da foto */
 export type Pos = { x: number; y: number; s: number };
-export type DadosCard = { km: number; ritmo: number; tempo: number; zona: typeof ZONAS[number] | null; tipo: string | null; cidade: string; fundo: Fundo; foto: Foto; focoY: number; pos?: Pos };
+export type Modelo = 'centro' | 'lateral';
+export type DadosCard = { km: number; ritmo: number; tempo: number; zona: typeof ZONAS[number] | null; tipo: string | null; cidade: string; fundo: Fundo; foto: Foto; focoY: number; pos?: Pos; modelo?: Modelo };
+
+/** Modelo "Lateral": números alinhados à esquerda com faixa listrada, como os adesivos de estatística do Strava. */
+function lateral(ctx: Ctx, d: DadosCard, W: number, H: number, transp: boolean, sombra: (on: boolean) => void, comSombra: boolean) {
+  const X = 130, cor = d.zona?.cor ?? '#3CE07A';
+  const itens: [string, string, string][] = [
+    [fmtKm(d.km), 'km', 'DISTÂNCIA'],
+    [fmtRitmo(d.ritmo), '/km', 'RITMO MÉDIO'],
+    [fmtTempo(d.tempo), '', 'TEMPO'],
+  ];
+  const passo = 215, topo = transp ? 150 : H - 380 - passo * itens.length - 150;
+  // faixa listrada à esquerda (na altura dos números)
+  const fy0 = topo - 10, fy1 = topo + passo * itens.length - 40;
+  ctx.save(); ctx.beginPath(); ctx.rect(56, fy0, 34, fy1 - fy0); ctx.clip();
+  sombra(comSombra); ctx.strokeStyle = '#fff'; ctx.lineWidth = 7;
+  for (let yy = fy0 - 40; yy < fy1 + 40; yy += 26) { ctx.beginPath(); ctx.moveTo(56, yy + 34); ctx.lineTo(90, yy); ctx.stroke(); }
+  ctx.restore(); sombra(false);
+  // título do treino (tipo + zona) em cima
+  ctx.textAlign = 'left';
+  const titulo = [d.tipo, d.zona ? `${d.zona.id} ${d.zona.nome}` : null].filter(Boolean).join(' · ') || 'Treino';
+  sombra(comSombra); ctx.fillStyle = '#fff';
+  fonte(ctx, 800, 46, true); ctx.fillText(titulo.toUpperCase(), X, topo - 60);
+  sombra(false);
+  ctx.fillStyle = cor; ctx.beginPath(); ctx.roundRect(X, topo - 40, 90, 8, 4); ctx.fill();
+  // números
+  let y = topo + 110;
+  for (const [val, un, rot] of itens) {
+    sombra(comSombra); ctx.fillStyle = '#fff';
+    fonte(ctx, 800, 128, true); ctx.fillText(val, X, y);
+    const w = ctx.measureText(val).width;
+    if (un) { fonte(ctx, 700, 50, true); ctx.fillText(un, X + w + 12, y); }
+    fonte(ctx, 600, 30, false); ctx.globalAlpha = .9; try { ctx.letterSpacing = '3px'; } catch { /* */ }
+    ctx.fillText(rot, X, y + 48); try { ctx.letterSpacing = '0px'; } catch { /* */ } ctx.globalAlpha = 1;
+    y += passo;
+  }
+  sombra(false);
+  // traço do percurso à direita dos números
+  percurso(ctx, W - 250, topo + passo * 1.1, 260, d.km + d.ritmo / 100, cor);
+  // local
+  sombra(comSombra); ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
+  const loc = caber(ctx, `${d.cidade.trim() || 'São Luís'} · MA`, 600, 36, 26, W - X - 60, 1, false);
+  ctx.fillText(loc.linhas[0], X, y - 40);
+  // marca do Radar
+  const by = transp ? H - 110 : H - 250;
+  ctx.save(); ctx.translate(X, by);
+  ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(0, 0, 64, 64, 14); ctx.fill();
+  sombra(false);
+  ctx.scale(2, 2); ctx.strokeStyle = AZUL; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  SIMBOLO.forEach(p => ctx.stroke(new Path2D(p)));
+  ctx.restore();
+  sombra(comSombra); ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
+  fonte(ctx, 800, 32, true); ctx.fillText('RADAR CORRIDAS', X + 84, by + 30);
+  fonte(ctx, 600, 26, false); ctx.globalAlpha = .9; ctx.fillText('@radarcorridasma', X + 84, by + 62); ctx.globalAlpha = 1;
+  sombra(false);
+}
 
 export async function desenharTreino(canvas: HTMLCanvasElement, d: DadosCard) {
   try { await Promise.all([document.fonts.load(`800 100px ${FONTE}`), document.fonts.load(`500 40px ${FONTE}`)]); } catch { /* fonte do sistema */ }
@@ -114,6 +169,8 @@ export async function desenharTreino(canvas: HTMLCanvasElement, d: DadosCard) {
   const sombra = (on: boolean) => { ctx.shadowColor = on ? 'rgba(0,0,0,.45)' : 'transparent'; ctx.shadowBlur = on ? 18 : 0; ctx.shadowOffsetY = on ? 2 : 0; };
   const comSombra = d.fundo !== 'azul';
   ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+
+  if (d.modelo === 'lateral') { lateral(ctx, d, W, H, transp, sombra, comSombra); if (pos) ctx.restore(); return; }
 
   // bloco central: distância, ritmo, tempo (como no Strava)
   const blocoH = 3 * 200;
@@ -191,6 +248,7 @@ export default function CardTreino() {
   const [tipo, setTipo] = useState<string | null>(null);
   const [cidade, setCidade] = useState('São Luís');
   const [fundo, setFundo] = useState<Fundo>('transparente');
+  const [modelo, setModelo] = useState<Modelo>('centro');
   const [foto, setFoto] = useState<Foto>(null);
   const [focoY, setFocoY] = useState(0.4);
   const [url, setUrl] = useState('');
@@ -232,7 +290,7 @@ export default function CardTreino() {
     let ativo = true;
     // com foto, desenha direto na prévia (o arrasto aparece na hora); sem foto, num canvas fora da tela
     const c = (comFoto && vivo.current) || (canvas.current ??= document.createElement('canvas'));
-    const t = setTimeout(() => desenharTreino(c, { km: K!, ritmo: ritmoS!, tempo: tempoS!, zona, tipo, cidade, fundo, foto, focoY, pos }).then(() => {
+    const t = setTimeout(() => desenharTreino(c, { km: K!, ritmo: ritmoS!, tempo: tempoS!, zona, tipo, cidade, fundo, foto, focoY, pos, modelo }).then(() => {
       if (!ativo || arrastando) return; // a imagem final só é gerada quando a pessoa solta o dedo
       c.toBlob(b => {
         if (!ativo || !b) return;
@@ -241,7 +299,7 @@ export default function CardTreino() {
       }, fundo === 'foto' ? 'image/jpeg' : 'image/png', 0.92);
     }), arrastando ? 0 : 120);
     return () => { ativo = false; clearTimeout(t); };
-  }, [ok, K, ritmoS, tempoS, zona, tipo, cidade, fundo, foto, focoY, pos, arrastando, comFoto]);
+  }, [ok, K, ritmoS, tempoS, zona, tipo, cidade, fundo, foto, focoY, pos, arrastando, comFoto, modelo]);
 
   // arrastar o bloco com o dedo (ou o mouse) por cima da foto
   function inicioArrasto(e: React.PointerEvent<HTMLCanvasElement>) {
@@ -307,6 +365,12 @@ export default function CardTreino() {
         {TIPOS.map(t => <button key={t} className="chip" aria-pressed={tipo === t} onClick={() => setTipo(tipo === t ? null : t)}>{t}</button>)}
       </div>
       <label className="ct-cidade">Cidade<input value={cidade} onChange={e => setCidade(e.target.value)} maxLength={40} /></label>
+
+      <p className="euvou-pergunta">Modelo</p>
+      <div className="seg" role="group" aria-label="Modelo do card">
+        <button aria-pressed={modelo === 'centro'} onClick={() => setModelo('centro')}>Centro</button>
+        <button aria-pressed={modelo === 'lateral'} onClick={() => setModelo('lateral')} data-umami-event="Card do treino: modelo lateral">Lateral</button>
+      </div>
 
       <p className="euvou-pergunta">Fundo</p>
       <div className="seg" role="group" aria-label="Fundo do card">
