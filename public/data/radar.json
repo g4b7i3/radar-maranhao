@@ -2908,9 +2908,52 @@
       "start": "06:30",
       "verifiedAt": "2026-10-20T10:59:04.116Z",
       "firstSeenAt": "2026-10-19T22:48:12.332Z"
+    },
+    {
+      "id": "portal-fitness-2026-morros",
+      "name": "1ª Corrida Portal Fitness",
+      "edition": "2026",
+      "city": "Morros",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [
+        5
+      ],
+      "location": "Em frente à Academia Portal Fitness, Morros",
+      "registrationOpen": null,
+      "registrationClose": "2026-10-30",
+      "status": "Abertas",
+      "officialUrl": "https://lscrono.com.br/e/1a-corrida-portal-fitness",
+      "sourceUrl": "https://lscrono.com.br/e/1a-corrida-portal-fitness",
+      "sourceName": "LS Crono",
+      "publishedAt": null,
+      "confidence": "Fonte única: página oficial da prova na LS Crono",
+      "notes": "Largada às 6h (concentração às 5h). Inscrições até 30/10/2026: 1º lote R$ 70. Kit: número de peito, chip e camisa. Organização: Academia Portal Fitness. Entrega do kit a ser divulgada no Instagram da academia.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 800,
+        "summary": "Geral masc. e fem.: troféu + R$ 800, 500 e 300."
+      },
+      "elevation": null,
+      "price": {
+        "min": 70,
+        "text": "R$ 70 (1º lote)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-10-20T13:15:02.306Z",
+      "firstSeenAt": "2026-10-20T13:15:02.306Z"
     }
   ],
   "changes": [
+    {
+      "id": "f6fbee7f-664b-4f9e-afa0-7b70670ec7c0",
+      "eventId": "portal-fitness-2026-morros",
+      "version": "[\"2026-12-20\",[5],\"Em frente à Academia Portal Fitness, Morros\",null,\"2026-10-30\",\"Abertas\",\"https://lscrono.com.br/e/1a-corrida-portal-fitness\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-20T13:15:02.306Z",
+      "notifiedAt": null
+    },
     {
       "id": "2f84ecb0-aac9-449e-8e17-8aba77a2dcc9",
       "eventId": "ecorun-2026-chapadinha",
@@ -4320,7 +4363,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T10:59:04.116Z",
+  "lastChecked": "2026-10-20T13:15:02.306Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
