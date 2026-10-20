@@ -3011,7 +3011,7 @@
       "location": "São Luís (local de largada a confirmar)",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
       "sourceName": "Central da Corrida",
@@ -3022,11 +3022,19 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-20T17:55:18.227Z",
+      "verifiedAt": "2026-10-20T18:06:16.038Z",
       "firstSeenAt": "2026-10-20T17:54:26.033Z"
     }
   ],
   "changes": [
+    {
+      "id": "9f593495-da44-433d-8a19-ce99e757d416",
+      "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
+      "version": "[\"2026-11-14\",[5,10],\"São Luís (local de largada a confirmar)\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-20T18:06:16.038Z",
+      "notifiedAt": null
+    },
     {
       "id": "c2a9ab82-34ec-4788-b932-525eda1b5b08",
       "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
@@ -4484,7 +4492,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T17:55:18.227Z",
+  "lastChecked": "2026-10-20T18:06:16.038Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
