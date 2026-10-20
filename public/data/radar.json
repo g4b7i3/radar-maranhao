@@ -2998,14 +2998,17 @@
     },
     {
       "id": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
-      "name": "Corrida Combate Ao Feminicidio 2026",
+      "name": "Corrida de Combate ao Feminicídio 2026",
       "edition": "2026",
       "city": "São Luís",
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-14",
-      "distances": [],
-      "location": "Local a confirmar",
+      "distances": [
+        5,
+        10
+      ],
+      "location": "São Luís (local de largada a confirmar)",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Em breve",
@@ -3013,17 +3016,25 @@
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
-      "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 00h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "confidence": "Fonte única: página oficial da prova na Central da Corrida",
+      "notes": "Inscrições ainda não abertas: a Central da Corrida mostra \"Em breve\", sem data de abertura. Distâncias: 5 km, 10 km e 5 km PCD. Horário da largada a confirmar. Organização: EuCorro Eventos Esportivos. A entrega do kit será divulgada nas redes sociais da organização; não haverá entrega no dia da prova.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-20T17:54:26.033Z",
+      "verifiedAt": "2026-10-20T17:55:18.227Z",
       "firstSeenAt": "2026-10-20T17:54:26.033Z"
     }
   ],
   "changes": [
+    {
+      "id": "c2a9ab82-34ec-4788-b932-525eda1b5b08",
+      "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
+      "version": "[\"2026-11-14\",[5,10],\"São Luís (local de largada a confirmar)\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-20T17:55:18.227Z",
+      "notifiedAt": null
+    },
     {
       "id": "76a8490a-5714-4da1-b663-3c6bb05b6898",
       "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
@@ -4473,7 +4484,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T17:54:26.033Z",
+  "lastChecked": "2026-10-20T17:55:18.227Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
