@@ -15,8 +15,8 @@ jobs:
           cat > /tmp/f.mjs <<'JS'
           import { writeFileSync } from 'node:fs';
           const UA = { 'User-Agent': 'RadarCorridasMA/1.0 (radarcorridasma.com.br; vinikautor@gmail.com)' };
-          const buscas = ['runner smartwatch', 'jogging city street', 'runner tying shoes', 'running group training park', 'trail running forest', 'jogging silhouette sunset', 'woman running road', 'jogger bridge', 'running stairs workout', 'man running beach', 'runner phone map', 'jogging morning city'];
-          const prova = /marathon|maratona|race|5k|10k|ten.miler|half|bib|finish|start line|relay|championship|olympic|games|competition|cross country|triathlon|run for|fun run|memorial/i;
+          const buscas = ['Avenida Litorânea São Luís', 'praia São Luís Maranhão', 'Lagoa da Jansen', 'Centro Histórico São Luís Maranhão', 'Ponte José Sarney São Luís', 'Lençóis Maranhenses', 'Chapada das Mesas', 'Imperatriz Maranhão', 'São Luís Maranhão skyline', 'Atins Maranhão', 'Barreirinhas Maranhão', 'corrida São Luís Maranhão'];
+          const prova = /zzzz_nada|marathon|maratona|race|5k|10k|ten.miler|half|bib|finish|start line|relay|championship|olympic|games|competition|cross country|triathlon|run for|fun run|memorial/i;
           const lista = [];
           for (const q of buscas) {
             const u = 'https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=25&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=1400&gsrsearch=' + encodeURIComponent(q + ' filetype:bitmap');
@@ -24,13 +24,13 @@ jobs:
             for (const p of Object.values(j.query?.pages ?? {})) {
               const ii = p.imageinfo?.[0]; if (!ii) continue;
               const lic = ii.extmetadata?.LicenseShortName?.value ?? '';
-              if (!/public domain|cc0|pd-/i.test(lic)) continue;
+              if (!/public domain|cc0|pd-|cc by(-sa)? ?[234]/i.test(lic)) continue;
               if (ii.width < 1200) continue;
               if (prova.test(p.title)) continue;
               lista.push({ busca: q, titulo: p.title, licenca: lic, autor: (ii.extmetadata?.Artist?.value ?? '').replace(/<[^>]+>/g, '').trim(), pagina: ii.descriptionurl, thumb: ii.thumburl, w: ii.width, h: ii.height });
             }
           }
-          const vistos = new Set(); const final = lista.filter(x => !vistos.has(x.titulo) && vistos.add(x.titulo)).slice(0, 72);
+          const vistos = new Set(); const final = lista.filter(x => !vistos.has(x.titulo) && vistos.add(x.titulo)).slice(0, 90);
           let i = 0;
           for (const x of final) {
             i++; x.arquivo = `f${String(i).padStart(2, '0')}.jpg`;
