@@ -239,3 +239,12 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 @media (prefers-reduced-motion: reduce) {
   .pro-oferta, .pro-oferta-in::after, .pro-oferta-chip i, .pro-oferta-preco b, .pro-cta, .pro-cta::after, .pro-lista li { animation: none; }
 }
+
+/* admin · usuários */
+.pro-adm-cab{width:100%;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.pro-usuarios{list-style:none;margin:0;padding:0;display:grid}
+.pro-usuarios li+li{border-top:1px solid var(--line)}
+.pro-usuarios button{width:100%;display:flex;justify-content:space-between;gap:12px;padding:12px 0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.pro-usuarios button>div{display:grid;gap:2px;min-width:0}
+.pro-usuarios small{color:var(--muted,#667);font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pro-usuarios .pro-dir{justify-items:end;flex:none}

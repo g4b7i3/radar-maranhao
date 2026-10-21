@@ -1,6 +1,6 @@
 // Radar Pro: temporada do atleta (login, perfil, assinatura via Pix e as telas do Pro).
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
@@ -16,7 +16,7 @@ const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
 // Link de cortesia (/?pro=cortesia&k=código): libera o Radar Pro sem pagar, até o Vinik revogar
 try { if (qs.get('pro') === 'cortesia' && qs.get('k')) localStorage.setItem('radar-cortesia', qs.get('k')!); } catch { /* sem armazenamento */ }
-const codigoCortesia = (): string | null => { let k = qs.get('pro') === 'cortesia' ? qs.get('k') : null; try { k ??= localStorage.getItem('radar-cortesia'); } catch { /* */ } return k; };
+const codigoCortesia = (): string | null => { let k = qs.get('pro') === 'cortesia' && new URLSearchParams(window.location.search).get('k') ? qs.get('k') : null; try { k ??= localStorage.getItem('radar-cortesia'); } catch { /* */ } return k; };
 
 /** Logo do Radar Pro: o símbolo do Radar em dourado, no fundo azul-noite (a mesma do ícone do app). */
 export const Logo = () => (
@@ -93,12 +93,15 @@ function ProTelas() {
   }, [perfil, temp?.assinante]);
 
   // link de cortesia: assim que o perfil existe, libera o Pro
+  const cortesiaFeita = useRef(false);
   useEffect(() => {
-    if (!perfil) return;
+    if (!perfil || cortesiaFeita.current) return;
     const k = codigoCortesia();
     if (!k) { setResgatando(false); return; }
+    cortesiaFeita.current = true; // uma vez só (antes repetia a cada recarga do perfil)
+    try { localStorage.removeItem('radar-cortesia'); } catch { /* */ }
+    try { window.history.replaceState(null, '', '/?pro'); } catch { /* */ }
     chamar<{ nome?: string }>('radar-acoes', { acao: 'cortesia_resgatar', codigo: k }).then(async r => {
-      try { localStorage.removeItem('radar-cortesia'); } catch { /* */ }
       setAviso(r.erro ?? '🎁 Radar Pro liberado como cortesia. Bem-vindo ao Radar Pro!');
       await recarregar(); setResgatando(false);
     });

@@ -709,6 +709,7 @@ export function TelaAdmin() {
   return (
     <div className="pro-cont">
       {msg && <p className="pro-aviso" role="status">{msg}</p>}
+      <AdminUsuarios aviso={setMsg} />
       <section className="pro-card">
         <p className="pro-k cinza">Liberar Radar Pro (pagamento por fora, cortesia)</p>
         <div className="pro-linha pro-quebra"><input className="pro-input" value={apelido} onChange={e => setApelido(e.target.value)} placeholder="@apelido" aria-label="Apelido" /><input className="pro-input pro-curto" inputMode="numeric" value={dias} onChange={e => setDias(e.target.value)} aria-label="Dias" /><button className="btn solid" onClick={liberar}>Liberar</button></div>
@@ -753,7 +754,7 @@ function PedidoAdmin({ x, quem, mesmoDia, feito }: { x: Sugestao; quem: string; 
       <div className="pro-linha"><b>{x.nome}</b><span className="pro-st dec">Pedido</span></div>
       <p>{quem}<br />{dataBR(x.data)} · {x.cidade} · correu {kmTxt(Number(x.distancia_km))}{x.obs ? ` · ${x.obs}` : ''}</p>
       {x.link && <p className="fine pro-sem-margem"><a href={x.link} target="_blank" rel="noopener noreferrer">Abrir link do resultado</a></p>}
-      {mesmoDia.length > 0 && <div className="pro-mesmo-dia"><p className="fine pro-sem-margem">Já existe prova neste dia. É a mesma?</p>{mesmoDia.map(y => <button key={y.id} className="btn outline" disabled={indo} onClick={() => decidir('aprovar', y.id)}>Juntar com “{y.nome}” ({y.cidade})</button>)}</div>}
+      {mesmoDia.length > 0 && <div className="pro-mesmo-dia"><p className="fine pro-sem-margem">Já existe prova neste dia. Só junte se for a mesma prova (mesmo nome e cidade). Se não for, use “Aprovar como prova nova”.</p>{mesmoDia.map(y => <button key={y.id} className="btn outline" disabled={indo} onClick={() => { if (confirm(`Juntar o pedido “${x.nome}” (${x.cidade}) com a prova “${y.nome}” (${y.cidade})?\n\nSó confirme se for a MESMA prova.`)) decidir('aprovar', y.id); }}>É a mesma: “{y.nome}” ({y.cidade})</button>)}</div>}
       <label className="ct-cidade">Nome da prova<input value={nome} onChange={e => setNome(e.target.value)} /></label>
       <div className="pro-linha pro-quebra">
         <label className="ct-cidade pro-flex">Cidade<input value={cidade} onChange={e => setCidade(e.target.value)} /></label>
@@ -761,6 +762,102 @@ function PedidoAdmin({ x, quem, mesmoDia, feito }: { x: Sugestao; quem: string; 
       </div>
       <label className="ct-cidade">Resposta ao atleta <small>(opcional)</small><input value={resposta} onChange={e => setResposta(e.target.value)} placeholder="Ex.: não achamos o resultado oficial" /></label>
       <div className="pro-linha pro-quebra"><button className="btn solid" disabled={indo} onClick={() => decidir('aprovar')}>Aprovar como prova nova</button><button className="btn outline pro-vermelho-txt" disabled={indo} onClick={() => decidir('recusar')}>Recusar</button></div>
+    </>
+  );
+}
+
+/* ───────── Admin · todos os usuários e a área de cada um ───────── */
+type UsuarioAdm = { user_id: string; apelido: string; nome_completo: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; nascimento: string; whatsapp: string | null; criado_em: string; email: string | null; valida_ate: string | null; cortesia: boolean; provas: number; oficiais: number };
+const situacao = (u: { valida_ate: string | null; cortesia?: boolean }) => {
+  if (u.cortesia) return { txt: 'Cortesia', cls: 'ok' };
+  if (u.valida_ate && new Date(u.valida_ate) > new Date()) return { txt: `Pro até ${new Date(u.valida_ate).toLocaleDateString('pt-BR')}`, cls: 'ok' };
+  return { txt: 'Sem assinatura', cls: 'dec' };
+};
+function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
+  const [lista, setLista] = useState<UsuarioAdm[] | null>(null);
+  const [aberto, setAberto] = useState(false);
+  const [busca, setBusca] = useState('');
+  const [filtro, setFiltro] = useState<'todos' | 'pro' | 'sem'>('todos');
+  const [sel, setSel] = useState<string | null>(null);
+  const carregar = () => chamar<{ usuarios: UsuarioAdm[] }>('radar-acoes', { acao: 'admin_usuarios' }).then(r => r.erro ? aviso(r.erro) : setLista(r.usuarios));
+  useEffect(() => { carregar(); }, []);
+  const norm = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const vis = (lista ?? []).filter(u => (filtro === 'todos' || (filtro === 'pro') === (situacao(u).cls === 'ok')) && (!busca || norm(`${u.apelido} ${u.nome_completo} ${u.email ?? ''} ${u.cidade} ${u.assessoria ?? ''}`).includes(norm(busca))));
+  const pro = (lista ?? []).filter(u => situacao(u).cls === 'ok').length;
+  if (sel) return <AdminUsuarioArea uid={sel} voltar={() => { setSel(null); carregar(); }} aviso={aviso} />;
+  return (
+    <section className="pro-card">
+      <button className="pro-linha pro-adm-cab" onClick={() => setAberto(!aberto)} aria-expanded={aberto}>
+        <p className="pro-k cinza">Usuários</p><span><b>{lista ? lista.length : '…'}</b> contas · <b>{lista ? pro : '…'}</b> com Pro</span>
+      </button>
+      {aberto && <>
+        <label className="pro-busca"><Search size={18} aria-hidden="true" /><input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Nome, @apelido, e-mail, cidade ou assessoria" aria-label="Buscar usuário" /></label>
+        <div className="chips" role="group" aria-label="Filtro">{([['todos', 'Todos'], ['pro', 'Com Pro'], ['sem', 'Sem assinatura']] as const).map(([k, n]) => <button key={k} className="chip" aria-pressed={filtro === k} onClick={() => setFiltro(k)}>{n}</button>)}</div>
+        <ul className="pro-usuarios">
+          {vis.map(u => { const st = situacao(u); return (
+            <li key={u.user_id}><button onClick={() => setSel(u.user_id)}>
+              <div><b>@{u.apelido}</b><small>{u.nome_completo} · {u.cidade}</small><small>{u.email}</small></div>
+              <div className="pro-dir"><span className={`pro-st ${st.cls}`}>{st.txt}</span><small>{u.provas} prova{u.provas === 1 ? '' : 's'}{u.oficiais ? ` · ${u.oficiais} oficial${u.oficiais === 1 ? '' : 'is'}` : ''}</small></div>
+            </button></li>); })}
+        </ul>
+        {lista && !vis.length && <p className="fine">Ninguém encontrado.</p>}
+      </>}
+    </section>
+  );
+}
+type AreaAdm = { perfil: Perfil & { criado_em?: string }; email: string | null; valida_ate: string | null; resultados: (Resultado & { user_id: string })[]; medalhas: { medalha: string; temporada: number; resultado_id: string | null }[]; pagamentos: { status: string; valor: number; criado_em: string }[]; pedidos: { nome: string; data: string; cidade: string; status: string }[]; duelos: number };
+function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => void; aviso: (m: string) => void }) {
+  const [d, setD] = useState<AreaAdm | null>(null);
+  const carregar = () => chamar<AreaAdm>('radar-acoes', { acao: 'admin_usuario', user_id: uid }).then(r => r.erro ? aviso(r.erro) : setD(r));
+  useEffect(() => { carregar(); }, [uid]);
+  if (!d) return <section className="pro-card"><p className="fine">Carregando a área do atleta…</p></section>;
+  const p = d.perfil;
+  const idade = Math.floor((Date.now() - new Date(p.nascimento + 'T12:00:00Z').getTime()) / (365.25 * 86400_000));
+  const st = situacao({ valida_ate: d.valida_ate, cortesia: !!d.valida_ate && new Date(d.valida_ate).getFullYear() >= 2090 });
+  const acao = async (corpo: Record<string, unknown>, ok: string) => { const r = await chamar('radar-acoes', corpo); aviso(r.erro ?? ok); carregar(); };
+  const liberar = (dias: number) => acao({ acao: 'admin_liberar', apelido: p.apelido, dias }, `+${dias} dias liberados para @${p.apelido}.`);
+  const meds = [...new Set(d.medalhas.map(m => m.medalha))].map(id => MEDALHAS.find(m => m.id === id)).filter(Boolean) as Medalha[];
+  return (
+    <>
+      <button className="btn text pro-esq" onClick={voltar}>← Todos os usuários</button>
+      <section className="pro-card azul">
+        <p className="pro-medio">@{p.apelido}</p>
+        <p className="pro-sub pro-sem-margem">{p.nome_completo}</p>
+        <p className="pro-sub pro-sem-margem">{p.sexo === 'F' ? 'Feminino' : 'Masculino'} · {idade} anos · {p.cidade}{p.assessoria ? ` · ${p.assessoria}` : ''}</p>
+        <div className="pro-tags"><span className={`pro-st ${st.cls}`}>{st.txt}</span>{p.publico === false && <span className="pro-st dec">Perfil privado</span>}</div>
+      </section>
+      <section className="pro-card">
+        <p className="pro-k cinza">Contato e conta</p>
+        <p className="pro-sem-margem">{d.email ?? 'sem e-mail'}</p>
+        {p.whatsapp && <p className="pro-sem-margem">WhatsApp: {zapMascara(p.whatsapp)}</p>}
+        <div className="pro-linha pro-quebra">
+          {p.whatsapp && <a className="btn whats" href={`https://wa.me/${zapLimpo(p.whatsapp) ?? ''}`} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />WhatsApp</a>}
+          <a className="btn outline" href={linkPerfil(p.apelido)} target="_blank" rel="noopener"><ExternalLink size={16} aria-hidden="true" />Perfil público</a>
+        </div>
+        <div className="pro-linha pro-quebra"><button className="btn outline" onClick={() => liberar(30)}>+30 dias de Pro</button><button className="btn outline" onClick={() => liberar(365)}>+1 ano</button></div>
+        {d.pagamentos.length > 0 && <p className="fine pro-sem-margem">Pagamentos: {d.pagamentos.map(x => `${new Date(x.criado_em).toLocaleDateString('pt-BR')} R$ ${Number(x.valor).toFixed(2).replace('.', ',')} (${x.status === 'approved' ? 'pago' : x.status})`).join(' · ')}</p>}
+        <p className="fine pro-sem-margem">{d.duelos} duelo{d.duelos === 1 ? '' : 's'} · conta criada em {p.criado_em ? new Date(p.criado_em).toLocaleDateString('pt-BR') : '?'}</p>
+      </section>
+      <section className="pro-card">
+        <p className="pro-k cinza">Provas ({d.resultados.length})</p>
+        {d.resultados.length ? <ul className="pro-provas">{d.resultados.map(r => (
+          <li key={r.id}>
+            <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
+            <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}% · {r.pontos} pts{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}</p>
+            {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
+            {r.link_resultado && <p className="fine pro-sem-margem"><a href={r.link_resultado} target="_blank" rel="noopener noreferrer">Abrir link enviado</a></p>}
+            <div className="pro-linha pro-quebra">
+              {r.status !== 'aprovado' && r.status !== 'verificado' && <button className="btn solid" onClick={() => acao({ acao: 'admin_decidir', resultado_id: r.id, decisao: 'aprovar' }, 'Prova aprovada.')}>Aprovar</button>}
+              {r.status !== 'recusado' && <button className="btn outline pro-vermelho-txt" onClick={() => { if (confirm(`Recusar a prova “${r.prova_nome}” de @${p.apelido}?`)) acao({ acao: 'admin_decidir', resultado_id: r.id, decisao: 'recusar' }, 'Prova recusada.'); }}>Recusar</button>}
+              {r.status === 'recusado' && <button className="btn outline" onClick={() => acao({ acao: 'admin_reabrir', resultado_id: r.id }, 'Prova reaberta: voltou para “em análise”.')}>Reabrir</button>}
+            </div>
+          </li>))}</ul> : <p className="fine">Ainda não registrou provas.</p>}
+      </section>
+      <section className="pro-card">
+        <p className="pro-k cinza">Medalhas ({meds.length})</p>
+        {meds.length ? <div className="pro-med">{meds.map(m => <div key={m.id} className="pro-med-item"><Desenho m={m} tam={60} /><b>{m.nome}</b></div>)}</div> : <p className="fine">Ainda sem medalhas.</p>}
+      </section>
+      {d.pedidos.length > 0 && <section className="pro-card"><p className="pro-k cinza">Provas pedidas</p><ul className="pro-provas">{d.pedidos.map((x, i) => <li key={i}><b>{x.nome}</b><p>{dataBR(x.data)} · {x.cidade} · {x.status}</p></li>)}</ul></section>}
     </>
   );
 }

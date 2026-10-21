@@ -1,6 +1,6 @@
 // Radar Pro · ações do atleta e do administrador (uma função só, para gastar menos).
 // Atleta: duelo_criar, duelo_aceitar, contestar, prova_sugerir, cortesia_resgatar, exportar, apagar_conta.
-// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova, admin_cortesia_revogar.
+// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova, admin_cortesia_revogar, admin_usuarios, admin_usuario.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -179,6 +179,45 @@ Deno.serve(async req => {
       }
       await db.from('radar_sugestoes_provas').update({ status: 'aprovada', prova_id: provaId, resposta: limpa(b.resposta, 300) || null, decidido_em: new Date().toISOString() }).eq('id', sg.id);
       return resp({ ok: true, prova_id: provaId });
+    }
+    case 'admin_usuarios': { // todos os atletas, com e-mail, assinatura e quantas provas têm
+      const { data: perfis } = await db.from('radar_perfis').select('user_id, apelido, nome_completo, cidade, assessoria, sexo, nascimento, whatsapp, criado_em').order('criado_em', { ascending: false });
+      const { data: ass } = await db.from('radar_assinaturas').select('user_id, valida_ate');
+      const { data: res } = await db.from('radar_resultados').select('user_id, status');
+      const { data: cort } = await db.from('radar_cortesias').select('user_id').is('revogado_em', null);
+      const emails = new Map<string, string>();
+      for (let pg = 1; pg <= 20; pg++) {
+        const { data } = await db.auth.admin.listUsers({ page: pg, perPage: 1000 });
+        for (const u of data?.users ?? []) emails.set(u.id, u.email ?? '');
+        if (!data?.users?.length || data.users.length < 1000) break;
+      }
+      const lista = (perfis ?? []).map(p => {
+        const r = (res ?? []).filter(x => x.user_id === p.user_id);
+        return { ...p, email: emails.get(p.user_id) ?? null, valida_ate: (ass ?? []).find(a => a.user_id === p.user_id)?.valida_ate ?? null,
+          cortesia: (cort ?? []).some(c => c.user_id === p.user_id), provas: r.length, oficiais: r.filter(x => ['verificado', 'aprovado'].includes(x.status)).length };
+      });
+      return resp({ usuarios: lista, total_contas: emails.size });
+    }
+    case 'admin_usuario': { // a área de um atleta: perfil, provas, medalhas, pagamentos e pedidos
+      const uid = String(b.user_id ?? '');
+      if (!/^[0-9a-f-]{36}$/.test(uid)) return resp({ erro: 'Atleta inválido.' }, 400);
+      const { data: perfil } = await db.from('radar_perfis').select('*').eq('user_id', uid).maybeSingle();
+      if (!perfil) return resp({ erro: 'Atleta não encontrado.' }, 404);
+      const { data: u } = await db.auth.admin.getUserById(uid);
+      const [ass, res, med, pag, sug, due] = await Promise.all([
+        db.from('radar_assinaturas').select('valida_ate').eq('user_id', uid).maybeSingle(),
+        db.from('radar_resultados').select('*').eq('user_id', uid).order('prova_data', { ascending: false }),
+        db.from('radar_medalhas').select('medalha, temporada, resultado_id').eq('user_id', uid),
+        db.from('radar_pagamentos').select('status, valor, criado_em').eq('user_id', uid).order('criado_em', { ascending: false }),
+        db.from('radar_sugestoes_provas').select('nome, data, cidade, status, criado_em').eq('user_id', uid).order('criado_em', { ascending: false }),
+        db.from('radar_duelos').select('id, mes, distancia_km, desafiante, desafiado').or(`desafiante.eq.${uid},desafiado.eq.${uid}`),
+      ]);
+      return resp({ perfil, email: u?.user?.email ?? null, valida_ate: ass.data?.valida_ate ?? null, resultados: res.data ?? [], medalhas: med.data ?? [], pagamentos: pag.data ?? [], pedidos: sug.data ?? [], duelos: (due.data ?? []).length });
+    }
+    case 'admin_reabrir': { // volta um resultado para "em análise" (ex.: recusado sem querer)
+      const { error } = await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Reaberto pelo administrador.' }).eq('id', b.resultado_id);
+      if (error) return resp({ erro: error.message }, 400);
+      return resp({ ok: true });
     }
     case 'admin_cortesia_revogar': { // tira o acesso de cortesia (volta a precisar pagar)
       const { data: c } = await db.from('radar_cortesias').select('*').eq('codigo', String(b.codigo ?? '')).maybeSingle();
