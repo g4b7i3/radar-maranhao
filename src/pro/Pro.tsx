@@ -8,7 +8,7 @@ import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
 import CardDuelo, { tituloDuelo, type FimDuelo } from './CardDuelo';
 import CIDADES from '../cidades-ma-geo.json';
-import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin } from './Telas';
+import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin, ZapConta } from './Telas';
 import './pro.css';
 
 type Aba = 'temporada' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
@@ -131,6 +131,9 @@ function ProTelas() {
 
   if (!temp || resgatando) return <main className="pro"><p className="pro-carregando">Carregando…</p></main>;
 
+  // WhatsApp agora é obrigatório: quem criou a conta antes precisa completar
+  if (!perfil.whatsapp) return <main className="pro">{topo('Falta só um dado')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, informe o seu WhatsApp. É por ele que o Radar fala com você sobre os seus resultados.</p><ZapConta perfil={perfil} pronto={recarregar} /></div></main>;
+
   const admin = sessao.user.email === ADMIN_EMAIL;
   if (!temp.assinante && aba !== 'conta' && aba !== 'admin') return (
     <main className="pro">
@@ -249,8 +252,8 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
     const nasc = f.nascimento.split('/').reverse().join('-');
     const idade = (Date.now() - Date.parse(nasc)) / (365.25 * 86400_000);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(nasc) || !(idade >= 10 && idade <= 100)) return setErro('Confira a data de nascimento (dd/mm/aaaa).');
-    const zap = f.whatsapp.trim() ? zapLimpo(f.whatsapp) : null;
-    if (f.whatsapp.trim() && !zap) return setErro('Confira o WhatsApp: DDD + número, ex.: (98) 98765-4321.');
+    const zap = zapLimpo(f.whatsapp);
+    if (!zap) return setErro(f.whatsapp.trim() ? 'Confira o WhatsApp: DDD + número, ex.: (98) 98765-4321.' : 'Informe o seu WhatsApp.');
     setSalvando(true);
     const { error } = await sb.from('radar_perfis').insert({ user_id: uid, apelido: ap, nome_completo: f.nome_completo.trim().replace(/\s+/g, ' '), cidade: f.cidade, sexo: f.sexo, nascimento: nasc, assessoria: f.assessoria.trim() || null, whatsapp: zap });
     setSalvando(false);
@@ -268,7 +271,7 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
       <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button></div>
       <label className="ct-cidade">Data de nascimento<input inputMode="numeric" value={f.nascimento} onChange={e => setF({ ...f, nascimento: masc(e.target.value) })} placeholder="dd/mm/aaaa" /><small>Usada só para a nota por idade e a faixa etária.</small></label>
       <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input value={f.assessoria} onChange={muda('assessoria')} placeholder="ex.: Equipe Corre Ilha" /></label>
-      <label className="ct-cidade">WhatsApp <small>(opcional)</small><input type="tel" inputMode="tel" autoComplete="tel" value={f.whatsapp} onChange={e => setF({ ...f, whatsapp: zapMascara(e.target.value) })} placeholder="(98) 98765-4321" /><small>Só para o Radar te avisar se tiver algum problema com o seu resultado. Não aparece para ninguém.</small></label>
+      <label className="ct-cidade">WhatsApp<input type="tel" required inputMode="tel" autoComplete="tel" value={f.whatsapp} onChange={e => setF({ ...f, whatsapp: zapMascara(e.target.value) })} placeholder="(98) 98765-4321" /><small>Para o Radar falar com você sobre os seus resultados e provas. Não aparece para ninguém.</small></label>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       <button className="btn solid pro-btn" disabled={salvando}>{salvando ? 'Salvando…' : 'Continuar'}</button>
       <button className="btn text" type="button" onClick={() => sb.auth.signOut()}><LogOut size={16} aria-hidden="true" />Sair</button>

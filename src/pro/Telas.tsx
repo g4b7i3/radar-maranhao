@@ -666,12 +666,12 @@ function PublicoConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }
   );
 }
 
-function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+export function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
   const [v, setV] = useState(perfil.whatsapp ? zapMascara(perfil.whatsapp) : '');
   const [msg, setMsg] = useState<string | null>(null);
   const salvar = async () => {
-    const zap = v.trim() ? zapLimpo(v) : null;
-    if (v.trim() && !zap) return setMsg('Confira: DDD + número, ex.: (98) 98765-4321.');
+    const zap = zapLimpo(v);
+    if (!zap) return setMsg(v.trim() ? 'Confira: DDD + número, ex.: (98) 98765-4321.' : 'O WhatsApp é obrigatório.');
     const { error } = await sb.from('radar_perfis').update({ whatsapp: zap }).eq('user_id', perfil.user_id);
     setMsg(error ? 'Não deu para salvar. Tente de novo.' : 'Salvo!'); if (!error) pronto();
   };
@@ -679,7 +679,7 @@ function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
     <section className="pro-card">
       <p className="pro-k cinza">WhatsApp para contato</p>
       <div className="pro-linha pro-quebra"><input className="pro-input" type="tel" inputMode="tel" value={v} onChange={e => { setV(zapMascara(e.target.value)); setMsg(null); }} placeholder="(98) 98765-4321" aria-label="WhatsApp" /><button className="btn outline" onClick={salvar}>Salvar</button></div>
-      <p className="fine pro-sem-margem">{msg ?? 'Só para o Radar te avisar se tiver algum problema com o seu resultado. Não aparece para ninguém.'}</p>
+      <p className="fine pro-sem-margem">{msg ?? 'Obrigatório. Para o Radar falar com você sobre os seus resultados e provas. Não aparece para ninguém.'}</p>
     </section>
   );
 }
