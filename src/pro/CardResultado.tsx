@@ -14,6 +14,21 @@ type Fundo = typeof FUNDOS[number]['id'] | 'azul' | 'minha';
 type Rei = { sexo: 'F' | 'M'; atletas: number | null } | null;
 
 const carregar = (src: string) => new Promise<HTMLImageElement>((ok, erro) => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => ok(i); i.onerror = erro; i.src = src; });
+/** Foto do perfil (ou nada, se não tiver ou não carregar). */
+export const fotoPerfil = async (apelidos: string[]) => {
+  const { data } = await sb.rpc('radar_fotos', { p_apelidos: apelidos });
+  const m = new Map(((data ?? []) as { apelido: string; foto: string }[]).map(x => [x.apelido, x.foto]));
+  const out = new Map<string, HTMLImageElement>();
+  await Promise.all(apelidos.map(async a => { const u = m.get(a); if (u) { const i = await carregar(u).catch(() => null); if (i) out.set(a, i); } }));
+  return out;
+};
+/** Desenha a foto redonda com borda branca. */
+export function fotoRedonda(ctx: Ctx, img: HTMLImageElement, cx: number, cy: number, raio: number) {
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 16; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(cx, cy, raio + 5, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, raio, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+  const s = Math.min(img.naturalWidth, img.naturalHeight);
+  ctx.drawImage(img, (img.naturalWidth - s) / 2, (img.naturalHeight - s) / 2, s, s, cx - raio, cy - raio, raio * 2, raio * 2); ctx.restore();
+}
 const svgImg = (m: Medalha) => carregar('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(medalhaSVG(m, true, 200).replace(/'Archivo Variable',sans-serif/g, "'Arial Black',Arial,sans-serif")));
 const ritmo = (s: number, km: number) => { const p = s / km; return `${Math.floor(p / 60)}:${String(Math.round(p % 60)).padStart(2, '0')}`; };
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -28,7 +43,7 @@ function coroa(ctx: Ctx, x: number, y: number, s: number, cor: string) {
   ctx.fillRect(0, 20, 32, 4); ctx.restore();
 }
 
-export async function desenharResultado(c: HTMLCanvasElement, r: Resultado, apelido: string, meds: Medalha[], rei: Rei, fundo: Fundo, foto: HTMLCanvasElement | null) {
+export async function desenharResultado(c: HTMLCanvasElement, r: Resultado, apelido: string, meds: Medalha[], rei: Rei, fundo: Fundo, foto: HTMLCanvasElement | null, avatar: HTMLImageElement | null = null) {
   c.width = W; c.height = H;
   const ctx = c.getContext('2d') as Ctx;
   await document.fonts?.ready;
@@ -122,11 +137,14 @@ export async function desenharResultado(c: HTMLCanvasElement, r: Resultado, apel
     });
   }
 
-  // rodapé
+  // rodapé: foto, @apelido e o link do perfil público
+  let xr = X;
+  if (avatar) { fotoRedonda(ctx, avatar, X + 44, H - 108, 44); xr = X + 108; }
   ctx.shadowBlur = 10; ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
-  fonte(ctx, 900, 40, true); ctx.fillText(`@${apelido}`, X, H - 92);
-  fonte(ctx, 600, 26, false); ctx.globalAlpha = .88; ctx.textAlign = 'right'; ctx.fillText('radarcorridasma.com.br', W - X, H - 94); ctx.globalAlpha = 1;
-  ctx.shadowBlur = 0;
+  fonte(ctx, 900, 40, true); ctx.fillText(`@${apelido}`, xr, H - 118 + (avatar ? 6 : 26));
+  fonte(ctx, 600, 24, false); ctx.globalAlpha = .88; ctx.fillText(avatar ? `radarcorridasma.com.br/?atleta=${apelido}` : '', xr, H - 76);
+  if (!avatar) { ctx.textAlign = 'right'; ctx.fillText(`radarcorridasma.com.br/?atleta=${apelido}`, W - X, H - 94); }
+  ctx.globalAlpha = 1; ctx.shadowBlur = 0;
 }
 
 export default function CardResultado({ r, apelido, fechar }: { r: Resultado; apelido: string; fechar: () => void }) {
@@ -134,6 +152,8 @@ export default function CardResultado({ r, apelido, fechar }: { r: Resultado; ap
   const [rei, setRei] = useState<Rei>(null);
   const [fundo, setFundo] = useState<Fundo>('calhau');
   const [foto, setFoto] = useState<HTMLCanvasElement | null>(null);
+  const [avatar, setAvatar] = useState<HTMLImageElement | null | undefined>(undefined);
+  useEffect(() => { fotoPerfil([apelido]).then(m => setAvatar(m.get(apelido) ?? null)).catch(() => setAvatar(null)); }, [apelido]);
   const [url, setUrl] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const blob = useRef<Blob | null>(null);
@@ -152,15 +172,15 @@ export default function CardResultado({ r, apelido, fechar }: { r: Resultado; ap
   }, [r]);
 
   useEffect(() => {
-    if (!meds) return;
+    if (!meds || avatar === undefined) return;
     let ativo = true;
     const c = document.createElement('canvas');
-    desenharResultado(c, r, apelido, meds, rei, fundo, foto).then(() => c.toBlob(b => {
+    desenharResultado(c, r, apelido, meds, rei, fundo, foto, avatar).then(() => c.toBlob(b => {
       if (!ativo || !b) return;
       blob.current = b; setUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); });
     }, 'image/jpeg', 0.92)).catch(() => setAviso('Não consegui montar o card. Tente outro fundo.'));
     return () => { ativo = false; };
-  }, [meds, rei, fundo, foto, r, apelido]);
+  }, [meds, rei, fundo, foto, r, apelido, avatar]);
 
   async function escolherFoto(file: File | undefined) {
     if (!file) return;

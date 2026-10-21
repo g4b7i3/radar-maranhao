@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Download, Share2, X, Swords } from 'lucide-react';
 import { AZUL, SIMBOLO, fonte, type Ctx } from '../EuVou';
 import { pct, kmTxt } from './sb';
-import { FUNDOS } from './CardResultado';
+import { FUNDOS, fotoPerfil, fotoRedonda } from './CardResultado';
 
 // Resultado do duelo (venceu, perdeu ou empatou) como card para o story (1080×1920).
 export type FimDuelo = { id: string; adversario: string | null; distancia_km: number; mes: string; minha_nota: number | null; nota_adv: number | null; resultado: 'venci' | 'perdi' | 'empate' | 'ninguem' };
@@ -12,7 +12,7 @@ const mesNome = (m: string) => new Date(m.slice(0, 10) + 'T12:00:00Z').toLocaleD
 
 export const tituloDuelo = (d: FimDuelo) => d.resultado === 'venci' ? 'Você venceu o duelo!' : d.resultado === 'perdi' ? 'Desta vez não deu' : d.resultado === 'empate' ? 'Empate no duelo' : 'Duelo sem provas';
 
-export async function desenhar(c: HTMLCanvasElement, d: FimDuelo, eu: string, fundo: string) {
+export async function desenhar(c: HTMLCanvasElement, d: FimDuelo, eu: string, fundo: string, fotos: Map<string, HTMLImageElement> = new Map()) {
   c.width = W; c.height = H;
   const ctx = c.getContext('2d') as Ctx;
   await document.fonts?.ready;
@@ -42,6 +42,7 @@ export async function desenhar(c: HTMLCanvasElement, d: FimDuelo, eu: string, fu
     ctx.shadowBlur = 0; ctx.fillStyle = destaque ? 'rgba(242,183,5,.22)' : 'rgba(255,255,255,.1)';
     ctx.beginPath(); ctx.roundRect(x + 10, y - 150, col - 20, 380, 36); ctx.fill();
     if (destaque) { ctx.strokeStyle = '#f2b705'; ctx.lineWidth = 5; ctx.stroke(); }
+    const av = fotos.get(nome); if (av) fotoRedonda(ctx, av, x + col / 2, y - 190, 70);
     ctx.shadowBlur = 14; ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
     fonte(ctx, 800, 44, true); ctx.fillText(`@${nome}`.slice(0, 18), x + col / 2, y - 60);
     fonte(ctx, 900, 140, true); ctx.fillText(nota != null ? `${pct(nota)}%` : '–', x + col / 2, y + 100);
@@ -64,12 +65,15 @@ export async function desenhar(c: HTMLCanvasElement, d: FimDuelo, eu: string, fu
 export default function CardDuelo({ d, eu, fechar }: { d: FimDuelo; eu: string; fechar: () => void }) {
   const [fundo, setFundo] = useState<string>('por-do-sol');
   const [url, setUrl] = useState<string | null>(null);
+  const [fotos, setFotos] = useState<Map<string, HTMLImageElement> | null>(null);
+  useEffect(() => { fotoPerfil([eu, d.adversario ?? ''].filter(Boolean)).then(setFotos).catch(() => setFotos(new Map())); }, [eu, d.adversario]);
   const blob = useRef<Blob | null>(null);
   useEffect(() => {
+    if (!fotos) return;
     let ativo = true; const c = document.createElement('canvas');
-    desenhar(c, d, eu, fundo).then(() => c.toBlob(b => { if (!ativo || !b) return; blob.current = b; setUrl(o => { if (o) URL.revokeObjectURL(o); return URL.createObjectURL(b); }); }, 'image/jpeg', .92));
+    desenhar(c, d, eu, fundo, fotos).then(() => c.toBlob(b => { if (!ativo || !b) return; blob.current = b; setUrl(o => { if (o) URL.revokeObjectURL(o); return URL.createObjectURL(b); }); }, 'image/jpeg', .92));
     return () => { ativo = false; };
-  }, [d, eu, fundo]);
+  }, [d, eu, fundo, fotos]);
   const nome = `duelo-${d.mes.slice(0, 7)}.jpg`;
   const baixar = () => { if (!url) return; const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
   const compartilhar = async () => {
