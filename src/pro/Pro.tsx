@@ -11,6 +11,7 @@ import CIDADES from '../cidades-ma-geo.json';
 import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin, ZapConta } from './Telas';
 import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
+import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
 import './pro.css';
 
 type Aba = 'temporada' | 'feed' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
@@ -70,6 +71,8 @@ function ProTelas() {
   const [fimDuelos, setFimDuelos] = useState<FimDuelo[]>([]);
   const [cardDuelo, setCardDuelo] = useState<string | null>(null);
   const [resgatando, setResgatando] = useState(() => !!codigoCortesia());
+  const [notifAberto, setNotifAberto] = useState(false);
+  const notif = useNotificacoes();
   const [fotoPulada, setFotoPulada] = useState(() => { try { return localStorage.getItem('radar-foto-pulada') === '1'; } catch { return true; } });
   const pularFoto = () => { try { localStorage.setItem('radar-foto-pulada', '1'); } catch { /* */ } setFotoPulada(true); };
 
@@ -161,7 +164,8 @@ function ProTelas() {
   ];
   return (
     <main className="pro">
-      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Minha pré-temporada' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, temp.assinante ? <span className="pro-selo">PRO</span> : null)}
+      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Minha pré-temporada' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
+      {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: todas as abas à vista, sem precisar arrastar */}
       <nav className="pro-menu" aria-label="Radar Pro">
         {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
