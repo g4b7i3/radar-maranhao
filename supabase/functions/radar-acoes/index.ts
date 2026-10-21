@@ -1,6 +1,6 @@
 // Radar Pro · ações do atleta e do administrador (uma função só, para gastar menos).
-// Atleta: duelo_criar, duelo_aceitar, contestar, exportar, apagar_conta.
-// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar.
+// Atleta: duelo_criar, duelo_aceitar, contestar, prova_sugerir, exportar, apagar_conta.
+// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -14,6 +14,9 @@ const medalhasDe = async (ids: string[]): Promise<Record<string, string[]>> => {
     return (await r.json()).novas ?? {};
   } catch { return {}; }
 };
+const INICIO_TEMPORADA = '2026-10-15';
+const hojeBR = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
+const limpa = (v: unknown, max: number) => String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
 const mesAtual = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 7) + '-01';
 
 Deno.serve(async req => {
@@ -70,12 +73,31 @@ Deno.serve(async req => {
       if (error) return resp({ erro: 'Não deu para enviar.' }, 400);
       return resp({ ok: true, protocolo: c.id.slice(0, 8) });
     }
+    // ───────── Prova que não está na agenda: o atleta pede e o Vinik aprova
+    case 'prova_sugerir': {
+      if (!(await assinante())) return resp({ erro: 'Pedir prova é do Radar Pro.' }, 402);
+      const nome = limpa(b.nome, 120), cidade = limpa(b.cidade, 60), data = String(b.data ?? '').slice(0, 10);
+      const km = Number(b.distancia_km), link = limpa(b.link, 500), obs = limpa(b.obs, 300);
+      if (nome.length < 5) return resp({ erro: 'Escreva o nome da prova.' }, 400);
+      if (cidade.length < 3) return resp({ erro: 'Diga a cidade da prova.' }, 400);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) return resp({ erro: 'Data inválida.' }, 400);
+      if (data < INICIO_TEMPORADA) return resp({ erro: 'A temporada 2026 conta só as provas a partir de 15/10/2026.' }, 400);
+      if (data > hojeBR()) return resp({ erro: 'A prova ainda não aconteceu. Peça depois do dia da prova.' }, 400);
+      if (!(km >= 1 && km <= 250)) return resp({ erro: 'Distância inválida.' }, 400);
+      if (link && !/^https?:\/\/\S+\.\S+/.test(link)) return resp({ erro: 'O link do resultado precisa começar com http.' }, 400);
+      const { count } = await db.from('radar_sugestoes_provas').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('status', 'pendente');
+      if ((count ?? 0) >= 5) return resp({ erro: 'Você já tem 5 pedidos esperando. Aguarde a resposta do Radar.' }, 429);
+      const { data: s, error } = await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, data, distancia_km: km, link: link || null, obs: obs || null }).select('*').single();
+      if (error) return resp({ erro: 'Não deu para enviar agora.' }, 400);
+      return resp({ ok: true, sugestao: s });
+    }
     // ───────── LGPD: baixar meus dados
     case 'exportar': {
       const tabelas = ['radar_perfis', 'radar_assinaturas', 'radar_pagamentos', 'radar_resultados', 'radar_medalhas'];
       const dados: Record<string, unknown> = { conta: { email: user.email, criada_em: user.created_at } };
       for (const t of tabelas) dados[t.replace('radar_', '')] = (await db.from(t).select('*').eq('user_id', user.id)).data;
       dados.duelos = (await db.from('radar_duelos').select('*').or(`desafiante.eq.${user.id},desafiado.eq.${user.id}`)).data;
+      dados.provas_pedidas = (await db.from('radar_sugestoes_provas').select('*').eq('user_id', user.id)).data;
       dados.contestacoes_feitas = (await db.from('radar_contestacoes').select('*').eq('autor_id', user.id)).data;
       return resp(dados);
     }
@@ -95,9 +117,12 @@ Deno.serve(async req => {
     case 'admin_pendentes': {
       const { data: res } = await db.from('radar_resultados').select('*').eq('status', 'em_analise').order('criado_em').limit(100);
       const { data: cont } = await db.from('radar_contestacoes').select('*, radar_resultados(*)').eq('status', 'aberta').order('criado_em').limit(100);
-      const ids = [...new Set([...(res ?? []).map(r => r.user_id), ...(cont ?? []).flatMap(c => [c.autor_id, c.radar_resultados?.user_id])].filter(Boolean))];
+      const { data: sug } = await db.from('radar_sugestoes_provas').select('*').eq('status', 'pendente').order('criado_em').limit(100);
+      const dias = [...new Set((sug ?? []).map(x => x.data))];
+      const { data: mesmoDia } = dias.length ? await db.from('radar_provas').select('id, nome, data, cidade, distancias').in('data', dias) : { data: [] };
+      const ids = [...new Set([...(res ?? []).map(r => r.user_id), ...(sug ?? []).map(x => x.user_id), ...(cont ?? []).flatMap(c => [c.autor_id, c.radar_resultados?.user_id])].filter(Boolean))];
       const { data: perfis } = ids.length ? await db.from('radar_perfis').select('user_id, apelido, nome_completo, cidade, whatsapp').in('user_id', ids) : { data: [] };
-      return resp({ resultados: res ?? [], contestacoes: cont ?? [], perfis: perfis ?? [] });
+      return resp({ resultados: res ?? [], contestacoes: cont ?? [], perfis: perfis ?? [], sugestoes: sug ?? [], provas_mesmo_dia: mesmoDia ?? [] });
     }
     case 'admin_decidir': { // aprova ou recusa um resultado em análise (ou qualquer um, após contestação)
       const st = b.decisao === 'aprovar' ? 'aprovado' : b.decisao === 'recusar' ? 'recusado' : null;
@@ -112,6 +137,32 @@ Deno.serve(async req => {
     case 'admin_contestacao': { // encerra uma contestação sem mexer no resultado
       await db.from('radar_contestacoes').update({ status: 'improcedente' }).eq('id', b.contestacao_id);
       return resp({ ok: true });
+    }
+    case 'admin_prova': { // aprova (cria a prova ou junta com uma que já existe) ou recusa o pedido de prova
+      const { data: sg } = await db.from('radar_sugestoes_provas').select('*').eq('id', String(b.sugestao_id ?? '')).maybeSingle();
+      if (!sg) return resp({ erro: 'Pedido não encontrado.' }, 404);
+      if (sg.status !== 'pendente') return resp({ erro: 'Esse pedido já foi respondido.' }, 409);
+      if (b.decisao === 'recusar') {
+        await db.from('radar_sugestoes_provas').update({ status: 'recusada', resposta: limpa(b.resposta, 300) || null, decidido_em: new Date().toISOString() }).eq('id', sg.id);
+        return resp({ ok: true });
+      }
+      if (b.decisao !== 'aprovar') return resp({ erro: 'Decisão inválida.' }, 400);
+      const dists = String(b.distancias ?? '').split(/[;,\s]+/).map(x => Number(x.replace(',', '.'))).filter(x => x > 0 && x <= 250);
+      const kmS = Number(sg.distancia_km);
+      let provaId = limpa(b.prova_id, 80);
+      if (provaId) { // a prova já existe (outra pessoa pediu ou entrou na agenda): só garante a distância
+        const { data: pv } = await db.from('radar_provas').select('id, distancias').eq('id', provaId).maybeSingle();
+        if (!pv) return resp({ erro: 'Prova não encontrada.' }, 404);
+        const todas = [...new Set([...(pv.distancias ?? []).map(Number), ...dists, kmS])].sort((x, y) => x - y);
+        await db.from('radar_provas').update({ distancias: todas, atualizado_em: new Date().toISOString() }).eq('id', pv.id);
+      } else {
+        provaId = 'pro-' + crypto.randomUUID().slice(0, 8);
+        const todas = [...new Set([...dists, kmS])].sort((x, y) => x - y);
+        const { error } = await db.from('radar_provas').insert({ id: provaId, nome: limpa(b.nome, 120) || sg.nome, data: sg.data, cidade: limpa(b.cidade, 60) || sg.cidade, distancias: todas, modalidade: 'corrida' });
+        if (error) return resp({ erro: error.message }, 400);
+      }
+      await db.from('radar_sugestoes_provas').update({ status: 'aprovada', prova_id: provaId, resposta: limpa(b.resposta, 300) || null, decidido_em: new Date().toISOString() }).eq('id', sg.id);
+      return resp({ ok: true, prova_id: provaId });
     }
     case 'admin_liberar': { // libera dias de Pro na mão (pagamento por fora, cortesia, patrocinador)
       const dias = Math.min(400, Math.max(1, Number(b.dias) || 30));

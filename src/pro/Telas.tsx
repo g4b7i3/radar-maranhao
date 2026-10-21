@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, X as Fechar } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -213,6 +213,49 @@ const PONTOS_TXT: Record<string, string> = { concluir: 'por concluir', dez_km: '
 
 type Resposta = { nota: number; pontos: number; detalhes: Record<string, number>; status: Resultado['status']; motivo: string | null; medalhas_novas: string[]; liga: Liga | null; subiu_de_liga: boolean; oficial: boolean; link_lido?: boolean; resultado: Resultado };
 
+/* ───────── Prova que não está na agenda: o atleta pede, o Vinik aprova ───────── */
+type Sugestao = { id: string; nome: string; data: string; cidade: string; distancia_km: number; link: string | null; obs: string | null; status: 'pendente' | 'aprovada' | 'recusada'; prova_id: string | null; resposta: string | null; criado_em: string };
+const INICIO = '2026-10-15';
+const hojeBR = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
+function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: () => void }) {
+  const [f, setF] = useState({ nome: '', data: '', cidade: '', link: '', obs: '' });
+  const [km, setKm] = useState<number | null>(null);
+  const [outra, setOutra] = useState('');
+  const [erro, setErro] = useState<string | null>(null);
+  const [indo, setIndo] = useState(false);
+  const muda = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
+  const dist = km ?? (Number(outra.replace(',', '.')) || null);
+  const enviar = async () => {
+    setErro(null);
+    if (f.nome.trim().length < 5) return setErro('Escreva o nome da prova.');
+    if (!f.data) return setErro('Escolha a data da prova.');
+    if (f.data < INICIO) return setErro('A temporada 2026 conta só as provas a partir de 15/10/2026.');
+    if (f.cidade.trim().length < 3) return setErro('Diga a cidade.');
+    if (!dist) return setErro('Escolha a distância que você correu.');
+    setIndo(true);
+    const r = await chamar('radar-acoes', { acao: 'prova_sugerir', ...f, distancia_km: dist });
+    setIndo(false);
+    if (r.erro) return setErro(r.erro);
+    enviado();
+  };
+  return (
+    <section className="pro-card pro-pedir">
+      <div className="pro-linha"><p className="pro-k cinza"><CalendarPlus size={14} aria-hidden="true" /> Pedir uma prova</p><button className="btn text" onClick={fechar} aria-label="Fechar"><Fechar size={18} aria-hidden="true" /></button></div>
+      <p className="fine pro-sem-margem">O Radar confere e coloca a prova no Radar Pro. Quando aprovar, aparece aqui o botão para você registrar o seu tempo.</p>
+      <label className="ct-cidade">Nome da prova<input value={f.nome} onChange={muda('nome')} placeholder="Ex.: Corrida do Sol 2026" maxLength={120} /></label>
+      <label className="ct-cidade">Data<input type="date" min={INICIO} max={hojeBR()} value={f.data} onChange={muda('data')} /></label>
+      <label className="ct-cidade">Cidade<input list="pro-cidades-pedir" value={f.cidade} onChange={muda('cidade')} /><datalist id="pro-cidades-pedir">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
+      <p className="ct-cidade pro-sem-margem">Distância que você correu</p>
+      <div className="chips" role="group" aria-label="Distância">{[3, 5, 7, 10, 15, 21, 42].map(d => <button key={d} className="chip" aria-pressed={km === d} onClick={() => { setKm(km === d ? null : d); setOutra(''); }}>{d} km</button>)}</div>
+      <label className="ct-cidade">Outra distância <small>(em km)</small><input inputMode="decimal" value={outra} onChange={e => { setOutra(e.target.value.replace(/[^\d.,]/g, '').slice(0, 6)); setKm(null); }} placeholder="Ex.: 8" /></label>
+      <label className="ct-cidade">Link do resultado <small>(se já saiu)</small><input inputMode="url" value={f.link} onChange={e => setF({ ...f, link: e.target.value.trim() })} placeholder="https://…" /><small>Ajuda o Radar a aprovar mais rápido.</small></label>
+      <label className="ct-cidade">Observação <small>(opcional)</small><input value={f.obs} onChange={muda('obs')} placeholder="Ex.: organizada pela assessoria X" maxLength={300} /></label>
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+      <button className="btn solid pro-btn" disabled={indo} onClick={enviar}>{indo ? 'Enviando…' : 'Enviar pedido'}</button>
+    </section>
+  );
+}
+
 export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; pronto: () => void; irTemporada: () => void }) {
   const [provas, setProvas] = useState<Prova[] | null>(null);
   const [busca, setBusca] = useState('');
@@ -228,6 +271,20 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
   const [feito, setFeito] = useState<Resposta | null>(null);
 
   useEffect(() => { chamar<{ provas: Prova[] }>('radar-provas').then(r => setProvas(r.provas ?? [])); }, []);
+  const [pedir, setPedir] = useState(false);
+  const [aviso, setAviso] = useState<string | null>(null);
+  const [sugs, setSugs] = useState<Sugestao[]>([]);
+  const [jaFeitas, setJaFeitas] = useState<Set<string>>(new Set());
+  const carregarSugs = () => {
+    sb.from('radar_sugestoes_provas').select('*').order('criado_em', { ascending: false }).limit(10).then(({ data }) => setSugs((data as Sugestao[]) ?? []));
+    sb.from('radar_resultados').select('prova_id').eq('user_id', perfil.user_id).then(({ data }) => setJaFeitas(new Set((data ?? []).map(x => x.prova_id as string))));
+  };
+  useEffect(carregarSugs, [perfil.user_id]);
+  const visiveis = sugs.filter(x => x.status === 'pendente' || (x.status === 'aprovada' && x.prova_id && !jaFeitas.has(x.prova_id)) || (x.status === 'recusada' && Date.now() - new Date(x.criado_em).getTime() < 15 * 86400_000));
+  const registrarSug = (x: Sugestao) => {
+    const p = provas?.find(y => y.id === x.prova_id) ?? { id: x.prova_id!, nome: x.nome, data: x.data, cidade: x.cidade, distancias: [Number(x.distancia_km)], largada: null };
+    setProva(p); setKm(Number(x.distancia_km)); if (x.link) setLink(x.link); setPedir(false); window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const lista = useMemo(() => (provas ?? []).filter(p => !busca || norm(`${p.nome} ${p.cidade}`).includes(norm(busca))).slice(0, 30), [provas, busca]);
   const seg = lerTempo(tempo);
@@ -239,7 +296,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
     const r = await chamar<Resposta>('radar-registrar', { prova_id: prova.id, distancia_km: km, tempo_s: seg ?? undefined, peito: peito || undefined, nome_inscricao: outroNome || undefined, link_resultado: link || undefined });
     setEnviando(false);
     if (r.erro) return setErro(r.erro);
-    setFeito(r); pronto();
+    setFeito(r); pronto(); carregarSugs();
   };
 
   if (feito) {
@@ -280,7 +337,26 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
           <ul className="pro-escolha">
             {lista.map(p => <li key={p.id}><button onClick={() => { setProva(p); setKm(p.distancias.length === 1 ? Number(p.distancias[0]) : null); }}><b>{p.nome}</b><span>{dataBR(p.data)} · {p.cidade}</span></button></li>)}
           </ul>
-          {provas && !lista.length && <p className="fine">Nenhuma prova encontrada. Valem as provas da agenda do Radar que já aconteceram, a partir de 15/10/2026. Faltou alguma? <a href={whatsappLink('Oi! Corri uma prova que não está no Radar Pro: ')} target="_blank" rel="noopener">Avise pelo WhatsApp</a>.</p>}
+          {provas && !lista.length && <p className="fine">Nenhuma prova encontrada. Valem as provas da agenda do Radar que já aconteceram, a partir de 15/10/2026.</p>}
+          {aviso && <p className="pro-aviso" role="status">{aviso}</p>}
+          {visiveis.length > 0 && (
+            <section className="pro-card">
+              <p className="pro-k cinza">Provas que você pediu</p>
+              <ul className="pro-pedidas">
+                {visiveis.map(x => (
+                  <li key={x.id}>
+                    <div><b>{x.nome}</b><small>{dataBR(x.data)} · {x.cidade} · {kmTxt(Number(x.distancia_km))}</small>{x.resposta && <small>Radar: {x.resposta}</small>}</div>
+                    {x.status === 'pendente' && <span className="pro-st ana"><Clock size={12} aria-hidden="true" /> Esperando</span>}
+                    {x.status === 'aprovada' && <button className="btn solid" onClick={() => registrarSug(x)}><Check size={16} aria-hidden="true" />Registrar</button>}
+                    {x.status === 'recusada' && <span className="pro-st rec">Não aprovada</span>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {pedir
+            ? <PedirProva fechar={() => setPedir(false)} enviado={() => { setPedir(false); setAviso('Pedido enviado! Quando o Radar aprovar, a prova aparece aqui para você registrar.'); carregarSugs(); }} />
+            : <button className="btn outline pro-btn" onClick={() => { setPedir(true); setAviso(null); }}><CalendarPlus size={18} aria-hidden="true" />Minha prova não está aqui</button>}
         </>
       )}
 
@@ -607,7 +683,8 @@ function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
 }
 
 /* ───────── Administração (só o Vinik) ───────── */
-type Pend = { resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
+type ProvaDia = { id: string; nome: string; data: string; cidade: string; distancias: number[] };
+type Pend = { sugestoes: (Sugestao & { user_id: string })[]; provas_mesmo_dia: ProvaDia[]; resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
 export function TelaAdmin() {
   const [p, setP] = useState<Pend | null>(null);
   const [apelido, setApelido] = useState('');
@@ -633,11 +710,43 @@ export function TelaAdmin() {
         <p className="pro-k cinza">Liberar Radar Pro (pagamento por fora, cortesia)</p>
         <div className="pro-linha pro-quebra"><input className="pro-input" value={apelido} onChange={e => setApelido(e.target.value)} placeholder="@apelido" aria-label="Apelido" /><input className="pro-input pro-curto" inputMode="numeric" value={dias} onChange={e => setDias(e.target.value)} aria-label="Dias" /><button className="btn solid" onClick={liberar}>Liberar</button></div>
       </section>
+      <section className="pro-card"><p className="pro-k cinza">Provas pedidas ({p?.sugestoes.length ?? '…'})</p>
+        <ul className="pro-provas">{p?.sugestoes.map(x => <li key={x.id}><PedidoAdmin x={x} quem={quem(x.user_id)} mesmoDia={p.provas_mesmo_dia.filter(y => y.data === x.data)} feito={m => { setMsg(m); carregar(); }} /></li>)}</ul>
+        {p && !p.sugestoes.length && <p className="fine">Nenhum pedido.</p>}
+      </section>
       <section className="pro-card"><p className="pro-k cinza">Em análise ({p?.resultados.length ?? '…'})</p><ul className="pro-provas">{p?.resultados.map(r => <li key={r.id}><Item r={r} /></li>)}</ul>{p && !p.resultados.length && <p className="fine">Nada pendente.</p>}</section>
       <section className="pro-card"><p className="pro-k cinza">Contestações ({p?.contestacoes.length ?? '…'})</p>
         <ul className="pro-provas">{p?.contestacoes.map(c => <li key={c.id}><p className="pro-sem-margem"><b>Motivo:</b> {c.motivo}<br /><small>por {quem(c.autor_id)}</small></p>{c.radar_resultados && <Item r={c.radar_resultados} />}<button className="btn text pro-esq" onClick={async () => { await chamar('radar-acoes', { acao: 'admin_contestacao', contestacao_id: c.id }); carregar(); }}>Encerrar sem mudar</button></li>)}</ul>
         {p && !p.contestacoes.length && <p className="fine">Nenhuma contestação aberta.</p>}
       </section>
     </div>
+  );
+}
+
+function PedidoAdmin({ x, quem, mesmoDia, feito }: { x: Sugestao; quem: string; mesmoDia: ProvaDia[]; feito: (m: string) => void }) {
+  const [nome, setNome] = useState(x.nome);
+  const [cidade, setCidade] = useState(x.cidade);
+  const [dists, setDists] = useState(String(Number(x.distancia_km)));
+  const [resposta, setResposta] = useState('');
+  const [indo, setIndo] = useState(false);
+  const decidir = async (decisao: 'aprovar' | 'recusar', prova_id?: string) => {
+    setIndo(true);
+    const r = await chamar('radar-acoes', { acao: 'admin_prova', sugestao_id: x.id, decisao, prova_id, nome, cidade, distancias: dists, resposta });
+    setIndo(false); feito(r.erro ?? (decisao === 'aprovar' ? `Prova aprovada. O atleta já pode registrar.` : 'Pedido recusado.'));
+  };
+  return (
+    <>
+      <div className="pro-linha"><b>{x.nome}</b><span className="pro-st dec">Pedido</span></div>
+      <p>{quem}<br />{dataBR(x.data)} · {x.cidade} · correu {kmTxt(Number(x.distancia_km))}{x.obs ? ` · ${x.obs}` : ''}</p>
+      {x.link && <p className="fine pro-sem-margem"><a href={x.link} target="_blank" rel="noopener noreferrer">Abrir link do resultado</a></p>}
+      {mesmoDia.length > 0 && <div className="pro-mesmo-dia"><p className="fine pro-sem-margem">Já existe prova neste dia. É a mesma?</p>{mesmoDia.map(y => <button key={y.id} className="btn outline" disabled={indo} onClick={() => decidir('aprovar', y.id)}>Juntar com “{y.nome}” ({y.cidade})</button>)}</div>}
+      <label className="ct-cidade">Nome da prova<input value={nome} onChange={e => setNome(e.target.value)} /></label>
+      <div className="pro-linha pro-quebra">
+        <label className="ct-cidade pro-flex">Cidade<input value={cidade} onChange={e => setCidade(e.target.value)} /></label>
+        <label className="ct-cidade pro-flex">Distâncias (km)<input value={dists} onChange={e => setDists(e.target.value)} placeholder="5, 10" /></label>
+      </div>
+      <label className="ct-cidade">Resposta ao atleta <small>(opcional)</small><input value={resposta} onChange={e => setResposta(e.target.value)} placeholder="Ex.: não achamos o resultado oficial" /></label>
+      <div className="pro-linha pro-quebra"><button className="btn solid" disabled={indo} onClick={() => decidir('aprovar')}>Aprovar como prova nova</button><button className="btn outline pro-vermelho-txt" disabled={indo} onClick={() => decidir('recusar')}>Recusar</button></div>
+    </>
   );
 }

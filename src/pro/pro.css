@@ -196,3 +196,15 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-inicio-temporada { display: flex; align-items: center; gap: 10px; margin: 0; padding: 10px 14px; border-radius: 14px; font-size: .9rem; line-height: 1.3;
   background: linear-gradient(90deg, rgb(242 183 5 / .18), rgb(242 183 5 / .06)); border: 1px solid rgb(242 183 5 / .5); color: var(--ink); }
 .pro-inicio-temporada svg { flex: none; color: #b07d00; }
+/* pedido de prova */
+.pro-pedir { display: grid; gap: 12px; }
+.pro-pedidas { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pro-pedidas li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.pro-pedidas li:first-child { border-top: 0; padding-top: 0; }
+.pro-pedidas li > div { display: grid; gap: 2px; min-width: 0; }
+.pro-pedidas small { color: var(--muted, #667); font-size: .82rem; }
+.pro-pedidas .btn { flex: none; }
+.pro-pedidas .pro-st { flex: none; display: inline-flex; align-items: center; gap: 4px; }
+.pro-mesmo-dia { display: grid; gap: 8px; margin: 8px 0; padding: 10px; border-radius: 12px; background: var(--warn-bg); }
+.pro-mesmo-dia .btn { white-space: normal; text-align: left; }
+.pro-flex { flex: 1; min-width: 140px; }
