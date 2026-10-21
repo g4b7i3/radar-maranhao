@@ -436,7 +436,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
           <li key={k} className={l.eu ? 'eu' : ''}>
             <button disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
-              <span>{rec === 'assessorias' ? <>{l.assessoria} <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
+              <span>{rec === 'assessorias' ? <>{l.assessoria} <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
               <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : Math.round(Number(l.pontos ?? 0))}</b>
             </button>
             {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} />}
