@@ -1,6 +1,6 @@
 {
  "url": "https://radarcorridasma.com.br/?pro",
- "lidoEm": "2026-10-21T18:39:28.620Z",
+ "lidoEm": "2026-10-21T18:40:37.533Z",
  "titulo": "Radar Pro · Corridas MA",
  "meta": {
   "viewport": "width=device-width, initial-scale=1, viewport-fit=cover",
@@ -23,6 +23,10 @@
   "application-name": "Radar Pro",
   "apple-mobile-web-app-status-bar-style": "default"
  },
+ "scripts": [
+  "https://cloud.umami.is/script.js",
+  "https://radarcorridasma.com.br/assets/index-wYRAHizs.js"
+ ],
  "texto": "Voltar para o Radar\n\nRADAR PRO\n\nSUA CORRIDA\nVIRA TEMPORADA.\n\nCada prova soma pontos, medalhas e te leva para a liga do seu nível.\n\n1\nSeu nível e sua liga\nBronze, Prata, Ouro ou Elite, pela nota por idade.\n2\nMedalhas e pontos\nToda prova que você corre entra na sua estante.\n3\nRanking do Maranhão\nPor cidade, sexo, faixa etária, eficiência e assessoria.\n4\nDuelo e pelotão\nDesafie amigos e dispute com até 25 atletas do seu nível.\nPRÉ-TEMPORADA VALENDO\n\nSó\nR$ 10\n/mês\n\nMenos que uma inscrição de 5 km. Sem fidelidade.\n\n⏱️ As provas desde 15/10 já contam pra você\n\nEntrar com Google\nEntrar com e-mail\n\nA agenda de provas continua grátis para todo mundo. Ao entrar, você aceita os termos de uso e a política de privacidade.",
  "links": [
   {
