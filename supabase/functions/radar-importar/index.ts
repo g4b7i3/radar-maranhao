@@ -5,6 +5,13 @@ import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { conferirRegistros, gravarOficiais, real, type Linha } from '../_comum/resultados.ts';
 
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { 'Content-Type': 'application/json' } });
+/** Medalhas: a conta fica na função radar-coletar-resultados (um lugar só para as regras). */
+const medalhasDe = async (ids: string[]): Promise<Record<string, string[]>> => {
+  try {
+    const r = await fetch(Deno.env.get('SUPABASE_URL') + '/functions/v1/radar-coletar-resultados', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-radar-interno': Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')! }, body: JSON.stringify({ medalhas: ids }) });
+    return (await r.json()).novas ?? {};
+  } catch { return {}; }
+};
 const int = (v: unknown) => (Number.isFinite(Number(v)) && Number(v) > 0 ? Math.round(Number(v)) : null);
 
 Deno.serve(async req => {
@@ -32,6 +39,9 @@ Deno.serve(async req => {
   })).filter(r => r.nome && r.tempo_s);
   try {
     const gravados = await gravarOficiais(db, prova, String(b.fonte_url ?? ''), linhas);
-    return resp({ ok: true, gravados, ...(await conferirRegistros(db, prova)) });
+    const conf = await conferirRegistros(db, prova);
+    const { data: quem } = await db.from('radar_resultados').select('user_id').eq('prova_id', prova);
+    if (quem?.length) await medalhasDe([...new Set(quem.map(q => q.user_id))]);
+    return resp({ ok: true, gravados, ...conf });
   } catch (e) { return resp({ erro: String((e as Error).message) }, 500); }
 });

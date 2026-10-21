@@ -62,13 +62,22 @@
 .pro-graf .area { fill: var(--cobalt-tint); } .pro-graf .linha { fill: none; stroke: var(--cobalt); stroke-width: 3; } .pro-graf .ponto { fill: #ffd166; stroke: var(--cobalt); stroke-width: 2; }
 
 /* medalhas */
-.pro-med { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 10px; }
-.pro-med button { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: .72rem; font-weight: 650; line-height: 1.15; color: var(--muted); text-align: center; }
-.pro-med button span { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; font-size: 1.5rem; background: var(--cobalt-tint); box-shadow: 0 0 0 2px var(--line); filter: grayscale(1); opacity: .45; }
-.pro-med button.ok { color: var(--ink); }
-.pro-med button.ok span { background: linear-gradient(#ffe08a, #f5b700); box-shadow: 0 0 0 2px #e2a400; filter: none; opacity: 1; }
-.pro-nova { flex-direction: row; align-items: center; gap: 12px; }
-.pro-nova > span { font-size: 2rem; }
+.pro-med { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 4px; margin-top: 10px; }
+.pro-med-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; }
+.pro-med-item b { font-size: .78rem; font-weight: 800; line-height: 1.15; }
+.pro-med-item small { font-size: .68rem; color: var(--muted); line-height: 1.2; }
+.pro-med-item.off b { color: var(--muted); }
+.pro-med-svg { display: block; line-height: 0; }
+.pro-med-svg svg { filter: drop-shadow(0 3px 4px rgb(15 26 51 / .18)); }
+.pro-med-item.off .pro-med-svg svg { filter: none; }
+.pro-med-barra { height: 8px; border-radius: 9px; background: var(--line); margin-top: 8px; overflow: hidden; }
+.pro-med-barra i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, #c27b43, #e2b23a, #2e52d6); }
+.pro-med-grupo { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+.pro-med-grupo .pro-k small { font-weight: 700; letter-spacing: 0; margin-left: 4px; }
+.pro-nova { display: flex; flex-direction: row; align-items: center; gap: 12px; color: #fff; border: 0; background: radial-gradient(circle at 85% 0%, rgb(255 211 77 / .35), transparent 55%), linear-gradient(150deg, #14278a, #1d3fbf 55%, #3a5ce0); }
+.pro-nova .pro-k { color: #fff; opacity: .8; }
+.pro-nova b { display: block; font-size: 1.25rem; font-weight: 900; margin: 2px 0; }
+.pro-nova p { opacity: .88; font-size: .9rem; }
 
 /* listas de provas */
 .pro-provas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }

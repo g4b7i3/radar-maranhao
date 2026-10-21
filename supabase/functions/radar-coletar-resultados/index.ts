@@ -3,6 +3,7 @@
 // lê o resultado, grava e confere quem registrou. Pública, mas roda no máximo a cada 15 minutos.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { conferirRegistros, gravarOficiais, lerLink, listarEventos, parecenca } from '../_comum/resultados.ts';
+import { atualizarMedalhas } from '../_comum/medalhas.ts';
 
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { 'Content-Type': 'application/json' } });
 const dias = (a: string, b: string) => Math.abs(new Date(a.slice(0, 10)).getTime() - new Date(b.slice(0, 10)).getTime()) / 86400_000;
@@ -19,6 +20,13 @@ Deno.serve(async req => {
     } catch (e) { return resp({ ok: false, erro: String((e as Error).message) }); }
   }
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+  // chamada interna das outras funções: recalcula as medalhas de alguns atletas
+  if (req.method === 'POST' && req.headers.get('x-radar-interno') === Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')) {
+    const b = await req.json().catch(() => ({}));
+    const ids = Array.isArray(b.medalhas) ? b.medalhas.map(String).slice(0, 500) : [];
+    const m = await atualizarMedalhas(db, ids.length ? ids : undefined);
+    return resp({ ok: true, novas: Object.fromEntries(m) });
+  }
   const { data: ult } = await db.from('radar_config').select('valor').eq('chave', 'coleta_resultados_em').maybeSingle();
   if (ult?.valor && Date.now() - new Date(ult.valor).getTime() < 15 * 60_000) return resp({ ok: true, pulou: 'rodou há pouco' });
   await db.from('radar_config').upsert({ chave: 'coleta_resultados_em', valor: new Date().toISOString() });
@@ -26,7 +34,9 @@ Deno.serve(async req => {
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
   const desde = new Date(Date.now() - 60 * 86400_000).toISOString().slice(0, 10);
   const { data: provas } = await db.from('radar_provas').select('id, nome, data').is('link_resultado', null).gte('data', desde).lte('data', hoje).order('data', { ascending: false });
-  if (!provas?.length) return resp({ ok: true, provas: 0 });
+  // medalhas de todo mundo (duelos que terminaram, pelotão, fundador, resultados que viraram oficiais)
+  const medalhas = async () => { try { const m = await atualizarMedalhas(db); return [...m.values()].reduce((a, x) => a + x.length, 0); } catch (e) { return String((e as Error).message).slice(0, 100); } };
+  if (!provas?.length) return resp({ ok: true, provas: 0, medalhas_novas: await medalhas() });
 
   const eventos = await listarEventos();
   const feitos: unknown[] = [];
@@ -45,5 +55,5 @@ Deno.serve(async req => {
     }
     if (feitos.length >= 6) break;
   }
-  return resp({ ok: true, provas: provas.length, eventos: eventos.length, feitos });
+  return resp({ ok: true, provas: provas.length, eventos: eventos.length, feitos, medalhas_novas: await medalhas() });
 });

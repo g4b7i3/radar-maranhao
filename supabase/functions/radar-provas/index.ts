@@ -14,7 +14,7 @@ Deno.serve(async req => {
   if (Date.now() - ultimaSync > 10 * 60_000) { // no máximo a cada 10 min por instância
     const agenda = await fetch(SITE + '/data/radar.json', { headers: { 'Cache-Control': 'no-cache' } }).then(r => r.json()).catch(() => null);
     const linhas = (agenda?.events ?? []).filter((e: any) => e?.id && /^\d{4}-\d{2}-\d{2}/.test(e.date ?? '') && !/cancel/i.test(e.status ?? ''))
-      .map((e: any) => ({ id: e.id, nome: e.name, data: e.date.slice(0, 10), cidade: e.city, distancias: (e.distances ?? []).filter((d: unknown) => typeof d === 'number' && d > 0), largada: e.start ?? null, atualizado_em: new Date().toISOString() }));
+      .map((e: any) => ({ id: e.id, nome: e.name, data: e.date.slice(0, 10), cidade: e.city, distancias: (e.distances ?? []).filter((d: unknown) => typeof d === 'number' && d > 0), largada: e.start ?? null, modalidade: e.modality ?? null, atualizado_em: new Date().toISOString() }));
     if (linhas.length) { await db.from('radar_provas').upsert(linhas); ultimaSync = Date.now(); }
   }
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);

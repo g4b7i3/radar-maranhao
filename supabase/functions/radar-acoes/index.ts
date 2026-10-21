@@ -7,6 +7,13 @@ const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
 const ADMIN = 'vinikautor@gmail.com';
 const DISTS = [5, 10, 21.0975, 42.195];
+/** Medalhas: a conta fica na função radar-coletar-resultados (um lugar só para as regras). */
+const medalhasDe = async (ids: string[]): Promise<Record<string, string[]>> => {
+  try {
+    const r = await fetch(Deno.env.get('SUPABASE_URL') + '/functions/v1/radar-coletar-resultados', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-radar-interno': Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')! }, body: JSON.stringify({ medalhas: ids }) });
+    return (await r.json()).novas ?? {};
+  } catch { return {}; }
+};
 const mesAtual = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 7) + '-01';
 
 Deno.serve(async req => {
@@ -99,6 +106,7 @@ Deno.serve(async req => {
       if (error) return resp({ erro: error.message }, 400);
       if (st === 'recusado') await db.from('radar_medalhas').delete().eq('resultado_id', b.resultado_id);
       await db.from('radar_contestacoes').update({ status: st === 'recusado' ? 'procedente' : 'improcedente' }).eq('resultado_id', b.resultado_id).eq('status', 'aberta');
+      if (st === 'aprovado') { const { data: r } = await db.from('radar_resultados').select('user_id').eq('id', b.resultado_id).maybeSingle(); if (r) await medalhasDe([r.user_id]); }
       return resp({ ok: true });
     }
     case 'admin_contestacao': { // encerra uma contestação sem mexer no resultado

@@ -8,6 +8,14 @@ import { acharNoOficial, gravarOficiais, lerLink, parecenca, semelhante, conferi
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
 const SITE = 'https://radarcorridasma.com.br';
+/** Medalhas: a conta fica na função radar-coletar-resultados (um lugar só para as regras). */
+const medalhasDe = async (ids: string[]): Promise<Record<string, string[]>> => {
+  try {
+    const r = await fetch(Deno.env.get('SUPABASE_URL') + '/functions/v1/radar-coletar-resultados', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-radar-interno': Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')! }, body: JSON.stringify({ medalhas: ids }) });
+    return (await r.json()).novas ?? {};
+  } catch { return {}; }
+};
+
 
 type T = { idadeMin: number; dist: number[]; oc: number[]; f: number[][] };
 let TAB: Record<'F' | 'M', T>; // tabela pública do site, carregada uma vez por instância
@@ -137,36 +145,18 @@ Deno.serve(async req => {
   }).select().single();
   if (error) return resp({ erro: error.code === '23505' ? 'Esse número de peito já foi confirmado para outro atleta nessa prova. Fale com o Radar pelo WhatsApp.' : 'Não deu para salvar agora.' }, 400);
 
-  // 4) Medalhas (participação conta mesmo declarada; "Subiu de liga" e "Recorde" só com tempo válido)
+  // 4) Medalhas: recalcula a partir do histórico (as regras ficam em _comum/medalhas.ts)
   const todos = [...(hist ?? []), novo];
-  const daTemp = todos.filter(h => Number(String(h.prova_data).slice(0, 4)) === temporada);
   const validos = (x: { status: string }) => ['verificado', 'aprovado'].includes(x.status);
-  const cidades = new Set(daTemp.map(h => norm(h.cidade))).size;
-  const hora = (s: string | null) => (s && /^\d{2}:\d{2}/.test(s) ? Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5)) : null);
-  const ganhou: string[] = [];
-  const marca = (m: string, cond: boolean) => { if (cond) ganhou.push(m); };
-  marca('primeira_prova', todos.length === 1);
-  marca('primeiro_10k', km >= 10 && km < 21 && !(hist ?? []).some(h => Number(h.distancia_km) >= 10 && Number(h.distancia_km) < 21));
-  marca('primeira_meia', km >= 21 && km < 42 && !(hist ?? []).some(h => Number(h.distancia_km) >= 21 && Number(h.distancia_km) < 42));
-  marca('primeira_maratona', km >= 42 && !(hist ?? []).some(h => Number(h.distancia_km) >= 42));
-  marca('5_provas', daTemp.length >= 5); marca('10_provas', daTemp.length >= 10); marca('20_provas', daTemp.length >= 20);
-  marca('3_cidades', cidades >= 3); marca('5_cidades', cidades >= 5); marca('10_cidades', cidades >= 10);
-  const h0 = hora(novo.largada);
-  marca('madrugador', h0 != null && h0 < 6 * 60); marca('night_run', h0 != null && h0 >= 17 * 60);
-  marca('recorde_pessoal', !!d.recorde_pessoal && validos(novo));
-  marca('podio', podio);
 
   // liga antes x depois (só com resultados válidos)
   const top3 = (lista: typeof todos) => { const v = lista.filter(validos).filter(h => new Date(h.prova_data) >= new Date(Date.now() - 365 * 86400_000)).map(h => Number(h.nota)).sort((a, b) => b - a).slice(0, 3); return v.length ? Math.round(v.reduce((a, x) => a + x, 0) / v.length * 10) / 10 : null; };
   const iAntes = top3(hist ?? []), iDepois = top3(todos);
   const subiu = !!liga(iDepois) && !!liga(iAntes) && LIGAS.indexOf(liga(iDepois)!) > LIGAS.indexOf(liga(iAntes)!);
-  marca('subiu_de_liga', subiu);
-
-  let novas: string[] = [];
-  if (ganhou.length) {
-    const { data: ins } = await db.from('radar_medalhas').upsert(ganhou.map(m => ({ user_id: user.id, medalha: m, temporada, resultado_id: novo.id })), { onConflict: 'user_id,medalha,temporada', ignoreDuplicates: true }).select('medalha');
-    novas = (ins ?? []).map(x => x.medalha);
-  }
+  // quem correu a mesma prova também pode ganhar (em equipe, pelotão)
+  const { data: junto } = await db.from('radar_resultados').select('user_id').eq('prova_id', prova.id).neq('status', 'recusado');
+  const ids = [...new Set([user.id, ...(junto ?? []).map(x => x.user_id)])];
+  const novas = (await medalhasDe(ids))[user.id] ?? [];
 
   return resp({ resultado: novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado', link_lido: linkLido });
 });

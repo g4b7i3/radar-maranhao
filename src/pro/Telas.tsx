@@ -6,6 +6,7 @@ import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
 import { Assinar, NOMES_CIDADES } from './Pro';
+import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -19,17 +20,46 @@ const SeloStatus = ({ r }: { r: Resultado }) => <span className={`pro-st ${STATU
 const msgComprovante = (p: Perfil, r: { prova_nome: string; prova_data: string; distancia_km: number; tempo_s: number }) =>
   whatsappLink(`Comprovante Radar Pro\nApelido: @${p.apelido}\nNome na inscrição: ${p.nome_completo}\nProva: ${r.prova_nome} (${dataBR(r.prova_data)})\nDistância: ${kmTxt(Number(r.distancia_km))}\nTempo: ${relogio(r.tempo_s)}\n\nSegue o print ou link do resultado:`);
 
+/* ───────── Medalhas ───────── */
+function Desenho({ m, ok = true, tam = 72 }: { m: Medalha; ok?: boolean; tam?: number }) {
+  const svg = useMemo(() => medalhaSVG(m, ok, tam), [m, ok, tam]);
+  return <span className="pro-med-svg" dangerouslySetInnerHTML={{ __html: svg }} />;
+}
+function Medalhas({ meds }: { meds: string[] }) {
+  const [todas, setTodas] = useState(false);
+  const tem = new Set(meds);
+  const ganhas = MEDALHAS.filter(m => tem.has(m.id));
+  const total = MEDALHAS.length;
+  return (
+    <section className="pro-card">
+      <div className="pro-linha"><p className="pro-k cinza">Minhas medalhas</p><b>{ganhas.length} / {total}</b></div>
+      <div className="pro-med-barra" aria-hidden="true"><i style={{ width: `${Math.max(2, (ganhas.length / total) * 100)}%` }} /></div>
+      {ganhas.length
+        ? <div className="pro-med">{ganhas.map(m => <div key={m.id} className="pro-med-item"><Desenho m={m} /><b>{m.nome}</b></div>)}</div>
+        : <p className="fine pro-sem-margem">Registre a sua primeira prova para ganhar a primeira medalha.</p>}
+      <button className="btn outline pro-btn" aria-expanded={todas} onClick={() => setTodas(!todas)}>{todas ? 'Esconder a coleção' : `Ver todas as ${total} medalhas`}</button>
+      {todas && GRUPOS.map(g => (
+        <div key={g.nome} className="pro-med-grupo">
+          <p className="pro-k cinza">{g.nome} <small>{g.itens.filter(m => tem.has(m.id)).length}/{g.itens.length}</small></p>
+          <div className="pro-med">{g.itens.map(m => { const ok = tem.has(m.id); return (
+            <div key={m.id} className={'pro-med-item' + (ok ? '' : ' off')}><Desenho m={m} ok={ok} /><b>{m.nome}</b>{!ok && <small>{m.como}</small>}</div>
+          ); })}</div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
 /* ───────── 3 · Minha temporada ───────── */
 export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp: Temporada; irCorri: () => void }) {
   const [res, setRes] = useState<Resultado[] | null>(null);
   const [meds, setMeds] = useState<string[]>([]);
-  const [abre, setAbre] = useState<string | null>(null);
   useEffect(() => {
     // medalhas de provas recusadas não contam
     Promise.all([sb.from('radar_resultados').select('*').order('prova_data', { ascending: false }), sb.from('radar_medalhas').select('medalha, temporada, resultado_id')]).then(([r, m]) => {
       const lista = (r.data ?? []) as Resultado[]; setRes(lista);
       const recusados = new Set(lista.filter(x => x.status === 'recusado').map(x => x.id));
-      setMeds((m.data ?? []).filter(x => !recusados.has(x.resultado_id) && (x.temporada === ANO || x.medalha.startsWith('primeir'))).map(x => x.medalha));
+      setMeds((m.data ?? []).filter(x => !recusados.has(x.resultado_id)).map(x => x.medalha));
     });
   }, []);
   const liga = temp.liga, i = LIGAS.findIndex(l => l.id === liga), prox = LIGAS[i + 1];
@@ -61,15 +91,7 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
       )}
 
-      <section className="pro-card">
-        <div className="pro-linha"><p className="pro-k cinza">Medalhas {ANO}</p><b>{new Set(meds).size} / {MEDALHAS.length}</b></div>
-        <div className="pro-med">
-          {MEDALHAS.map(m => { const ok = meds.includes(m.id); return (
-            <button key={m.id} className={ok ? 'ok' : ''} aria-label={`${m.nome}: ${ok ? 'conquistada' : m.como}`} onClick={() => setAbre(abre === m.id ? null : m.id)}><span>{m.icone}</span>{m.nome}</button>
-          ); })}
-        </div>
-        {abre && <p className="fine pro-sem-margem">{MEDALHAS.find(m => m.id === abre)!.como}</p>}
-      </section>
+      <Medalhas meds={meds} />
 
       <section className="pro-card">
         <p className="pro-k cinza">Minhas provas</p>
@@ -170,7 +192,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
           {feito.oficial && feito.link_lido && <p className="fine pro-sem-margem">O Radar leu o link e achou você no resultado oficial.</p>}
           {feito.motivo && <p className="fine pro-sem-margem">{feito.motivo}</p>}
         </section>
-        {feito.medalhas_novas.length > 0 && feito.medalhas_novas.map(m => { const x = MEDALHAS.find(y => y.id === m); return x ? <section key={m} className="pro-card pro-nova"><span>{x.icone}</span><div><b>Nova medalha: {x.nome}!</b><p className="fine pro-sem-margem">{x.como}</p></div></section> : null; })}
+        {[...new Set(feito.medalhas_novas)].map(m => { const x = MEDALHAS.find(y => y.id === m); return x ? <section key={m} className="pro-card pro-nova"><Desenho m={x} tam={76} /><div><span className="pro-k">Nova medalha!</span><b>{x.nome}</b><p className="pro-sem-margem">{x.como}</p></div></section> : null; })}
         {!feito.oficial && <a className="btn whats pro-btn" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={18} aria-hidden="true" />Enviar comprovante pelo WhatsApp</a>}
         {!feito.oficial && <p className="fine pro-sem-margem">Quando a cronometragem publicar o resultado, o Radar confere sozinho e muda para “Verificado”.</p>}
         <button className="btn solid pro-btn" onClick={irTemporada}>Ver minha temporada</button>

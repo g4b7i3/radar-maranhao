@@ -44,23 +44,7 @@ export const LIGAS: { id: Liga; nome: string; min: number; max: number | null }[
   { id: 'elite', nome: 'Elite', min: 65, max: null },
 ];
 
-export const MEDALHAS: { id: string; icone: string; nome: string; como: string }[] = [
-  { id: 'primeira_prova', icone: '🏁', nome: '1ª prova', como: 'Registre a sua primeira prova.' },
-  { id: 'primeiro_10k', icone: '🔟', nome: '1º 10K', como: 'Complete uma prova de 10 km.' },
-  { id: 'primeira_meia', icone: '🥈', nome: '1ª meia', como: 'Complete uma meia maratona.' },
-  { id: 'primeira_maratona', icone: '🏆', nome: '1ª maratona', como: 'Complete uma maratona.' },
-  { id: '5_provas', icone: '5️⃣', nome: '5 provas', como: '5 provas na temporada.' },
-  { id: '10_provas', icone: '🔥', nome: '10 provas', como: '10 provas na temporada.' },
-  { id: '20_provas', icone: '💯', nome: '20 provas', como: '20 provas na temporada.' },
-  { id: '3_cidades', icone: '🗺️', nome: '3 cidades', como: 'Corra em 3 cidades na temporada.' },
-  { id: '5_cidades', icone: '🧭', nome: '5 cidades', como: 'Corra em 5 cidades na temporada.' },
-  { id: '10_cidades', icone: '🌎', nome: '10 cidades', como: 'Corra em 10 cidades na temporada.' },
-  { id: 'madrugador', icone: '🌅', nome: 'Madrugador', como: 'Prova com largada antes das 6h.' },
-  { id: 'night_run', icone: '🌙', nome: 'Night Run', como: 'Prova com largada a partir das 17h.' },
-  { id: 'recorde_pessoal', icone: '⚡', nome: 'Recorde pessoal', como: 'Bata o seu melhor tempo numa distância (resultado oficial).' },
-  { id: 'podio', icone: '🥇', nome: 'Pódio', como: 'Top 3 no geral ou na faixa etária (resultado oficial).' },
-  { id: 'subiu_de_liga', icone: '⬆️', nome: 'Subiu de liga', como: 'Suba de liga com um resultado oficial.' },
-];
+export { MEDALHAS, GRUPOS } from './medalhas';
 
 export const STATUS: Record<Resultado['status'], { txt: string; cls: string; dica: string }> = {
   verificado: { txt: 'Verificado', cls: 'ok', dica: 'Conferido no resultado oficial da cronometragem.' },
