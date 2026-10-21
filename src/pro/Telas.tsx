@@ -1,7 +1,7 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
 import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag } from 'lucide-react';
-import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
+import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
@@ -401,6 +401,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
     <div className="pro-cont">
       <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? ` · ${perfil.assessoria}` : ''}</p></section>
       <section className="pro-card"><p className="pro-k cinza">Usado só no cálculo (não aparece)</p><p className="pro-sem-margem">{perfil.nome_completo} · {perfil.sexo === 'F' ? 'Feminino' : 'Masculino'} · nascimento {perfil.nascimento.split('-').reverse().join('/')}</p><p className="fine pro-sem-margem">{email}</p><p className="fine pro-sem-margem">Algum dado errado? <a href={whatsappLink(`Oi! Quero corrigir meu perfil no Radar Pro (@${perfil.apelido}): `)} target="_blank" rel="noopener">Peça a correção pelo WhatsApp</a>.</p></section>
+      <ZapConta perfil={perfil} pronto={pronto} />
       <section className="pro-card">
         <p className="pro-k cinza">Assinatura</p>
         <p className="pro-sem-margem">{temp.assinante ? <><b className="pro-verde">Ativa</b> · vence em {vence} · R$ 10/mês</> : <><b>Inativa</b>{vence ? ` · venceu em ${vence}` : ''}</>}</p>
@@ -420,8 +421,26 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
   );
 }
 
+function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+  const [v, setV] = useState(perfil.whatsapp ? zapMascara(perfil.whatsapp) : '');
+  const [msg, setMsg] = useState<string | null>(null);
+  const salvar = async () => {
+    const zap = v.trim() ? zapLimpo(v) : null;
+    if (v.trim() && !zap) return setMsg('Confira: DDD + número, ex.: (98) 98765-4321.');
+    const { error } = await sb.from('radar_perfis').update({ whatsapp: zap }).eq('user_id', perfil.user_id);
+    setMsg(error ? 'Não deu para salvar. Tente de novo.' : 'Salvo!'); if (!error) pronto();
+  };
+  return (
+    <section className="pro-card">
+      <p className="pro-k cinza">WhatsApp para contato</p>
+      <div className="pro-linha pro-quebra"><input className="pro-input" type="tel" inputMode="tel" value={v} onChange={e => { setV(zapMascara(e.target.value)); setMsg(null); }} placeholder="(98) 98765-4321" aria-label="WhatsApp" /><button className="btn outline" onClick={salvar}>Salvar</button></div>
+      <p className="fine pro-sem-margem">{msg ?? 'Só para o Radar te avisar se tiver algum problema com o seu resultado. Não aparece para ninguém.'}</p>
+    </section>
+  );
+}
+
 /* ───────── Administração (só o Vinik) ───────── */
-type Pend = { resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string }[] };
+type Pend = { resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
 export function TelaAdmin() {
   const [p, setP] = useState<Pend | null>(null);
   const [apelido, setApelido] = useState('');
@@ -429,6 +448,7 @@ export function TelaAdmin() {
   const [msg, setMsg] = useState<string | null>(null);
   const carregar = () => chamar<Pend>('radar-acoes', { acao: 'admin_pendentes' }).then(r => (r.erro ? setMsg(r.erro) : setP(r)));
   useEffect(() => { carregar(); }, []);
+  const zapDe = (uid: string) => p?.perfis.find(y => y.user_id === uid)?.whatsapp ?? null;
   const quem = (uid: string) => { const x = p?.perfis.find(y => y.user_id === uid); return x ? `@${x.apelido} (${x.nome_completo}, ${x.cidade})` : '?'; };
   const decidir = async (id: string, decisao: 'aprovar' | 'recusar') => { const r = await chamar('radar-acoes', { acao: 'admin_decidir', resultado_id: id, decisao }); setMsg(r.erro ?? 'Feito.'); carregar(); };
   const liberar = async () => { const r = await chamar<{ valida_ate: string }>('radar-acoes', { acao: 'admin_liberar', apelido: apelido.replace('@', ''), dias: Number(dias) }); setMsg(r.erro ?? `Liberado até ${new Date(r.valida_ate).toLocaleDateString('pt-BR')}.`); };
@@ -437,7 +457,7 @@ export function TelaAdmin() {
       <p>{quem(r.user_id)}<br />{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}%{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}{r.nome_inscricao ? ` · inscrito como ${r.nome_inscricao}` : ''}</p>
       {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
       {r.link_resultado && <p className="fine pro-sem-margem"><a href={r.link_resultado} target="_blank" rel="noopener noreferrer">Abrir link enviado</a></p>}
-      <div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => decidir(r.id, 'aprovar')}>Aprovar</button><button className="btn outline pro-vermelho-txt" onClick={() => decidir(r.id, 'recusar')}>Recusar</button></div></>
+      <div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => decidir(r.id, 'aprovar')}>Aprovar</button><button className="btn outline pro-vermelho-txt" onClick={() => decidir(r.id, 'recusar')}>Recusar</button>{zapDe(r.user_id) && <a className="btn whats" href={`https://wa.me/${zapDe(r.user_id)}?text=${encodeURIComponent(`Oi, @${p?.perfis.find(y => y.user_id === r.user_id)?.apelido}! Aqui é o Radar Corridas Maranhão. Sobre a sua prova ${r.prova_nome} (${dataBR(r.prova_data)}, ${kmTxt(Number(r.distancia_km))}, ${relogio(r.tempo_s)}) no Radar Pro: ${r.motivo_analise ?? 'precisamos conferir o seu resultado.'} Pode me mandar o print ou o link do resultado oficial?`)}`} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />Chamar no WhatsApp</a>}</div></>
   );
   return (
     <div className="pro-cont">

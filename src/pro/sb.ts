@@ -25,7 +25,7 @@ export async function chamar<T = any>(fn: string, corpo?: unknown): Promise<T & 
   }
 }
 
-export type Perfil = { user_id: string; apelido: string; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null };
+export type Perfil = { user_id: string; apelido: string; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null };
 export type Resultado = {
   id: string; prova_id: string; prova_nome: string; prova_data: string; cidade: string; largada: string | null; distancia_km: number;
   tempo_s: number; idade: number; nota: number; status: 'verificado' | 'aprovado' | 'declarado' | 'em_analise' | 'recusado';
@@ -77,3 +77,7 @@ export const relogio = (s: number) => {
 export const pct = (n: number | null | undefined) => (n == null ? '–' : Number(n).toFixed(1).replace('.', ','));
 export const kmTxt = (km: number) => (Math.abs(km - 21.0975) < 0.01 ? '21 km' : Math.abs(km - 42.195) < 0.01 ? '42 km' : `${String(Math.round(km * 100) / 100).replace('.', ',')} km`);
 export const dataBR = (d: string) => d.slice(0, 10).split('-').reverse().slice(0, 2).join('/');
+
+/** WhatsApp: guarda só números com 55 + DDD (ex.: 5598984334880). */
+export const zapLimpo = (v: string) => { const d = v.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''); return /^\d{10,11}$/.test(d) ? '55' + d : null; };
+export const zapMascara = (v: string) => { const d = v.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '').slice(0, 11); return d.length <= 2 ? d : d.length <= 7 ? `(${d.slice(0, 2)}) ${d.slice(2)}` : `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`; };

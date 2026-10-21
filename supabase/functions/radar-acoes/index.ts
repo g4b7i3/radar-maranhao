@@ -89,7 +89,7 @@ Deno.serve(async req => {
       const { data: res } = await db.from('radar_resultados').select('*').eq('status', 'em_analise').order('criado_em').limit(100);
       const { data: cont } = await db.from('radar_contestacoes').select('*, radar_resultados(*)').eq('status', 'aberta').order('criado_em').limit(100);
       const ids = [...new Set([...(res ?? []).map(r => r.user_id), ...(cont ?? []).flatMap(c => [c.autor_id, c.radar_resultados?.user_id])].filter(Boolean))];
-      const { data: perfis } = ids.length ? await db.from('radar_perfis').select('user_id, apelido, nome_completo, cidade').in('user_id', ids) : { data: [] };
+      const { data: perfis } = ids.length ? await db.from('radar_perfis').select('user_id, apelido, nome_completo, cidade, whatsapp').in('user_id', ids) : { data: [] };
       return resp({ resultados: res ?? [], contestacoes: cont ?? [], perfis: perfis ?? [] });
     }
     case 'admin_decidir': { // aprova ou recusa um resultado em análise (ou qualquer um, após contestação)
