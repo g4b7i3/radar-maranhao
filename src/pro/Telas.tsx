@@ -1,11 +1,11 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag } from 'lucide-react';
-import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil } from 'lucide-react';
+import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
-import { Assinar } from './Pro';
+import { Assinar, NOMES_CIDADES } from './Pro';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -381,6 +381,7 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
 /* ───────── 8 · Minha conta ───────── */
 export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; temp: Temporada; email: string; pronto: () => void }) {
   const [renovar, setRenovar] = useState(false);
+  const [editando, setEditando] = useState(false);
   const [apagar, setApagar] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
   const baixar = async () => {
@@ -398,8 +399,13 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
   const vence = temp.valida_ate ? new Date(temp.valida_ate).toLocaleDateString('pt-BR') : null;
   return (
     <div className="pro-cont">
-      <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? ` · ${perfil.assessoria}` : ''}</p></section>
-      <section className="pro-card"><p className="pro-k cinza">Usado só no cálculo (não aparece)</p><p className="pro-sem-margem">{perfil.nome_completo} · {perfil.sexo === 'F' ? 'Feminino' : 'Masculino'} · nascimento {perfil.nascimento.split('-').reverse().join('/')}</p><p className="fine pro-sem-margem">{email}</p><p className="fine pro-sem-margem">Algum dado errado? <a href={whatsappLink(`Oi! Quero corrigir meu perfil no Radar Pro (@${perfil.apelido}): `)} target="_blank" rel="noopener">Peça a correção pelo WhatsApp</a>.</p></section>
+      {editando ? <EditarPerfil perfil={perfil} fechar={() => setEditando(false)} pronto={pronto} /> : <>
+        <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? ` · ${perfil.assessoria}` : ''}</p></section>
+        <section className="pro-card"><p className="pro-k cinza">Usado só no cálculo (não aparece)</p><p className="pro-sem-margem">{perfil.nome_completo} · {perfil.sexo === 'F' ? 'Feminino' : 'Masculino'} · nascimento {perfil.nascimento.split('-').reverse().join('/')}</p><p className="fine pro-sem-margem">{email}</p></section>
+        {edicoesRestantes(perfil) > 0
+          ? <button className="btn outline pro-btn" onClick={() => setEditando(true)}><Pencil size={16} aria-hidden="true" />Editar perfil <small>({edicoesRestantes(perfil) === 1 ? 'resta 1 edição' : 'restam 2 edições'} este mês)</small></button>
+          : <p className="fine pro-sem-margem">Você já usou as 2 edições de perfil deste mês. Libera de novo no dia 1º. Precisa corrigir algo agora? <a href={whatsappLink(`Oi! Quero corrigir meu perfil no Radar Pro (@${perfil.apelido}): `)} target="_blank" rel="noopener">Fale com o Radar</a>.</p>}
+      </>}
       <ZapConta perfil={perfil} pronto={pronto} />
       <section className="pro-card">
         <p className="pro-k cinza">Assinatura</p>
@@ -417,6 +423,50 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
       <button className="btn text" onClick={() => sb.auth.signOut()}><LogOut size={16} aria-hidden="true" />Sair</button>
       <p className="fine pro-centro"><a href="/termos.html">Termos de uso e política de privacidade</a></p>
     </div>
+  );
+}
+
+function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () => void; pronto: () => void }) {
+  const dataBRp = (iso: string) => iso.split('-').reverse().join('/');
+  const [f, setF] = useState({ apelido: perfil.apelido, nome_completo: perfil.nome_completo, cidade: perfil.cidade, sexo: perfil.sexo, nascimento: dataBRp(perfil.nascimento), assessoria: perfil.assessoria ?? '' });
+  const [erro, setErro] = useState<string | null>(null);
+  const [salvando, setSalvando] = useState(false);
+  const muda = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
+  const masc = (v: string) => { const d = v.replace(/\D/g, '').slice(0, 8); return d.length > 4 ? `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; };
+  const resta = edicoesRestantes(perfil);
+  const salvar = async (e: React.FormEvent) => {
+    e.preventDefault(); setErro(null);
+    const ap = f.apelido.trim().toLowerCase();
+    if (!/^[a-z0-9_.]{3,20}$/.test(ap)) return setErro('Apelido: 3 a 20 letras sem acento, números, ponto ou _.');
+    const nome = f.nome_completo.trim().replace(/\s+/g, ' ');
+    if (nome.split(' ').length < 2) return setErro('Escreva o nome completo, igual ao da inscrição das provas.');
+    const nasc = f.nascimento.split('/').reverse().join('-');
+    const idade = (Date.now() - Date.parse(nasc)) / (365.25 * 86400_000);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(nasc) || !(idade >= 10 && idade <= 100)) return setErro('Confira a data de nascimento (dd/mm/aaaa).');
+    const novo = { apelido: ap, nome_completo: nome, cidade: f.cidade.trim() || perfil.cidade, sexo: f.sexo, nascimento: nasc, assessoria: f.assessoria.trim() || null };
+    const igual = (Object.keys(novo) as (keyof typeof novo)[]).every(k => (novo[k] ?? null) === (perfil[k] ?? null));
+    if (igual) return fechar();
+    setSalvando(true);
+    const { error } = await sb.from('radar_perfis').update(novo).eq('user_id', perfil.user_id);
+    setSalvando(false);
+    if (error) return setErro(error.message.includes('LIMITE_EDICOES') ? 'Você já usou as 2 edições de perfil deste mês.' : error.code === '23505' ? 'Esse apelido já existe. Escolha outro.' : 'Não deu para salvar. Tente de novo.');
+    fechar(); pronto();
+  };
+  return (
+    <form className="pro-card pro-form" onSubmit={salvar}>
+      <p className="pro-k cinza">Editar perfil</p>
+      <p className="fine pro-sem-margem">Você pode editar o perfil 2 vezes por mês. {resta === 1 ? 'Esta é a última deste mês.' : 'Esta conta como uma.'}</p>
+      <label className="ct-cidade">Apelido público<input value={f.apelido} onChange={muda('apelido')} autoCapitalize="none" /></label>
+      <label className="ct-cidade">Nome completo (como na inscrição)<input value={f.nome_completo} onChange={muda('nome_completo')} autoComplete="name" /><small>É por ele que o Radar acha você no resultado oficial. Provas já verificadas não mudam.</small></label>
+      <label className="ct-cidade">Cidade<input list="pro-cidades-ed" value={f.cidade} onChange={muda('cidade')} /><datalist id="pro-cidades-ed">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
+      <p className="euvou-pergunta">Categoria</p>
+      <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button></div>
+      <label className="ct-cidade">Data de nascimento<input inputMode="numeric" value={f.nascimento} onChange={e => setF({ ...f, nascimento: masc(e.target.value) })} placeholder="dd/mm/aaaa" /></label>
+      <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input value={f.assessoria} onChange={muda('assessoria')} /></label>
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+      <button className="btn solid pro-btn" disabled={salvando}>{salvando ? 'Salvando…' : 'Salvar alterações'}</button>
+      <button className="btn text" type="button" onClick={fechar}>Cancelar</button>
+    </form>
   );
 }
 

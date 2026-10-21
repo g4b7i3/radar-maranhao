@@ -143,7 +143,7 @@ function Convite() {
 }
 
 /* ───────── Perfil ───────── */
-const NOMES_CIDADES = Object.keys(CIDADES as Record<string, unknown>).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+export const NOMES_CIDADES = Object.keys(CIDADES as Record<string, unknown>).sort((a, b) => a.localeCompare(b, 'pt-BR'));
 function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto: () => void }) {
   const [f, setF] = useState({ apelido: email.split('@')[0].toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20), nome_completo: '', cidade: 'São Luís', sexo: '' as '' | 'F' | 'M', nascimento: '', assessoria: '', whatsapp: '' });
   const [erro, setErro] = useState<string | null>(null);

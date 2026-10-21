@@ -25,7 +25,7 @@ export async function chamar<T = any>(fn: string, corpo?: unknown): Promise<T & 
   }
 }
 
-export type Perfil = { user_id: string; apelido: string; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null };
+export type Perfil = { user_id: string; apelido: string; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null; edicoes_mes?: string | null; edicoes_qtd?: number };
 export type Resultado = {
   id: string; prova_id: string; prova_nome: string; prova_data: string; cidade: string; largada: string | null; distancia_km: number;
   tempo_s: number; idade: number; nota: number; status: 'verificado' | 'aprovado' | 'declarado' | 'em_analise' | 'recusado';
@@ -81,3 +81,9 @@ export const dataBR = (d: string) => d.slice(0, 10).split('-').reverse().slice(0
 /** WhatsApp: guarda só números com 55 + DDD (ex.: 5598984334880). */
 export const zapLimpo = (v: string) => { const d = v.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''); return /^\d{10,11}$/.test(d) ? '55' + d : null; };
 export const zapMascara = (v: string) => { const d = v.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '').slice(0, 11); return d.length <= 2 ? d : d.length <= 7 ? `(${d.slice(0, 2)}) ${d.slice(2)}` : `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`; };
+
+/** Edições de perfil que ainda restam no mês (limite de 2 por mês, contado no servidor). */
+export const edicoesRestantes = (p: Perfil) => {
+  const mes = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 7);
+  return Math.max(0, 2 - (p.edicoes_mes === mes ? p.edicoes_qtd ?? 0 : 0));
+};
