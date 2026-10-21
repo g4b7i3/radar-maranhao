@@ -12,6 +12,7 @@ import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
 import { Metas } from './Metas';
+import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -474,7 +475,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
             <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
               {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={36} />}
-              <span>{rec === 'assessorias' ? <>{l.assessoria} <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
+              <span>{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a> <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
               <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : Math.round(Number(l.pontos ?? 0))}</b>
             </button>
             {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} sigo={sigo.has(l.apelido)} mudouSigo={mudouSigo(l.apelido)} />}
@@ -621,7 +622,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
   return (
     <div className="pro-cont">
       {editando ? <EditarPerfil perfil={perfil} fechar={() => setEditando(false)} pronto={pronto} /> : <>
-        <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? ` · ${perfil.assessoria}` : ''}</p></section>
+        <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? <> · <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">{perfil.assessoria}</a></> : ''}</p>{perfil.assessoria && <p className="fine pro-sem-margem">A página da sua equipe: <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">radarcorridasma.com.br/?assessoria={encodeURIComponent(perfil.assessoria.trim())}</a>. Mande pro grupo.</p>}</section>
         <section className="pro-card"><p className="pro-k cinza">Usado só no cálculo (não aparece)</p><p className="pro-sem-margem">{perfil.nome_completo} · {perfil.sexo === 'F' ? 'Feminino' : 'Masculino'} · nascimento {perfil.nascimento.split('-').reverse().join('/')}</p><p className="fine pro-sem-margem">{email}</p></section>
         {edicoesRestantes(perfil) > 0
           ? <button className="btn outline pro-btn" onClick={() => setEditando(true)}><Pencil size={16} aria-hidden="true" />Editar perfil <small>({edicoesRestantes(perfil) === 1 ? 'resta 1 edição' : 'restam 2 edições'} este mês)</small></button>

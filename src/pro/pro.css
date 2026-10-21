@@ -298,3 +298,8 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-metas li .pro-med-barra{margin-top:6px}
 .pro-metas li.ok .pro-med-barra i{background:linear-gradient(90deg,#18a957,#2e52d6)}
 .pro-metas small{color:var(--muted);font-size:.8rem;display:block;margin-top:4px}
+.pro-ass-fotos{display:flex;margin:6px 0 2px}
+.pro-ass-fotos .pro-avatar{margin-right:-12px;border-width:3px}
+.pro-pub-topo .pro-sub a,.pro-pub-topo .pro-sub{color:#fff}
+.pro-pub-topo .pro-sub a{text-decoration:underline}
+.pro-rank li > a.pro-ass-linha{display:grid;grid-template-columns:26px 36px 1fr auto;gap:10px;align-items:center;padding:11px 6px;color:inherit;text-decoration:none;font-variant-numeric:tabular-nums}
