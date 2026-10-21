@@ -6,6 +6,7 @@ import './pro.css';
 import { Avatar } from './Foto';
 import { Aplauso, Seguir, type Reacoes, type TipoReacao } from './Feed';
 import { Metas } from './Metas';
+import { Recordes } from './Recordes';
 import { linkAssessoria } from './Assessoria';
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
@@ -45,9 +46,6 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
     if (navigator.share) { try { await navigator.share({ title: `@${d.apelido} no Radar Pro`, url }); return; } catch { /* */ } }
     try { await navigator.clipboard.writeText(url); alert('Link copiado.'); } catch { /* */ }
   };
-  // melhores tempos por distância (oficiais)
-  const melhores = new Map<string, Prova>();
-  for (const r of validas) { const k = kmTxt(Number(r.km)); if (!melhores.has(k) || r.tempo < melhores.get(k)!.tempo) melhores.set(k, r); }
 
   return (
     <main className="pro pro-publico">
@@ -94,12 +92,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
           <p className="fine pro-sem-margem">{GRUPOS.length} categorias · {MEDALHAS.length} medalhas no Radar Pro.</p>
         </section>
 
-        {melhores.size > 0 && (
-          <section className="pro-card">
-            <p className="pro-k cinza">Melhores tempos oficiais</p>
-            <div className="pro-pub-recordes">{[...melhores.entries()].map(([k, r]) => <div key={k}><small>{k}</small><b>{relogio(r.tempo)}</b><small>{r.prova}</small></div>)}</div>
-          </section>
-        )}
+        <Recordes provas={d.resultados.map(r => ({ prova: r.prova, data: r.data, km: Number(r.km), tempo: r.tempo, status: r.status }))} />
 
         <section className="pro-card">
           <p className="pro-k cinza">Provas</p>

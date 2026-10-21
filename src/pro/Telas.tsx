@@ -12,6 +12,7 @@ import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
 import { Metas } from './Metas';
+import { Recordes } from './Recordes';
 import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
@@ -158,6 +159,7 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
       )}
 
+      {res && <Recordes provas={res.map(r => ({ prova: r.prova_nome, data: r.prova_data, km: Number(r.distancia_km), tempo: r.tempo_s, status: r.status }))} />}
       {res && <Metas provas={res.map(r => ({ data: r.prova_data, cidade: r.cidade, status: r.status }))} indice={temp.indice} liga={temp.liga} />}
 
       <Medalhas meds={meds} />

@@ -335,3 +335,9 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-reacoes-trava{color:var(--muted);font-size:.72rem}
 .pro-limite{background:#fff6d6;border-color:#f2d27a;gap:8px}
 .pro-limite p{color:var(--ink)}
+.pro-recordes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pro-recordes>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:var(--cobalt-tint)}
+.pro-recordes>div.vazio{background:var(--bg);opacity:.7}
+.pro-recordes small{color:var(--muted);font-weight:700;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+.pro-recordes b{font-size:1.35rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.pro-recordes span{font-size:.74rem;color:var(--muted);line-height:1.25}
