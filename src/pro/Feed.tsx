@@ -9,7 +9,7 @@ import { medalhaSVG } from './medalhas';
 export type Evento = {
   quando: string; tipo: 'prova' | 'rei' | 'duelo'; alvo: string; apelido: string; foto: string | null; cidade: string;
   dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string };
-  aplausos: number; aplaudi: boolean;
+  reacoes: Reacoes; minha: TipoReacao | null;
 };
 
 const quandoTxt = (iso: string) => {
@@ -20,21 +20,32 @@ const quandoTxt = (iso: string) => {
   return dataBR(iso);
 };
 
-/** Botão de aplauso: uma reação por pessoa e por item. */
-export function Aplauso({ alvo, n, feito, mudou }: { alvo: string; n: number; feito: boolean; mudou?: (n: number, feito: boolean) => void }) {
-  const [st, setSt] = useState({ n, feito });
+export type Reacoes = { palma: number; fogo: number; uau: number };
+export type TipoReacao = keyof Reacoes;
+export const REACOES: { id: TipoReacao; e: string; nome: string }[] = [{ id: 'palma', e: '👏', nome: 'Palmas' }, { id: 'fogo', e: '🔥', nome: 'Fogo' }, { id: 'uau', e: '😮', nome: 'Uau' }];
+const ZERO: Reacoes = { palma: 0, fogo: 0, uau: 0 };
+
+/** Reações: uma por pessoa e por item (tocar de novo tira; tocar outra troca). */
+export function Aplauso({ alvo, reacoes, minha, travado, onTravado }: { alvo: string; reacoes?: Reacoes | null; minha?: TipoReacao | null; travado?: boolean; onTravado?: () => void }) {
+  const [st, setSt] = useState<{ r: Reacoes; minha: TipoReacao | null }>({ r: reacoes ?? ZERO, minha: minha ?? null });
   const [indo, setIndo] = useState(false);
-  useEffect(() => setSt({ n, feito }), [n, feito]);
-  const toca = async () => {
+  useEffect(() => setSt({ r: reacoes ?? ZERO, minha: minha ?? null }), [reacoes, minha]);
+  const toca = async (t: TipoReacao) => {
+    if (travado) return onTravado?.();
     if (indo) return;
     setIndo(true);
-    const novo = !st.feito;
-    setSt(s => ({ n: s.n + (novo ? 1 : -1), feito: novo })); // resposta na hora
-    const { data, error } = await sb.rpc('radar_aplaudir', { p_alvo: alvo, p_aplaudir: novo });
-    if (!error && data) { setSt({ n: data.aplausos, feito: data.aplaudi }); mudou?.(data.aplausos, data.aplaudi); }
+    const tira = st.minha === t;
+    setSt(s => { const r = { ...s.r }; if (s.minha) r[s.minha]--; if (!tira) r[t]++; return { r, minha: tira ? null : t }; }); // resposta na hora
+    const { data, error } = await sb.rpc('radar_aplaudir', { p_alvo: alvo, p_aplaudir: !tira, p_tipo: t });
+    if (!error && data) setSt({ r: { palma: data.palma, fogo: data.fogo, uau: data.uau }, minha: data.minha });
     setIndo(false);
   };
-  return <button className={'pro-aplauso' + (st.feito ? ' on' : '')} onClick={toca} aria-pressed={st.feito} aria-label={st.feito ? 'Tirar aplauso' : 'Aplaudir'}>👏 <b>{st.n}</b></button>;
+  return (
+    <div className="pro-reacoes" role="group" aria-label="Reações">
+      {REACOES.map(x => <button key={x.id} className={'pro-aplauso' + (st.minha === x.id ? ' on' : '')} onClick={() => toca(x.id)} aria-pressed={st.minha === x.id} aria-label={x.nome} title={travado ? 'Só no Pro' : x.nome}>{x.e} <b>{st.r[x.id]}</b></button>)}
+      {travado && <small className="pro-reacoes-trava">só no Pro</small>}
+    </div>
+  );
 }
 
 /** Botão seguir/seguindo. */
@@ -87,7 +98,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar }: { e: E
       {e.tipo === 'duelo' && (
         <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
       )}
-      <footer className="pro-feed-pe">{pro ? <Aplauso alvo={e.alvo} n={e.aplausos} feito={e.aplaudi} /> : <button className="pro-aplauso" onClick={assinar} title="Só no Pro">👏 <b>{e.aplausos}</b> <small>só no Pro</small></button>}{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}</footer>
+      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} travado={!pro} onTravado={assinar} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}</footer>
     </article>
   );
 }
@@ -108,7 +119,7 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
       {lista === null && <p className="fine">Carregando…</p>}
       {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova verificada aparece aqui.'}</p>}
       {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} pro={pro} assinar={assinar} />)}
-      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só aplausos.</p>}
+      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só reações.</p>}
     </div>
   );
 }

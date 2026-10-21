@@ -330,3 +330,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-indica-barra small{color:var(--muted);font-size:.8rem;margin-left:4px}
 .pro-link-quebra{word-break:break-all}
 .pro-assinar-destaque{border-color:var(--cobalt)}
+.pro-reacoes{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pro-reacoes .pro-aplauso{padding:4px 10px;font-size:.9rem;gap:4px}
+.pro-reacoes-trava{color:var(--muted);font-size:.72rem}
