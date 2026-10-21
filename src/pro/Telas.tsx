@@ -424,7 +424,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
       <p className="fine pro-sem-margem">{{
         geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas.`,
         eficiencia: 'Índice (nota por idade): compara atletas de idades e sexos diferentes de forma justa.',
-        assessorias: 'Média dos pontos dos 5 melhores atletas de cada assessoria.',
+        assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
         pelotao: 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
         reis: '',
       }[rec]}</p>
