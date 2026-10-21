@@ -465,6 +465,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   const [sexo, setSexo] = useState<'' | 'F' | 'M'>('');
   const [cidade, setCidade] = useState('');
   const [faixa, setFaixa] = useState('');
+  const [pelotaoCidade, setPelotaoCidade] = useState(false);
   const [linhas, setLinhas] = useState<Linha[] | null>(null);
   const [aberto, setAberto] = useState<string | null>(null);
 
@@ -474,9 +475,9 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
     const q = rec === 'geral' ? sb.rpc('radar_ranking', { temporada: ANO, recorte_sexo: sexo || null, recorte_cidade: cidade || null, recorte_faixa: faixa || null })
       : rec === 'eficiencia' ? sb.rpc('radar_ranking_eficiencia', { temporada: ANO })
       : rec === 'assessorias' ? sb.rpc('radar_ranking_assessorias', { temporada: ANO })
-      : sb.rpc('radar_pelotao', {});
+      : sb.rpc(pelotaoCidade ? 'radar_pelotao_cidade' : 'radar_pelotao', {});
     q.then(({ data }) => setLinhas((data ?? []) as Linha[]));
-  }, [rec, sexo, cidade, faixa]);
+  }, [rec, sexo, cidade, faixa, pelotaoCidade]);
 
   const eu = linhas?.find(l => l.eu);
   const fotos = useFotos((linhas ?? []).map(l => l.apelido).filter(Boolean));
@@ -499,13 +500,14 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
         </div>
         <label className="ct-cidade pro-sel">Faixa etária<select value={faixa} onChange={e => setFaixa(e.target.value)}><option value="">Todas</option>{FAIXAS.map(f => <option key={f} value={f}>{f} anos</option>)}</select></label>
       </>}
-      {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">Pelotão {LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
+      {rec === 'pelotao' && <div className="chips" role="group" aria-label="Pelotão"><button className="chip" aria-pressed={!pelotaoCidade} onClick={() => setPelotaoCidade(false)}>Da minha liga</button><button className="chip" aria-pressed={pelotaoCidade} onClick={() => setPelotaoCidade(true)}>De {perfil.cidade}</button></div>}
+      {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">{pelotaoCidade ? `Pelotão de ${perfil.cidade}` : `Pelotão ${LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}`}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
 
       <p className="fine pro-sem-margem">{{
         geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas.`,
         eficiencia: 'Índice (nota por idade): compara atletas de idades e sexos diferentes de forma justa.',
         assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
-        pelotao: 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
+        pelotao: pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
         reis: '',
       }[rec]}</p>
 
