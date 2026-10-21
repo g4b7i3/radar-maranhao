@@ -9,6 +9,7 @@ import InstallPrompt from '../InstallPrompt';
 import CardDuelo, { tituloDuelo, type FimDuelo } from './CardDuelo';
 import CIDADES from '../cidades-ma-geo.json';
 import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin, ZapConta } from './Telas';
+import { FotoConta } from './Foto';
 import './pro.css';
 
 type Aba = 'temporada' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
@@ -132,6 +133,8 @@ function ProTelas() {
   if (!temp || resgatando) return <main className="pro"><p className="pro-carregando">Carregando…</p></main>;
 
   // WhatsApp agora é obrigatório: quem criou a conta antes precisa completar
+  if (perfil.whatsapp && !perfil.foto_url) return <main className="pro">{topo('Falta a sua foto')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, coloque uma foto sua. Ela aparece no ranking e no seu perfil público, para todo mundo reconhecer você nas provas.</p><FotoConta perfil={perfil} pronto={recarregar} titulo="Sua foto" /></div></main>;
+
   if (!perfil.whatsapp) return <main className="pro">{topo('Falta só um dado')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, informe o seu WhatsApp. É por ele que o Radar fala com você sobre os seus resultados.</p><ZapConta perfil={perfil} pronto={recarregar} /></div></main>;
 
   const admin = sessao.user.email === ADMIN_EMAIL;

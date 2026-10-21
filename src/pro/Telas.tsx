@@ -9,6 +9,7 @@ import { Assinar, NOMES_CIDADES } from './Pro';
 import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
+import { Avatar, FotoConta, useFotos } from './Foto';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -35,6 +36,7 @@ function Reis() {
       setLista(l);
     });
   }, []);
+  const fotosReis = useFotos((lista ?? []).map(x => x.apelido ?? '').filter(Boolean));
   const provas = useMemo(() => { const m = new Map<string, ReiLinha[]>(); for (const x of lista ?? []) { if (!m.has(x.prova_id)) m.set(x.prova_id, []); m.get(x.prova_id)!.push(x); } return [...m.values()]; }, [lista]);
   return (
     <>
@@ -47,7 +49,7 @@ function Reis() {
           <b className="pro-reis-prova">{ps[0].prova_nome}</b>
           {[...ps].sort((a, b) => Number(a.distancia_km) - Number(b.distancia_km) || a.sexo.localeCompare(b.sexo)).map(x => (
             <div key={x.distancia_km + x.sexo} className="pro-rei">
-              <span className={'pro-coroa ' + (x.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span>
+              {x.apelido && fotosReis.get(x.apelido) ? <Avatar foto={fotosReis.get(x.apelido)} apelido={x.apelido} tam={40} /> : <span className={'pro-coroa ' + (x.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span>}
               <div>
                 <small>{x.sexo === 'F' ? 'Rainha' : 'Rei'} · {kmTxt(Number(x.distancia_km))}{x.atletas ? ` · ${x.atletas} atletas` : ''}</small>
                 <p className="pro-sem-margem"><b>{x.apelido ? <a href={linkPerfil(x.apelido)}>@{x.apelido}</a> : titulo(x.nome)}</b>{x.idade ? `, ${x.idade} anos` : ''}</p>
@@ -403,6 +405,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   }, [rec, sexo, cidade, faixa]);
 
   const eu = linhas?.find(l => l.eu);
+  const fotos = useFotos((linhas ?? []).map(l => l.apelido).filter(Boolean));
   return (
     <div className="pro-cont">
       <div className="seg pro-seg" role="group" aria-label="Tipo de ranking">
@@ -434,8 +437,9 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
       <ol className="pro-rank">
         {linhas?.map((l, k) => (
           <li key={k} className={l.eu ? 'eu' : ''}>
-            <button disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
+            <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
+              {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={36} />}
               <span>{rec === 'assessorias' ? <>{l.assessoria} <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
               <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : Math.round(Number(l.pontos ?? 0))}</b>
             </button>
@@ -443,7 +447,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
           </li>
         ))}
       </ol>
-      <p className="fine">No ranking aparecem só apelido, cidade e faixa etária. Viu algo estranho? Abra o atleta e toque em “Contestar”.</p>
+      <p className="fine">No ranking aparecem só foto, apelido, cidade e faixa etária. Viu algo estranho? Abra o atleta e toque em “Contestar”.</p>
       </>}
     </div>
   );
@@ -588,6 +592,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
           ? <button className="btn outline pro-btn" onClick={() => setEditando(true)}><Pencil size={16} aria-hidden="true" />Editar perfil <small>({edicoesRestantes(perfil) === 1 ? 'resta 1 edição' : 'restam 2 edições'} este mês)</small></button>
           : <p className="fine pro-sem-margem">Você já usou as 2 edições de perfil deste mês. Libera de novo no dia 1º. Precisa corrigir algo agora? <a href={whatsappLink(`Oi! Quero corrigir meu perfil no Radar Pro (@${perfil.apelido}): `)} target="_blank" rel="noopener">Fale com o Radar</a>.</p>}
       </>}
+      <FotoConta perfil={perfil} pronto={pronto} />
       <ZapConta perfil={perfil} pronto={pronto} />
       <PublicoConta perfil={perfil} pronto={pronto} />
       <section className="pro-card">
@@ -661,7 +666,7 @@ function PublicoConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }
   return (
     <section className="pro-card">
       <div className="pro-linha"><p className="pro-k cinza">Perfil público</p><button className="btn outline" disabled={salvando} onClick={trocar}>{pub ? 'Desligar' : 'Ligar'}</button></div>
-      <p className="fine pro-sem-margem">{pub ? <>Ligado: <a href={linkPerfil(perfil.apelido)} target="_blank" rel="noopener">radarcorridasma.com.br/?atleta={perfil.apelido}</a> mostra apelido, cidade, liga, provas e medalhas. Nunca seu nome completo, idade ou contato.</> : 'Desligado: ninguém vê seu perfil pelo link.'}</p>
+      <p className="fine pro-sem-margem">{pub ? <>Ligado: <a href={linkPerfil(perfil.apelido)} target="_blank" rel="noopener">radarcorridasma.com.br/?atleta={perfil.apelido}</a> mostra foto, apelido, cidade, liga, provas e medalhas. Nunca seu nome completo, idade ou contato.</> : 'Desligado: ninguém vê seu perfil pelo link.'}</p>
     </section>
   );
 }
@@ -767,7 +772,7 @@ function PedidoAdmin({ x, quem, mesmoDia, feito }: { x: Sugestao; quem: string; 
 }
 
 /* ───────── Admin · todos os usuários e a área de cada um ───────── */
-type UsuarioAdm = { user_id: string; apelido: string; nome_completo: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; nascimento: string; whatsapp: string | null; criado_em: string; email: string | null; valida_ate: string | null; cortesia: boolean; provas: number; oficiais: number };
+type UsuarioAdm = { foto_url?: string | null; user_id: string; apelido: string; nome_completo: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; nascimento: string; whatsapp: string | null; criado_em: string; email: string | null; valida_ate: string | null; cortesia: boolean; provas: number; oficiais: number };
 const situacao = (u: { valida_ate: string | null; cortesia?: boolean }) => {
   if (u.cortesia) return { txt: 'Cortesia', cls: 'ok' };
   if (u.valida_ate && new Date(u.valida_ate) > new Date()) return { txt: `Pro até ${new Date(u.valida_ate).toLocaleDateString('pt-BR')}`, cls: 'ok' };
@@ -784,6 +789,7 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
   const norm = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const vis = (lista ?? []).filter(u => (filtro === 'todos' || (filtro === 'pro') === (situacao(u).cls === 'ok')) && (!busca || norm(`${u.apelido} ${u.nome_completo} ${u.email ?? ''} ${u.cidade} ${u.assessoria ?? ''}`).includes(norm(busca))));
   const pro = (lista ?? []).filter(u => situacao(u).cls === 'ok').length;
+  const fotosAdm = useFotos((lista ?? []).map(u => u.apelido));
   if (sel) return <AdminUsuarioArea uid={sel} voltar={() => { setSel(null); carregar(); }} aviso={aviso} />;
   return (
     <section className="pro-card">
@@ -796,7 +802,8 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
         <ul className="pro-usuarios">
           {vis.map(u => { const st = situacao(u); return (
             <li key={u.user_id}><button onClick={() => setSel(u.user_id)}>
-              <div><b>@{u.apelido}</b><small>{u.nome_completo} · {u.cidade}</small><small>{u.email}</small></div>
+              <Avatar foto={u.foto_url ?? fotosAdm.get(u.apelido)} apelido={u.apelido} tam={44} />
+              <div className="pro-usu-txt"><b>@{u.apelido}</b><small>{u.nome_completo} · {u.cidade}</small><small>{u.email}</small></div>
               <div className="pro-dir"><span className={`pro-st ${st.cls}`}>{st.txt}</span><small>{u.provas} prova{u.provas === 1 ? '' : 's'}{u.oficiais ? ` · ${u.oficiais} oficial${u.oficiais === 1 ? '' : 'is'}` : ''}</small></div>
             </button></li>); })}
         </ul>
@@ -837,6 +844,7 @@ function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => v
     <>
       <button className="btn text pro-esq" onClick={voltar}>← Todos os usuários</button>
       <section className="pro-card azul">
+        <Avatar foto={p.foto_url} apelido={p.apelido} tam={88} />
         <p className="pro-medio">@{p.apelido}</p>
         <p className="pro-sub pro-sem-margem">{p.nome_completo}</p>
         <p className="pro-sub pro-sem-margem">{p.sexo === 'F' ? 'Feminino' : 'Masculino'} · {idade} anos · {p.cidade}{p.assessoria ? ` · ${p.assessoria}` : ''}</p>

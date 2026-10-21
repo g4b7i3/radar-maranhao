@@ -3,11 +3,12 @@ import { Crown, Share2 } from 'lucide-react';
 import { sb, LIGAS, pct, relogio, kmTxt, dataBR, type Liga } from './sb';
 import { GRUPOS, MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
 import './pro.css';
+import { Avatar } from './Foto';
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
 // Mostra só o que já aparece no ranking (apelido, cidade, liga, provas e medalhas). Nada de nome completo, idade ou contato.
 type Prova = { id: string; prova: string; data: string; cidade: string; km: number; tempo: number; nota: number; status: string; geral: number | null; faixa: number | null; total: number | null };
-type Dados = { apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[] };
+type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[] };
 
 function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
   const svg = useMemo(() => medalhaSVG(m, true, tam), [m, tam]);
@@ -50,6 +51,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
       <div className="pro-cont">
         <section className="pro-card azul pro-pub-topo">
           <a href="/" className="pro-pub-marca">Radar Corridas MA · <b>PRO</b></a>
+          <Avatar foto={d.foto} apelido={d.apelido} tam={112} />
           <p className="pro-medio">@{d.apelido}</p>
           <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? ` · ${d.assessoria}` : ''}</p>
           <div className="pro-tags">

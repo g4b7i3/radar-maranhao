@@ -249,3 +249,13 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-usuarios small{color:var(--muted,#667);font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pro-usuarios .pro-dir{justify-items:end;flex:none}
 .pro-msgs{display:grid;gap:8px;margin:6px 0}.pro-msg{justify-content:flex-start;text-align:left;white-space:normal}
+
+/* foto de perfil */
+.pro-avatar{flex:none;border-radius:50%;object-fit:cover;background:var(--cobalt-tint);border:2px solid rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.pro-avatar-vazio{display:inline-grid;place-items:center;font-weight:900;color:var(--cobalt)}
+.pro-foto-acoes{display:grid;gap:6px;justify-items:start}
+.pro-rank button{align-items:center}
+.pro-usuarios button{align-items:center;justify-content:flex-start}
+.pro-usu-txt{flex:1}
+.pro-pub-topo .pro-avatar{margin:6px 0 4px;border-width:3px}
+.pro-rank li > button.com-foto { grid-template-columns: 26px 36px 1fr auto; }
