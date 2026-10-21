@@ -578,7 +578,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
     if (r.erro) return setMsg(r.erro);
     await sb.auth.signOut(); window.location.href = '/';
   };
-  const vence = temp.valida_ate ? new Date(temp.valida_ate).toLocaleDateString('pt-BR') : null;
+  const vence = temp.valida_ate ? (new Date(temp.valida_ate).getFullYear() >= 2090 ? 'sem vencimento (cortesia)' : new Date(temp.valida_ate).toLocaleDateString('pt-BR')) : null;
   return (
     <div className="pro-cont">
       {editando ? <EditarPerfil perfil={perfil} fechar={() => setEditando(false)} pronto={pronto} /> : <>
@@ -686,7 +686,8 @@ function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
 
 /* ───────── Administração (só o Vinik) ───────── */
 type ProvaDia = { id: string; nome: string; data: string; cidade: string; distancias: number[] };
-type Pend = { sugestoes: (Sugestao & { user_id: string })[]; provas_mesmo_dia: ProvaDia[]; resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
+type Cortesia = { codigo: string; nome: string; user_id: string | null; usado_em: string | null; apelido: string | null };
+type Pend = { cortesias: Cortesia[]; sugestoes: (Sugestao & { user_id: string })[]; provas_mesmo_dia: ProvaDia[]; resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
 export function TelaAdmin() {
   const [p, setP] = useState<Pend | null>(null);
   const [apelido, setApelido] = useState('');
@@ -711,6 +712,17 @@ export function TelaAdmin() {
       <section className="pro-card">
         <p className="pro-k cinza">Liberar Radar Pro (pagamento por fora, cortesia)</p>
         <div className="pro-linha pro-quebra"><input className="pro-input" value={apelido} onChange={e => setApelido(e.target.value)} placeholder="@apelido" aria-label="Apelido" /><input className="pro-input pro-curto" inputMode="numeric" value={dias} onChange={e => setDias(e.target.value)} aria-label="Dias" /><button className="btn solid" onClick={liberar}>Liberar</button></div>
+      </section>
+      <section className="pro-card"><p className="pro-k cinza">Cortesias ativas ({p?.cortesias?.length ?? '…'})</p>
+        <ul className="pro-provas">{p?.cortesias?.map(c => (
+          <li key={c.codigo}>
+            <div className="pro-linha"><b>{c.nome}</b>{c.apelido ? <span className="pro-st ok">@{c.apelido}</span> : <span className="pro-st dec">Ainda não usado</span>}</div>
+            <p className="fine pro-sem-margem">radarcorridasma.com.br/?pro=cortesia&amp;k={c.codigo}</p>
+            <div className="pro-linha pro-quebra">
+              <button className="btn outline" onClick={() => { navigator.clipboard?.writeText(`https://radarcorridasma.com.br/?pro=cortesia&k=${c.codigo}`); setMsg('Link copiado.'); }}><Copy size={16} aria-hidden="true" />Copiar link</button>
+              <button className="btn outline pro-vermelho-txt" onClick={async () => { if (!confirm(`Tirar o acesso de cortesia de ${c.nome}?`)) return; const r = await chamar('radar-acoes', { acao: 'admin_cortesia_revogar', codigo: c.codigo }); setMsg(r.erro ?? 'Cortesia retirada.'); carregar(); }}>Tirar acesso</button>
+            </div>
+          </li>))}</ul>
       </section>
       <section className="pro-card"><p className="pro-k cinza">Provas pedidas ({p?.sugestoes.length ?? '…'})</p>
         <ul className="pro-provas">{p?.sugestoes.map(x => <li key={x.id}><PedidoAdmin x={x} quem={quem(x.user_id)} mesmoDia={p.provas_mesmo_dia.filter(y => y.data === x.data)} feito={m => { setMsg(m); carregar(); }} /></li>)}</ul>

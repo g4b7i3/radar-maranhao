@@ -208,3 +208,5 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-mesmo-dia { display: grid; gap: 8px; margin: 8px 0; padding: 10px; border-radius: 12px; background: var(--warn-bg); }
 .pro-mesmo-dia .btn { white-space: normal; text-align: left; }
 .pro-flex { flex: 1; min-width: 140px; }
+.pro-cortesia { display: grid; gap: 4px; text-align: center; border: 1.5px solid #f2b705; background: linear-gradient(180deg, rgb(242 183 5 / .16), rgb(242 183 5 / .04)); }
+.pro-cortesia b { font-size: 1.15rem; }

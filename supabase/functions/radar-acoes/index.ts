@@ -1,6 +1,6 @@
 // Radar Pro · ações do atleta e do administrador (uma função só, para gastar menos).
-// Atleta: duelo_criar, duelo_aceitar, contestar, prova_sugerir, exportar, apagar_conta.
-// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova.
+// Atleta: duelo_criar, duelo_aceitar, contestar, prova_sugerir, cortesia_resgatar, exportar, apagar_conta.
+// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova, admin_cortesia_revogar.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -91,6 +91,18 @@ Deno.serve(async req => {
       if (error) return resp({ erro: 'Não deu para enviar agora.' }, 400);
       return resp({ ok: true, sugestao: s });
     }
+    // ───────── Cortesia: link pessoal que libera o Radar Pro sem prazo (até o Vinik revogar)
+    case 'cortesia_resgatar': {
+      const codigo = String(b.codigo ?? '').replace(/[^a-z0-9]/gi, '').slice(0, 20).toLowerCase();
+      const { data: c } = await db.from('radar_cortesias').select('*').eq('codigo', codigo).maybeSingle();
+      if (!c || c.revogado_em) return resp({ erro: 'Esse link de cortesia não vale mais.' }, 404);
+      if (c.user_id && c.user_id !== user.id) return resp({ erro: 'Esse link de cortesia já foi usado por outra conta.' }, 409);
+      if (!c.user_id) await db.from('radar_cortesias').update({ user_id: user.id, usado_em: new Date().toISOString() }).eq('codigo', codigo).is('user_id', null);
+      const { data: dono } = await db.from('radar_cortesias').select('user_id').eq('codigo', codigo).maybeSingle();
+      if (dono?.user_id !== user.id) return resp({ erro: 'Esse link de cortesia já foi usado por outra conta.' }, 409);
+      await db.from('radar_assinaturas').upsert({ user_id: user.id, valida_ate: '2099-12-31T23:59:59Z', atualizado_em: new Date().toISOString() });
+      return resp({ ok: true, nome: c.nome });
+    }
     // ───────── LGPD: baixar meus dados
     case 'exportar': {
       const tabelas = ['radar_perfis', 'radar_assinaturas', 'radar_pagamentos', 'radar_resultados', 'radar_medalhas'];
@@ -122,7 +134,11 @@ Deno.serve(async req => {
       const { data: mesmoDia } = dias.length ? await db.from('radar_provas').select('id, nome, data, cidade, distancias').in('data', dias) : { data: [] };
       const ids = [...new Set([...(res ?? []).map(r => r.user_id), ...(sug ?? []).map(x => x.user_id), ...(cont ?? []).flatMap(c => [c.autor_id, c.radar_resultados?.user_id])].filter(Boolean))];
       const { data: perfis } = ids.length ? await db.from('radar_perfis').select('user_id, apelido, nome_completo, cidade, whatsapp').in('user_id', ids) : { data: [] };
-      return resp({ resultados: res ?? [], contestacoes: cont ?? [], perfis: perfis ?? [], sugestoes: sug ?? [], provas_mesmo_dia: mesmoDia ?? [] });
+      const { data: cort } = await db.from('radar_cortesias').select('codigo, nome, user_id, usado_em').is('revogado_em', null).order('criado_em');
+      const idsC = (cort ?? []).map(c => c.user_id).filter(Boolean);
+      const { data: apC } = idsC.length ? await db.from('radar_perfis').select('user_id, apelido').in('user_id', idsC) : { data: [] };
+      const cortesias = (cort ?? []).map(c => ({ ...c, apelido: (apC ?? []).find(x => x.user_id === c.user_id)?.apelido ?? null }));
+      return resp({ resultados: res ?? [], contestacoes: cont ?? [], perfis: perfis ?? [], sugestoes: sug ?? [], provas_mesmo_dia: mesmoDia ?? [], cortesias });
     }
     case 'admin_decidir': { // aprova ou recusa um resultado em análise (ou qualquer um, após contestação)
       const st = b.decisao === 'aprovar' ? 'aprovado' : b.decisao === 'recusar' ? 'recusado' : null;
@@ -163,6 +179,13 @@ Deno.serve(async req => {
       }
       await db.from('radar_sugestoes_provas').update({ status: 'aprovada', prova_id: provaId, resposta: limpa(b.resposta, 300) || null, decidido_em: new Date().toISOString() }).eq('id', sg.id);
       return resp({ ok: true, prova_id: provaId });
+    }
+    case 'admin_cortesia_revogar': { // tira o acesso de cortesia (volta a precisar pagar)
+      const { data: c } = await db.from('radar_cortesias').select('*').eq('codigo', String(b.codigo ?? '')).maybeSingle();
+      if (!c) return resp({ erro: 'Cortesia não encontrada.' }, 404);
+      await db.from('radar_cortesias').update({ revogado_em: new Date().toISOString() }).eq('codigo', c.codigo);
+      if (c.user_id) await db.from('radar_assinaturas').update({ valida_ate: new Date().toISOString(), atualizado_em: new Date().toISOString() }).eq('user_id', c.user_id);
+      return resp({ ok: true });
     }
     case 'admin_liberar': { // libera dias de Pro na mão (pagamento por fora, cortesia, patrocinador)
       const dias = Math.min(400, Math.max(1, Number(b.dias) || 30));
