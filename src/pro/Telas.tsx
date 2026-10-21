@@ -230,7 +230,7 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
     setErro(null);
     if (f.nome.trim().length < 5) return setErro('Escreva o nome da prova.');
     if (!f.data) return setErro('Escolha a data da prova.');
-    if (f.data < INICIO) return setErro('A temporada 2026 conta só as provas a partir de 15/10/2026.');
+    if (f.data < INICIO) return setErro('A pré-temporada conta só as provas a partir de 15/10/2026.');
     if (f.cidade.trim().length < 3) return setErro('Diga a cidade.');
     if (!dist) return setErro('Escolha a distância que você correu.');
     setIndo(true);
@@ -339,7 +339,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
           <ul className="pro-escolha">
             {lista.map(p => <li key={p.id}><button onClick={() => { setProva(p); setKm(p.distancias.length === 1 ? Number(p.distancias[0]) : null); }}><b>{p.nome}</b><span>{dataBR(p.data)} · {p.cidade}</span></button></li>)}
           </ul>
-          {provas && !lista.length && <p className="fine">Nenhuma prova encontrada. Valem as provas da agenda do Radar que já aconteceram, a partir de 15/10/2026.</p>}
+          {provas && !lista.length && <p className="fine">Nenhuma prova encontrada. Valem as provas da agenda do Radar que já aconteceram, desde o início da pré-temporada (15/10/2026).</p>}
           {aviso && <p className="pro-aviso" role="status">{aviso}</p>}
           {visiveis.length > 0 && (
             <section className="pro-card">
@@ -422,7 +422,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
       {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">Pelotão {LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
 
       <p className="fine pro-sem-margem">{{
-        geral: `Temporada ${ANO}: soma dos pontos de provas verificadas.`,
+        geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas.`,
         eficiencia: 'Índice (nota por idade): compara atletas de idades e sexos diferentes de forma justa.',
         assessorias: 'Média dos pontos dos 5 melhores atletas de cada assessoria.',
         pelotao: 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',

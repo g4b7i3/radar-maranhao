@@ -102,7 +102,7 @@ function StatusTag({ e }: { e: Race }) {
 }
 
 /** Chamada animada para o Radar Pro, logo abaixo da marca. */
-const FRASES_PRO = ['Sua temporada começou', '97 medalhas para ganhar', 'Seja Rei ou Rainha da prova', 'Ranking do Maranhão', 'Resultado oficial na hora'];
+const FRASES_PRO = ['Pré-temporada valendo', '97 medalhas para ganhar', 'Seja Rei ou Rainha da prova', 'Ranking do Maranhão', 'Resultado oficial na hora'];
 function ChamadaPro() {
   const [i, setI] = useState(0);
   useEffect(() => {

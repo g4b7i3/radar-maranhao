@@ -99,7 +99,7 @@ function ProTelas() {
     if (!k) { setResgatando(false); return; }
     chamar<{ nome?: string }>('radar-acoes', { acao: 'cortesia_resgatar', codigo: k }).then(async r => {
       try { localStorage.removeItem('radar-cortesia'); } catch { /* */ }
-      setAviso(r.erro ?? '🎁 Radar Pro liberado como cortesia. Bem-vindo à temporada!');
+      setAviso(r.erro ?? '🎁 Radar Pro liberado como cortesia. Bem-vindo ao Radar Pro!');
       await recarregar(); setResgatando(false);
     });
   }, [perfil, recarregar]);
@@ -145,12 +145,12 @@ function ProTelas() {
   ];
   return (
     <main className="pro">
-      {topo(aba === 'temporada' ? `Minha temporada ${new Date().getFullYear()}` : ABAS.find(a => a.id === aba)!.nome, temp.assinante ? <span className="pro-selo">PRO</span> : null)}
+      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Minha pré-temporada' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, temp.assinante ? <span className="pro-selo">PRO</span> : null)}
       {/* menu fixo embaixo, como app: todas as abas à vista, sem precisar arrastar */}
       <nav className="pro-menu" aria-label="Radar Pro">
         {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
       </nav>
-      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Temporada 2026:</b> contam as provas a partir de <b>15/10/2026</b>.</span></p>
+      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { setAba('conta'); window.scrollTo(0, 0); }} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {fimDuelos.map(d => (
@@ -206,7 +206,7 @@ function Convite() {
         ? <div className="pro-card pro-cortesia"><b>🎁 Acesso cortesia</b><span>Entre com o seu e-mail e o Radar Pro já vem liberado, sem pagar.</span></div>
         : <div className="pro-oferta">
             <div className="pro-oferta-in">
-              <span className="pro-oferta-chip"><i aria-hidden="true" />Temporada 2026 aberta</span>
+              <span className="pro-oferta-chip"><i aria-hidden="true" />Pré-temporada valendo</span>
               <p className="pro-oferta-preco"><small>Só</small> <b>R$ 10</b><small>/mês</small></p>
               <p className="pro-oferta-sub">Menos que uma inscrição de 5 km. <b>Sem fidelidade.</b></p>
               <p className="pro-oferta-sub2">⏱️ As provas desde 15/10 já contam pra você</p>
