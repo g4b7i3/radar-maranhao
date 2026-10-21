@@ -333,3 +333,5 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-reacoes{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .pro-reacoes .pro-aplauso{padding:4px 10px;font-size:.9rem;gap:4px}
 .pro-reacoes-trava{color:var(--muted);font-size:.72rem}
+.pro-limite{background:#fff6d6;border-color:#f2d27a;gap:8px}
+.pro-limite p{color:var(--ink)}
