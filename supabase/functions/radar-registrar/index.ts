@@ -56,8 +56,8 @@ Deno.serve(async req => {
   if (!TAB) return resp({ erro: 'Tente de novo em instantes.' }, 503);
   const { data: perfil } = await db.from('radar_perfis').select('*').eq('user_id', user.id).maybeSingle();
   if (!perfil) return resp({ erro: 'Complete seu perfil antes.' }, 400);
-  const { data: ass } = await db.from('radar_assinaturas').select('valida_ate').eq('user_id', user.id).maybeSingle();
-  if (!ass?.valida_ate || new Date(ass.valida_ate) < new Date()) return resp({ erro: 'Sua assinatura do Radar Pro não está ativa.' }, 402);
+  const { data: ehPro } = await db.rpc('radar_eh_assinante', { uid: user.id }); // pago, cortesia ou plano assessoria
+  if (!ehPro) return resp({ erro: 'Sua assinatura do Radar Pro não está ativa.' }, 402);
 
   // Prova que não está na agenda: com o link da cronometragem, o Radar confere e cria a prova na hora.
   // Sem link (ou link que o Radar não sabe ler), vira pedido para o administrador.

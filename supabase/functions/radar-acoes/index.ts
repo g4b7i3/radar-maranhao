@@ -1,6 +1,6 @@
 // Radar Pro · ações do atleta e do administrador (uma função só, para gastar menos).
 // Atleta: duelo_criar, duelo_aceitar, contestar, prova_sugerir, cortesia_resgatar, exportar, apagar_conta.
-// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova, admin_cortesia_revogar, admin_usuarios, admin_usuario.
+// Admin (só o e-mail do Vinik): admin_pendentes, admin_decidir, admin_contestacao, admin_liberar, admin_prova, admin_cortesia_criar, admin_cortesia_revogar, admin_usuarios, admin_usuario.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -29,9 +29,9 @@ Deno.serve(async req => {
   let b: Record<string, any>;
   try { b = await req.json(); } catch { return resp({ erro: 'Envio inválido.' }, 400); }
 
-  const assinante = async () => {
-    const { data } = await db.from('radar_assinaturas').select('valida_ate').eq('user_id', user.id).maybeSingle();
-    return !!data?.valida_ate && new Date(data.valida_ate) > new Date();
+  const assinante = async () => { // pago, cortesia ou liberado pela equipe (plano assessoria)
+    const { data } = await db.rpc('radar_eh_assinante', { uid: user.id });
+    return !!data;
   };
 
   switch (b.acao) {
@@ -218,6 +218,13 @@ Deno.serve(async req => {
       const { error } = await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Reaberto pelo administrador.' }).eq('id', b.resultado_id);
       if (error) return resp({ erro: error.message }, 400);
       return resp({ ok: true });
+    }
+    case 'admin_cortesia_criar': { // gera um link de cortesia novo
+      const nome = String(b.nome ?? '').trim().slice(0, 60) || `Cortesia ${new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`;
+      const codigo = Array.from(crypto.getRandomValues(new Uint8Array(5))).map(x => x.toString(16).padStart(2, '0')).join('');
+      const { error } = await db.from('radar_cortesias').insert({ codigo, nome });
+      if (error) return resp({ erro: error.message }, 400);
+      return resp({ ok: true, codigo, link: `https://radarcorridasma.com.br/?pro=cortesia&k=${codigo}` });
     }
     case 'admin_cortesia_revogar': { // tira o acesso de cortesia (volta a precisar pagar)
       const { data: c } = await db.from('radar_cortesias').select('*').eq('codigo', String(b.codigo ?? '')).maybeSingle();

@@ -800,6 +800,7 @@ type Pend = { cortesias: Cortesia[]; sugestoes: (Sugestao & { user_id: string })
 export function TelaAdmin() {
   const [p, setP] = useState<Pend | null>(null);
   const [apelido, setApelido] = useState('');
+  const [nomeCort, setNomeCort] = useState('');
   const [dias, setDias] = useState('30');
   const [msg, setMsg] = useState<string | null>(null);
   const carregar = () => chamar<Pend>('radar-acoes', { acao: 'admin_pendentes' }).then(r => (r.erro ? setMsg(r.erro) : setP(r)));
@@ -824,6 +825,7 @@ export function TelaAdmin() {
         <div className="pro-linha pro-quebra"><input className="pro-input" value={apelido} onChange={e => setApelido(e.target.value)} placeholder="@apelido" aria-label="Apelido" /><input className="pro-input pro-curto" inputMode="numeric" value={dias} onChange={e => setDias(e.target.value)} aria-label="Dias" /><button className="btn solid" onClick={liberar}>Liberar</button></div>
       </section>
       <section className="pro-card"><p className="pro-k cinza">Cortesias ativas ({p?.cortesias?.length ?? '…'})</p>
+        <div className="pro-linha pro-quebra"><input className="pro-input" value={nomeCort} onChange={e => setNomeCort(e.target.value)} placeholder="Para quem (opcional)" aria-label="Nome da cortesia" /><button className="btn solid" onClick={async () => { const r = await chamar<{ link: string }>('radar-acoes', { acao: 'admin_cortesia_criar', nome: nomeCort }); if (r.erro) return setMsg(r.erro); setNomeCort(''); try { await navigator.clipboard.writeText(r.link); setMsg('Cortesia criada e link copiado: ' + r.link); } catch { setMsg('Cortesia criada: ' + r.link); } carregar(); }}>Gerar cortesia</button></div>
         <ul className="pro-provas">{p?.cortesias?.map(c => (
           <li key={c.codigo}>
             <div className="pro-linha"><b>{c.nome}</b>{c.apelido ? <span className="pro-st ok">@{c.apelido}</span> : <span className="pro-st dec">Ainda não usado</span>}</div>
