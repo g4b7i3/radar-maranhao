@@ -169,3 +169,16 @@
 .pro-rei .pro-dir { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
 .pro-coroa { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #ffe28a, #e2a400); color: #3a2600; }
 .pro-coroa.f { background: linear-gradient(135deg, #ffd1e8, #e0559a); color: #3d0020; }
+
+/* menu fixo embaixo (como app) */
+.pro-menu { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; justify-content: center; gap: 0;
+  padding: 6px max(8px, var(--safe-l)) calc(6px + env(safe-area-inset-bottom)) max(8px, var(--safe-r));
+  background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgb(15 26 51 / .08); }
+.pro-menu a { flex: 1; max-width: 104px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 14px;
+  color: var(--muted); text-decoration: none; font-size: .7rem; font-weight: 700; line-height: 1.1; -webkit-tap-highlight-color: transparent; }
+.pro-menu a[aria-current="page"] { color: var(--cobalt); background: var(--cobalt-tint); }
+.pro-menu a span { white-space: nowrap; }
+main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+/* abas do ranking: quebram em duas linhas em vez de esconder */
+.pro-seg { display: flex; flex-wrap: wrap; border-radius: 22px; gap: 2px; }
+.pro-seg button { flex: 1 1 auto; min-height: 40px; }

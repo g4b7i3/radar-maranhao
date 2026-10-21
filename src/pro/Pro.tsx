@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, LogOut } from 'lucide-react';
+import { ArrowLeft, Mail, LogOut, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
 import CIDADES from '../cidades-ma-geo.json';
@@ -71,15 +71,17 @@ export default function Pro() {
     </main>
   );
 
-  const ABAS: { id: Aba; nome: string }[] = [
-    { id: 'temporada', nome: 'Temporada' }, { id: 'corri', nome: 'Eu corri' }, { id: 'ranking', nome: 'Ranking' }, { id: 'duelos', nome: 'Duelos' }, { id: 'conta', nome: 'Conta' },
-    ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin' }] : []),
+  const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
+    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: UserRound },
+    ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
   return (
     <main className="pro">
       {topo(aba === 'temporada' ? `Minha temporada ${new Date().getFullYear()}` : ABAS.find(a => a.id === aba)!.nome, temp.assinante ? <span className="pro-selo">PRO</span> : null)}
-      <nav className="ni-troca pro-abas" aria-label="Radar Pro">
-        {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}>{a.nome}</a>)}
+      {/* menu fixo embaixo, como app: todas as abas à vista, sem precisar arrastar */}
+      <nav className="pro-menu" aria-label="Radar Pro">
+        {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
       </nav>
       <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { setAba('conta'); window.scrollTo(0, 0); }} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
