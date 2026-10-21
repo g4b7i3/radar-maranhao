@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, X as Fechar } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, X as Fechar } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -10,6 +10,7 @@ import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
+import { Seguir } from './Feed';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -115,6 +116,7 @@ function Medalhas({ meds }: { meds: string[] }) {
 export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp: Temporada; irCorri: () => void }) {
   const [res, setRes] = useState<Resultado[] | null>(null);
   const [card, setCard] = useState<string | null>(null);
+  const [quem, setQuem] = useState<string | null>(null);
   const [meds, setMeds] = useState<string[]>([]);
   useEffect(() => {
     // medalhas de provas recusadas não contam
@@ -170,8 +172,10 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
               <div className="pro-linha pro-quebra pro-esq">
                 {r.status !== 'recusado' && <button className="btn outline pro-btn-p" onClick={() => setCard(card === r.id ? null : r.id)}><ImageIcon size={16} aria-hidden="true" />Card pro story</button>}
                 {(r.status === 'declarado' || r.status === 'em_analise') && <a className="btn whats pro-btn-p" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />Enviar comprovante</a>}
+                {r.status !== 'recusado' && <button className="btn text pro-btn-p" onClick={() => setQuem(quem === r.id ? null : r.id)}><Users size={16} aria-hidden="true" />Quem mais correu</button>}
               </div>
               {card === r.id && <CardResultado r={r} apelido={perfil.apelido} fechar={() => setCard(null)} />}
+              {quem === r.id && <CorreramComigo provaId={r.prova_id} />}
             </li>
           ))}
         </ul>
@@ -323,6 +327,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
         {!feito.oficial && <a className="btn whats pro-btn" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={18} aria-hidden="true" />Enviar comprovante pelo WhatsApp</a>}
         {!feito.oficial && <p className="fine pro-sem-margem">Quando a cronometragem publicar o resultado, o Radar confere sozinho e muda para “Verificado”.</p>}
         <CardResultado r={r} apelido={perfil.apelido} fechar={() => { /* fica aberto */ }} />
+        <CorreramComigo provaId={r.prova_id} />
         <button className="btn solid pro-btn" onClick={irTemporada}>Ver minha temporada</button>
         <button className="btn outline pro-btn" onClick={() => { setFeito(null); setProva(null); setKm(null); setTempo(''); setPeito(''); setLink(''); setOutroNome(''); }}>Registrar outra prova</button>
       </div>
@@ -381,6 +386,29 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
   );
 }
 
+/* ───────── Quem do Radar Pro correu a mesma prova (para seguir) ───────── */
+type Companheiro = { apelido: string; foto: string | null; cidade: string; km: number; tempo: number; nota: number; sigo: boolean };
+export function CorreramComigo({ provaId, titulo = 'Quem mais correu essa prova' }: { provaId: string; titulo?: string }) {
+  const [lista, setLista] = useState<Companheiro[] | null>(null);
+  useEffect(() => { sb.rpc('radar_correram_comigo', { p_prova_id: provaId }).then(({ data }) => setLista((data as Companheiro[]) ?? [])); }, [provaId]);
+  if (!lista?.length) return null;
+  return (
+    <section className="pro-card">
+      <p className="pro-k cinza">{titulo}</p>
+      <ul className="pro-companheiros">
+        {lista.map(c => (
+          <li key={c.apelido}>
+            <a href={linkPerfil(c.apelido)}><Avatar foto={c.foto} apelido={c.apelido} tam={40} /></a>
+            <div><b><a href={linkPerfil(c.apelido)}>@{c.apelido}</a></b><small>{kmTxt(Number(c.km))} · {relogio(c.tempo)} · nota {pct(c.nota)}%</small></div>
+            <Seguir apelido={c.apelido} sigo={c.sigo} mudou={v => setLista(l => (l ?? []).map(x => x.apelido === c.apelido ? { ...x, sigo: v } : x))} />
+          </li>
+        ))}
+      </ul>
+      <p className="fine pro-sem-margem">Atletas do Radar Pro com resultado oficial nessa prova. Siga para ver no feed.</p>
+    </section>
+  );
+}
+
 /* ───────── Ranking do Maranhão ───────── */
 type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; faixa?: string; pontos?: number; provas?: number; indice?: number; eu?: boolean; assessoria?: string; atletas?: number; tamanho?: number };
 const FAIXAS = ['até 19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60+'];
@@ -406,6 +434,9 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
 
   const eu = linhas?.find(l => l.eu);
   const fotos = useFotos((linhas ?? []).map(l => l.apelido).filter(Boolean));
+  const [sigo, setSigo] = useState<Set<string>>(new Set());
+  useEffect(() => { sb.rpc('radar_sigo').then(({ data }) => setSigo(new Set((data as string[]) ?? []))); }, []);
+  const mudouSigo = (ap: string) => (v: boolean) => setSigo(prev => { const n = new Set(prev); if (v) n.add(ap); else n.delete(ap); return n; });
   return (
     <div className="pro-cont">
       <div className="seg pro-seg" role="group" aria-label="Tipo de ranking">
@@ -443,7 +474,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
               <span>{rec === 'assessorias' ? <>{l.assessoria} <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
               <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : Math.round(Number(l.pontos ?? 0))}</b>
             </button>
-            {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} />}
+            {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} sigo={sigo.has(l.apelido)} mudouSigo={mudouSigo(l.apelido)} />}
           </li>
         ))}
       </ol>
@@ -453,7 +484,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   );
 }
 
-function ProvasDe({ apelido, meu }: { apelido: string; meu: boolean }) {
+function ProvasDe({ apelido, meu, sigo, mudouSigo }: { apelido: string; meu: boolean; sigo?: boolean; mudouSigo?: (v: boolean) => void }) {
   const [lista, setLista] = useState<Resultado[] | null>(null);
   const [contesta, setContesta] = useState<string | null>(null);
   const [motivo, setMotivo] = useState('');
@@ -466,6 +497,7 @@ function ProvasDe({ apelido, meu }: { apelido: string; meu: boolean }) {
   if (!lista) return <p className="fine pro-dentro">Carregando…</p>;
   return (
     <ul className="pro-provas pro-dentro">
+      {!meu && mudouSigo && <li className="pro-linha pro-quebra"><a className="btn text pro-btn-p" href={linkPerfil(apelido)} target="_blank" rel="noopener"><ExternalLink size={15} aria-hidden="true" />Perfil</a><Seguir apelido={apelido} sigo={!!sigo} mudou={mudouSigo} /></li>}
       {lista.map(r => (
         <li key={r.id}>
           <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>

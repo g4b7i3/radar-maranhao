@@ -4,11 +4,12 @@ import { sb, LIGAS, pct, relogio, kmTxt, dataBR, type Liga } from './sb';
 import { GRUPOS, MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
 import './pro.css';
 import { Avatar } from './Foto';
+import { Aplauso, Seguir } from './Feed';
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
 // Mostra só o que já aparece no ranking (apelido, cidade, liga, provas e medalhas). Nada de nome completo, idade ou contato.
 type Prova = { id: string; prova: string; data: string; cidade: string; km: number; tempo: number; nota: number; status: string; geral: number | null; faixa: number | null; total: number | null };
-type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[] };
+type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[]; seguidores: number; seguindo: number; aplausos: number; eu: boolean; sigo: boolean; aplaudi: boolean; logado: boolean };
 
 function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
   const svg = useMemo(() => medalhaSVG(m, true, tam), [m, tam]);
@@ -54,6 +55,13 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
           <Avatar foto={d.foto} apelido={d.apelido} tam={112} />
           <p className="pro-medio">@{d.apelido}</p>
           <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? ` · ${d.assessoria}` : ''}</p>
+          <p className="pro-pub-social"><b>{d.seguidores}</b> {d.seguidores === 1 ? 'seguidor' : 'seguidores'} · <b>{d.seguindo}</b> seguindo</p>
+          <div className="pro-linha pro-pub-acoes">
+            {d.logado && !d.eu && <Seguir apelido={d.apelido} sigo={d.sigo} mudou={v => setD(x => x ? { ...x, sigo: v, seguidores: x.seguidores + (v ? 1 : -1) } : x)} />}
+            {d.logado && !d.eu && <Aplauso alvo={`perfil:${d.apelido}`} n={d.aplausos} feito={d.aplaudi} />}
+            {!d.logado && <a className="btn outline pro-seguir" href="/?pro">👏 {d.aplausos} · Entrar para seguir</a>}
+            {d.eu && <span className="pro-aplauso on">👏 <b>{d.aplausos}</b></span>}
+          </div>
           <div className="pro-tags">
             {ligaInfo && <span className={`pro-liga l-${ligaInfo.id}`}>Liga {ligaInfo.nome}</span>}
             {d.indice != null && <span className="pro-liga l-verde">Índice {pct(d.indice)}</span>}
