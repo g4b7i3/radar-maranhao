@@ -2735,7 +2735,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Esgotadas",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
       "sourceName": "Central da Corrida",
@@ -2746,7 +2746,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-21T20:24:12.739Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
     },
     {
@@ -3110,9 +3110,43 @@
       "start": "06:00",
       "verifiedAt": "2026-10-21T17:05:54.960Z",
       "firstSeenAt": "2026-10-21T17:05:54.960Z"
+    },
+    {
+      "id": "corrida-contra-as-drigas-2026-montes-altos",
+      "name": "Corrida Contra As Drigas",
+      "edition": "2026",
+      "city": "Montes Altos",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-22",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 05h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-21T20:24:12.739Z",
+      "firstSeenAt": "2026-10-21T20:24:12.739Z"
     }
   ],
   "changes": [
+    {
+      "id": "2056f152-ca87-4ff9-b4ba-433f0b2c40fc",
+      "eventId": "corrida-contra-as-drigas-2026-montes-altos",
+      "version": "[\"2026-11-22\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-21T20:24:12.739Z",
+      "notifiedAt": null
+    },
     {
       "id": "e0dcdad4-29aa-4616-8d0d-6ba06de9702c",
       "eventId": "pib-runner-2026-governador-nunes-freire",
@@ -4626,7 +4660,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-21T17:05:54.960Z",
+  "lastChecked": "2026-10-21T20:24:12.739Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
