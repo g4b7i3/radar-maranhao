@@ -1,0 +1,20 @@
+name: Explorar resultados (temporário)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  explorar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          npm i --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - run: node scripts/explorar-resultados.mjs
+      - run: |
+          git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
+          git add coleta/explora-resultados.json && git commit -m "Exploração de resultados (temporário)" && git pull --rebase && git push
