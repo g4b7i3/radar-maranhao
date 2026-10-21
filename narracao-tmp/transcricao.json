@@ -1,0 +1,436 @@
+[
+ {
+  "ini": 0.5,
+  "fim": 4.94,
+  "texto": "Você corre no Maranhão? Então para tudo e olha esse aqui.",
+  "palavras": [
+   {
+    "p": "Você",
+    "ini": 0.5,
+    "fim": 0.98
+   },
+   {
+    "p": "corre",
+    "ini": 0.98,
+    "fim": 1.3
+   },
+   {
+    "p": "no",
+    "ini": 1.3,
+    "fim": 1.46
+   },
+   {
+    "p": "Maranhão?",
+    "ini": 1.46,
+    "fim": 2.22
+   },
+   {
+    "p": "Então",
+    "ini": 2.64,
+    "fim": 2.96
+   },
+   {
+    "p": "para",
+    "ini": 2.96,
+    "fim": 3.18
+   },
+   {
+    "p": "tudo",
+    "ini": 3.18,
+    "fim": 3.68
+   },
+   {
+    "p": "e",
+    "ini": 3.68,
+    "fim": 3.84
+   },
+   {
+    "p": "olha",
+    "ini": 3.84,
+    "fim": 3.98
+   },
+   {
+    "p": "esse",
+    "ini": 3.98,
+    "fim": 4.22
+   },
+   {
+    "p": "aqui.",
+    "ini": 4.22,
+    "fim": 4.94
+   }
+  ]
+ },
+ {
+  "ini": 5.48,
+  "fim": 8.04,
+  "texto": "Todas as corridas do nosso estado em um só lugar.",
+  "palavras": [
+   {
+    "p": "Todas",
+    "ini": 5.48,
+    "fim": 5.62
+   },
+   {
+    "p": "as",
+    "ini": 5.62,
+    "fim": 5.78
+   },
+   {
+    "p": "corridas",
+    "ini": 5.78,
+    "fim": 6.1
+   },
+   {
+    "p": "do",
+    "ini": 6.1,
+    "fim": 6.3
+   },
+   {
+    "p": "nosso",
+    "ini": 6.3,
+    "fim": 6.54
+   },
+   {
+    "p": "estado",
+    "ini": 6.54,
+    "fim": 6.82
+   },
+   {
+    "p": "em",
+    "ini": 6.82,
+    "fim": 7.24
+   },
+   {
+    "p": "um",
+    "ini": 7.24,
+    "fim": 7.42
+   },
+   {
+    "p": "só",
+    "ini": 7.42,
+    "fim": 7.56
+   },
+   {
+    "p": "lugar.",
+    "ini": 7.56,
+    "fim": 8.04
+   }
+  ]
+ },
+ {
+  "ini": 8.74,
+  "fim": 16.34,
+  "texto": "Você consegue ver no mapa o que tem perto de você, preço, horário da largada, premiação, tá tudo nesse site.",
+  "palavras": [
+   {
+    "p": "Você",
+    "ini": 8.74,
+    "fim": 8.9
+   },
+   {
+    "p": "consegue",
+    "ini": 8.9,
+    "fim": 9.18
+   },
+   {
+    "p": "ver",
+    "ini": 9.18,
+    "fim": 9.34
+   },
+   {
+    "p": "no",
+    "ini": 9.34,
+    "fim": 9.54
+   },
+   {
+    "p": "mapa",
+    "ini": 9.54,
+    "fim": 9.82
+   },
+   {
+    "p": "o",
+    "ini": 9.82,
+    "fim": 9.92
+   },
+   {
+    "p": "que",
+    "ini": 9.92,
+    "fim": 10.1
+   },
+   {
+    "p": "tem",
+    "ini": 10.1,
+    "fim": 10.28
+   },
+   {
+    "p": "perto",
+    "ini": 10.28,
+    "fim": 10.52
+   },
+   {
+    "p": "de",
+    "ini": 10.52,
+    "fim": 10.8
+   },
+   {
+    "p": "você,",
+    "ini": 10.8,
+    "fim": 11.34
+   },
+   {
+    "p": "preço,",
+    "ini": 11.6,
+    "fim": 12.04
+   },
+   {
+    "p": "horário",
+    "ini": 12.38,
+    "fim": 12.62
+   },
+   {
+    "p": "da",
+    "ini": 12.62,
+    "fim": 12.82
+   },
+   {
+    "p": "largada,",
+    "ini": 12.82,
+    "fim": 13.42
+   },
+   {
+    "p": "premiação,",
+    "ini": 13.68,
+    "fim": 14.46
+   },
+   {
+    "p": "tá",
+    "ini": 14.92,
+    "fim": 15.14
+   },
+   {
+    "p": "tudo",
+    "ini": 15.14,
+    "fim": 15.6
+   },
+   {
+    "p": "nesse",
+    "ini": 15.6,
+    "fim": 15.96
+   },
+   {
+    "p": "site.",
+    "ini": 15.96,
+    "fim": 16.34
+   }
+  ]
+ },
+ {
+  "ini": 17.08,
+  "fim": 19.82,
+  "texto": "Um toque e a prova já vai pro seu calendário.",
+  "palavras": [
+   {
+    "p": "Um",
+    "ini": 17.08,
+    "fim": 17.36
+   },
+   {
+    "p": "toque",
+    "ini": 17.36,
+    "fim": 17.72
+   },
+   {
+    "p": "e",
+    "ini": 17.72,
+    "fim": 17.92
+   },
+   {
+    "p": "a",
+    "ini": 17.92,
+    "fim": 18.08
+   },
+   {
+    "p": "prova",
+    "ini": 18.08,
+    "fim": 18.28
+   },
+   {
+    "p": "já",
+    "ini": 18.28,
+    "fim": 18.46
+   },
+   {
+    "p": "vai",
+    "ini": 18.46,
+    "fim": 18.54
+   },
+   {
+    "p": "pro",
+    "ini": 18.54,
+    "fim": 18.68
+   },
+   {
+    "p": "seu",
+    "ini": 18.68,
+    "fim": 18.86
+   },
+   {
+    "p": "calendário.",
+    "ini": 18.86,
+    "fim": 19.82
+   }
+  ]
+ },
+ {
+  "ini": 19.98,
+  "fim": 21.32,
+  "texto": "Ainda tem o alarme.",
+  "palavras": [
+   {
+    "p": "Ainda",
+    "ini": 19.98,
+    "fim": 20.16
+   },
+   {
+    "p": "tem",
+    "ini": 20.16,
+    "fim": 20.36
+   },
+   {
+    "p": "o",
+    "ini": 20.36,
+    "fim": 20.56
+   },
+   {
+    "p": "alarme.",
+    "ini": 20.56,
+    "fim": 21.32
+   }
+  ]
+ },
+ {
+  "ini": 21.78,
+  "fim": 27.2,
+  "texto": "Você monta um card pro seu tênis, pro stories e sem baixar nada, sem pagar nada.",
+  "palavras": [
+   {
+    "p": "Você",
+    "ini": 21.78,
+    "fim": 22.08
+   },
+   {
+    "p": "monta",
+    "ini": 22.08,
+    "fim": 22.28
+   },
+   {
+    "p": "um",
+    "ini": 22.28,
+    "fim": 22.52
+   },
+   {
+    "p": "card",
+    "ini": 22.52,
+    "fim": 22.72
+   },
+   {
+    "p": "pro",
+    "ini": 22.72,
+    "fim": 22.9
+   },
+   {
+    "p": "seu",
+    "ini": 22.9,
+    "fim": 23.12
+   },
+   {
+    "p": "tênis,",
+    "ini": 23.12,
+    "fim": 23.34
+   },
+   {
+    "p": "pro",
+    "ini": 23.48,
+    "fim": 23.48
+   },
+   {
+    "p": "stories",
+    "ini": 23.48,
+    "fim": 24.1
+   },
+   {
+    "p": "e",
+    "ini": 24.1,
+    "fim": 24.76
+   },
+   {
+    "p": "sem",
+    "ini": 24.76,
+    "fim": 24.92
+   },
+   {
+    "p": "baixar",
+    "ini": 24.92,
+    "fim": 25.46
+   },
+   {
+    "p": "nada,",
+    "ini": 25.46,
+    "fim": 25.98
+   },
+   {
+    "p": "sem",
+    "ini": 26.22,
+    "fim": 26.3
+   },
+   {
+    "p": "pagar",
+    "ini": 26.3,
+    "fim": 26.62
+   },
+   {
+    "p": "nada.",
+    "ini": 26.62,
+    "fim": 27.2
+   }
+  ]
+ },
+ {
+  "ini": 27.2,
+  "fim": 32.1,
+  "texto": "Radar Corridas Maranhão. RadarCorridas.com.br",
+  "palavras": [
+   {
+    "p": "Radar",
+    "ini": 27.2,
+    "fim": 27.96
+   },
+   {
+    "p": "Corridas",
+    "ini": 27.96,
+    "fim": 28.36
+   },
+   {
+    "p": "Maranhão.",
+    "ini": 28.36,
+    "fim": 29.24
+   },
+   {
+    "p": "RadarCorridas",
+    "ini": 29.42,
+    "fim": 30.36
+   },
+   {
+    "p": ".com",
+    "ini": 30.36,
+    "fim": 31.18
+   },
+   {
+    "p": ".br",
+    "ini": 31.18,
+    "fim": 32.1
+   }
+  ]
+ }
+]
