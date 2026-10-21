@@ -369,3 +369,5 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-retro-nums>div{display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:12px;background:var(--cobalt-tint)}
 .pro-retro-nums b{font-size:1.2rem;line-height:1.1}
 .pro-retro-nums small{color:var(--muted);font-size:.72rem}
+.pro-mini-4{grid-template-columns:repeat(4,1fr)}
+.pro-mini-4 b{font-size:1.05rem}

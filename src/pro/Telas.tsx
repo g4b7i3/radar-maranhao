@@ -847,6 +847,41 @@ export function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => voi
 type ProvaDia = { id: string; nome: string; data: string; cidade: string; distancias: number[] };
 type Cortesia = { codigo: string; nome: string; user_id: string | null; usado_em: string | null; apelido: string | null; dias?: number | null };
 type Pend = { cortesias: Cortesia[]; sugestoes: (Sugestao & { user_id: string })[]; provas_mesmo_dia: ProvaDia[]; resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
+/* ───────── Painel: assinantes, receita e renovações ───────── */
+type Painel = { contas: number; ativos: number; pagantes: number; cortesias: number; equipes_ativas: number; por_equipe: number; gratis: number; receita_mes: number; receita_total: number; pagamentos_mes: { plano: string; n: number; valor: number }[]; novos_mes: number; provas_mes: number; vencendo: { apelido: string; foto: string | null; whatsapp: string | null; valida_ate: string; dias: number }[]; vencidos: { apelido: string; foto: string | null; whatsapp: string | null; valida_ate: string; dias: number; provas: number }[]; ultimos_pagamentos: { apelido: string | null; valor: number; plano: string; quando: string }[] };
+const reais = (v: number) => `R$ ${Number(v).toFixed(2).replace('.', ',')}`;
+const PLANO_NOME: Record<string, string> = { mensal: 'Mensal', anual: 'Anual', equipe: 'Assessoria' };
+function AdminPainel() {
+  const [d, setD] = useState<Painel | null>(null);
+  const [aberto, setAberto] = useState(true);
+  useEffect(() => { sb.rpc('radar_admin_painel').then(({ data }) => setD(data as Painel)); }, []);
+  if (!d) return <p className="fine">Carregando números…</p>;
+  const zap = (n: string | null | undefined, msg: string) => n ? `https://wa.me/${n}?text=${encodeURIComponent(msg)}` : null;
+  return (
+    <section className="pro-card">
+      <div className="pro-linha"><p className="pro-k cinza">Painel</p><button className="btn text" onClick={() => setAberto(!aberto)}>{aberto ? 'Esconder' : 'Mostrar'}</button></div>
+      <div className="pro-mini pro-mini-4">
+        <div><b>{reais(d.receita_mes)}</b><small>este mês</small></div>
+        <div><b>{d.pagantes}</b><small>pagantes</small></div>
+        <div><b>{d.ativos}</b><small>Pro ativos</small></div>
+        <div><b>{d.contas}</b><small>contas</small></div>
+      </div>
+      {aberto && <>
+        <p className="fine pro-sem-margem">{d.cortesias} por cortesia · {d.por_equipe} por equipe ({d.equipes_ativas} {d.equipes_ativas === 1 ? 'equipe ativa' : 'equipes ativas'}) · {d.gratis} no modo grátis · {d.novos_mes} contas novas e {d.provas_mes} provas registradas no mês · total recebido {reais(d.receita_total)}</p>
+        {d.pagamentos_mes.length > 0 && <p className="fine pro-sem-margem">Pagamentos do mês: {d.pagamentos_mes.map(x => `${x.n}× ${PLANO_NOME[x.plano] ?? x.plano} (${reais(x.valor)})`).join(' · ')}</p>}
+        <p className="pro-k cinza">Vencem em 7 dias ({d.vencendo.length})</p>
+        {d.vencendo.length === 0 && <p className="fine pro-sem-margem">Ninguém.</p>}
+        <ul className="pro-companheiros">{d.vencendo.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b>@{x.apelido}</b><small>vence {new Date(x.valida_ate).toLocaleDateString('pt-BR')} ({x.dias === 0 ? 'hoje' : `em ${x.dias} ${x.dias === 1 ? 'dia' : 'dias'}`})</small></div>{zap(x.whatsapp, `Oi, @${x.apelido}! Seu Radar Pro vence ${x.dias === 0 ? 'hoje' : `em ${x.dias} dia${x.dias === 1 ? '' : 's'}`}. Pra não perder o ranking e as medalhas, renova em radarcorridasma.com.br/pro (Pix de R$ 10). Qualquer dúvida é só chamar!`) && <a className="btn whats" href={zap(x.whatsapp, `Oi, @${x.apelido}! Seu Radar Pro vence ${x.dias === 0 ? 'hoje' : `em ${x.dias} dia${x.dias === 1 ? '' : 's'}`}. Pra não perder o ranking e as medalhas, renova em radarcorridasma.com.br/pro (Pix de R$ 10). Qualquer dúvida é só chamar!`)!} target="_blank" rel="noopener"><MessageCircle size={14} aria-hidden="true" />Lembrar</a>}</li>)}</ul>
+        <p className="pro-k cinza">Venceram e não renovaram ({d.vencidos.length})</p>
+        {d.vencidos.length === 0 && <p className="fine pro-sem-margem">Ninguém nos últimos 60 dias.</p>}
+        <ul className="pro-companheiros">{d.vencidos.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b>@{x.apelido}</b><small>venceu há {x.dias} {x.dias === 1 ? 'dia' : 'dias'} · {x.provas} {x.provas === 1 ? 'prova' : 'provas'}</small></div>{x.whatsapp && <a className="btn whats" href={zap(x.whatsapp, `Oi, @${x.apelido}! Sentimos sua falta no Radar Pro. Suas provas e medalhas continuam guardadas: é só renovar em radarcorridasma.com.br/pro (Pix de R$ 10) que volta tudo. Bora pra próxima prova?`)!} target="_blank" rel="noopener"><MessageCircle size={14} aria-hidden="true" />Chamar</a>}</li>)}</ul>
+        <p className="pro-k cinza">Últimos pagamentos</p>
+        <ul className="pro-provas">{d.ultimos_pagamentos.map((x, i) => <li key={i}><p className="pro-sem-margem"><b>{x.apelido ? `@${x.apelido}` : 'conta apagada'}</b> · {reais(x.valor)} · {PLANO_NOME[x.plano] ?? x.plano} · {new Date(x.quando).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</p></li>)}</ul>
+      </>}
+    </section>
+  );
+}
+
 export function TelaAdmin() {
   const [p, setP] = useState<Pend | null>(null);
   const [apelido, setApelido] = useState('');
@@ -870,6 +905,7 @@ export function TelaAdmin() {
   return (
     <div className="pro-cont">
       {msg && <p className="pro-aviso" role="status">{msg}</p>}
+      <AdminPainel />
       <AdminUsuarios aviso={setMsg} />
       <section className="pro-card">
         <p className="pro-k cinza">Liberar Radar Pro (pagamento por fora, cortesia)</p>
