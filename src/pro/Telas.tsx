@@ -1,12 +1,13 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
 import { Assinar, NOMES_CIDADES } from './Pro';
 import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
+import CardResultado from './CardResultado';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -19,6 +20,63 @@ const SeloStatus = ({ r }: { r: Resultado }) => <span className={`pro-st ${STATU
 
 const msgComprovante = (p: Perfil, r: { prova_nome: string; prova_data: string; distancia_km: number; tempo_s: number }) =>
   whatsappLink(`Comprovante Radar Pro\nApelido: @${p.apelido}\nNome na inscrição: ${p.nome_completo}\nProva: ${r.prova_nome} (${dataBR(r.prova_data)})\nDistância: ${kmTxt(Number(r.distancia_km))}\nTempo: ${relogio(r.tempo_s)}\n\nSegue o print ou link do resultado:`);
+
+/* ───────── Rei e Rainha da prova ───────── */
+type ReiLinha = { prova_id: string; prova_nome: string | null; prova_data: string | null; cidade: string | null; distancia_km: number; sexo: 'F' | 'M'; nome: string; idade: number | null; tempo_s: number; nota: number; user_id: string | null; atletas: number | null; apelido?: string | null };
+const titulo = (s: string) => s.toLowerCase().replace(/(^|\s)\S/g, x => x.toUpperCase()).replace(/ (De|Da|Do|Das|Dos|E) /g, m => m.toLowerCase());
+function Reis() {
+  const [lista, setLista] = useState<ReiLinha[] | null>(null);
+  useEffect(() => {
+    sb.from('radar_reis').select('*').order('prova_data', { ascending: false }).limit(200).then(async ({ data }) => {
+      const l = (data ?? []) as ReiLinha[];
+      const ids = [...new Set(l.map(x => x.user_id).filter(Boolean))] as string[];
+      if (ids.length) { const { data: a } = await sb.rpc('radar_apelidos', { ids }); const m = new Map(((a ?? []) as { user_id: string; apelido: string }[]).map(x => [x.user_id, x.apelido])); l.forEach(x => { x.apelido = x.user_id ? m.get(x.user_id) ?? null : null; }); }
+      setLista(l);
+    });
+  }, []);
+  const provas = useMemo(() => { const m = new Map<string, ReiLinha[]>(); for (const x of lista ?? []) { if (!m.has(x.prova_id)) m.set(x.prova_id, []); m.get(x.prova_id)!.push(x); } return [...m.values()]; }, [lista]);
+  return (
+    <>
+      <p className="fine pro-sem-margem">A melhor <b>nota por idade</b> de cada prova, entre todos que correram (não só quem assina o Radar). Um atleta de 60 anos pode ser o Rei da prova.</p>
+      {lista === null && <p className="fine">Carregando…</p>}
+      {lista?.length === 0 && <p className="fine">Ainda sem provas com resultado oficial e idade dos atletas.</p>}
+      {provas.map(ps => (
+        <section key={ps[0].prova_id} className="pro-card pro-reis">
+          <p className="pro-k cinza">{ps[0].prova_data ? dataBR(ps[0].prova_data) : ''} · {ps[0].cidade}</p>
+          <b className="pro-reis-prova">{ps[0].prova_nome}</b>
+          {[...ps].sort((a, b) => Number(a.distancia_km) - Number(b.distancia_km) || a.sexo.localeCompare(b.sexo)).map(x => (
+            <div key={x.distancia_km + x.sexo} className="pro-rei">
+              <span className={'pro-coroa ' + (x.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span>
+              <div>
+                <small>{x.sexo === 'F' ? 'Rainha' : 'Rei'} · {kmTxt(Number(x.distancia_km))}{x.atletas ? ` · ${x.atletas} atletas` : ''}</small>
+                <p className="pro-sem-margem"><b>{x.apelido ? <a href={linkPerfil(x.apelido)}>@{x.apelido}</a> : titulo(x.nome)}</b>{x.idade ? `, ${x.idade} anos` : ''}</p>
+              </div>
+              <div className="pro-dir"><b>{pct(x.nota)}%</b><small>{relogio(x.tempo_s)}</small></div>
+            </div>
+          ))}
+        </section>
+      ))}
+    </>
+  );
+}
+
+/* ───────── Perfil público ───────── */
+export const linkPerfil = (apelido: string) => `https://radarcorridasma.com.br/?atleta=${apelido}`;
+function LinkPerfil({ perfil }: { perfil: Perfil }) {
+  const [copiado, setCopiado] = useState(false);
+  if (perfil.publico === false) return null;
+  const link = linkPerfil(perfil.apelido);
+  const copiar = async () => { try { await navigator.clipboard.writeText(link); setCopiado(true); setTimeout(() => setCopiado(false), 2000); } catch { /* */ } };
+  return (
+    <section className="pro-card pro-linkperfil">
+      <div><p className="pro-k cinza">Seu perfil público</p><p className="pro-sem-margem"><b>radarcorridasma.com.br/?atleta={perfil.apelido}</b></p><p className="fine pro-sem-margem">Ponha na bio do Instagram: mostra suas medalhas, provas e liga.</p></div>
+      <div className="pro-linha pro-quebra">
+        <button className="btn outline pro-btn-p" onClick={copiar}><Copy size={16} aria-hidden="true" />{copiado ? 'Copiado!' : 'Copiar link'}</button>
+        <a className="btn text pro-btn-p" href={link} target="_blank" rel="noopener"><ExternalLink size={16} aria-hidden="true" />Ver</a>
+      </div>
+    </section>
+  );
+}
 
 /* ───────── Medalhas ───────── */
 function Desenho({ m, ok = true, tam = 72 }: { m: Medalha; ok?: boolean; tam?: number }) {
@@ -53,6 +111,7 @@ function Medalhas({ meds }: { meds: string[] }) {
 /* ───────── 3 · Minha temporada ───────── */
 export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp: Temporada; irCorri: () => void }) {
   const [res, setRes] = useState<Resultado[] | null>(null);
+  const [card, setCard] = useState<string | null>(null);
   const [meds, setMeds] = useState<string[]>([]);
   useEffect(() => {
     // medalhas de provas recusadas não contam
@@ -86,6 +145,7 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
       {temp.pontos_pendentes > 0 && <p className="fine pro-sem-margem">+{temp.pontos_pendentes} pontos esperando o resultado oficial ou o comprovante.</p>}
 
       <button className="btn solid pro-btn" onClick={irCorri}><Plus size={18} aria-hidden="true" />Eu corri uma prova</button>
+      <LinkPerfil perfil={perfil} />
 
       {evolucao.length >= 2 && (
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
@@ -102,8 +162,13 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
             <li key={r.id}>
               <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
               <p>{dataBR(r.prova_data)} · {r.cidade} · {kmTxt(Number(r.distancia_km))} · <b>{relogio(r.tempo_s)}</b> · nota {pct(r.nota)}% · {r.pontos} pts{r.podio ? ' · 🥇 pódio' : ''}</p>
+              {r.colocacao_geral ? <p className="fine pro-sem-margem">{r.colocacao_geral}º no geral{r.total_dist ? ` de ${r.total_dist}` : ''}{r.colocacao_faixa ? ` · ${r.colocacao_faixa}º na faixa` : ''}</p> : null}
               {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
-              {(r.status === 'declarado' || r.status === 'em_analise') && <a className="btn whats pro-btn-p" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />Enviar comprovante</a>}
+              <div className="pro-linha pro-quebra pro-esq">
+                {r.status !== 'recusado' && <button className="btn outline pro-btn-p" onClick={() => setCard(card === r.id ? null : r.id)}><ImageIcon size={16} aria-hidden="true" />Card pro story</button>}
+                {(r.status === 'declarado' || r.status === 'em_analise') && <a className="btn whats pro-btn-p" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />Enviar comprovante</a>}
+              </div>
+              {card === r.id && <CardResultado r={r} apelido={perfil.apelido} fechar={() => setCard(null)} />}
             </li>
           ))}
         </ul>
@@ -195,6 +260,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
         {[...new Set(feito.medalhas_novas)].map(m => { const x = MEDALHAS.find(y => y.id === m); return x ? <section key={m} className="pro-card pro-nova"><Desenho m={x} tam={76} /><div><span className="pro-k">Nova medalha!</span><b>{x.nome}</b><p className="pro-sem-margem">{x.como}</p></div></section> : null; })}
         {!feito.oficial && <a className="btn whats pro-btn" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={18} aria-hidden="true" />Enviar comprovante pelo WhatsApp</a>}
         {!feito.oficial && <p className="fine pro-sem-margem">Quando a cronometragem publicar o resultado, o Radar confere sozinho e muda para “Verificado”.</p>}
+        <CardResultado r={r} apelido={perfil.apelido} fechar={() => { /* fica aberto */ }} />
         <button className="btn solid pro-btn" onClick={irTemporada}>Ver minha temporada</button>
         <button className="btn outline pro-btn" onClick={() => { setFeito(null); setProva(null); setKm(null); setTempo(''); setPeito(''); setLink(''); setOutroNome(''); }}>Registrar outra prova</button>
       </div>
@@ -237,7 +303,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
 /* ───────── Ranking do Maranhão ───────── */
 type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; faixa?: string; pontos?: number; provas?: number; indice?: number; eu?: boolean; assessoria?: string; atletas?: number; tamanho?: number };
 const FAIXAS = ['até 19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60+'];
-type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao';
+type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao' | 'reis';
 
 export function TelaRanking({ perfil }: { perfil: Perfil }) {
   const [rec, setRec] = useState<Rec>('geral');
@@ -249,6 +315,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
 
   useEffect(() => {
     setLinhas(null); setAberto(null);
+    if (rec === 'reis') return;
     const q = rec === 'geral' ? sb.rpc('radar_ranking', { temporada: ANO, recorte_sexo: sexo || null, recorte_cidade: cidade || null, recorte_faixa: faixa || null })
       : rec === 'eficiencia' ? sb.rpc('radar_ranking_eficiencia', { temporada: ANO })
       : rec === 'assessorias' ? sb.rpc('radar_ranking_assessorias', { temporada: ANO })
@@ -260,8 +327,9 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   return (
     <div className="pro-cont">
       <div className="seg pro-seg" role="group" aria-label="Tipo de ranking">
-        {([['geral', 'Pontos'], ['eficiencia', 'Eficiência'], ['assessorias', 'Assessorias'], ['pelotao', 'Pelotão']] as [Rec, string][]).map(([k, n]) => <button key={k} aria-pressed={rec === k} onClick={() => setRec(k)}>{n}</button>)}
+        {([['geral', 'Pontos'], ['eficiencia', 'Eficiência'], ['reis', 'Reis 👑'], ['assessorias', 'Assessorias'], ['pelotao', 'Pelotão']] as [Rec, string][]).map(([k, n]) => <button key={k} aria-pressed={rec === k} onClick={() => setRec(k)}>{n}</button>)}
       </div>
+      {rec === 'reis' ? <Reis /> : <>
 
       {rec === 'geral' && <>
         <div className="chips" role="group" aria-label="Recorte">
@@ -279,6 +347,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
         eficiencia: 'Índice (nota por idade): compara atletas de idades e sexos diferentes de forma justa.',
         assessorias: 'Média dos pontos dos 5 melhores atletas de cada assessoria.',
         pelotao: 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
+        reis: '',
       }[rec]}</p>
 
       {linhas === null && <p className="fine">Carregando…</p>}
@@ -296,6 +365,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
         ))}
       </ol>
       <p className="fine">No ranking aparecem só apelido, cidade e faixa etária. Viu algo estranho? Abra o atleta e toque em “Contestar”.</p>
+      </>}
     </div>
   );
 }
@@ -429,6 +499,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
           : <p className="fine pro-sem-margem">Você já usou as 2 edições de perfil deste mês. Libera de novo no dia 1º. Precisa corrigir algo agora? <a href={whatsappLink(`Oi! Quero corrigir meu perfil no Radar Pro (@${perfil.apelido}): `)} target="_blank" rel="noopener">Fale com o Radar</a>.</p>}
       </>}
       <ZapConta perfil={perfil} pronto={pronto} />
+      <PublicoConta perfil={perfil} pronto={pronto} />
       <section className="pro-card">
         <p className="pro-k cinza">Assinatura</p>
         <p className="pro-sem-margem">{temp.assinante ? <><b className="pro-verde">Ativa</b> · vence em {vence} · R$ 10/mês</> : <><b>Inativa</b>{vence ? ` · venceu em ${vence}` : ''}</>}</p>
@@ -489,6 +560,18 @@ function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () =
       <button className="btn solid pro-btn" disabled={salvando}>{salvando ? 'Salvando…' : 'Salvar alterações'}</button>
       <button className="btn text" type="button" onClick={fechar}>Cancelar</button>
     </form>
+  );
+}
+
+function PublicoConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+  const [salvando, setSalvando] = useState(false);
+  const pub = perfil.publico !== false;
+  const trocar = async () => { setSalvando(true); await sb.from('radar_perfis').update({ publico: !pub }).eq('user_id', perfil.user_id); setSalvando(false); pronto(); };
+  return (
+    <section className="pro-card">
+      <div className="pro-linha"><p className="pro-k cinza">Perfil público</p><button className="btn outline" disabled={salvando} onClick={trocar}>{pub ? 'Desligar' : 'Ligar'}</button></div>
+      <p className="fine pro-sem-margem">{pub ? <>Ligado: <a href={linkPerfil(perfil.apelido)} target="_blank" rel="noopener">radarcorridasma.com.br/?atleta={perfil.apelido}</a> mostra apelido, cidade, liga, provas e medalhas. Nunca seu nome completo, idade ou contato.</> : 'Desligado: ninguém vê seu perfil pelo link.'}</p>
+    </section>
   );
 }
 

@@ -4,6 +4,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { conferirRegistros, gravarOficiais, lerLink, listarEventos, parecenca } from '../_comum/resultados.ts';
 import { atualizarMedalhas } from '../_comum/medalhas.ts';
+import { calcularReis } from '../_comum/reis.ts';
 
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { 'Content-Type': 'application/json' } });
 const dias = (a: string, b: string) => Math.abs(new Date(a.slice(0, 10)).getTime() - new Date(b.slice(0, 10)).getTime()) / 86400_000;
@@ -16,7 +17,7 @@ Deno.serve(async req => {
       const l = await lerLink(teste);
       if (!l) return resp({ ok: false, erro: 'formato ou site não suportado' });
       const dist: Record<string, number> = {}; for (const x of l.linhas) dist[String(x.distancia_km)] = (dist[String(x.distancia_km)] ?? 0) + 1;
-      return resp({ ok: true, evento: l.evento, data: l.data, fonte: l.fonte, linhas: l.linhas.length, distancias: dist, primeiros: l.linhas.filter(x => x.colocacao_geral === 1).map(x => ({ nome: x.nome, km: x.distancia_km, sexo: x.sexo, tempo_s: x.tempo_s })) });
+      return resp({ ok: true, evento: l.evento, data: l.data, fonte: l.fonte, linhas: l.linhas.length, distancias: dist, primeiros: l.linhas.filter(x => x.colocacao_geral === 1).map(x => ({ nome: x.nome, km: x.distancia_km, sexo: x.sexo, tempo_s: x.tempo_s, idade: x.idade })) });
     } catch (e) { return resp({ ok: false, erro: String((e as Error).message) }); }
   }
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
@@ -49,7 +50,8 @@ Deno.serve(async req => {
         const lido = await lerLink(e.url);
         if (!lido?.linhas.length) continue;
         const n = await gravarOficiais(db, p.id, e.url, lido.linhas);
-        feitos.push({ prova: p.id, evento: e.nome, url: e.url, parecenca: Math.round(s * 100) / 100, linhas: n, ...(await conferirRegistros(db, p.id)) });
+        const reis = await calcularReis(db, p.id).catch(() => 0);
+        feitos.push({ prova: p.id, evento: e.nome, url: e.url, parecenca: Math.round(s * 100) / 100, linhas: n, reis, ...(await conferirRegistros(db, p.id)) });
         break;
       } catch (err) { feitos.push({ prova: p.id, url: e.url, erro: String((err as Error).message).slice(0, 120) }); }
     }

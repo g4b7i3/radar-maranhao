@@ -3,7 +3,8 @@
 // Participação (distância, cidades, momentos) vale com qualquer status que não seja "recusado".
 // Desempenho (tempo, pódio, nota, liga, recorde) só com resultado oficial ("verificado" ou "aprovado").
 // deno-lint-ignore-file no-explicit-any
-import { acharNoOficial, norm, real } from './resultados.ts';
+import { acharNoOficial, lerOficiais, norm, paginar, real } from './resultados.ts';
+import { calcularReis } from './reis.ts';
 
 const SITE = 'https://radarcorridasma.com.br';
 let COORD: Record<string, [number, number]> | null = null;
@@ -55,7 +56,7 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
   if (!COORD) COORD = await fetch(SITE + '/data/cidades-ma-geo.json').then(r => r.json()).catch(() => null);
   const coord = new Map(Object.entries(COORD ?? {}).map(([k, v]) => [cid(k), v as [number, number]]));
   const [{ data: todos }, { data: perfis }, { data: ass }, { data: duelos }] = await Promise.all([
-    db.from('radar_resultados').select('id, user_id, prova_id, prova_nome, prova_data, cidade, largada, distancia_km, tempo_s, nota, status, podio, peito, nome_inscricao, criado_em').neq('status', 'recusado').limit(50000),
+    paginar((de, ate) => db.from('radar_resultados').select('id, user_id, prova_id, prova_nome, prova_data, cidade, largada, distancia_km, tempo_s, nota, status, podio, peito, nome_inscricao, criado_em, colocacao_geral, colocacao_faixa, total_dist').neq('status', 'recusado').order('id').range(de, ate)).then(data => ({ data })),
     db.from('radar_perfis').select('user_id, nome_completo, nascimento, assessoria'),
     db.from('radar_assinaturas').select('user_id, valida_ate, atualizado_em'),
     db.from('radar_duelos').select('id, desafiante, desafiado, distancia_km, mes, aceito_em').not('aceito_em', 'is', null),
@@ -74,13 +75,25 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
     for (const p of data ?? []) if (p.modalidade) modal.set(p.id, p.modalidade);
   }
 
+  // Rei e Rainha já calculados dessas provas
+  const reis = new Map<string, any[]>();
+  for (let i = 0; i < provaIds.length; i += 200) {
+    const { data } = await db.from('radar_reis').select('prova_id, distancia_km, sexo, nome, tempo_s, user_id').in('prova_id', provaIds.slice(i, i + 200));
+    for (const k of data ?? []) { if (!reis.has(k.prova_id)) reis.set(k.prova_id, []); reis.get(k.prova_id)!.push(k); }
+  }
+
   // colocação no resultado oficial (só para resultados verificados)
   const oficiais = new Map<string, any[]>();
   const colocacao = async (r: any, nomeCompleto: string) => {
     if (r.status !== 'verificado') return null;
     if (!oficiais.has(r.prova_id)) {
-      const { data } = await db.from('radar_resultados_oficiais').select('nome, nome_norm, peito, tempo_s, distancia_km, sexo, colocacao_geral, colocacao_faixa').eq('prova_id', r.prova_id).limit(20000);
-      oficiais.set(r.prova_id, data ?? []);
+      const data = await lerOficiais(db, r.prova_id);
+      oficiais.set(r.prova_id, data);
+      if (data?.length && !reis.has(r.prova_id)) { // resultado oficial sem Rei/Rainha ainda: calcula agora
+        await calcularReis(db, r.prova_id).catch(() => 0);
+        const { data: k } = await db.from('radar_reis').select('prova_id, distancia_km, sexo, nome, tempo_s, user_id').eq('prova_id', r.prova_id);
+        reis.set(r.prova_id, k ?? []);
+      }
     }
     const ofs = oficiais.get(r.prova_id)!;
     if (!ofs.length) return null;
@@ -89,7 +102,7 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
       || acharNoOficial(ofs, km, { peito: null, nomePerfil: nomeCompleto, nomeBusca: r.nome_inscricao || nomeCompleto, tempo: r.tempo_s }).of;
     if (!of) return null;
     const total = ofs.filter(o => o.sexo === (of as any).sexo && (o.distancia_km == null || Math.abs(real(Number(o.distancia_km)) - km) < 0.2)).length;
-    return { geral: of.colocacao_geral as number | null, faixa: of.colocacao_faixa as number | null, total };
+    return { geral: of.colocacao_geral as number | null, faixa: of.colocacao_faixa as number | null, total, of: of as any };
   };
 
   // pelotão atual: até 25 atletas da mesma liga, pela ordem do índice (igual ao ranking)
@@ -184,6 +197,12 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
         if (rs.some(o => o !== r && ano(o.prova_data) < y && Math.abs(Number(o.distancia_km) - km) < 0.2 && o.tempo_s > t && mesmaSerie(o.prova_nome, r.prova_nome))) dar('voltei_melhor', y, r);
         // colocação
         const col = await colocacao(r, p?.nome_completo ?? '');
+        if (col && (r.colocacao_geral !== col.geral || r.colocacao_faixa !== col.faixa || r.total_dist !== col.total)) {
+          await db.from('radar_resultados').update({ colocacao_geral: col.geral, colocacao_faixa: col.faixa, total_dist: col.total }).eq('id', r.id);
+        }
+        // Rei/Rainha: melhor nota por idade de toda a prova na distância
+        const rei = col && (reis.get(r.prova_id) ?? []).find(k => k.sexo === col.of.sexo && Math.abs(Number(k.distancia_km) - km) < 0.2 && k.tempo_s === col.of.tempo_s && norm(k.nome) === col.of.nome_norm);
+        if (rei) { dar('rei_da_prova', y, r); if (rei.user_id !== u) await db.from('radar_reis').update({ user_id: u }).eq('prova_id', rei.prova_id).eq('distancia_km', rei.distancia_km).eq('sexo', rei.sexo); }
         const podioFaixa = (col?.faixa ?? 99) <= 3 || (!col && r.podio), podioGeral = (col?.geral ?? 99) <= 3, campeao = col?.geral === 1 || col?.faixa === 1;
         if (podioFaixa) dar('podio', y, r);
         if (podioGeral) dar('podio_geral', y, r);

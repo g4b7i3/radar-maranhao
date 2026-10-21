@@ -5,7 +5,7 @@
 // Só guardamos nome, peito, sexo, faixa, tempo e colocação (nada de CPF ou outros dados das planilhas).
 // deno-lint-ignore-file no-explicit-any
 
-export type Linha = { distancia_km: number | null; nome: string; peito: string | null; tempo_s: number; sexo: 'F' | 'M' | null; faixa: string | null; colocacao_geral: number | null; colocacao_faixa: number | null };
+export type Linha = { distancia_km: number | null; nome: string; peito: string | null; tempo_s: number; sexo: 'F' | 'M' | null; faixa: string | null; colocacao_geral: number | null; colocacao_faixa: number | null; idade?: number | null };
 export type Lido = { fonte: string; evento: string; data: string | null; linhas: Linha[] };
 
 const UA = { 'User-Agent': 'Mozilla/5.0 (RadarCorridasMA; +https://radarcorridasma.com.br)' };
@@ -66,7 +66,7 @@ async function racezone(url: string): Promise<Lido | null> {
     const t = seg(r.tn) ?? seg(r.tg);
     if (!t || !r.nm || (temRank && r.rg == null)) continue; // sem colocação = não concluiu
     if (!possivel(rotas.get(r.r) ?? null, t)) continue;
-    linhas.push({ distancia_km: rotas.get(r.r) ?? null, nome: String(r.nm).trim(), peito: r.n != null ? String(r.n) : null, tempo_s: t, sexo: r.g === 'F' || r.g === 'M' ? r.g : null, faixa: cats.get(r.c) ?? null, colocacao_geral: null, colocacao_faixa: null });
+    linhas.push({ distancia_km: rotas.get(r.r) ?? null, nome: String(r.nm).trim(), peito: r.n != null ? String(r.n) : null, tempo_s: t, sexo: r.g === 'F' || r.g === 'M' ? r.g : null, faixa: cats.get(r.c) ?? null, colocacao_geral: null, colocacao_faixa: null, idade: Number(r.a) >= 5 && Number(r.a) <= 100 ? Number(r.a) : null });
   }
   return { fonte: new URL(base).hostname, evento: ev.name, data: ev.startDate ?? null, linhas: colocar(linhas) };
 }
@@ -86,11 +86,12 @@ async function wiclax(url: string): Promise<Lido | null> {
   for (const m of blocoE.matchAll(/<E [^>]*\/>/g)) { const a = attrs(m[0]); if (a.d) eng.set(a.d, a); }
   const blocoR = xml.match(/<Resultats>([\s\S]*?)<\/Resultats>/)?.[1] ?? '';
   const linhas: Linha[] = [];
+  const anoProva = ep.date && /^\d+$/.test(ep.date) ? new Date(Date.UTC(1899, 11, 30) + Number(ep.date) * 86400_000).getUTCFullYear() : new Date().getUTCFullYear();
   for (const m of blocoR.matchAll(/<R [^>]*\/>/g)) {
     const r = attrs(m[0]); const e = eng.get(r.d); if (!e?.n) continue;
     const p = pcs.get(e.p); if (p && !p.ok) continue; // "análise", "tempo não oficial"
     const t = seg(r.re) ?? seg(r.t); if (!t || !possivel(p?.km ?? null, t)) continue;
-    linhas.push({ distancia_km: p?.km ?? null, nome: e.n.trim(), peito: r.d, tempo_s: t, sexo: e.x === 'F' || e.x === 'M' ? e.x : null, faixa: e.ca || null, colocacao_geral: null, colocacao_faixa: null });
+    linhas.push({ distancia_km: p?.km ?? null, nome: e.n.trim(), peito: r.d, tempo_s: t, sexo: e.x === 'F' || e.x === 'M' ? e.x : null, faixa: e.ca || null, colocacao_geral: null, colocacao_faixa: null, idade: Number(e.a) > 1900 && anoProva - Number(e.a) >= 5 && anoProva - Number(e.a) <= 100 ? anoProva - Number(e.a) : null });
   }
   // data do Excel (dias desde 1899-12-30)
   const data = ep.date && /^\d+$/.test(ep.date) ? new Date(Date.UTC(1899, 11, 30) + Number(ep.date) * 86400_000).toISOString().slice(0, 10) : null;
@@ -154,9 +155,23 @@ export function parecenca(a: string, b: string) {
   return n / Math.min(A.size, Bc.size);
 }
 
+// ---------- leitura em páginas (o banco devolve no máximo 1000 linhas por vez) ----------
+export async function paginar(consulta: (de: number, ate: number) => any): Promise<any[]> {
+  const out: any[] = [];
+  for (let de = 0; de < 50000; de += 1000) {
+    const { data, error } = await consulta(de, de + 999);
+    if (error || !data?.length) break;
+    out.push(...data);
+    if (data.length < 1000) break;
+  }
+  return out;
+}
+export const lerOficiais = (db: any, prova: string, cols = 'nome, nome_norm, peito, tempo_s, distancia_km, sexo, idade, colocacao_geral, colocacao_faixa, fonte_url') =>
+  paginar((de, ate) => db.from('radar_resultados_oficiais').select(cols).eq('prova_id', prova).order('id').range(de, ate));
+
 // ---------- gravar e conferir ----------
 export async function gravarOficiais(db: any, prova: string, fonte_url: string, linhas: Linha[]) {
-  const rows = linhas.slice(0, 20000).map(l => ({ prova_id: prova, distancia_km: l.distancia_km, nome: l.nome.slice(0, 120), nome_norm: norm(l.nome), peito: l.peito ? l.peito.replace(/\D/g, '').slice(0, 8) || null : null, tempo_s: l.tempo_s, sexo: l.sexo, faixa: l.faixa?.slice(0, 30) ?? null, colocacao_geral: l.colocacao_geral, colocacao_faixa: l.colocacao_faixa, fonte_url: fonte_url.slice(0, 400) }));
+  const rows = linhas.slice(0, 20000).map(l => ({ prova_id: prova, distancia_km: l.distancia_km, nome: l.nome.slice(0, 120), nome_norm: norm(l.nome), peito: l.peito ? l.peito.replace(/\D/g, '').slice(0, 8) || null : null, tempo_s: l.tempo_s, sexo: l.sexo, faixa: l.faixa?.slice(0, 30) ?? null, colocacao_geral: l.colocacao_geral, colocacao_faixa: l.colocacao_faixa, idade: l.idade ?? null, fonte_url: fonte_url.slice(0, 400) }));
   await db.from('radar_resultados_oficiais').delete().eq('prova_id', prova);
   for (let i = 0; i < rows.length; i += 1000) {
     const { error } = await db.from('radar_resultados_oficiais').insert(rows.slice(i, i + 1000));
@@ -189,8 +204,8 @@ export function acharNoOficial(ofs: Of[], km: number, o: { peito: string | null;
 
 /** Confere quem registrou a prova antes do resultado sair. */
 export async function conferirRegistros(db: any, prova: string) {
-  const { data: ofs } = await db.from('radar_resultados_oficiais').select('nome, nome_norm, peito, tempo_s, distancia_km, colocacao_geral, colocacao_faixa').eq('prova_id', prova);
-  if (!ofs?.length) return { verificados: 0, divergentes: 0, recusados: 0 };
+  const ofs = await lerOficiais(db, prova);
+  if (!ofs.length) return { verificados: 0, divergentes: 0, recusados: 0 };
   const { data: regs } = await db.from('radar_resultados').select('id, user_id, distancia_km, tempo_s, peito_declarado, nome_inscricao, status, detalhes_pontos').eq('prova_id', prova).in('status', ['declarado', 'em_analise']);
   let verificados = 0, divergentes = 0, recusados = 0;
   if (!regs?.length) return { verificados, divergentes, recusados };

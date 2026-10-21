@@ -3,7 +3,7 @@
 // senão fica "declarado" (só conta para a temporada pessoal) ou "em análise" (com comprovante).
 // Calcula aqui no servidor a nota por idade, os pontos e as medalhas, para ninguém mexer pelo navegador.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
-import { acharNoOficial, gravarOficiais, lerLink, parecenca, semelhante, conferirRegistros } from '../_comum/resultados.ts';
+import { acharNoOficial, gravarOficiais, lerLink, lerOficiais, parecenca, semelhante, conferirRegistros } from '../_comum/resultados.ts';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
@@ -80,7 +80,7 @@ Deno.serve(async req => {
   if (nomeIns && !semelhante(nomeIns, perfil.nome_completo)) return resp({ erro: 'O nome da inscrição precisa ter pelo menos um nome do seu nome completo.' }, 400);
   const link = (b.link_resultado ?? '').trim().slice(0, 400) || null;
 
-  let { data: ofs } = await db.from('radar_resultados_oficiais').select('tempo_s, colocacao_geral, colocacao_faixa, nome, nome_norm, peito, distancia_km, fonte_url').eq('prova_id', prova.id);
+  let ofs = await lerOficiais(db, prova.id);
   // 1b) Link do resultado: o Radar lê na hora (Racezone, Wiclax). Se for da prova certa, vira o resultado oficial da prova.
   let linkLido = false, avisoLink: string | null = null;
   if (link && !ofs?.length) {
@@ -91,7 +91,7 @@ Deno.serve(async req => {
         const nomeOk = parecenca(lido.evento, prova.name) >= 0.5;
         if (nomeOk && (diaOk || !lido.data)) {
           await gravarOficiais(db, prova.id, link, lido.linhas);
-          ({ data: ofs } = await db.from('radar_resultados_oficiais').select('tempo_s, colocacao_geral, colocacao_faixa, nome, nome_norm, peito, distancia_km, fonte_url').eq('prova_id', prova.id));
+          ofs = await lerOficiais(db, prova.id);
           linkLido = true;
           await conferirRegistros(db, prova.id).catch(() => null); // quem já tinha registrado essa prova também é conferido
         } else if (!diaOk) avisoLink = `O link é de outro evento (${lido.evento || 'sem nome'}${lido.data ? ', ' + lido.data.slice(0, 10).split('-').reverse().join('/') : ''}).`;
@@ -157,6 +157,7 @@ Deno.serve(async req => {
   const { data: junto } = await db.from('radar_resultados').select('user_id').eq('prova_id', prova.id).neq('status', 'recusado');
   const ids = [...new Set([user.id, ...(junto ?? []).map(x => x.user_id)])];
   const novas = (await medalhasDe(ids))[user.id] ?? [];
+  const { data: final } = await db.from('radar_resultados').select('*').eq('id', novo.id).maybeSingle();
 
-  return resp({ resultado: novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado', link_lido: linkLido });
+  return resp({ resultado: final ?? novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado', link_lido: linkLido });
 });

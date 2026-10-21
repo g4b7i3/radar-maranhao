@@ -96,7 +96,8 @@ export const GRUPOS: { nome: string; itens: Medalha[] }[] = [
   { nome: 'Pódio e nota', itens: [
     { id: 'podio', nome: 'Pódio na faixa', como: 'Top 3 na sua faixa etária.', tier: 'prata', ic: 'podio' },
     { id: 'podio_geral', nome: 'Pódio geral', como: 'Top 3 no geral da sua distância.', tier: 'ouro', ic: 'trofeu' },
-    { id: 'campeao', nome: 'Campeão', como: '1º lugar no geral ou na faixa etária.', tier: 'especial', ic: 'coroa' },
+    { id: 'rei_da_prova', nome: 'Rei/Rainha da prova', como: 'Melhor nota por idade de toda a prova na sua distância (resultado oficial).', tier: 'especial', ic: 'coroa' },
+    { id: 'campeao', nome: 'Campeão', como: '1º lugar no geral ou na faixa etária.', tier: 'especial', num: '1º', sub: 'LUGAR' },
     { id: 'nota_60', nome: 'Nota 60%', como: 'Nota por idade de 60% ou mais.', tier: 'prata', num: '60', sub: '% NOTA' },
     { id: 'nota_70', nome: 'Nota 70%', como: 'Nota por idade de 70% ou mais.', tier: 'ouro', num: '70', sub: '% NOTA' },
     { id: 'subiu_de_liga', nome: 'Subiu de liga', como: 'Suba de liga com um resultado oficial.', tier: 'prata', ic: 'subir' },
@@ -193,7 +194,7 @@ export function medalhaSVG(m: Medalha, ok = true, tam = 96) {
     ? `<text x="50" y="${m.num.length > 2 ? 69 : 70}" text-anchor="middle" font-family="'Archivo Variable',sans-serif" font-weight="900" font-size="${m.num.length > 3 ? 17 : m.num.length > 2 ? 21 : 27}" fill="${tinta}" letter-spacing="-0.5">${m.num}</text>
        <text x="50" y="${m.num.length > 2 ? 81 : 83}" text-anchor="middle" font-family="'Archivo Variable',sans-serif" font-weight="800" font-size="6.2" fill="${tinta}" letter-spacing="1.2" opacity=".85">${m.sub}</text>`
     : `<g transform="translate(32 48) scale(1.5)" fill="none" stroke="${tinta}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${IC[m.ic ?? 'bandeira']}</g>`;
-  return `<svg viewBox="0 0 100 112" width="${tam}" height="${tam * 1.12}" role="img" aria-label="${m.nome}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 112" width="${tam}" height="${tam * 1.12}" role="img" aria-label="${m.nome}">
   <defs>
     <linearGradient id="${k}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${A}"/><stop offset=".5" stop-color="${B}"/><stop offset="1" stop-color="${C}"/></linearGradient>
     <linearGradient id="${k}h" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${A}"/><stop offset=".55" stop-color="${B}"/><stop offset="1" stop-color="${A}"/></linearGradient>
