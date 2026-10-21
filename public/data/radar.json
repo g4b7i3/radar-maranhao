@@ -3051,32 +3051,45 @@
     },
     {
       "id": "eles-correm-2026-santa-rita",
-      "name": "2ª Corrida Eles Correm, Eles Vencem!",
+      "name": "2ª Corrida Eles Correm, Eles Vencem! (Outubro Rosa & Novembro Azul)",
       "edition": "2026",
       "city": "Santa Rita",
       "state": "MA",
       "modality": "Rua",
       "date": "2026-10-31",
-      "distances": [],
+      "distances": [
+        5
+      ],
       "location": "Redondo de Carema, Santa Rita",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
       "officialUrl": "https://doity.com.br/2-corrida-eles-correm-eles-vencem",
-      "sourceUrl": "https://roadrunners.run/evento/2026-2-corrida-eles-correm-eles-vencem/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://doity.com.br/2-corrida-eles-correm-eles-vencem",
+      "sourceName": "Doity",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Listada pelo Road Runners e pelo running.life com inscrição no Doity; organização informada: Prefeitura Municipal de Santa Rita. O running.life cita 5 km; o Road Runners diz que as distâncias não foram informadas. Horário, valores e status das inscrições a confirmar (a página do Doity não abriu nesta pesquisa).",
+      "confidence": "Página oficial da prova no Doity",
+      "notes": "Corrida de 5 km, largada às 16h30 (evento das 16h30 às 19h), no Redondo de Carema. Inscrição gratuita pelo Doity; a página não mostra prazo nem se ainda há vagas. Kit em 30/10, das 15h às 18h, na Secretaria Municipal da Mulher. Premiação só na classificação geral (sem faixa etária), sem detalhes. Organização: Prefeitura Municipal de Santa Rita.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-21T10:58:57.704Z",
+      "price": {
+        "min": 0,
+        "text": "Gratuita"
+      },
+      "start": "16:30",
+      "verifiedAt": "2026-10-21T11:09:49.097Z",
       "firstSeenAt": "2026-10-21T10:58:57.704Z"
     }
   ],
   "changes": [
+    {
+      "id": "aadb9435-b8be-433a-9f52-8284cded3099",
+      "eventId": "eles-correm-2026-santa-rita",
+      "version": "[\"2026-10-31\",[5],\"Redondo de Carema, Santa Rita\",null,null,\"Consultar\",\"https://doity.com.br/2-corrida-eles-correm-eles-vencem\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-21T11:09:49.097Z",
+      "notifiedAt": "2026-10-21T11:10:10.562Z"
+    },
     {
       "id": "9a941a17-5690-4e84-87b4-91de541b4466",
       "eventId": "eles-correm-2026-santa-rita",
@@ -4574,7 +4587,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-21T10:58:57.704Z",
+  "lastChecked": "2026-10-21T11:09:49.097Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
