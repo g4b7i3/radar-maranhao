@@ -273,6 +273,16 @@ function Convite() {
 
 /* ───────── Perfil ───────── */
 export const NOMES_CIDADES = Object.keys(CIDADES as Record<string, unknown>).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+/** Assessorias conhecidas (sugestão no campo; dá para digitar uma nova). */
+export function useAssessorias() {
+  const [lista, setLista] = useState<string[]>([]);
+  useEffect(() => { sb.from('radar_assessorias').select('nome').order('nome').then(({ data }) => setLista((data ?? []).map(x => x.nome))); }, []);
+  return lista;
+}
+export const CampoAssessoria = ({ value, onChange, id = 'pro-assessorias' }: { value: string; onChange: (v: string) => void; id?: string }) => {
+  const lista = useAssessorias();
+  return <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input list={id} value={value} onChange={e => onChange(e.target.value)} placeholder="Escolha ou escreva a sua" autoComplete="off" /><datalist id={id}>{lista.map(n => <option key={n} value={n} />)}</datalist><small>Escreva igual ao nome da sua equipe para somar pontos com ela.</small></label>;
+};
 function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto: () => void }) {
   const [f, setF] = useState({ apelido: email.split('@')[0].toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20), nome_completo: '', cidade: 'São Luís', sexo: '' as '' | 'F' | 'M', nascimento: '', assessoria: '', whatsapp: '' });
   const [erro, setErro] = useState<string | null>(null);
@@ -306,7 +316,7 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
       <p className="euvou-pergunta">Categoria</p>
       <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button></div>
       <label className="ct-cidade">Data de nascimento<input inputMode="numeric" value={f.nascimento} onChange={e => setF({ ...f, nascimento: masc(e.target.value) })} placeholder="dd/mm/aaaa" /><small>Usada só para a nota por idade e a faixa etária.</small></label>
-      <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input value={f.assessoria} onChange={muda('assessoria')} placeholder="ex.: Equipe Corre Ilha" /></label>
+      <CampoAssessoria value={f.assessoria} onChange={v => setF({ ...f, assessoria: v })} />
       <label className="ct-cidade">WhatsApp<input type="tel" required inputMode="tel" autoComplete="tel" value={f.whatsapp} onChange={e => setF({ ...f, whatsapp: zapMascara(e.target.value) })} placeholder="(98) 98765-4321" /><small>Para o Radar falar com você sobre os seus resultados e provas. Não aparece para ninguém.</small></label>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       <button className="btn solid pro-btn" disabled={salvando}>{salvando ? 'Salvando…' : 'Continuar'}</button>

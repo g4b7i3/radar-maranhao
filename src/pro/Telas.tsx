@@ -5,7 +5,7 @@ import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLi
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
-import { Assinar, NOMES_CIDADES } from './Pro';
+import { Assinar, NOMES_CIDADES, CampoAssessoria } from './Pro';
 import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
@@ -805,7 +805,7 @@ function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () =
       <p className="euvou-pergunta">Categoria</p>
       <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button></div>
       <label className="ct-cidade">Data de nascimento<input inputMode="numeric" value={f.nascimento} onChange={e => setF({ ...f, nascimento: masc(e.target.value) })} placeholder="dd/mm/aaaa" /></label>
-      <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input value={f.assessoria} onChange={muda('assessoria')} /></label>
+      <CampoAssessoria value={f.assessoria} onChange={v => setF({ ...f, assessoria: v })} id="pro-assessorias-ed" />
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       <button className="btn solid pro-btn" disabled={salvando}>{salvando ? 'Salvando…' : 'Salvar alterações'}</button>
       <button className="btn text" type="button" onClick={fechar}>Cancelar</button>
