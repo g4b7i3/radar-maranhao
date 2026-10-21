@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 
-const MAX = 5 * 1024 * 1024;
 
 /** Foto redonda do atleta (ou a inicial do apelido, se ainda não tiver foto). */
 export function Avatar({ foto, apelido, tam = 40 }: { foto?: string | null; apelido: string; tam?: number }) {
@@ -27,14 +26,19 @@ export function useFotos(apelidos: string[]) {
 async function reduzir(arq: File): Promise<Blob> {
   const url = URL.createObjectURL(arq);
   try {
+    // tenta ler como imagem
     const img = await new Promise<HTMLImageElement>((ok, erro) => { const i = new Image(); i.onload = () => ok(i); i.onerror = erro; i.src = url; });
     const lado = 600, k = Math.min(1, lado / Math.min(img.naturalWidth, img.naturalHeight));
     // recorte quadrado no centro
     const s = Math.min(img.naturalWidth, img.naturalHeight), c = document.createElement('canvas');
     c.width = c.height = Math.round(s * k);
     c.getContext('2d')!.drawImage(img, (img.naturalWidth - s) / 2, (img.naturalHeight - s) / 2, s, s, 0, 0, c.width, c.height);
-    return await new Promise<Blob>((ok, erro) => c.toBlob(b => b ? ok(b) : erro(new Error('falhou')), 'image/jpeg', .86));
-  } finally { URL.revokeObjectURL(url); }
+    return await new Promise<Blob>((ok) => c.toBlob(b => ok(b ?? arq), 'image/jpeg', .86)); // se não gerou blob, retorna o arquivo original
+  } catch {
+    return arq; // não é imagem, retorna o original
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 /** Escolher ou trocar a foto do perfil. */
@@ -45,8 +49,7 @@ export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil' }: { perfi
   const escolher = async (arq?: File) => {
     if (!arq) return;
     setMsg(null);
-    if (!arq.type.startsWith('image/') && !/\.(heic|heif|jpe?g|png|webp)$/i.test(arq.name)) return setMsg('Escolha uma foto (JPG, PNG ou HEIC).');
-    if (arq.size > MAX) return setMsg(`Essa foto tem ${(arq.size / 1024 / 1024).toFixed(1).replace('.', ',')} MB. O limite é 5 MB: escolha outra ou mande um print dela.`);
+    if (!arq.type.startsWith('image/') && !/\.(heic|heif|jpe?g|png|webp)$/i.test(arq.name)) return setMsg('Escolha uma imagem (JPG, PNG, HEIC…).');
     setEnviando(true);
     try {
       const blob = await reduzir(arq).catch(() => arq); // se o navegador não conseguir reduzir (ex.: HEIC), sobe a original (até 5 MB)
@@ -60,7 +63,7 @@ export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil' }: { perfi
       // apaga a foto anterior
       const antiga = perfil.foto_url?.split('/avatares/')[1];
       if (antiga && antiga !== caminho) sb.storage.from('avatares').remove([decodeURIComponent(antiga)]).catch(() => null);
-      setMsg('Foto salva!'); pronto();
+      setMsg('Salvo!'); pronto();
     } catch { setMsg('Não deu para enviar a foto agora. Tente de novo.'); }
     setEnviando(false);
   };
