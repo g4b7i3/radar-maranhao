@@ -3079,9 +3079,48 @@
       "start": "16:30",
       "verifiedAt": "2026-10-21T11:09:49.097Z",
       "firstSeenAt": "2026-10-21T10:58:57.704Z"
+    },
+    {
+      "id": "pib-runner-2026-governador-nunes-freire",
+      "name": "PIB Runner 5K",
+      "edition": "2026",
+      "city": "Governador Nunes Freire",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-06",
+      "distances": [
+        5
+      ],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.marakarun.com/evento/64e26bca-406b-4539-9635-eb8de5f9f58b",
+      "sourceUrl": "https://www.marakarun.com/evento/64e26bca-406b-4539-9635-eb8de5f9f58b",
+      "sourceName": "Marakarun Eventos (inscrição)",
+      "publishedAt": null,
+      "confidence": "Página de inscrição oficial",
+      "notes": "Largada às 6h (a descrição diz 6h; o resumo da plataforma mostra 09:00). Kit no 1º lote por R$ 90 + R$ 2,70 de taxa: camisa, medalha, número de peito e pulseira. Premiação por categoria. Toda a renda vai para a construção da Igreja Batista no bairro Monteiro Lobato. Restavam 83 vagas em 21/10/2026. Organização: Marakarun Eventos (Maracaçumé), (98) 98502-4870.",
+      "prize": null,
+      "elevation": null,
+      "price": {
+        "min": 90,
+        "text": "R$ 90 + taxa (1º lote)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-10-21T17:05:54.960Z",
+      "firstSeenAt": "2026-10-21T17:05:54.960Z"
     }
   ],
   "changes": [
+    {
+      "id": "e0dcdad4-29aa-4616-8d0d-6ba06de9702c",
+      "eventId": "pib-runner-2026-governador-nunes-freire",
+      "version": "[\"2026-12-06\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.marakarun.com/evento/64e26bca-406b-4539-9635-eb8de5f9f58b\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-21T17:05:54.960Z",
+      "notifiedAt": null
+    },
     {
       "id": "aadb9435-b8be-433a-9f52-8284cded3099",
       "eventId": "eles-correm-2026-santa-rita",
@@ -4587,7 +4626,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-21T11:09:49.097Z",
+  "lastChecked": "2026-10-21T17:05:54.960Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
