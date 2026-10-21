@@ -71,3 +71,5 @@ export const edicoesRestantes = (p: Perfil) => {
   const mes = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 7);
   return Math.max(0, 2 - (p.edicoes_mes === mes ? p.edicoes_qtd ?? 0 : 0));
 };
+
+export const linkPerfil = (apelido: string) => `https://radarcorridasma.com.br/?atleta=${apelido}`;

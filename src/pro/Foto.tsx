@@ -1,4 +1,4 @@
-// Foto de perfil do Radar Pro (opcional). Antes de enviar, o app reduz para 600 px (sobe rápido e ocupa pouco).
+// Foto de perfil do Radar Pro (opcional). Antes de enviar, o app reduz para 300 px (no ranking aparece com 36 px) e o navegador guarda por 1 ano, porque o nome do arquivo muda a cada troca (sobe rápido e ocupa pouco).
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { sb, type Perfil } from './sb';
@@ -28,7 +28,7 @@ async function reduzir(arq: File): Promise<Blob> {
   try {
     // tenta ler como imagem
     const img = await new Promise<HTMLImageElement>((ok, erro) => { const i = new Image(); i.onload = () => ok(i); i.onerror = erro; i.src = url; });
-    const lado = 600, k = Math.min(1, lado / Math.min(img.naturalWidth, img.naturalHeight));
+    const lado = 300, k = Math.min(1, lado / Math.min(img.naturalWidth, img.naturalHeight));
     // recorte quadrado no centro
     const s = Math.min(img.naturalWidth, img.naturalHeight), c = document.createElement('canvas');
     c.width = c.height = Math.round(s * k);
@@ -55,7 +55,7 @@ export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil' }: { perfi
       const blob = await reduzir(arq).catch(() => arq); // se o navegador não conseguir reduzir (ex.: HEIC), sobe a original (até 5 MB)
       const ext = blob === arq ? (arq.name.split('.').pop() || 'jpg').toLowerCase() : 'jpg';
       const caminho = `${perfil.user_id}/${Date.now()}.${ext}`;
-      const { error } = await sb.storage.from('avatares').upload(caminho, blob, { contentType: blob.type || 'image/jpeg', upsert: true });
+      const { error } = await sb.storage.from('avatares').upload(caminho, blob, { contentType: blob.type || 'image/jpeg', upsert: true, cacheControl: '31536000' });
       if (error) throw error;
       const url = sb.storage.from('avatares').getPublicUrl(caminho).data.publicUrl;
       const { error: e2 } = await sb.from('radar_perfis').update({ foto_url: url }).eq('user_id', perfil.user_id);

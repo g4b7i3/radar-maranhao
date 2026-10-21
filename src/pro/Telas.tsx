@@ -1,7 +1,7 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
 import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, X as Fechar } from 'lucide-react';
-import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
+import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
@@ -64,7 +64,7 @@ function Reis() {
 }
 
 /* ───────── Perfil público ───────── */
-export const linkPerfil = (apelido: string) => `https://radarcorridasma.com.br/?atleta=${apelido}`;
+export { linkPerfil };
 function LinkPerfil({ perfil }: { perfil: Perfil }) {
   const [copiado, setCopiado] = useState(false);
   if (perfil.publico === false) return null;
