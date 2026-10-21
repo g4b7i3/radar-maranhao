@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity } from 'lucide-react';
+import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
 import { RadarFundo, BandeiraMA } from './HeroRadar';
@@ -99,6 +99,24 @@ function StatusTag({ e }: { e: Race }) {
   const tone = s === 'Abertas' || s === 'Abertura anunciada' ? 'open' : s === 'Cancelada' ? 'bad' : s === 'Realizada' || s === 'Encerradas' ? 'done' : s === 'Abrem em breve' ? 'soon' : 'check';
   const label = s === 'Consultar' ? 'Confirmar inscrições' : s === 'Abertura anunciada' ? 'Abertas' : s;
   return <span className={'tag ' + tone}>{label}</span>;
+}
+
+/** Chamada animada para o Radar Pro, logo abaixo da marca. */
+const FRASES_PRO = ['Sua temporada começou', '97 medalhas para ganhar', 'Seja Rei ou Rainha da prova', 'Ranking do Maranhão', 'Resultado oficial na hora'];
+function ChamadaPro() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setI(x => (x + 1) % FRASES_PRO.length), 3200);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <a className="chamada-pro" href="/?pro" data-umami-event="Radar Pro: chamada do topo">
+      <span className="chamada-pro-selo"><Crown size={13} aria-hidden="true" />PRO</span>
+      <span className="chamada-pro-txt" aria-live="off"><span key={i}>{FRASES_PRO[i]}</span></span>
+      <span className="chamada-pro-seta" aria-hidden="true">→</span>
+    </a>
+  );
 }
 
 export default function App() {
@@ -297,6 +315,7 @@ export default function App() {
           <div className="brand-wrap">
             <a className="brand" href="/" aria-label="Radar Corridas Maranhão, página inicial"><Logo /><span>Radar Corridas Maranhão</span></a>
             <a className="byline" href="https://www.instagram.com/gabriel_vinicius_jj/" target="_blank" rel="noopener noreferrer">Desenvolvido por <strong>@gabriel_vinicius_jj</strong></a>
+            <ChamadaPro />
           </div>
           <nav className="tabs" aria-label="Seções">
             {TABS.map(x => (

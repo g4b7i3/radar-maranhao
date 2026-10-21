@@ -951,3 +951,19 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .envio-robo { position: absolute !important; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .envio .fine { margin: 0; }
 .envio-ok { flex: 1 1 100%; display: flex; align-items: center; gap: 8px; margin: 0; padding: 12px 14px; border-radius: 12px; background: #dcfce7; color: #14532d !important; font-weight: 650; }
+
+/* chamada animada do Radar Pro, embaixo da marca */
+.chamada-pro { position: relative; align-self: flex-start; margin: 4px 0 6px 40px; display: inline-flex; align-items: center; gap: 8px; max-width: calc(100vw - 72px);
+  padding: 6px 12px 6px 6px; border-radius: 999px; text-decoration: none; color: #fff; font-size: .8125rem; font-weight: 700; line-height: 1.2; overflow: hidden; isolation: isolate;
+  background: linear-gradient(110deg, #14278a, #1d3fbf 45%, #3a5ce0); box-shadow: 0 4px 14px rgb(29 63 191 / .35); }
+.chamada-pro::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / .35) 50%, transparent 70%); transform: translateX(-120%); animation: chamada-brilho 3.2s ease-in-out infinite; }
+.chamada-pro-selo { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; background: linear-gradient(135deg, #ffe28a, #f2b705); color: #3a2600; font-weight: 900; letter-spacing: .08em; font-size: .72rem; flex: none; animation: chamada-pulso 2.4s ease-in-out infinite; }
+.chamada-pro-txt { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.chamada-pro-txt span { display: inline-block; animation: chamada-entra .45s ease-out; }
+.chamada-pro-seta { flex: none; transition: transform .2s; }
+.chamada-pro:hover .chamada-pro-seta, .chamada-pro:focus-visible .chamada-pro-seta { transform: translateX(3px); }
+@keyframes chamada-brilho { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@keyframes chamada-pulso { 0%, 100% { box-shadow: 0 0 0 0 rgb(242 183 5 / .6); } 50% { box-shadow: 0 0 0 5px rgb(242 183 5 / 0); } }
+@keyframes chamada-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .chamada-pro::before, .chamada-pro-selo, .chamada-pro-txt span { animation: none; } }
+@media (max-width: 760px) { .chamada-pro { margin: 6px 0 8px; width: calc(100vw - 2 * var(--gutter, 16px)); max-width: 520px; } .chamada-pro-txt { flex: 1; } }
