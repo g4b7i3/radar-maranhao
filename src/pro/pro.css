@@ -364,3 +364,8 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-desafio-lista .km{font-variant-numeric:tabular-nums}
 .pro-desafio-fotos{display:flex}
 .pro-desafio-fotos .pro-avatar{margin-right:-8px;border-width:1.5px}
+.pro-retro.dezembro{border-color:#f2b705;background:linear-gradient(180deg,#fff9e6,var(--surface))}
+.pro-retro-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pro-retro-nums>div{display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:12px;background:var(--cobalt-tint)}
+.pro-retro-nums b{font-size:1.2rem;line-height:1.1}
+.pro-retro-nums small{color:var(--muted);font-size:.72rem}
