@@ -1,7 +1,7 @@
 // Radar Pro · recebe da coleta (GitHub Actions) os resultados oficiais de uma prova.
 // Protegida pela chave "chave_coleta" guardada em radar_config (o GitHub manda no cabeçalho x-radar-chave).
 // Depois de gravar, confere quem já tinha registrado a prova no Radar Pro:
-//   tempo bate com o oficial (±5 s) → "verificado"; tempo diferente → "em análise" com o motivo.
+//   tempo bate com o oficial (±5 s) → "verificado"; tempo diferente → "em análise"; número de peito de outra pessoa → "recusado".
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { 'Content-Type': 'application/json' } });
@@ -44,29 +44,40 @@ Deno.serve(async req => {
   }
 
   // confere quem registrou essa prova antes do resultado sair
-  const { data: regs } = await db.from('radar_resultados').select('id, user_id, distancia_km, tempo_s, peito, status, pontos, detalhes_pontos').eq('prova_id', prova).in('status', ['declarado', 'em_analise']);
-  let verificados = 0, divergentes = 0;
+  const { data: regs } = await db.from('radar_resultados').select('id, user_id, distancia_km, tempo_s, peito_declarado, nome_inscricao, status, pontos, detalhes_pontos').eq('prova_id', prova).in('status', ['declarado', 'em_analise']);
+  const batem = (a: string, c: string) => { const x = a.split(' '), y = c.split(' '); return x[0] === y[0] && (x[x.length - 1] === y[y.length - 1] || a.includes(c) || c.includes(a)); };
+  let verificados = 0, divergentes = 0, recusados = 0;
   if (regs?.length) {
     const { data: perfis } = await db.from('radar_perfis').select('user_id, nome_completo').in('user_id', regs.map(r => r.user_id));
     const nomes = new Map((perfis ?? []).map(p => [p.user_id, norm(p.nome_completo)]));
     for (const r of regs) {
-      const nm = nomes.get(r.user_id) ?? '';
+      const perfil = nomes.get(r.user_id) ?? '';
+      const nm = r.nome_inscricao ? norm(r.nome_inscricao) : perfil;
+      const outroNome = !!r.nome_inscricao && nm !== perfil;
       const naDist = linhas.filter(o => o.distancia_km == null || Math.abs(o.distancia_km - Number(r.distancia_km)) < 0.2);
-      const of = (r.peito && naDist.find(o => o.peito === r.peito && o.nome_norm.split(' ')[0] === nm.split(' ')[0]))
-        || (naDist.filter(o => o.nome_norm === nm).length === 1 ? naDist.find(o => o.nome_norm === nm) : null);
+      const dono = r.peito_declarado ? naDist.find(o => o.peito === r.peito_declarado) : null;
+      if (dono && !batem(dono.nome_norm, perfil)) { // o número é de outra pessoa (vale o nome do perfil, não o digitado)
+        await db.from('radar_resultados').update({ status: 'recusado', motivo_analise: 'O número de peito pertence a outro atleta no resultado oficial.' }).eq('id', r.id);
+        await db.from('radar_medalhas').delete().eq('resultado_id', r.id);
+        recusados++; continue;
+      }
+      const porNome = naDist.filter(o => o.nome_norm === nm);
+      const of = dono ?? (porNome.length === 1 ? porNome[0] : null);
       if (!of) continue;
+      if (outroNome) { await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Achado no resultado oficial com nome diferente do perfil: conferir.' }).eq('id', r.id); divergentes++; continue; }
       const podio = (of.colocacao_geral ?? 99) <= 3 || (of.colocacao_faixa ?? 99) <= 3;
       if (Math.abs(of.tempo_s! - r.tempo_s) <= 5) {
         const det = { ...(r.detalhes_pontos ?? {}) } as Record<string, number>;
         if (podio && !det.podio) det.podio = 10;
         const pontos = Object.values(det).reduce((a, x) => a + Number(x), 0);
-        await db.from('radar_resultados').update({ status: 'verificado', motivo_analise: null, podio, detalhes_pontos: det, pontos }).eq('id', r.id);
-        verificados++;
+        const { error } = await db.from('radar_resultados').update({ status: 'verificado', motivo_analise: null, podio, detalhes_pontos: det, pontos, peito: of.peito ?? r.peito_declarado }).eq('id', r.id);
+        if (error) { await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Peito já confirmado para outro atleta: conferir.' }).eq('id', r.id); divergentes++; }
+        else verificados++;
       } else {
         await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: `Tempo diferente do resultado oficial (${of.tempo_s} s).` }).eq('id', r.id);
         divergentes++;
       }
     }
   }
-  return resp({ ok: true, gravados: linhas.length, verificados, divergentes });
+  return resp({ ok: true, gravados: linhas.length, verificados, divergentes, recusados });
 });

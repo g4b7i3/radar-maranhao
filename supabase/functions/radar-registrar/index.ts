@@ -64,18 +64,22 @@ Deno.serve(async req => {
   const km = real(Number(b.distancia_km));
   if (!(km > 0) || !prova.distances?.some((d: number) => Math.abs(real(d) - km) < 0.2)) return resp({ erro: 'Escolha uma das distâncias da prova.' }, 400);
 
-  // 1) Procura no resultado oficial (número de peito ou nome da inscrição).
+  // 1) Procura no resultado oficial (número de peito + nome).
   const peito = (b.peito ?? '').toString().replace(/\D/g, '').slice(0, 8) || null;
+  const nomePerfil = norm(perfil.nome_completo);
   const nomeIns = norm(b.nome_inscricao || perfil.nome_completo);
+  const outroNome = !!b.nome_inscricao && nomeIns !== nomePerfil; // inscrito com outro nome: nunca verifica sozinho
+  // nomes "batem" se o primeiro e o último nome são iguais (aceita nome do meio abreviado ou faltando)
+  const batem = (a: string, c: string) => { const x = a.split(' '), y = c.split(' '); return x[0] === y[0] && (x[x.length - 1] === y[y.length - 1] || a.includes(c) || c.includes(a)); };
   let oficial: { tempo_s: number; colocacao_geral: number | null; colocacao_faixa: number | null; nome: string; fonte_url: string | null } | null = null;
   const { data: ofs } = await db.from('radar_resultados_oficiais').select('tempo_s, colocacao_geral, colocacao_faixa, nome, nome_norm, peito, distancia_km, fonte_url').eq('prova_id', prova.id);
   if (ofs?.length) {
     const naDist = ofs.filter(o => o.distancia_km == null || Math.abs(real(Number(o.distancia_km)) - km) < 0.2);
-    const porPeito = peito ? naDist.filter(o => o.peito && o.peito.replace(/\D/g, '') === peito) : [];
+    const dono = peito ? naDist.find(o => o.peito && o.peito.replace(/\D/g, '') === peito) : null;
+    // o dono do número no resultado oficial tem que ser a pessoa do perfil; senão, recusa
+    if (dono && !batem(dono.nome_norm, nomePerfil)) return resp({ erro: 'Recusado: esse número de peito é de outro atleta no resultado oficial.' }, 400);
     const porNome = naDist.filter(o => o.nome_norm === nomeIns);
-    // peito só vale se o nome bater (evita usar o peito de outra pessoa)
-    const cand = porPeito.find(o => o.nome_norm.split(' ')[0] === nomeIns.split(' ')[0]) ?? (porNome.length === 1 ? porNome[0] : null);
-    if (cand) oficial = cand;
+    oficial = dono ?? (porNome.length === 1 ? porNome[0] : null);
   }
 
   const tempo = oficial ? oficial.tempo_s : Math.round(Number(b.tempo_s));
@@ -97,6 +101,7 @@ Deno.serve(async req => {
   // 2) Status e alarmes contra fraude
   let status = oficial ? 'verificado' : link ? 'em_analise' : 'declarado';
   let motivo: string | null = oficial ? null : link ? 'Comprovante enviado: aguardando aprovação.' : null;
+  if (oficial && outroNome) { status = 'em_analise'; motivo = 'Achado no resultado oficial com nome diferente do perfil: o Radar confere.'; }
   if (!oficial && n > 80) { status = 'em_analise'; motivo = 'Nota por idade acima de 80%: precisa do resultado oficial.'; }
   if (!oficial && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
 
@@ -106,16 +111,16 @@ Deno.serve(async req => {
   if (km >= 42) d.maratona = 20; else if (km >= 21) d.meia = 10; else if (km >= 10) d.dez_km = 5;
   if (melhorAntes && tempo < melhorAntes) d.recorde_pessoal = 5;
   if (!(hist ?? []).some(h => Number(String(h.prova_data).slice(0, 4)) === temporada && norm(h.cidade) === norm(prova.city))) d.cidade_nova = 3;
-  const podio = !!oficial && ((oficial.colocacao_geral ?? 99) <= 3 || (oficial.colocacao_faixa ?? 99) <= 3);
+  const podio = status === 'verificado' && !!oficial && ((oficial.colocacao_geral ?? 99) <= 3 || (oficial.colocacao_faixa ?? 99) <= 3);
   if (podio) d.podio = 10;
   const pontos = Object.values(d).reduce((a, x) => a + x, 0);
 
   const { data: novo, error } = await db.from('radar_resultados').insert({
     user_id: user.id, prova_id: prova.id, prova_nome: prova.name, prova_data: prova.date.slice(0, 10), cidade: prova.city,
-    largada: prova.start, distancia_km: km, tempo_s: tempo, idade, nota: n, peito, link_resultado: link,
+    largada: prova.start, distancia_km: km, tempo_s: tempo, idade, nota: n, peito: status === 'verificado' ? peito : null, peito_declarado: peito, nome_inscricao: b.nome_inscricao?.trim().slice(0, 120) || null, link_resultado: link,
     status, motivo_analise: motivo, podio, pontos, detalhes_pontos: d,
   }).select().single();
-  if (error) return resp({ erro: error.code === '23505' ? 'Esse número de peito já foi usado nessa prova. Fale com o Radar pelo WhatsApp.' : 'Não deu para salvar agora.' }, 400);
+  if (error) return resp({ erro: error.code === '23505' ? 'Esse número de peito já foi confirmado para outro atleta nessa prova. Fale com o Radar pelo WhatsApp.' : 'Não deu para salvar agora.' }, 400);
 
   // 4) Medalhas (participação conta mesmo declarada; "Subiu de liga" e "Recorde" só com tempo válido)
   const todos = [...(hist ?? []), novo];
@@ -148,5 +153,5 @@ Deno.serve(async req => {
     novas = (ins ?? []).map(x => x.medalha);
   }
 
-  return resp({ resultado: novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: !!oficial });
+  return resp({ resultado: novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado' });
 });

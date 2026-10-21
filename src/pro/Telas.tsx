@@ -25,8 +25,12 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
   const [meds, setMeds] = useState<string[]>([]);
   const [abre, setAbre] = useState<string | null>(null);
   useEffect(() => {
-    sb.from('radar_resultados').select('*').order('prova_data', { ascending: false }).then(({ data }) => setRes((data ?? []) as Resultado[]));
-    sb.from('radar_medalhas').select('medalha, temporada').then(({ data }) => setMeds((data ?? []).filter(m => m.temporada === ANO || m.medalha.startsWith('primeir')).map(m => m.medalha)));
+    // medalhas de provas recusadas não contam
+    Promise.all([sb.from('radar_resultados').select('*').order('prova_data', { ascending: false }), sb.from('radar_medalhas').select('medalha, temporada, resultado_id')]).then(([r, m]) => {
+      const lista = (r.data ?? []) as Resultado[]; setRes(lista);
+      const recusados = new Set(lista.filter(x => x.status === 'recusado').map(x => x.id));
+      setMeds((m.data ?? []).filter(x => !recusados.has(x.resultado_id) && (x.temporada === ANO || x.medalha.startsWith('primeir'))).map(x => x.medalha));
+    });
   }, []);
   const liga = temp.liga, i = LIGAS.findIndex(l => l.id === liga), prox = LIGAS[i + 1];
   const evolucao = useMemo(() => (res ?? []).filter(ehValido).slice().reverse().map(r => Number(r.nota)), [res]);
@@ -430,7 +434,7 @@ export function TelaAdmin() {
   const liberar = async () => { const r = await chamar<{ valida_ate: string }>('radar-acoes', { acao: 'admin_liberar', apelido: apelido.replace('@', ''), dias: Number(dias) }); setMsg(r.erro ?? `Liberado até ${new Date(r.valida_ate).toLocaleDateString('pt-BR')}.`); };
   const Item = ({ r }: { r: Resultado & { user_id: string } }) => (
     <><div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
-      <p>{quem(r.user_id)}<br />{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}%{r.peito ? ` · peito ${r.peito}` : ''}</p>
+      <p>{quem(r.user_id)}<br />{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}%{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}{r.nome_inscricao ? ` · inscrito como ${r.nome_inscricao}` : ''}</p>
       {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
       {r.link_resultado && <p className="fine pro-sem-margem"><a href={r.link_resultado} target="_blank" rel="noopener noreferrer">Abrir link enviado</a></p>}
       <div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => decidir(r.id, 'aprovar')}>Aprovar</button><button className="btn outline pro-vermelho-txt" onClick={() => decidir(r.id, 'recusar')}>Recusar</button></div></>

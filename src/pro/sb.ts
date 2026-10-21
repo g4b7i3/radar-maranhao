@@ -29,7 +29,7 @@ export type Perfil = { user_id: string; apelido: string; nome_completo: string; 
 export type Resultado = {
   id: string; prova_id: string; prova_nome: string; prova_data: string; cidade: string; largada: string | null; distancia_km: number;
   tempo_s: number; idade: number; nota: number; status: 'verificado' | 'aprovado' | 'declarado' | 'em_analise' | 'recusado';
-  motivo_analise: string | null; podio: boolean; pontos: number; detalhes_pontos: Record<string, number> | null; peito: string | null; link_resultado: string | null;
+  motivo_analise: string | null; podio: boolean; pontos: number; detalhes_pontos: Record<string, number> | null; peito: string | null; peito_declarado?: string | null; nome_inscricao?: string | null; link_resultado: string | null;
 };
 export type Temporada = {
   assinante: boolean; valida_ate: string | null; indice: number | null; provas_indice: number; liga: Liga | null;
