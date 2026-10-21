@@ -67,6 +67,8 @@ function ProTelas() {
   const [fimDuelos, setFimDuelos] = useState<FimDuelo[]>([]);
   const [cardDuelo, setCardDuelo] = useState<string | null>(null);
   const [resgatando, setResgatando] = useState(() => !!codigoCortesia());
+  const [fotoPulada, setFotoPulada] = useState(() => { try { return localStorage.getItem('radar-foto-pulada') === '1'; } catch { return true; } });
+  const pularFoto = () => { try { localStorage.setItem('radar-foto-pulada', '1'); } catch { /* */ } setFotoPulada(true); };
 
   useEffect(() => {
     sb.auth.getSession().then(({ data }) => setSessao(data.session));
@@ -134,6 +136,15 @@ function ProTelas() {
 
   // WhatsApp agora é obrigatório: quem criou a conta antes precisa completar
   
+  // Foto opcional: oferecida uma vez, logo depois do cadastro (dá para pular; depois fica em Conta)
+  if (perfil.whatsapp && !perfil.foto_url && !fotoPulada) return (
+    <main className="pro">{topo('Sua foto')}<div className="pro-cont">
+      <p className="pro-sem-margem">Quer aparecer com a sua foto no ranking e no seu perfil público? É opcional e você pode colocar ou trocar depois em Conta.</p>
+      <FotoConta perfil={perfil} pronto={() => { pularFoto(); recarregar(); }} titulo="Foto do perfil" />
+      <button className="btn text" onClick={pularFoto}>Agora não</button>
+    </div></main>
+  );
+
   if (!perfil.whatsapp) return <main className="pro">{topo('Falta só um dado')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, informe o seu WhatsApp. É por ele que o Radar fala com você sobre os seus resultados.</p><ZapConta perfil={perfil} pronto={recarregar} /></div></main>;
 
   const admin = sessao.user.email === ADMIN_EMAIL;

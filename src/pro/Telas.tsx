@@ -36,6 +36,7 @@ function Reis() {
       setLista(l);
     });
   }, []);
+  const fotosReis = useFotos((lista ?? []).map(x => x.apelido ?? '').filter(Boolean));
   const provas = useMemo(() => { const m = new Map<string, ReiLinha[]>(); for (const x of lista ?? []) { if (!m.has(x.prova_id)) m.set(x.prova_id, []); m.get(x.prova_id)!.push(x); } return [...m.values()]; }, [lista]);
   return (
     <>
@@ -48,7 +49,7 @@ function Reis() {
           <b className="pro-reis-prova">{ps[0].prova_nome}</b>
           {[...ps].sort((a, b) => Number(a.distancia_km) - Number(b.distancia_km) || a.sexo.localeCompare(b.sexo)).map(x => (
             <div key={x.distancia_km + x.sexo} className="pro-rei">
-              {x.apelido ? <span className="pro-avatar pro-avatar-vazio" style={{ width: 40, height: 40 }} aria-hidden="true">{x.apelido.slice(0, 1).toUpperCase()}</span> : <span className={'pro-coroa ' + (x.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span>}
+              {x.apelido && fotosReis.get(x.apelido) ? <Avatar foto={fotosReis.get(x.apelido)} apelido={x.apelido} tam={40} /> : <span className={'pro-coroa ' + (x.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span>}
               <div>
                 <small>{x.sexo === 'F' ? 'Rainha' : 'Rei'} · {kmTxt(Number(x.distancia_km))}{x.atletas ? ` · ${x.atletas} atletas` : ''}</small>
                 <p className="pro-sem-margem"><b>{x.apelido ? <a href={linkPerfil(x.apelido)}>@{x.apelido}</a> : titulo(x.nome)}</b>{x.idade ? `, ${x.idade} anos` : ''}</p>
@@ -404,6 +405,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   }, [rec, sexo, cidade, faixa]);
 
   const eu = linhas?.find(l => l.eu);
+  const fotos = useFotos((linhas ?? []).map(l => l.apelido).filter(Boolean));
   return (
     <div className="pro-cont">
       <div className="seg pro-seg" role="group" aria-label="Tipo de ranking">
@@ -437,7 +439,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
           <li key={k} className={l.eu ? 'eu' : ''}>
             <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
-              {rec !== 'assessorias' && <span className="pro-avatar pro-avatar-vazio" style={{ width: 36, height: 36 }} aria-hidden="true">{l.apelido.slice(0, 1).toUpperCase()}</span>}
+              {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={36} />}
               <span>{rec === 'assessorias' ? <>{l.assessoria} <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
               <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : Math.round(Number(l.pontos ?? 0))}</b>
             </button>

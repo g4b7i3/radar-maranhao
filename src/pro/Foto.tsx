@@ -1,4 +1,4 @@
-// Foto de perfil do Radar Pro: obrigatória, até 5 MB. Antes de enviar, o app reduz para 600 px (sobe rápido e ocupa pouco).
+// Foto de perfil do Radar Pro (opcional). Antes de enviar, o app reduz para 600 px (sobe rápido e ocupa pouco).
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { sb, type Perfil } from './sb';
@@ -74,7 +74,7 @@ export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil' }: { perfi
         <Avatar foto={perfil.foto_url} apelido={perfil.apelido} tam={84} />
         <div className="pro-foto-acoes">
           <button className="btn solid" disabled={enviando} onClick={() => entrada.current?.click()}><Camera size={18} aria-hidden="true" />{enviando ? 'Enviando…' : perfil.foto_url ? 'Trocar foto' : 'Escolher foto'}</button>
-          <small className="fine">Até 5 MB. Aparece no ranking e no seu perfil público.</small>
+          <small className="fine">Opcional. Aparece no ranking e no seu perfil público.</small>
         </div>
       </div>
       <input ref={entrada} type="file" accept="image/*" hidden onChange={e => { escolher(e.target.files?.[0]); e.target.value = ''; }} />
