@@ -62,7 +62,7 @@ function Meds({ ids }: { ids: string[] }) {
   );
 }
 
-export function ItemFeed({ e, eu, sigo, mudouSigo }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void }) {
+export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void }) {
   const d = e.dados, meu = e.apelido === eu;
   const nome = meu ? 'Você' : `@${e.apelido}`;
   return (
@@ -73,7 +73,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo }: { e: Evento; eu: string; si
           <b><a href={linkPerfil(e.apelido)}>{nome}</a></b>
           <small>{e.cidade} · {quandoTxt(e.quando)}</small>
         </div>
-        {!meu && sigo !== undefined && mudouSigo && <Seguir apelido={e.apelido} sigo={sigo} mudou={mudouSigo} />}
+        {!meu && sigo !== undefined && mudouSigo && (pro ? <Seguir apelido={e.apelido} sigo={sigo} mudou={mudouSigo} /> : <button className="btn outline pro-seguir" onClick={assinar} title="Só no Pro">🔒 Seguir</button>)}
       </header>
       {e.tipo === 'prova' && (
         <>
@@ -87,12 +87,12 @@ export function ItemFeed({ e, eu, sigo, mudouSigo }: { e: Evento; eu: string; si
       {e.tipo === 'duelo' && (
         <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} n={e.aplausos} feito={e.aplaudi} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}</footer>
+      <footer className="pro-feed-pe">{pro ? <Aplauso alvo={e.alvo} n={e.aplausos} feito={e.aplaudi} /> : <button className="pro-aplauso" onClick={assinar} title="Só no Pro">👏 <b>{e.aplausos}</b> <small>só no Pro</small></button>}{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}</footer>
     </article>
   );
 }
 
-export function TelaFeed({ perfil }: { perfil: Perfil }) {
+export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?: boolean; assinar?: () => void }) {
   const [soSigo, setSoSigo] = useState(false);
   const [lista, setLista] = useState<Evento[] | null>(null);
   const [sigo, setSigo] = useState<Set<string>>(new Set());
@@ -103,11 +103,11 @@ export function TelaFeed({ perfil }: { perfil: Perfil }) {
     <div className="pro-cont">
       <div className="chips" role="group" aria-label="Filtro do feed">
         <button className="chip" aria-pressed={!soSigo} onClick={() => setSoSigo(false)}>Todo mundo</button>
-        <button className="chip" aria-pressed={soSigo} onClick={() => setSoSigo(true)}>Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
+        <button className="chip" aria-pressed={soSigo} onClick={() => pro ? setSoSigo(true) : assinar?.()}>{pro ? '' : '🔒 '}Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
       </div>
       {lista === null && <p className="fine">Carregando…</p>}
       {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova verificada aparece aqui.'}</p>}
-      {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} />)}
+      {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} pro={pro} assinar={assinar} />)}
       {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só aplausos.</p>}
     </div>
   );

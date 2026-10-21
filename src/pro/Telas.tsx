@@ -619,8 +619,12 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
     await sb.auth.signOut(); window.location.href = '/';
   };
   const vence = temp.valida_ate ? (new Date(temp.valida_ate).getFullYear() >= 2090 ? 'sem vencimento (cortesia)' : new Date(temp.valida_ate).toLocaleDateString('pt-BR')) : null;
+  const [equipePro, setEquipePro] = useState<{ nome: string; valida_ate: string; dono: boolean } | null>(null);
+  useEffect(() => { sb.rpc('radar_minha_equipe_pro').then(({ data }) => setEquipePro((data as typeof equipePro) ?? null)); }, [temp.assinante]);
+  const propria = !!temp.valida_ate && new Date(temp.valida_ate) > new Date();
   return (
     <div className="pro-cont">
+      {!temp.assinante && <section className="pro-card pro-assinar-destaque"><p className="pro-k cinza">Assinar o Radar Pro</p><Assinar perfil={perfil} pronto={pronto} /></section>}
       {editando ? <EditarPerfil perfil={perfil} fechar={() => setEditando(false)} pronto={pronto} /> : <>
         <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? <> · <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">{perfil.assessoria}</a></> : ''}</p>{perfil.assessoria && <p className="fine pro-sem-margem">A página da sua equipe: <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">radarcorridasma.com.br/?assessoria={encodeURIComponent(perfil.assessoria.trim())}</a>. Mande pro grupo.</p>}</section>
         <section className="pro-card"><p className="pro-k cinza">Usado só no cálculo (não aparece)</p><p className="pro-sem-margem">{perfil.nome_completo} · {perfil.sexo === 'F' ? 'Feminino' : 'Masculino'} · nascimento {perfil.nascimento.split('-').reverse().join('/')}</p><p className="fine pro-sem-margem">{email}</p></section>
@@ -631,12 +635,14 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
       <FotoConta perfil={perfil} pronto={pronto} />
       <ZapConta perfil={perfil} pronto={pronto} />
       <PublicoConta perfil={perfil} pronto={pronto} />
-      <section className="pro-card">
+      {temp.assinante && <section className="pro-card">
         <p className="pro-k cinza">Assinatura</p>
-        <p className="pro-sem-margem">{temp.assinante ? <><b className="pro-verde">Ativa</b> · vence em {vence} · R$ 10/mês</> : <><b>Inativa</b>{vence ? ` · venceu em ${vence}` : ''}</>}</p>
-        {!renovar && <button className="btn outline pro-btn" onClick={() => setRenovar(true)}>{temp.assinante ? 'Renovar com Pix (+30 dias)' : 'Assinar com Pix'}</button>}
+        <p className="pro-sem-margem">{propria ? <><b className="pro-verde">Ativa</b> · vence em {vence}</> : equipePro ? <><b className="pro-verde">Ativa pela equipe {equipePro.nome}</b> · até {new Date(equipePro.valida_ate).toLocaleDateString('pt-BR')}{equipePro.dono ? ' · você é o treinador' : ''}</> : <><b className="pro-verde">Ativa</b></>}</p>
+        {!renovar && <button className="btn outline pro-btn" onClick={() => setRenovar(true)}>Renovar com Pix</button>}
         {renovar && <Assinar perfil={perfil} pronto={() => { setRenovar(false); pronto(); }} />}
-      </section>
+      </section>}
+      <Indicacao perfil={perfil} />
+      {perfil.assessoria && <Equipe perfil={perfil} pronto={pronto} />}
       <button className="btn solid pro-btn pro-instalar" onClick={() => window.dispatchEvent(new Event('radar:instalar'))}><Smartphone size={18} aria-hidden="true" />Instalar o app Radar Pro</button>
       <button className="btn outline pro-btn" onClick={baixar}><Download size={18} aria-hidden="true" />Baixar meus dados</button>
       <details className="pro-card pro-perigo"><summary><Trash2 size={16} aria-hidden="true" /> Apagar minha conta</summary>
@@ -648,6 +654,68 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
       <button className="btn text" onClick={() => sb.auth.signOut()}><LogOut size={16} aria-hidden="true" />Sair</button>
       <p className="fine pro-centro"><a href="/termos.html">Termos de uso e política de privacidade</a></p>
     </div>
+  );
+}
+
+/* ───────── Indicação: 3 amigos que assinam = 1 mês grátis ───────── */
+function Indicacao({ perfil }: { perfil: Perfil }) {
+  const [d, setD] = useState<{ total: number; pagas: number; pendentes_credito: number; meses_ganhos: number; lista: { apelido: string; foto: string | null; pagou: boolean }[] } | null>(null);
+  const [copiado, setCopiado] = useState(false);
+  useEffect(() => { sb.rpc('radar_minhas_indicacoes').then(({ data }) => setD(data as typeof d)); }, []);
+  const link = `https://radarcorridasma.com.br/?pro&ref=${perfil.apelido}`;
+  const texto = `Entra comigo no Radar Pro: ranking, liga, medalhas e nota por idade nas provas do Maranhão. R$ 10/mês. Meu link: ${link}`;
+  const copiar = async () => { try { await navigator.clipboard.writeText(link); setCopiado(true); setTimeout(() => setCopiado(false), 2000); } catch { /* */ } };
+  const falta = d ? 3 - (d.pendentes_credito % 3) : 3;
+  return (
+    <section className="pro-card">
+      <p className="pro-k cinza">Indique e ganhe</p>
+      <p className="pro-sem-margem">A cada <b>3 amigos</b> que entram pelo seu link e assinam, você ganha <b>1 mês grátis</b>.</p>
+      {d && <div className="pro-indica-barra" aria-label={`${d.pendentes_credito % 3} de 3`}>{[0, 1, 2].map(i => <i key={i} className={i < d.pendentes_credito % 3 ? 'on' : ''} />)}<small>{d.pendentes_credito % 3 === 0 && d.pagas === 0 ? 'Nenhum amigo assinou ainda' : `faltam ${falta} para o próximo mês grátis`}{d.meses_ganhos ? ` · ${d.meses_ganhos} ${d.meses_ganhos === 1 ? 'mês ganho' : 'meses ganhos'}` : ''}</small></div>}
+      <p className="pro-sem-margem"><b className="pro-link-quebra">radarcorridasma.com.br/?pro&ref={perfil.apelido}</b></p>
+      <div className="pro-linha pro-quebra">
+        <a className="btn whats pro-btn-p" href={`https://wa.me/?text=${encodeURIComponent(texto)}`} target="_blank" rel="noopener"><Share2 size={16} aria-hidden="true" />Mandar no WhatsApp</a>
+        <button className="btn outline pro-btn-p" onClick={copiar}><Copy size={16} aria-hidden="true" />{copiado ? 'Copiado!' : 'Copiar link'}</button>
+      </div>
+      {d && d.lista.length > 0 && <ul className="pro-companheiros">{d.lista.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b>@{x.apelido}</b></div><span className={'pro-st ' + (x.pagou ? 'ok' : 'ana')}>{x.pagou ? 'Assinou' : 'Entrou, ainda não assinou'}</span></li>)}</ul>}
+    </section>
+  );
+}
+
+/* ───────── Plano assessoria: o treinador escolhe os alunos ───────── */
+type EquipeDados = { sem_assessoria?: boolean; erro?: string; id?: string; nome?: string; valida_ate?: string | null; vagas?: number; ativa?: boolean; membros?: { apelido: string; foto: string | null; cidade: string }[]; candidatos?: { apelido: string; foto: string | null; cidade: string }[] };
+function Equipe({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+  const [aberto, setAberto] = useState(false);
+  const [d, setD] = useState<EquipeDados | null>(null);
+  const [pagar, setPagar] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const carregar = () => sb.rpc('radar_equipe_minha').then(({ data, error }) => { if (error) setErro(error.message); else setD(data as EquipeDados); });
+  useEffect(() => { if (aberto) carregar(); }, [aberto]);
+  const mudar = async (apelido: string, add: boolean) => {
+    setErro(null);
+    const { error } = await sb.rpc('radar_equipe_membro', { p_apelido: apelido, p_adicionar: add });
+    if (error) return setErro(error.message.replace(/^.*?: /, ''));
+    carregar(); pronto();
+  };
+  if (!aberto) return <button className="btn outline pro-btn" onClick={() => setAberto(true)}><Users size={16} aria-hidden="true" />Sou treinador: plano assessoria (R$ 150 · até 20 alunos)</button>;
+  return (
+    <section className="pro-card">
+      <div className="pro-linha"><p className="pro-k cinza"><Users size={14} aria-hidden="true" /> Plano assessoria · {perfil.assessoria}</p><button className="btn text" onClick={() => setAberto(false)} aria-label="Fechar"><Fechar size={18} aria-hidden="true" /></button></div>
+      {!d && !erro && <p className="fine">Carregando…</p>}
+      {d?.erro && <p className="ct-erro">{d.erro}</p>}
+      {d?.id && <>
+        <p className="pro-sem-margem">{d.ativa ? <><b className="pro-verde">Plano ativo</b> até {new Date(d.valida_ate!).toLocaleDateString('pt-BR')}</> : <><b>Plano inativo</b>{d.valida_ate ? ` · venceu em ${new Date(d.valida_ate).toLocaleDateString('pt-BR')}` : ''}</>} · {d.membros!.length} de {d.vagas} vagas</p>
+        <p className="fine pro-sem-margem">R$ 150 por mês liberam o Pro para você e para os alunos que você marcar abaixo. Só entra quem escreveu “{d.nome}” no campo assessoria do perfil.</p>
+        {!pagar && <button className="btn solid pro-btn" onClick={() => setPagar(true)}>{d.ativa ? 'Renovar a equipe (+30 dias)' : 'Pagar R$ 150 com Pix'}</button>}
+        {pagar && <Assinar perfil={perfil} planoInicial="equipe" fixo pronto={() => { setPagar(false); carregar(); pronto(); }} />}
+        <p className="pro-k cinza">Na equipe ({d.membros!.length})</p>
+        {d.membros!.length === 0 && <p className="fine pro-sem-margem">Ninguém ainda. Marque os alunos na lista abaixo.</p>}
+        <ul className="pro-companheiros">{d.membros!.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b>@{m.apelido}</b><small>{m.cidade}</small></div><button className="btn text" onClick={() => mudar(m.apelido, false)}>Tirar</button></li>)}</ul>
+        <p className="pro-k cinza">Com o nome da equipe no perfil ({d.candidatos!.length})</p>
+        {d.candidatos!.length === 0 && <p className="fine pro-sem-margem">Nenhum aluno com “{d.nome}” no perfil ainda. Peça para escreverem igual.</p>}
+        <ul className="pro-companheiros">{d.candidatos!.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b>@{m.apelido}</b><small>{m.cidade}</small></div><button className="btn outline" disabled={d.membros!.length >= d.vagas!} onClick={() => mudar(m.apelido, true)}>Adicionar</button></li>)}</ul>
+      </>}
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+    </section>
   );
 }
 

@@ -18,6 +18,8 @@ const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
 // Link de cortesia (/?pro=cortesia&k=código): libera o Radar Pro sem pagar, até o Vinik revogar
 try { if (qs.get('pro') === 'cortesia' && qs.get('k')) localStorage.setItem('radar-cortesia', qs.get('k')!); } catch { /* sem armazenamento */ }
+// Link de indicação (/?pro&ref=apelido ou /?ref=apelido): guarda até a pessoa criar o perfil
+try { const ref = (qs.get('ref') ?? '').toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20); if (ref) localStorage.setItem('radar-ref', ref); } catch { /* */ }
 const codigoCortesia = (): string | null => { let k = qs.get('pro') === 'cortesia' && new URLSearchParams(window.location.search).get('k') ? qs.get('k') : null; try { k ??= localStorage.getItem('radar-cortesia'); } catch { /* */ } return k; };
 
 /** Logo do Radar Pro: o símbolo do Radar em dourado, no fundo azul-noite (a mesma do ícone do app). */
@@ -149,14 +151,8 @@ function ProTelas() {
   if (!perfil.whatsapp) return <main className="pro">{topo('Falta só um dado')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, informe o seu WhatsApp. É por ele que o Radar fala com você sobre os seus resultados.</p><ZapConta perfil={perfil} pronto={recarregar} /></div></main>;
 
   const admin = sessao.user.email === ADMIN_EMAIL;
-  if (!temp.assinante && aba !== 'conta' && aba !== 'admin') return (
-    <main className="pro">
-      {topo('Assinar o Radar Pro')}
-      <ConviteDuelo />
-      <Assinar perfil={perfil} pronto={recarregar} />
-      <div className="pro-rodape-links"><button className="btn text" onClick={() => setAba('conta')}>Minha conta</button>{admin && <button className="btn text" onClick={() => setAba('admin')}>Administração</button>}</div>
-    </main>
-  );
+  const pro = temp.assinante;
+  const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
     { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'feed', nome: 'Radar', Icone: Activity }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
@@ -171,7 +167,8 @@ function ProTelas() {
         {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
       </nav>
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
-      <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { setAba('conta'); window.scrollTo(0, 0); }} />
+      {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você só observa. Pontos, ranking, duelos e medalhas abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
+      <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {fimDuelos.map(d => (
         <section key={d.id} className={'pro-card pro-fim-duelo ' + d.resultado}>
@@ -181,14 +178,33 @@ function ProTelas() {
           {cardDuelo === d.id ? <CardDuelo d={d} eu={perfil.apelido} fechar={() => setCardDuelo(null)} /> : <button className="btn outline pro-btn" onClick={() => setCardDuelo(d.id)}>Card pro story</button>}
         </section>
       ))}
-      {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} />}
-      {aba === 'corri' && <TelaEuCorri perfil={perfil} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
-      {aba === 'feed' && <TelaFeed perfil={perfil} />}
-      {aba === 'ranking' && <TelaRanking perfil={perfil} />}
-      {aba === 'duelos' && <TelaDuelos perfil={perfil} />}
+      {aba === 'temporada' && (pro ? <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} /> : <Travado tela="temporada" perfil={perfil} assinar={irAssinar} />)}
+      {aba === 'corri' && (pro ? <TelaEuCorri perfil={perfil} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} /> : <Travado tela="corri" perfil={perfil} assinar={irAssinar} />)}
+      {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
+      {aba === 'ranking' && (pro ? <TelaRanking perfil={perfil} /> : <Travado tela="ranking" perfil={perfil} assinar={irAssinar} />)}
+      {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'conta' && <TelaConta perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
       {aba === 'admin' && admin && <TelaAdmin />}
     </main>
+  );
+}
+
+/* ───────── Modo grátis: a tela existe, mas está trancada ───────── */
+export function Travado({ tela, perfil, assinar }: { tela: 'temporada' | 'corri' | 'ranking' | 'duelos'; perfil: Perfil; assinar: () => void }) {
+  const T = {
+    temporada: { t: 'Sua temporada', d: 'Índice, liga, pontos, medalhas e a sua posição no Maranhão. Cada prova que você corre entra aqui.', ex: ['Liga Ouro · índice 61,3', '4 provas · 3 cidades · 18º no MA', '12 medalhas'] },
+    corri: { t: 'Eu corri uma prova', d: 'Cole o link do resultado e o Radar acha o seu tempo oficial, calcula a nota por idade e dá os pontos na hora.', ex: ['Corrida do Sol · 10 km · 48:12', 'Nota 68,4% · +18 pontos', 'Card pro story pronto'] },
+    ranking: { t: 'Ranking do Maranhão', d: 'Por pontos, eficiência, cidade, sexo, faixa etária, assessoria e pelotão da sua liga.', ex: ['1  @zima · Caxias · 33', '2  @robe · Icatu · 23', '3  @…'] },
+    duelos: { t: 'Duelos', d: 'Desafie um amigo: vence a maior nota por idade do mês. Dá pra duelar com quem tem idade diferente.', ex: ['Você 71,2% × @amigo 68,4%', 'Faltam 9 dias', '🏆 Você está na frente'] },
+  }[tela];
+  return (
+    <div className="pro-cont">
+      <section className="pro-card pro-travado" aria-label={`${T.t} (só no Pro)`}>
+        <div className="pro-travado-ex" aria-hidden="true">{T.ex.map(x => <p key={x}>{x}</p>)}</div>
+        <div className="pro-travado-capa"><span className="pro-travado-cadeado">🔒</span><b>{T.t}</b><p>{T.d}</p><button className="btn solid pro-btn" onClick={assinar}>Assinar o Radar Pro · R$ 10</button><small>Menos que uma inscrição de 5 km. Sem fidelidade.</small></div>
+      </section>
+      <p className="fine pro-centro">Oi, @{perfil.apelido}. No modo grátis você vê o feed e o seu perfil. Para competir, é o Pro.</p>
+    </div>
   );
 }
 
@@ -231,6 +247,7 @@ function Convite() {
               <p className="pro-oferta-preco"><small>Só</small> <b>R$ 10</b><small>/mês</small></p>
               <p className="pro-oferta-sub">Menos que uma inscrição de 5 km. <b>Sem fidelidade.</b></p>
               <p className="pro-oferta-sub2">⏱️ As provas desde 15/10 já contam pra você</p>
+              <p className="pro-oferta-sub2">Anual R$ 96 (2 meses grátis) · Assessoria R$ 150 para até 20 alunos</p>
             </div>
           </div>}
       {modo === 'botoes' && <>
@@ -273,6 +290,7 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
     const { error } = await sb.from('radar_perfis').insert({ user_id: uid, apelido: ap, nome_completo: f.nome_completo.trim().replace(/\s+/g, ' '), cidade: f.cidade, sexo: f.sexo, nascimento: nasc, assessoria: f.assessoria.trim() || null, whatsapp: zap });
     setSalvando(false);
     if (error) return setErro(error.code === '23505' ? 'Esse apelido já existe. Escolha outro.' : 'Não deu para salvar. Tente de novo.');
+    try { const ref = localStorage.getItem('radar-ref'); if (ref) { await sb.rpc('radar_indicar', { p_apelido: ref }); localStorage.removeItem('radar-ref'); } } catch { /* */ }
     pronto();
   };
   const masc = (v: string) => { const d = v.replace(/\D/g, '').slice(0, 8); return d.length > 4 ? `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}` : d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; };
@@ -295,14 +313,23 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
 }
 
 /* ───────── 2 · Assinar com Pix ───────── */
-export function Assinar({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+export const PLANOS = {
+  mensal: { nome: 'Mensal', preco: 'R$ 10', sub: '30 dias · sem fidelidade', dias: 30 },
+  anual: { nome: 'Anual', preco: 'R$ 96', sub: '12 meses pelo preço de 10', dias: 365 },
+  equipe: { nome: 'Assessoria', preco: 'R$ 150', sub: '30 dias · você + até 20 alunos', dias: 30 },
+} as const;
+export type Plano = keyof typeof PLANOS;
+
+export function Assinar({ perfil, pronto, planoInicial = 'mensal', fixo = false }: { perfil: Perfil; pronto: () => void; planoInicial?: Plano; fixo?: boolean }) {
+  const [plano, setPlano] = useState<Plano>(planoInicial);
   const [pix, setPix] = useState<{ qr: string; qr_img: string } | null>(null);
   const [estado, setEstado] = useState<'inicio' | 'gerando' | 'aguardando' | 'indisponivel' | 'pago'>('inicio');
   const [erro, setErro] = useState<string | null>(null);
   const [copiado, setCopiado] = useState(false);
+  const P = PLANOS[plano];
   const gerar = async () => {
     setEstado('gerando'); setErro(null);
-    const r = await chamar<{ qr: string; qr_img: string; indisponivel?: boolean }>('radar-pix', {});
+    const r = await chamar<{ qr: string; qr_img: string; indisponivel?: boolean }>('radar-pix', { plano });
     if (r.indisponivel) return setEstado('indisponivel');
     if (r.erro) { setErro(r.erro); return setEstado('inicio'); }
     setPix(r); setEstado('aguardando');
@@ -310,19 +337,26 @@ export function Assinar({ perfil, pronto }: { perfil: Perfil; pronto: () => void
   // confere sozinho a cada 5 s se o Pix caiu
   useEffect(() => {
     if (estado !== 'aguardando') return;
-    const t = setInterval(async () => { const r = await chamar<{ ativo: boolean }>('radar-pix', { acao: 'status' }); if (r.ativo) { setEstado('pago'); clearInterval(t); setTimeout(pronto, 1800); } }, 5000);
+    const t = setInterval(async () => { const r = await chamar<{ ativo: boolean; equipe_valida_ate?: string | null }>('radar-pix', { acao: 'status' }); if (r.ativo || (plano === 'equipe' && r.equipe_valida_ate && new Date(r.equipe_valida_ate) > new Date())) { setEstado('pago'); clearInterval(t); setTimeout(pronto, 1800); } }, 5000);
     return () => clearInterval(t);
-  }, [estado, pronto]);
+  }, [estado, pronto, plano]);
   const copiar = async () => { try { await navigator.clipboard.writeText(pix!.qr); setCopiado(true); setTimeout(() => setCopiado(false), 2500); } catch { /* */ } };
   return (
     <div className="pro-form">
+      {!fixo && estado === 'inicio' && (
+        <div className="pro-planos" role="group" aria-label="Plano">
+          {(Object.keys(PLANOS) as Plano[]).map(k => <button key={k} className={'pro-plano' + (plano === k ? ' on' : '')} aria-pressed={plano === k} onClick={() => setPlano(k)}><small>{PLANOS[k].nome}</small><b>{PLANOS[k].preco}</b><span>{PLANOS[k].sub}</span>{k === 'anual' && <i>2 meses grátis</i>}</button>)}
+        </div>
+      )}
       <div className="pro-card pro-centro">
-        <p className="pro-k cinza">Radar Pro · 30 dias</p>
-        <p className="pro-valor">R$ 10,00</p>
+        <p className="pro-k cinza">Radar Pro · {P.nome} · {P.dias === 365 ? '1 ano' : '30 dias'}</p>
+        <p className="pro-valor">{P.preco},00</p>
+        {plano === 'equipe' && estado === 'inicio' && <p className="fine pro-sem-margem">Libera o Pro para você e até 20 alunos que tenham “{perfil.assessoria || 'sua assessoria'}” no perfil. Você escolhe quem entra, na aba Conta.</p>}
         {estado === 'aguardando' && pix && <><img className="pro-qr" src={`data:image/png;base64,${pix.qr_img}`} alt="QR Code do Pix" /><p className="fine">Aponte a câmera do app do seu banco</p></>}
         {estado === 'pago' && <p className="pro-ok">Pagamento recebido! Liberando o seu Radar Pro…</p>}
       </div>
-      {estado === 'inicio' && <button className="btn solid pro-btn" onClick={gerar}>Gerar Pix</button>}
+      {estado === 'inicio' && <button className="btn solid pro-btn" onClick={gerar} disabled={plano === 'equipe' && !perfil.assessoria}>Gerar Pix de {P.preco}</button>}
+      {estado === 'inicio' && plano === 'equipe' && !perfil.assessoria && <p className="ct-erro">Antes, escreva o nome da sua assessoria no seu perfil (Conta → Editar perfil).</p>}
       {estado === 'gerando' && <button className="btn solid pro-btn" disabled>Gerando…</button>}
       {estado === 'aguardando' && pix && <>
         <label className="ct-cidade">Pix copia e cola<textarea className="pro-copia" readOnly value={pix.qr} rows={3} onFocus={e => e.target.select()} /></label>
@@ -331,10 +365,10 @@ export function Assinar({ perfil, pronto }: { perfil: Perfil; pronto: () => void
       </>}
       {estado === 'indisponivel' && <>
         <p className="pro-aviso">O pagamento automático está sendo ativado. Por enquanto, chame o Radar no WhatsApp que a gente libera o seu acesso na hora.</p>
-        <a className="btn whats pro-btn" href={whatsappLink(`Oi! Quero assinar o Radar Pro (R$ 10/mês). Meu apelido é @${perfil.apelido}.`)} target="_blank" rel="noopener">Assinar pelo WhatsApp</a>
+        <a className="btn whats pro-btn" href={whatsappLink(`Oi! Quero assinar o Radar Pro (${P.nome}, ${P.preco}). Meu apelido é @${perfil.apelido}.`)} target="_blank" rel="noopener">Assinar pelo WhatsApp</a>
       </>}
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-centro">Sem renovação automática: você paga um Pix por mês, só se quiser continuar. A agenda segue grátis.</p>
+      <p className="fine pro-centro">Sem renovação automática: você paga um Pix e só renova se quiser continuar. A agenda segue grátis.</p>
     </div>
   );
 }
