@@ -1,0 +1,23 @@
+# Uso pontual: lê uma página que a sessão do Claude não abre e salva em coleta/pagina.json.
+name: Ler página
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'Endereço', required: true }
+permissions:
+  contents: write
+jobs:
+  ler:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: |
+          npm i --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - run: node scripts/ler-pagina.mjs "${{ inputs.url }}"
+      - run: |
+          git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
+          git add coleta/pagina.json && git commit -m "Leitura de página" && git pull --rebase && git push
