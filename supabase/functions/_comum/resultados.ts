@@ -14,7 +14,7 @@ const pegar = async (url: string, json = true) => {
   if (!r.ok) throw new Error(`HTTP ${r.status} em ${url}`);
   return json ? r.json() : r.text();
 };
-export const norm = (s: string) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+export const norm = (s: string) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 export const real = (k: number) => (Math.abs(k - 21) < 0.2 ? 21.0975 : Math.abs(k - 42) < 0.3 ? 42.195 : k);
 
 // ---------- nomes ----------

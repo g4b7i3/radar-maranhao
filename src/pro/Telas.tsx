@@ -217,10 +217,11 @@ type Resposta = { nota: number; pontos: number; detalhes: Record<string, number>
 type Sugestao = { id: string; nome: string; data: string; cidade: string; distancia_km: number; link: string | null; obs: string | null; status: 'pendente' | 'aprovada' | 'recusada'; prova_id: string | null; resposta: string | null; criado_em: string };
 const INICIO = '2026-10-15';
 const hojeBR = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
-function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: () => void }) {
+function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resposta & { pedido?: boolean; motivo?: string }) => void }) {
   const [f, setF] = useState({ nome: '', data: '', cidade: '', link: '', obs: '' });
   const [km, setKm] = useState<number | null>(null);
   const [outra, setOutra] = useState('');
+  const [peito, setPeito] = useState('');
   const [erro, setErro] = useState<string | null>(null);
   const [indo, setIndo] = useState(false);
   const muda = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
@@ -233,25 +234,26 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: () => vo
     if (f.cidade.trim().length < 3) return setErro('Diga a cidade.');
     if (!dist) return setErro('Escolha a distância que você correu.');
     setIndo(true);
-    const r = await chamar('radar-acoes', { acao: 'prova_sugerir', ...f, distancia_km: dist });
+    const r = await chamar<Resposta & { pedido?: boolean; motivo?: string }>('radar-registrar', { nova_prova: { nome: f.nome, data: f.data, cidade: f.cidade, obs: f.obs }, distancia_km: dist, link_resultado: f.link || undefined, peito: peito || undefined });
     setIndo(false);
     if (r.erro) return setErro(r.erro);
-    enviado();
+    enviado(r);
   };
   return (
     <section className="pro-card pro-pedir">
       <div className="pro-linha"><p className="pro-k cinza"><CalendarPlus size={14} aria-hidden="true" /> Pedir uma prova</p><button className="btn text" onClick={fechar} aria-label="Fechar"><Fechar size={18} aria-hidden="true" /></button></div>
-      <p className="fine pro-sem-margem">O Radar confere e coloca a prova no Radar Pro. Quando aprovar, aparece aqui o botão para você registrar o seu tempo.</p>
+      <p className="fine pro-sem-margem"><b>Com o link do resultado, é na hora:</b> o Radar lê o link, acha você e já registra a prova com o tempo oficial. Sem o link, o pedido vai para conferência.</p>
       <label className="ct-cidade">Nome da prova<input value={f.nome} onChange={muda('nome')} placeholder="Ex.: Corrida do Sol 2026" maxLength={120} /></label>
       <label className="ct-cidade">Data<input type="date" min={INICIO} max={hojeBR()} value={f.data} onChange={muda('data')} /></label>
       <label className="ct-cidade">Cidade<input list="pro-cidades-pedir" value={f.cidade} onChange={muda('cidade')} /><datalist id="pro-cidades-pedir">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
       <p className="ct-cidade pro-sem-margem">Distância que você correu</p>
       <div className="chips" role="group" aria-label="Distância">{[3, 5, 7, 10, 15, 21, 42].map(d => <button key={d} className="chip" aria-pressed={km === d} onClick={() => { setKm(km === d ? null : d); setOutra(''); }}>{d} km</button>)}</div>
       <label className="ct-cidade">Outra distância <small>(em km)</small><input inputMode="decimal" value={outra} onChange={e => { setOutra(e.target.value.replace(/[^\d.,]/g, '').slice(0, 6)); setKm(null); }} placeholder="Ex.: 8" /></label>
-      <label className="ct-cidade">Link do resultado <small>(se já saiu)</small><input inputMode="url" value={f.link} onChange={e => setF({ ...f, link: e.target.value.trim() })} placeholder="https://…" /><small>Ajuda o Radar a aprovar mais rápido.</small></label>
+      <label className="ct-cidade">Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={f.link} onChange={e => setF({ ...f, link: e.target.value.trim() })} placeholder="cole aqui o link do resultado" /><small>Funciona na hora com SA Crono, RaceTag, Meta Sport e Crono Esportes.</small></label>
+      {f.link && <label className="ct-cidade">Número de peito <small>(ajuda a achar você)</small><input inputMode="numeric" value={peito} onChange={e => setPeito(e.target.value.replace(/\D/g, '').slice(0, 8))} placeholder="Ex.: 1234" /></label>}
       <label className="ct-cidade">Observação <small>(opcional)</small><input value={f.obs} onChange={muda('obs')} placeholder="Ex.: organizada pela assessoria X" maxLength={300} /></label>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <button className="btn solid pro-btn" disabled={indo} onClick={enviar}>{indo ? 'Enviando…' : 'Enviar pedido'}</button>
+      <button className="btn solid pro-btn" disabled={indo} onClick={enviar}>{indo ? (f.link ? 'Lendo o resultado…' : 'Enviando…') : f.link ? 'Conferir e registrar' : 'Enviar pedido'}</button>
     </section>
   );
 }
@@ -355,7 +357,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
             </section>
           )}
           {pedir
-            ? <PedirProva fechar={() => setPedir(false)} enviado={() => { setPedir(false); setAviso('Pedido enviado! Quando o Radar aprovar, a prova aparece aqui para você registrar.'); carregarSugs(); }} />
+            ? <PedirProva fechar={() => setPedir(false)} enviado={r => { setPedir(false); carregarSugs(); if (r.resultado) { setFeito(r); pronto(); window.scrollTo({ top: 0 }); return; } setAviso(r.motivo === 'Link não lido automaticamente' ? 'Esse link o Radar ainda não lê sozinho. O pedido foi para conferência e, quando aprovar, a prova aparece aqui para você registrar.' : r.motivo ? 'O Radar leu o link mas não achou o seu nome. O pedido foi para conferência; quando aprovar, a prova aparece aqui.' : 'Pedido enviado! Quando o Radar aprovar, a prova aparece aqui para você registrar.'); }} />
             : <button className="btn outline pro-btn" onClick={() => { setPedir(true); setAviso(null); }}><CalendarPlus size={18} aria-hidden="true" />Minha prova não está aqui</button>}
         </>
       )}
