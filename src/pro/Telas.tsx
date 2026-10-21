@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, X as Fechar } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -16,6 +16,7 @@ import { Recordes } from './Recordes';
 import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
+const DIST_DUELO = [5, 10, 21.0975, 42.195];
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
 
 const SeloLiga = ({ liga }: { liga: Liga | null }) => liga
@@ -153,6 +154,7 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
       {temp.pontos_pendentes > 0 && <p className="fine pro-sem-margem">+{temp.pontos_pendentes} pontos esperando o resultado oficial ou o comprovante.</p>}
 
       <button className="btn solid pro-btn" onClick={irCorri}><Plus size={18} aria-hidden="true" />Eu corri uma prova</button>
+      <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
 
       {evolucao.length >= 2 && (
@@ -392,6 +394,42 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
   );
 }
 
+/* ───────── Rival sugerido: o atleta mais parecido comigo, com botão para desafiar ───────── */
+type Rival = { apelido: string; foto: string | null; cidade: string; liga: Liga; indice: number; faixa: string | null; meu_indice: number; km: number | null; meu_tempo: number | null; tempo_dele: number | null };
+export function RivalCard({ perfil }: { perfil: Perfil }) {
+  const [r, setR] = useState<Rival | null | undefined>(undefined);
+  const [link, setLink] = useState<string | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
+  useEffect(() => { sb.rpc('radar_rival').then(({ data }) => setR((data as Rival) ?? null)); }, []);
+  if (!r) return null;
+  const km = r.km && DIST_DUELO.find(d => Math.abs(d - Number(r.km)) < 0.3) ? Number(r.km) : 10;
+  const kmReal = DIST_DUELO.find(d => Math.abs(d - km) < 0.3) ?? 10;
+  const dif = r.meu_tempo != null && r.tempo_dele != null ? r.meu_tempo - r.tempo_dele : null;
+  const desafiar = async () => {
+    setErro(null);
+    const x = await chamar<{ link: string }>('radar-acoes', { acao: 'duelo_criar', distancia_km: kmReal });
+    if (x.erro) return setErro(x.erro);
+    setLink(x.link);
+    const txt = `@${r.apelido}, te desafio no Radar Pro! Duelo de ${kmTxt(kmReal)} neste mês: vence a maior nota por idade. Aceita? ${x.link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank', 'noopener');
+  };
+  return (
+    <section className="pro-card pro-rival">
+      <p className="pro-k cinza"><Swords size={14} aria-hidden="true" /> Seu rival do momento</p>
+      <div className="pro-rival-vs">
+        <div><Avatar foto={perfil.foto_url} apelido={perfil.apelido} tam={56} /><b>Você</b><small>índice {pct(r.meu_indice)}</small></div>
+        <em>vs</em>
+        <div><a href={linkPerfil(r.apelido)}><Avatar foto={r.foto} apelido={r.apelido} tam={56} /></a><b><a href={linkPerfil(r.apelido)}>@{r.apelido}</a></b><small>índice {pct(r.indice)} · {r.cidade}</small></div>
+      </div>
+      <p className="pro-sem-margem">{LIGAS.find(l => l.id === r.liga)?.nome ? `Mesma liga ${LIGAS.find(l => l.id === r.liga)!.nome}` : 'Nível parecido'}{r.faixa ? `, faixa ${r.faixa}` : ''}{dif != null && r.km ? <>. Nos {kmTxt(Number(r.km))}, {dif > 0 ? <>ele está <b>{relogio(dif)}</b> na sua frente</> : dif < 0 ? <>você está <b>{relogio(-dif)}</b> na frente</> : <>vocês estão <b>empatados</b></>}.</> : '.'}</p>
+      {link
+        ? <p className="pro-ok">Duelo criado! Se o WhatsApp não abriu, <a href={`https://wa.me/?text=${encodeURIComponent(`Te desafio no Radar Pro! Duelo de ${kmTxt(kmReal)}: ${link}`)}`} target="_blank" rel="noopener">mande o convite</a>. Acompanhe na aba Duelos.</p>
+        : <button className="btn solid pro-btn" onClick={desafiar}><Swords size={16} aria-hidden="true" />Desafiar nos {kmTxt(kmReal)}</button>}
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+    </section>
+  );
+}
+
 /* ───────── Quem do Radar Pro correu a mesma prova (para seguir) ───────── */
 type Companheiro = { apelido: string; foto: string | null; cidade: string; km: number; tempo: number; nota: number; sigo: boolean };
 export function CorreramComigo({ provaId, titulo = 'Quem mais correu essa prova' }: { provaId: string; titulo?: string }) {
@@ -524,7 +562,6 @@ function ProvasDe({ apelido, meu, sigo, mudouSigo }: { apelido: string; meu: boo
 
 /* ───────── 6 · Duelos ───────── */
 type Duelo = { id: string; convite: string; distancia_km: number; mes: string; eu_desafiante: boolean; adversario: string | null; minha_nota: number | null; minha_tempo: number | null; nota_adv: number | null; tempo_adv: number | null };
-const DIST_DUELO = [5, 10, 21.0975, 42.195];
 
 export function TelaDuelos({ perfil }: { perfil: Perfil }) {
   const [duelos, setDuelos] = useState<Duelo[] | null>(null);
