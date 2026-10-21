@@ -193,3 +193,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-fim-duelo.venci { border: 2px solid #f2b705; background: linear-gradient(180deg, rgb(242 183 5 / .14), var(--surface) 60%); }
 .pro-fim-duelo-tit { font-size: 1.35rem; font-weight: 900; }
 @keyframes chamada-pulso { 0%, 100% { box-shadow: 0 0 0 0 rgb(242 183 5 / .6); } 50% { box-shadow: 0 0 0 6px rgb(242 183 5 / 0); } }
+.pro-inicio-temporada { display: flex; align-items: center; gap: 10px; margin: 0; padding: 10px 14px; border-radius: 14px; font-size: .9rem; line-height: 1.3;
+  background: linear-gradient(90deg, rgb(242 183 5 / .18), rgb(242 183 5 / .06)); border: 1px solid rgb(242 183 5 / .5); color: var(--ink); }
+.pro-inicio-temporada svg { flex: none; color: #b07d00; }

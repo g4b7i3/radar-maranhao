@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, LogOut, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -134,6 +134,7 @@ function ProTelas() {
       <nav className="pro-menu" aria-label="Radar Pro">
         {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
       </nav>
+      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Temporada 2026:</b> contam as provas a partir de <b>15/10/2026</b>.</span></p>
       <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { setAba('conta'); window.scrollTo(0, 0); }} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {fimDuelos.map(d => (

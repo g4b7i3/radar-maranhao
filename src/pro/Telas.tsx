@@ -280,7 +280,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
           <ul className="pro-escolha">
             {lista.map(p => <li key={p.id}><button onClick={() => { setProva(p); setKm(p.distancias.length === 1 ? Number(p.distancias[0]) : null); }}><b>{p.nome}</b><span>{dataBR(p.data)} · {p.cidade}</span></button></li>)}
           </ul>
-          {provas && !lista.length && <p className="fine">Nenhuma prova encontrada. Só valem provas da agenda do Radar que já aconteceram (últimos 12 meses). Faltou alguma? <a href={whatsappLink('Oi! Corri uma prova que não está no Radar Pro: ')} target="_blank" rel="noopener">Avise pelo WhatsApp</a>.</p>}
+          {provas && !lista.length && <p className="fine">Nenhuma prova encontrada. Valem as provas da agenda do Radar que já aconteceram, a partir de 15/10/2026. Faltou alguma? <a href={whatsappLink('Oi! Corri uma prova que não está no Radar Pro: ')} target="_blank" rel="noopener">Avise pelo WhatsApp</a>.</p>}
         </>
       )}
 
