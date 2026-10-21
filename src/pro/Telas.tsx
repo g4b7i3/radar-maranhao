@@ -8,6 +8,7 @@ import TAB from '../idade-tabela.json';
 import { Assinar, NOMES_CIDADES } from './Pro';
 import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
+import CardDuelo, { type FimDuelo } from './CardDuelo';
 
 const ANO = new Date().getFullYear();
 const ehValido = (r: Resultado) => r.status === 'verificado' || r.status === 'aprovado';
@@ -410,6 +411,7 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
   const [res, setRes] = useState<Resultado[]>([]);
   const [km, setKm] = useState(5);
   const [novo, setNovo] = useState<{ link: string } | null>(null);
+  const [cardD, setCardD] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const carregar = () => sb.rpc('radar_meus_duelos').then(({ data }) => setDuelos((data ?? []) as Duelo[]));
   useEffect(() => { carregar(); sb.from('radar_resultados').select('*').neq('status', 'recusado').order('prova_data', { ascending: false }).then(({ data }) => setRes((data ?? []) as Resultado[])); }, []);
@@ -451,7 +453,17 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
           ) : (
             <p className="pro-sub">Esperando o amigo aceitar. <a href={`https://wa.me/?text=${encodeURIComponent(`Te desafio no Radar Pro! Duelo de ${kmTxt(Number(d.distancia_km))}: https://radarcorridasma.com.br/?pro=duelo&c=${d.convite}`)}`} target="_blank" rel="noopener">Mandar o convite de novo</a></p>
           )}
-          {d.adversario && (d.minha_nota != null || d.nota_adv != null) && <p className="pro-sub pro-centro">{ganho ? 'Você está na frente!' : 'Seu amigo está na frente.'} Vence a maior nota por idade.</p>}
+          {d.adversario && (() => {
+            const fim = new Date(d.mes.slice(0, 10) + 'T12:00:00Z'); fim.setUTCMonth(fim.getUTCMonth() + 1);
+            if (fim > new Date()) return null;
+            const r: FimDuelo['resultado'] = d.minha_nota == null && d.nota_adv == null ? 'ninguem' : d.nota_adv == null || (d.minha_nota != null && d.minha_nota > d.nota_adv) ? 'venci' : d.minha_nota == null || d.minha_nota < d.nota_adv ? 'perdi' : 'empate';
+            const fd: FimDuelo = { id: d.id, adversario: d.adversario, distancia_km: Number(d.distancia_km), mes: d.mes, minha_nota: d.minha_nota, nota_adv: d.nota_adv, resultado: r };
+            return <>
+              <p className="pro-sub pro-centro"><b>{r === 'venci' ? '🏆 Você venceu!' : r === 'perdi' ? 'Duelo encerrado: @' + d.adversario + ' venceu.' : r === 'empate' ? 'Empate!' : 'Ninguém correu na distância.'}</b></p>
+              {r !== 'ninguem' && (cardD === d.id ? <CardDuelo d={fd} eu={perfil.apelido} fechar={() => setCardD(null)} /> : <button className="btn outline pro-btn" onClick={() => setCardD(d.id)}>Card pro story</button>)}
+            </>;
+          })()}
+          {d.adversario && d.mes.slice(0, 7) >= new Date().toISOString().slice(0, 7) && (d.minha_nota != null || d.nota_adv != null) && <p className="pro-sub pro-centro">{ganho ? 'Você está na frente!' : 'Seu amigo está na frente.'} Vence a maior nota por idade.</p>}
         </section>
       ); })}
 

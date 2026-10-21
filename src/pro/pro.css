@@ -183,3 +183,13 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-seg { display: flex; flex-wrap: wrap; border-radius: 22px; gap: 2px; }
 .pro-seg button { flex: 1 1 auto; min-height: 40px; }
 .pro-instalar { background: linear-gradient(135deg, #1a2a6c, #0d1840); color: #ffd34d; border: 0; }
+
+/* duelo: convite e resultado */
+.pro-convite-duelo { display: flex; gap: 14px; align-items: flex-start; color: #fff; border: 0; background: radial-gradient(circle at 90% 0%, rgb(255 211 77 / .35), transparent 55%), linear-gradient(140deg, #3a0d0d, #a4161a 55%, #e5383b); }
+.pro-convite-duelo .pro-k { color: #fff; opacity: .85; }
+.pro-convite-duelo b { display: block; font-size: 1.2rem; line-height: 1.2; margin: 2px 0 6px; }
+.pro-convite-duelo-ic { flex: none; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #ffe28a, #f2b705); color: #3a2600; animation: chamada-pulso 2.4s ease-in-out infinite; }
+.pro-fim-duelo { display: flex; flex-direction: column; gap: 6px; }
+.pro-fim-duelo.venci { border: 2px solid #f2b705; background: linear-gradient(180deg, rgb(242 183 5 / .14), var(--surface) 60%); }
+.pro-fim-duelo-tit { font-size: 1.35rem; font-weight: 900; }
+@keyframes chamada-pulso { 0%, 100% { box-shadow: 0 0 0 0 rgb(242 183 5 / .6); } 50% { box-shadow: 0 0 0 6px rgb(242 183 5 / 0); } }

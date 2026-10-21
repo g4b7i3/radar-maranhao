@@ -2,10 +2,11 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, LogOut, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Mail, LogOut, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
+import CardDuelo, { tituloDuelo, type FimDuelo } from './CardDuelo';
 import CIDADES from '../cidades-ma-geo.json';
 import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin } from './Telas';
 import './pro.css';
@@ -26,6 +27,28 @@ export const Logo = () => (
   </svg>
 );
 
+/** Quem abriu o link de um duelo vê quem desafiou, antes mesmo de entrar. */
+function ConviteDuelo() {
+  const [d, setD] = useState<{ apelido: string; distancia_km: number; mes: string; aceito: boolean } | null>(null);
+  useEffect(() => {
+    let c: string | null = qs.get('c'); try { c ??= sessionStorage.getItem('radar-duelo'); } catch { /* */ }
+    if (c) sb.rpc('radar_convite_duelo', { p_convite: c }).then(({ data }) => setD((data as typeof d) ?? null));
+  }, []);
+  if (!d) return null;
+  const mes = new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' });
+  const km = Math.abs(Number(d.distancia_km) - 21.0975) < 0.1 ? '21 km' : Math.abs(Number(d.distancia_km) - 42.195) < 0.1 ? '42 km' : `${Number(d.distancia_km)} km`;
+  return (
+    <section className="pro-card pro-convite-duelo">
+      <span className="pro-convite-duelo-ic"><Espadas size={26} aria-hidden="true" /></span>
+      <div>
+        <p className="pro-k">Desafio pra você</p>
+        <b>@{d.apelido} te desafiou para um duelo de {km} em {mes}!</b>
+        <p className="pro-sem-margem">{d.aceito ? 'Esse duelo já foi aceito.' : 'Vence quem tiver a maior nota por idade numa prova oficial do mês. Entre no Radar Pro para aceitar.'}</p>
+      </div>
+    </section>
+  );
+}
+
 /** Radar Pro com o convite para instalar o app (igual ao do Radar, mas com a logo dourada). */
 export default function Pro() {
   return <><ProTelas /><InstallPrompt blocked={false} onInstalled={() => { /* */ }} app="o Radar Pro" icone="/icons/pro-192.png" oQueMostra="a sua temporada" /></>;
@@ -37,6 +60,8 @@ function ProTelas() {
   const [temp, setTemp] = useState<Temporada | null>(null);
   const [aba, setAba] = useState<Aba>('temporada');
   const [aviso, setAviso] = useState<string | null>(null);
+  const [fimDuelos, setFimDuelos] = useState<FimDuelo[]>([]);
+  const [cardDuelo, setCardDuelo] = useState<string | null>(null);
 
   useEffect(() => {
     sb.auth.getSession().then(({ data }) => setSessao(data.session));
@@ -51,6 +76,17 @@ function ProTelas() {
     if (p) { const { data: t } = await sb.rpc('radar_minha_temporada', { temporada: new Date().getFullYear() }); setTemp(t as Temporada); }
   }, [sessao]);
   useEffect(() => { if (sessao) recarregar(); else if (sessao === null) setPerfil(undefined); }, [sessao, recarregar]);
+
+  // novidades dos duelos: "fulano aceitou" e o resultado dos duelos do mês que acabou (aparecem uma vez)
+  useEffect(() => {
+    if (!perfil || !temp?.assinante) return;
+    sb.rpc('radar_duelo_novidades').then(({ data }) => {
+      const l = (data ?? []) as (FimDuelo & { tipo: 'aceito' | 'resultado' })[];
+      const aceitos = l.filter(x => x.tipo === 'aceito' && x.adversario).map(x => '@' + x.adversario);
+      if (aceitos.length) setAviso(`⚔️ ${aceitos.join(', ')} ${aceitos.length > 1 ? 'aceitaram' : 'aceitou'} o seu duelo! Veja na aba Duelos.`);
+      setFimDuelos(l.filter(x => x.tipo === 'resultado' && x.resultado !== 'ninguem'));
+    });
+  }, [perfil, temp?.assinante]);
 
   // convite de duelo guardado antes do login
   useEffect(() => {
@@ -70,9 +106,9 @@ function ProTelas() {
 
   if (sessao === undefined || (sessao && perfil === undefined)) return <main className="pro"><p className="pro-carregando">Carregando…</p></main>;
 
-  if (!sessao) return <main className="pro"><a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a><Convite /></main>;
+  if (!sessao) return <main className="pro"><a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a><ConviteDuelo /><Convite /></main>;
 
-  if (!perfil) return <main className="pro">{topo('Seu perfil de atleta')}<FormPerfil uid={sessao.user.id} email={sessao.user.email ?? ''} pronto={recarregar} /></main>;
+  if (!perfil) return <main className="pro">{topo('Seu perfil de atleta')}<ConviteDuelo /><FormPerfil uid={sessao.user.id} email={sessao.user.email ?? ''} pronto={recarregar} /></main>;
 
   if (!temp) return <main className="pro"><p className="pro-carregando">Carregando…</p></main>;
 
@@ -80,6 +116,7 @@ function ProTelas() {
   if (!temp.assinante && aba !== 'conta' && aba !== 'admin') return (
     <main className="pro">
       {topo('Assinar o Radar Pro')}
+      <ConviteDuelo />
       <Assinar perfil={perfil} pronto={recarregar} />
       <div className="pro-rodape-links"><button className="btn text" onClick={() => setAba('conta')}>Minha conta</button>{admin && <button className="btn text" onClick={() => setAba('admin')}>Administração</button>}</div>
     </main>
@@ -99,6 +136,14 @@ function ProTelas() {
       </nav>
       <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { setAba('conta'); window.scrollTo(0, 0); }} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
+      {fimDuelos.map(d => (
+        <section key={d.id} className={'pro-card pro-fim-duelo ' + d.resultado}>
+          <div className="pro-linha"><p className="pro-k">Duelo de {new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })} contra @{d.adversario}</p><button className="btn text" onClick={() => setFimDuelos(f => f.filter(x => x.id !== d.id))} aria-label="Fechar">✕</button></div>
+          <b className="pro-fim-duelo-tit">{d.resultado === 'venci' ? '🏆 ' : ''}{tituloDuelo(d)}</b>
+          <p className="pro-sem-margem">Você {d.minha_nota != null ? `${String(Number(d.minha_nota).toFixed(1)).replace('.', ',')}%` : 'sem prova'} × @{d.adversario} {d.nota_adv != null ? `${String(Number(d.nota_adv).toFixed(1)).replace('.', ',')}%` : 'sem prova'}</p>
+          {cardDuelo === d.id ? <CardDuelo d={d} eu={perfil.apelido} fechar={() => setCardDuelo(null)} /> : <button className="btn outline pro-btn" onClick={() => setCardDuelo(d.id)}>Card pro story</button>}
+        </section>
+      ))}
       {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} />}
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
       {aba === 'ranking' && <TelaRanking perfil={perfil} />}
