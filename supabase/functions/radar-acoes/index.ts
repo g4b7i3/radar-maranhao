@@ -209,7 +209,7 @@ Deno.serve(async req => {
         db.from('radar_resultados').select('*').eq('user_id', uid).order('prova_data', { ascending: false }),
         db.from('radar_medalhas').select('medalha, temporada, resultado_id').eq('user_id', uid),
         db.from('radar_pagamentos').select('status, valor, criado_em').eq('user_id', uid).order('criado_em', { ascending: false }),
-        db.from('radar_sugestoes_provas').select('nome, data, cidade, status, criado_em').eq('user_id', uid).order('criado_em', { ascending: false }),
+        db.from('radar_sugestoes_provas').select('nome, data, cidade, status, criado_em, prova_id').eq('user_id', uid).order('criado_em', { ascending: false }),
         db.from('radar_duelos').select('id, mes, distancia_km, desafiante, desafiado').or(`desafiante.eq.${uid},desafiado.eq.${uid}`),
       ]);
       return resp({ perfil, email: u?.user?.email ?? null, valida_ate: ass.data?.valida_ate ?? null, resultados: res.data ?? [], medalhas: med.data ?? [], pagamentos: pag.data ?? [], pedidos: sug.data ?? [], duelos: (due.data ?? []).length });

@@ -248,3 +248,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-usuarios button>div{display:grid;gap:2px;min-width:0}
 .pro-usuarios small{color:var(--muted,#667);font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pro-usuarios .pro-dir{justify-items:end;flex:none}
+.pro-msgs{display:grid;gap:8px;margin:6px 0}.pro-msg{justify-content:flex-start;text-align:left;white-space:normal}

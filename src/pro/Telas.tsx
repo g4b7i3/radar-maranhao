@@ -805,7 +805,7 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
     </section>
   );
 }
-type AreaAdm = { perfil: Perfil & { criado_em?: string }; email: string | null; valida_ate: string | null; resultados: (Resultado & { user_id: string })[]; medalhas: { medalha: string; temporada: number; resultado_id: string | null }[]; pagamentos: { status: string; valor: number; criado_em: string }[]; pedidos: { nome: string; data: string; cidade: string; status: string }[]; duelos: number };
+type AreaAdm = { perfil: Perfil & { criado_em?: string }; email: string | null; valida_ate: string | null; resultados: (Resultado & { user_id: string })[]; medalhas: { medalha: string; temporada: number; resultado_id: string | null }[]; pagamentos: { status: string; valor: number; criado_em: string }[]; pedidos: { nome: string; data: string; cidade: string; status: string; prova_id?: string | null }[]; duelos: number };
 function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => void; aviso: (m: string) => void }) {
   const [d, setD] = useState<AreaAdm | null>(null);
   const carregar = () => chamar<AreaAdm>('radar-acoes', { acao: 'admin_usuario', user_id: uid }).then(r => r.erro ? aviso(r.erro) : setD(r));
@@ -816,6 +816,22 @@ function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => v
   const st = situacao({ valida_ate: d.valida_ate, cortesia: !!d.valida_ate && new Date(d.valida_ate).getFullYear() >= 2090 });
   const acao = async (corpo: Record<string, unknown>, ok: string) => { const r = await chamar('radar-acoes', corpo); aviso(r.erro ?? ok); carregar(); };
   const liberar = (dias: number) => acao({ acao: 'admin_liberar', apelido: p.apelido, dias }, `+${dias} dias liberados para @${p.apelido}.`);
+  // mensagens prontas para o WhatsApp, conforme a situação do atleta
+  const primeiro = p.nome_completo.trim().split(/\s+/)[0].replace(/^./, c => c.toUpperCase());
+  const oi = `Oi, ${primeiro}! Aqui é do Radar Corridas MA 🏃`;
+  const mensagens: { nome: string; texto: string }[] = [];
+  const registradas = new Set(d.resultados.map(r => r.prova_id));
+  for (const x of d.pedidos.filter(x => x.status === 'aprovada' && (!x.prova_id || !registradas.has(x.prova_id))))
+    mensagens.push({ nome: `Prova aprovada: ${x.nome}`, texto: `${oi}\n\nSua prova *${x.nome}* (${dataBR(x.data)}) já foi aprovada no Radar Pro! ✅\n\nAbre o app, vai em *Eu corri* e toca em *Registrar* pra lançar o seu tempo. Se tiver o link do resultado ou um print, cola lá ou me manda aqui que eu confiro.\n\nradarcorridasma.com.br/pro` });
+  for (const r of d.resultados.filter(r => r.status === 'em_analise'))
+    mensagens.push({ nome: `Prova em análise: ${r.prova_nome}`, texto: `${oi}\n\nSobre a sua prova *${r.prova_nome}* (${dataBR(r.prova_data)}, ${kmTxt(Number(r.distancia_km))}, ${relogio(r.tempo_s)}) no Radar Pro: ${r.motivo_analise ?? 'precisamos conferir o seu resultado.'}\n\nPode me mandar o print ou o link do resultado oficial? Assim que eu conferir, ela passa a valer no ranking.` });
+  for (const r of d.resultados.filter(r => r.status === 'declarado'))
+    mensagens.push({ nome: `Valer no ranking: ${r.prova_nome}`, texto: `${oi}\n\nSua prova *${r.prova_nome}* está no Radar Pro como *declarada*, então ainda não conta no ranking. Me manda o print ou o link do resultado oficial que eu aprovo e ela passa a valer! 🏅` });
+  if (st.cls !== 'ok')
+    mensagens.push({ nome: 'Ativar o Pro', texto: `${oi}\n\nVi que você criou sua conta no Radar Pro, mas ainda não ativou. Ficou alguma dúvida? É só R$ 10 por mês, no Pix, sem fidelidade, e as provas desde 15/10 já contam pra você.\n\nSe quiser, te ajudo a ativar agora: radarcorridasma.com.br/pro` });
+  if (!d.resultados.length && st.cls === 'ok')
+    mensagens.push({ nome: 'Registrar a 1ª prova', texto: `${oi}\n\nSeu Radar Pro já tá ativo! Bora registrar a sua primeira prova? Vai em *Eu corri*, escolhe a prova e cola o link do resultado. O Radar acha você e já lança o tempo oficial, os pontos e as medalhas. 🏅\n\nradarcorridasma.com.br/pro` });
+  mensagens.push({ nome: 'Mensagem em branco', texto: `${oi}\n\n` });
   const meds = [...new Set(d.medalhas.map(m => m.medalha))].map(id => MEDALHAS.find(m => m.id === id)).filter(Boolean) as Medalha[];
   return (
     <>
@@ -834,6 +850,7 @@ function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => v
           {p.whatsapp && <a className="btn whats" href={`https://wa.me/${zapLimpo(p.whatsapp) ?? ''}`} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />WhatsApp</a>}
           <a className="btn outline" href={linkPerfil(p.apelido)} target="_blank" rel="noopener"><ExternalLink size={16} aria-hidden="true" />Perfil público</a>
         </div>
+        {p.whatsapp && zapLimpo(p.whatsapp) && <div className="pro-msgs"><p className="fine pro-sem-margem">Mensagem pronta no WhatsApp:</p>{mensagens.map(m => <a key={m.nome} className="btn outline pro-msg" href={`https://wa.me/${zapLimpo(p.whatsapp!)}?text=${encodeURIComponent(m.texto)}`} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />{m.nome}</a>)}</div>}
         <div className="pro-linha pro-quebra"><button className="btn outline" onClick={() => liberar(30)}>+30 dias de Pro</button><button className="btn outline" onClick={() => liberar(365)}>+1 ano</button></div>
         {d.pagamentos.length > 0 && <p className="fine pro-sem-margem">Pagamentos: {d.pagamentos.map(x => `${new Date(x.criado_em).toLocaleDateString('pt-BR')} R$ ${Number(x.valor).toFixed(2).replace('.', ',')} (${x.status === 'approved' ? 'pago' : x.status})`).join(' · ')}</p>}
         <p className="fine pro-sem-margem">{d.duelos} duelo{d.duelos === 1 ? '' : 's'} · conta criada em {p.criado_em ? new Date(p.criado_em).toLocaleDateString('pt-BR') : '?'}</p>
