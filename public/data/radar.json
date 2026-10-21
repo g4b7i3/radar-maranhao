@@ -1170,7 +1170,10 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-22",
-      "distances": [],
+      "distances": [
+        5,
+        10
+      ],
       "location": "Senac de Imperatriz",
       "registrationOpen": null,
       "registrationClose": null,
@@ -1180,11 +1183,16 @@
       "sourceName": "Crono Esportes",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Organização do Sesc, largada às 6h no Senac. Inscrições pela Crono Esportes (a Topchip também lista a prova). Categorias comunidade, comerciário e PcD.",
-      "prize": null,
+      "notes": "Organização do Sesc, largada às 6h05 (5 km PcD às 6h) no Senac. Inscrições pela Crono Esportes (a Topchip também lista a prova). Categorias comunidade, comerciário e PcD, em 5 e 10 km.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "Regulamento: troféu + R$ 500, 300 e 200 aos 3 primeiros de 5 e 10 km (comunidade e comerciário) e 5 km PcD, masc. e fem.; troféu do 4º ao 5º."
+      },
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
+      "verifiedAt": "2026-10-21T10:58:57.704Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1288,22 +1296,25 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://www.circuitodasestacoes.com.br/sao-luis/verao",
       "sourceUrl": "https://soucorredor.com.br/evento/7011/circuito_das_estacoes_-_etapa_verao_2026_%7C_sao_luis",
       "sourceName": "Sou Corredor",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Etapa de São Luís; há outra etapa em Imperatriz em 13/12. Data confirmada no Sou Corredor, CorridasBR e Ahotu.",
+      "confidence": "Página oficial e plataforma de inscrição (Running Land)",
+      "notes": "Etapa de São Luís; há outra etapa em Imperatriz em 13/12. Kits à venda na Running Land (Kit Estações R$ 149,90 em 5 e 10 km; idosos e PCD R$ 89,95), com camiseta, mochila, garrafa e medalha. Largada às 7h segundo a lista da Crono Esportes. Local ainda \"a definir\" na página de inscrição; percurso \"em breve\".",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Regulamento: \"não haverá premiação em dinheiro\". Troféus aos 3 primeiros de cada percurso, masc. e fem.; faixa etária no ranking final do circuito."
       },
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "price": {
+        "min": 89.95,
+        "text": "R$ 149,90 (idosos e PCD R$ 89,95)"
+      },
+      "start": "07:00",
+      "verifiedAt": "2026-10-21T10:58:57.704Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -2038,7 +2049,10 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-11-08",
-      "distances": [],
+      "distances": [
+        1,
+        5
+      ],
       "location": "Memorial da Balaiada",
       "registrationOpen": null,
       "registrationClose": null,
@@ -2048,11 +2062,16 @@
       "sourceName": "Crono Esportes",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h. Categorias comunidade, comerciário, kids e PcD; distâncias no regulamento.",
-      "prize": null,
+      "notes": "Largada às 6h (1 km às 6h, 5 km às 6h10). Categorias comunidade, comerciário, kids (1 km, 10 a 13 anos) e PcD participativo. Kit com camisa, sacola, coqueteleira, número com chip e medalha; não há entrega de kit no dia.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "Regulamento: troféu + R$ 500, 300 e 200 aos 3 primeiros dos 5 km (geral, comerciário e PcD), masc. e fem.; troféus do 4º ao 5º e no 1 km kids."
+      },
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
+      "verifiedAt": "2026-10-21T10:58:57.704Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -2111,10 +2130,15 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Categorias PcD, kids e médicos sócios da SBU-MA.",
-      "prize": null,
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus aos 3 primeiros gerais de 5 km PCD, 5 e 10 km, masc. e fem., sem premiação em dinheiro; medalhas por faixa etária."
+      },
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T15:54:43.321Z",
+      "verifiedAt": "2026-10-21T10:58:57.704Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3024,16 +3048,74 @@
       "start": null,
       "verifiedAt": "2026-10-20T18:06:44.443Z",
       "firstSeenAt": "2026-10-20T17:54:26.033Z"
+    },
+    {
+      "id": "eles-correm-2026-santa-rita",
+      "name": "2ª Corrida Eles Correm, Eles Vencem!",
+      "edition": "2026",
+      "city": "Santa Rita",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-10-31",
+      "distances": [],
+      "location": "Redondo de Carema, Santa Rita",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://doity.com.br/2-corrida-eles-correm-eles-vencem",
+      "sourceUrl": "https://roadrunners.run/evento/2026-2-corrida-eles-correm-eles-vencem/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Listada pelo Road Runners e pelo running.life com inscrição no Doity; organização informada: Prefeitura Municipal de Santa Rita. O running.life cita 5 km; o Road Runners diz que as distâncias não foram informadas. Horário, valores e status das inscrições a confirmar (a página do Doity não abriu nesta pesquisa).",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-21T10:58:57.704Z",
+      "firstSeenAt": "2026-10-21T10:58:57.704Z"
     }
   ],
   "changes": [
+    {
+      "id": "9a941a17-5690-4e84-87b4-91de541b4466",
+      "eventId": "eles-correm-2026-santa-rita",
+      "version": "[\"2026-10-31\",[],\"Redondo de Carema, Santa Rita\",null,null,\"Consultar\",\"https://doity.com.br/2-corrida-eles-correm-eles-vencem\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-21T10:58:57.704Z",
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
+    },
+    {
+      "id": "9177451f-1962-4a4f-b212-ab50f136812d",
+      "eventId": "estacoes-verao-2026-sao-luis",
+      "version": "[\"2026-12-06\",[5,10],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.circuitodasestacoes.com.br/sao-luis/verao\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-21T10:58:57.704Z",
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
+    },
+    {
+      "id": "4a3df2d8-7963-4e5f-b975-1fa420320ba4",
+      "eventId": "sesc-2026-imperatriz",
+      "version": "[\"2026-11-22\",[5,10],\"Senac de Imperatriz\",null,null,\"Abertas\",\"https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-21T10:58:57.704Z",
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
+    },
+    {
+      "id": "1ffcbc61-4042-4eb2-ad2c-1966ce77bd96",
+      "eventId": "sesc-2026-caxias",
+      "version": "[\"2026-11-08\",[1,5],\"Memorial da Balaiada\",null,null,\"Abertas\",\"https://www.cronoesportes.com.br/evento/3589/circuito-sesc-de-corridas-2026-caxias\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-21T10:58:57.704Z",
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
+    },
     {
       "id": "9f593495-da44-433d-8a19-ce99e757d416",
       "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
       "version": "[\"2026-11-14\",[5,10],\"São Luís (local de largada a confirmar)\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-20T18:06:16.038Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "c2a9ab82-34ec-4788-b932-525eda1b5b08",
@@ -3041,7 +3123,7 @@
       "version": "[\"2026-11-14\",[5,10],\"São Luís (local de largada a confirmar)\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-20T17:55:18.227Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "76a8490a-5714-4da1-b663-3c6bb05b6898",
@@ -3049,7 +3131,7 @@
       "version": "[\"2026-11-14\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
       "kind": "Nova prova",
       "at": "2026-10-20T17:54:26.033Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "ed359209-d1c5-42cf-ad3f-a2b530c1e004",
@@ -3057,7 +3139,7 @@
       "version": "[\"2028-09-24\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-10-20T16:18:41.197Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "31976a28-207f-402f-9017-e09cf6988e40",
@@ -3065,7 +3147,7 @@
       "version": "[\"2027-09-26\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-10-20T16:18:41.197Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "b483d567-ba7c-4949-b890-ba9b61ac2e30",
@@ -3073,7 +3155,7 @@
       "version": "[\"2026-10-31\",[5],\"Complexo do Porto do Itaqui\",\"2026-10-13T12:00:00-03:00\",null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/4acorridaportoitaqui\"]",
       "kind": "Alteração importante",
       "at": "2026-10-20T16:18:41.197Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "f6fbee7f-664b-4f9e-afa0-7b70670ec7c0",
@@ -3081,7 +3163,7 @@
       "version": "[\"2026-12-20\",[5],\"Em frente à Academia Portal Fitness, Morros\",null,\"2026-10-30\",\"Abertas\",\"https://lscrono.com.br/e/1a-corrida-portal-fitness\"]",
       "kind": "Nova prova",
       "at": "2026-10-20T13:15:02.306Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-21T10:59:39.032Z"
     },
     {
       "id": "2f84ecb0-aac9-449e-8e17-8aba77a2dcc9",
@@ -4492,7 +4574,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-20T18:06:44.443Z",
+  "lastChecked": "2026-10-21T10:58:57.704Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
