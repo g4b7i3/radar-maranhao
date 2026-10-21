@@ -3,6 +3,7 @@ import { Crown, Share2, Users } from 'lucide-react';
 import { sb, LIGAS, pct, kmTxt, dataBR, linkPerfil, type Liga } from './sb';
 import { Avatar } from './Foto';
 import './pro.css';
+import { DesafioAssessorias } from './Desafio';
 
 // Página pública da assessoria ou grupo: radarcorridasma.com.br/?assessoria=nome
 // Mostra só o que o ranking já mostra (apelido, foto, cidade, liga, pontos). O dono da equipe divulga, o Radar ganha atletas.
@@ -49,6 +50,8 @@ export default function Assessoria({ nome }: { nome: string }) {
             {d.reis.map(k => <div key={k.apelido + k.prova + k.km} className="pro-rei"><Avatar foto={k.foto} apelido={k.apelido} tam={40} /><div><b><a href={linkPerfil(k.apelido)}>@{k.apelido}</a> · {k.sexo === 'F' ? 'Rainha' : 'Rei'} da prova</b><small>{k.prova} · {dataBR(k.data)} · {kmTxt(Number(k.km))}</small></div><div className="pro-dir"><b>{pct(k.nota)}%</b></div></div>)}
           </section>
         )}
+
+        <DesafioAssessorias minha={d.nome} />
 
         <section className="pro-card">
           <p className="pro-k cinza">Atletas</p>

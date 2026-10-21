@@ -353,3 +353,14 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 @keyframes pro-halo{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
 .pro-mapa-pin{transform-box:fill-box;transform-origin:center}
 .pro-mapa-pin .halo{transform-box:fill-box;transform-origin:center}
+.pro-desafio-lista{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pro-desafio-lista li{display:grid;grid-template-columns:36px 1fr auto auto;gap:8px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line)}
+.pro-desafio-lista li:last-child{border-bottom:0}
+.pro-desafio-lista li.eu{background:var(--cobalt-tint);border-radius:12px;border-bottom:0}
+.pro-desafio-lista li>div{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.pro-desafio-lista li>div a{color:inherit;text-decoration:none;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pro-desafio-lista small{color:var(--muted);font-size:.76rem}
+.pro-desafio-lista .pos{font-size:1.05rem}
+.pro-desafio-lista .km{font-variant-numeric:tabular-nums}
+.pro-desafio-fotos{display:flex}
+.pro-desafio-fotos .pro-avatar{margin-right:-8px;border-width:1.5px}

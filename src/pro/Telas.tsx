@@ -14,6 +14,7 @@ import { Seguir } from './Feed';
 import { Metas } from './Metas';
 import { Recordes } from './Recordes';
 import { MapaCidades } from './Mapa';
+import { DesafioAssessorias } from './Desafio';
 import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
@@ -500,6 +501,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
         </div>
         <label className="ct-cidade pro-sel">Faixa etária<select value={faixa} onChange={e => setFaixa(e.target.value)}><option value="">Todas</option>{FAIXAS.map(f => <option key={f} value={f}>{f} anos</option>)}</select></label>
       </>}
+      {rec === 'assessorias' && <DesafioAssessorias minha={perfil.assessoria} />}
       {rec === 'pelotao' && <div className="chips" role="group" aria-label="Pelotão"><button className="chip" aria-pressed={!pelotaoCidade} onClick={() => setPelotaoCidade(false)}>Da minha liga</button><button className="chip" aria-pressed={pelotaoCidade} onClick={() => setPelotaoCidade(true)}>De {perfil.cidade}</button></div>}
       {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">{pelotaoCidade ? `Pelotão de ${perfil.cidade}` : `Pelotão ${LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}`}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
 
