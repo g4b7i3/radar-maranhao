@@ -111,7 +111,7 @@ function ChamadaPro() {
     return () => clearInterval(t);
   }, []);
   return (
-    <a className="chamada-pro" href="/?pro" data-umami-event="Radar Pro: chamada do topo">
+    <a className="chamada-pro" href="/pro/" data-umami-event="Radar Pro: chamada do topo">
       <span className="chamada-pro-selo"><Crown size={13} aria-hidden="true" />PRO</span>
       <span className="chamada-pro-txt" aria-live="off"><span key={i}>{FRASES_PRO[i]}</span></span>
       <span className="chamada-pro-seta" aria-hidden="true">→</span>

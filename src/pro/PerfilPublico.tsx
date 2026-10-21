@@ -25,7 +25,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
   if (d === undefined) return <main className="pro pro-publico"><p className="fine pro-centro">Carregando…</p></main>;
   if (d === null) return (
     <main className="pro pro-publico"><div className="pro-cont">
-      <section className="pro-card pro-centro"><p className="pro-medio">@{apelido}</p><p>Esse perfil não existe ou não é público.</p><a className="btn solid pro-btn" href="/?pro">Conhecer o Radar Pro</a></section>
+      <section className="pro-card pro-centro"><p className="pro-medio">@{apelido}</p><p>Esse perfil não existe ou não é público.</p><a className="btn solid pro-btn" href="/pro/">Conhecer o Radar Pro</a></section>
     </div></main>
   );
 
@@ -103,7 +103,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
         <section className="pro-card pro-centro">
           <p className="pro-sem-margem"><b>Quer o seu perfil assim?</b></p>
           <p className="fine">Resultado oficial verificado sozinho, nota por idade, ligas, ranking do Maranhão e {MEDALHAS.length} medalhas.</p>
-          <a className="btn solid pro-btn" href="/?pro">Conhecer o Radar Pro</a>
+          <a className="btn solid pro-btn" href="/pro/">Conhecer o Radar Pro</a>
         </section>
       </div>
     </main>

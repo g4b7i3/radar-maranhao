@@ -18,7 +18,7 @@ const nota = qs.get('nota') === 'idade'; // /?nota=idade abre a calculadora de n
 const ritmo = qs.get('calc') === 'ritmo'; // /?calc=ritmo abre a calculadora de ritmo
 // /?pro abre o Radar Pro; a volta do login (com #access_token ou ?code) também cai aqui
 const atleta = (qs.get('atleta') ?? '').toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20);
-const pro = qs.has('pro') || /access_token=|error_description=/.test(window.location.hash);
+const pro = qs.has('pro') || /^\/pro\b/.test(window.location.pathname) || /access_token=|error_description=/.test(window.location.hash);
 createRoot(document.getElementById('root')!).render(<StrictMode>{atleta ? <Suspense fallback={null}><PerfilPublico apelido={atleta} /></Suspense> : pro ? <Suspense fallback={null}><Pro /></Suspense> : story ? <StorySemana /> : treino ? <CardTreino /> : nota ? <NotaIdade /> : ritmo ? <Suspense fallback={null}><CalcRitmo /></Suspense> : <App />}</StrictMode>);
 
 // App instalável e offline: registra o service worker só na versão publicada.

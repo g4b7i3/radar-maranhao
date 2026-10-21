@@ -44,3 +44,23 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Links do Radar Pro com ?pro=… (convite de duelo) e perfil público ?atleta=… usam a página do Pro,
+# para a prévia do link (WhatsApp, Instagram) mostrar a temporada. O endereço no navegador não muda.
+[[redirects]]
+  from = "/"
+  to = "/pro/index.html"
+  status = 200
+  query = {pro = ":pro"}
+
+[[redirects]]
+  from = "/"
+  to = "/pro/index.html"
+  status = 200
+  query = {atleta = ":atleta"}
+
+[[headers]]
+  for = "/pro.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "no-cache"
