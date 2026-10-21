@@ -51,12 +51,14 @@
   from = "/"
   to = "/pro/index.html"
   status = 200
+  force = true
   query = {pro = ":pro"}
 
 [[redirects]]
   from = "/"
   to = "/pro/index.html"
   status = 200
+  force = true
   query = {atleta = ":atleta"}
 
 [[headers]]
