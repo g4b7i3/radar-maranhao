@@ -3,6 +3,7 @@
 // senão fica "declarado" (só conta para a temporada pessoal) ou "em análise" (com comprovante).
 // Calcula aqui no servidor a nota por idade, os pontos e as medalhas, para ninguém mexer pelo navegador.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
+import { acharNoOficial, gravarOficiais, lerLink, parecenca, semelhante, conferirRegistros } from '../_comum/resultados.ts';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
@@ -66,31 +67,46 @@ Deno.serve(async req => {
 
   // 1) Procura no resultado oficial (número de peito + nome).
   const peito = (b.peito ?? '').toString().replace(/\D/g, '').slice(0, 8) || null;
-  const nomePerfil = norm(perfil.nome_completo);
-  const nomeIns = norm(b.nome_inscricao || perfil.nome_completo);
-  const outroNome = !!b.nome_inscricao && nomeIns !== nomePerfil; // inscrito com outro nome: nunca verifica sozinho
-  // nomes "batem" se o primeiro e o último nome são iguais (aceita nome do meio abreviado ou faltando)
-  const batem = (a: string, c: string) => { const x = a.split(' '), y = c.split(' '); return x[0] === y[0] && (x[x.length - 1] === y[y.length - 1] || a.includes(c) || c.includes(a)); };
-  let oficial: { tempo_s: number; colocacao_geral: number | null; colocacao_faixa: number | null; nome: string; fonte_url: string | null } | null = null;
-  const { data: ofs } = await db.from('radar_resultados_oficiais').select('tempo_s, colocacao_geral, colocacao_faixa, nome, nome_norm, peito, distancia_km, fonte_url').eq('prova_id', prova.id);
+  const nomeIns = (b.nome_inscricao ?? '').trim().slice(0, 120);
+  // liberdade no nome da inscrição, mas com pelo menos um nome do nome completo do perfil
+  if (nomeIns && !semelhante(nomeIns, perfil.nome_completo)) return resp({ erro: 'O nome da inscrição precisa ter pelo menos um nome do seu nome completo.' }, 400);
+  const link = (b.link_resultado ?? '').trim().slice(0, 400) || null;
+
+  let { data: ofs } = await db.from('radar_resultados_oficiais').select('tempo_s, colocacao_geral, colocacao_faixa, nome, nome_norm, peito, distancia_km, fonte_url').eq('prova_id', prova.id);
+  // 1b) Link do resultado: o Radar lê na hora (Racezone, Wiclax). Se for da prova certa, vira o resultado oficial da prova.
+  let linkLido = false, avisoLink: string | null = null;
+  if (link && !ofs?.length) {
+    try {
+      const lido = await lerLink(link);
+      if (lido?.linhas.length) {
+        const diaOk = !!lido.data && Math.abs(new Date(lido.data.slice(0, 10)).getTime() - new Date(prova.date.slice(0, 10)).getTime()) <= 86400_000;
+        const nomeOk = parecenca(lido.evento, prova.name) >= 0.5;
+        if (nomeOk && (diaOk || !lido.data)) {
+          await gravarOficiais(db, prova.id, link, lido.linhas);
+          ({ data: ofs } = await db.from('radar_resultados_oficiais').select('tempo_s, colocacao_geral, colocacao_faixa, nome, nome_norm, peito, distancia_km, fonte_url').eq('prova_id', prova.id));
+          linkLido = true;
+          await conferirRegistros(db, prova.id).catch(() => null); // quem já tinha registrado essa prova também é conferido
+        } else if (!diaOk) avisoLink = `O link é de outro evento (${lido.evento || 'sem nome'}${lido.data ? ', ' + lido.data.slice(0, 10).split('-').reverse().join('/') : ''}).`;
+      }
+    } catch { /* site da cronometragem fora do ar: segue como comprovante */ }
+  }
+  if (avisoLink) return resp({ erro: avisoLink + ' Cole o link do resultado desta prova.' }, 400);
+
+  let oficial: { tempo_s: number; colocacao_geral: number | null; colocacao_faixa: number | null; nome: string } | null = null;
   if (ofs?.length) {
-    const naDist = ofs.filter(o => o.distancia_km == null || Math.abs(real(Number(o.distancia_km)) - km) < 0.2);
-    const dono = peito ? naDist.find(o => o.peito && o.peito.replace(/\D/g, '') === peito) : null;
-    // o dono do número no resultado oficial tem que ser a pessoa do perfil; senão, recusa
-    if (dono && !batem(dono.nome_norm, nomePerfil)) return resp({ erro: 'Recusado: esse número de peito é de outro atleta no resultado oficial.' }, 400);
-    const porNome = naDist.filter(o => o.nome_norm === nomeIns);
-    oficial = dono ?? (porNome.length === 1 ? porNome[0] : null);
+    const achado = acharNoOficial(ofs, km, { peito, nomePerfil: perfil.nome_completo, nomeBusca: nomeIns || perfil.nome_completo, tempo: Number(b.tempo_s) || null });
+    if (achado.outroAtleta) return resp({ erro: 'Recusado: esse número de peito é de outro atleta no resultado oficial.' }, 400);
+    oficial = achado.of;
   }
 
   const tempo = oficial ? oficial.tempo_s : Math.round(Number(b.tempo_s));
-  if (!(tempo > 0)) return resp({ erro: ofs?.length ? 'Não achamos você no resultado oficial. Confira o nome e o número de peito, ou informe o tempo.' : 'Informe o tempo líquido (do chip).' }, 400);
+  if (!(tempo > 0)) return resp({ erro: ofs?.length ? 'Não achamos você no resultado oficial. Confira o nome da inscrição e o número de peito, ou informe o tempo.' : 'Informe o tempo líquido (do chip).' }, 400);
   const pace = tempo / km;
   if (pace < 150) return resp({ erro: 'Esse tempo não é possível para essa distância. Confira.' }, 400);
   if (pace > 1500) return resp({ erro: 'Esse tempo parece de caminhada longa demais. Confira.' }, 400);
 
   const idade = idadeEm(perfil.nascimento, prova.date.slice(0, 10));
   const n = Math.round(nota(perfil.sexo, km, idade, tempo) * 100) / 100;
-  const link = (b.link_resultado ?? '').trim().slice(0, 400) || null;
 
   // Histórico do atleta (para recorde, cidade nova, alarmes e medalhas)
   const { data: hist } = await db.from('radar_resultados').select('*').eq('user_id', user.id).neq('status', 'recusado');
@@ -100,8 +116,7 @@ Deno.serve(async req => {
 
   // 2) Status e alarmes contra fraude
   let status = oficial ? 'verificado' : link ? 'em_analise' : 'declarado';
-  let motivo: string | null = oficial ? null : link ? 'Comprovante enviado: aguardando aprovação.' : null;
-  if (oficial && outroNome) { status = 'em_analise'; motivo = 'Achado no resultado oficial com nome diferente do perfil: o Radar confere.'; }
+  let motivo: string | null = oficial ? null : link ? (linkLido ? 'O Radar leu o resultado, mas não achou o seu nome/peito: conferir.' : 'Comprovante enviado: aguardando aprovação.') : null;
   if (!oficial && n > 80) { status = 'em_analise'; motivo = 'Nota por idade acima de 80%: precisa do resultado oficial.'; }
   if (!oficial && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
 
@@ -117,7 +132,7 @@ Deno.serve(async req => {
 
   const { data: novo, error } = await db.from('radar_resultados').insert({
     user_id: user.id, prova_id: prova.id, prova_nome: prova.name, prova_data: prova.date.slice(0, 10), cidade: prova.city,
-    largada: prova.start, distancia_km: km, tempo_s: tempo, idade, nota: n, peito: status === 'verificado' ? peito : null, peito_declarado: peito, nome_inscricao: b.nome_inscricao?.trim().slice(0, 120) || null, link_resultado: link,
+    largada: prova.start, distancia_km: km, tempo_s: tempo, idade, nota: n, peito: status === 'verificado' ? peito : null, peito_declarado: peito, nome_inscricao: nomeIns || null, link_resultado: link,
     status, motivo_analise: motivo, podio, pontos, detalhes_pontos: d,
   }).select().single();
   if (error) return resp({ erro: error.code === '23505' ? 'Esse número de peito já foi confirmado para outro atleta nessa prova. Fale com o Radar pelo WhatsApp.' : 'Não deu para salvar agora.' }, 400);
@@ -153,5 +168,5 @@ Deno.serve(async req => {
     novas = (ins ?? []).map(x => x.medalha);
   }
 
-  return resp({ resultado: novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado' });
+  return resp({ resultado: novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado', link_lido: linkLido });
 });

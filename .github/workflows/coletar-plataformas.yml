@@ -41,6 +41,8 @@ jobs:
             && cp /tmp/sugestoes.json coleta/sugestoes.json || echo "Sugestões ficaram para a próxima."
       - name: Radar Pro guarda as provas da agenda (para o "Eu corri!" depois que saem da agenda)
         run: curl -sf --max-time 30 https://xsijphfxcorjsuxiewch.supabase.co/functions/v1/radar-provas -o /dev/null || echo "Arquivo de provas fica para a próxima."
+      - name: Radar Pro · buscar resultados oficiais
+        run: curl -sf --max-time 140 https://xsijphfxcorjsuxiewch.supabase.co/functions/v1/radar-coletar-resultados || echo "Resultados ficam para a próxima."
       - name: Atualizar a agenda com a coleta (sem Claude)
         run: |
           # aplica status e provas novas; se algo der errado, a agenda fica como estava
