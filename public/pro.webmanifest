@@ -1,0 +1,20 @@
+{
+  "name": "Radar Pro · Corridas MA",
+  "short_name": "Radar Pro",
+  "description": "Sua temporada de corrida no Maranhão: resultado oficial verificado, nota por idade, ligas, ranking, medalhas e Rei da prova.",
+  "id": "/?pro",
+  "start_url": "/?pro&origem=app",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "background_color": "#0d1840",
+  "theme_color": "#0d1840",
+  "categories": ["sports", "health", "lifestyle"],
+  "icons": [
+    { "src": "/icons/pro-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/pro-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/pro-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/pro-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

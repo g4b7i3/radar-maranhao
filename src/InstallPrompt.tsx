@@ -18,7 +18,7 @@ function chooseMode(p: Platform, nativeReady: boolean): Mode {
 
 export const openInstallPrompt = () => window.dispatchEvent(new Event('radar:instalar'));
 
-export default function InstallPrompt({ blocked, onInstalled }: { blocked: boolean; onInstalled: () => void }) {
+export default function InstallPrompt({ blocked, onInstalled, app = 'o Radar', icone = '/icons/icon-192.png', oQueMostra = 'a agenda' }: { blocked: boolean; onInstalled: () => void; app?: string; icone?: string; oQueMostra?: string }) {
   const [platform] = useState(detect);
   const [nativeReady, setNativeReady] = useState(canPromptNative);
   const [open, setOpen] = useState(false);
@@ -92,10 +92,10 @@ export default function InstallPrompt({ blocked, onInstalled }: { blocked: boole
     <div className="install" role="dialog" aria-modal="false" aria-labelledby="install-title" ref={ref}>
       <button className="install-close" onClick={dismiss} aria-label="Fechar"><X size={18} /></button>
       <div className="install-head">
-        <img src="/icons/icon-192.png" alt="" width="48" height="48" />
+        <img src={icone} alt="" width="48" height="48" />
         <div>
-          <h2 id="install-title">{mode === 'installed' ? 'O app já está instalado' : (platform.mobile ? 'Instale o Radar no seu celular' : 'Instale o Radar no computador')}</h2>
-          <p>{mode === 'installed' ? 'Você está usando a versão instalada.' : (platform.mobile ? 'Abre direto da tela inicial, em tela cheia, e mostra a agenda mesmo com a internet fraca.' : 'Abre numa janela própria, sem abas, e mostra a agenda mesmo com a internet fraca.')}</p>
+          <h2 id="install-title">{mode === 'installed' ? 'O app já está instalado' : (platform.mobile ? `Instale ${app} no seu celular` : `Instale ${app} no computador`)}</h2>
+          <p>{mode === 'installed' ? 'Você está usando a versão instalada.' : (platform.mobile ? `Abre direto da tela inicial, em tela cheia, e mostra ${oQueMostra} mesmo com a internet fraca.` : `Abre numa janela própria, sem abas, e mostra ${oQueMostra} mesmo com a internet fraca.`)}</p>
         </div>
       </div>
 
@@ -130,7 +130,7 @@ export default function InstallPrompt({ blocked, onInstalled }: { blocked: boole
 
       {mode === 'inapp' && (
         <>
-          <p className="install-note">Você abriu o Radar pelo <b>{platform.inApp}</b>, e por aqui não dá para instalar. Abra no navegador do celular e a opção de instalar aparece.</p>
+          <p className="install-note">Você abriu {app} pelo <b>{platform.inApp}</b>, e por aqui não dá para instalar. Abra no navegador do celular e a opção de instalar aparece.</p>
           <ol className="install-steps">
             {platform.ios
               ? <li>Toque em <Ellipsis size={15} aria-label="três pontos" className="ico" /> ou <Share size={15} aria-label="Compartilhar" className="ico" /> e escolha <b>Abrir no navegador</b> (ou <b>Abrir no Safari</b>).</li>

@@ -5,6 +5,7 @@ import type { Session } from '@supabase/supabase-js';
 import { ArrowLeft, Mail, LogOut, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
+import InstallPrompt from '../InstallPrompt';
 import CIDADES from '../cidades-ma-geo.json';
 import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin } from './Telas';
 import './pro.css';
@@ -13,11 +14,24 @@ type Aba = 'temporada' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
 const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
 
+/** Logo do Radar Pro: o símbolo do Radar em dourado, no fundo azul-noite (a mesma do ícone do app). */
 export const Logo = () => (
-  <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1D3FBF" /><g fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-8 8M12 28a8 8 0 0 0-8-8" /><path d="M16 9l7 7-7 7-7-7z" /></g></svg>
+  <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+    <defs>
+      <linearGradient id="logo-pro-f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#1a2a6c" /><stop offset="1" stopColor="#070d26" /></linearGradient>
+      <linearGradient id="logo-pro-o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff1b8" /><stop offset=".5" stopColor="#f2b705" /><stop offset="1" stopColor="#ffe28a" /></linearGradient>
+    </defs>
+    <rect width="32" height="32" rx="7" fill="url(#logo-pro-f)" />
+    <g fill="none" stroke="url(#logo-pro-o)" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-8 8M12 28a8 8 0 0 0-8-8" /><path d="M16 9l7 7-7 7-7-7z" /></g>
+  </svg>
 );
 
+/** Radar Pro com o convite para instalar o app (igual ao do Radar, mas com a logo dourada). */
 export default function Pro() {
+  return <><ProTelas /><InstallPrompt blocked={false} onInstalled={() => { /* */ }} app="o Radar Pro" icone="/icons/pro-192.png" oQueMostra="a sua temporada" /></>;
+}
+
+function ProTelas() {
   const [sessao, setSessao] = useState<Session | null | undefined>(undefined);
   const [perfil, setPerfil] = useState<Perfil | null | undefined>(undefined);
   const [temp, setTemp] = useState<Temporada | null>(null);

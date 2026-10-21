@@ -26,6 +26,16 @@
     <meta name="apple-mobile-web-app-title" content="Corridas MA" />
     <meta name="application-name" content="Corridas MA" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <script>
+      // Radar Pro (/?pro): é instalado como outro app, com a logo dourada e nome próprio
+      if (/[?&]pro\b/.test(location.search) || /access_token=|error_description=/.test(location.hash)) {
+        document.querySelector('link[rel="manifest"]').href = '/pro.webmanifest';
+        document.querySelector('link[rel="apple-touch-icon"]').href = '/icons/pro-apple-touch-icon.png';
+        document.querySelector('meta[name="apple-mobile-web-app-title"]').content = 'Radar Pro';
+        document.querySelector('meta[name="application-name"]').content = 'Radar Pro';
+        document.title = 'Radar Pro · Corridas MA';
+      }
+    </script>
       <!-- Contador de visitas (Umami): sem cookies, não precisa de aviso de consentimento -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="b76ab5df-6ae1-413d-8502-e52632473f44"></script>
   </head>

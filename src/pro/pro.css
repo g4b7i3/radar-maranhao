@@ -182,3 +182,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 /* abas do ranking: quebram em duas linhas em vez de esconder */
 .pro-seg { display: flex; flex-wrap: wrap; border-radius: 22px; gap: 2px; }
 .pro-seg button { flex: 1 1 auto; min-height: 40px; }
+.pro-instalar { background: linear-gradient(135deg, #1a2a6c, #0d1840); color: #ffd34d; border: 0; }

@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -506,6 +506,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
         {!renovar && <button className="btn outline pro-btn" onClick={() => setRenovar(true)}>{temp.assinante ? 'Renovar com Pix (+30 dias)' : 'Assinar com Pix'}</button>}
         {renovar && <Assinar perfil={perfil} pronto={() => { setRenovar(false); pronto(); }} />}
       </section>
+      <button className="btn solid pro-btn pro-instalar" onClick={() => window.dispatchEvent(new Event('radar:instalar'))}><Smartphone size={18} aria-hidden="true" />Instalar o app Radar Pro</button>
       <button className="btn outline pro-btn" onClick={baixar}><Download size={18} aria-hidden="true" />Baixar meus dados</button>
       <details className="pro-card pro-perigo"><summary><Trash2 size={16} aria-hidden="true" /> Apagar minha conta</summary>
         <p className="fine">Apaga perfil, provas, medalhas, duelos e pagamentos registrados. Não dá para desfazer.</p>
