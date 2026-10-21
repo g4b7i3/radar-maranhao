@@ -100,8 +100,15 @@ Deno.serve(async req => {
       if (!c.user_id) await db.from('radar_cortesias').update({ user_id: user.id, usado_em: new Date().toISOString() }).eq('codigo', codigo).is('user_id', null);
       const { data: dono } = await db.from('radar_cortesias').select('user_id').eq('codigo', codigo).maybeSingle();
       if (dono?.user_id !== user.id) return resp({ erro: 'Esse link de cortesia já foi usado por outra conta.' }, 409);
-      await db.from('radar_assinaturas').upsert({ user_id: user.id, valida_ate: '2099-12-31T23:59:59Z', atualizado_em: new Date().toISOString() });
-      return resp({ ok: true, nome: c.nome });
+      // com prazo: soma os dias ao que a pessoa já tem; sem prazo: vitalícia (até o Vinik revogar)
+      let ate = '2099-12-31T23:59:59Z';
+      if (c.dias) {
+        const { data: a } = await db.from('radar_assinaturas').select('valida_ate').eq('user_id', user.id).maybeSingle();
+        const base = a?.valida_ate && new Date(a.valida_ate) > new Date() && new Date(a.valida_ate).getFullYear() < 2090 ? new Date(a.valida_ate) : new Date();
+        ate = new Date(base.getTime() + c.dias * 86400_000).toISOString();
+      }
+      await db.from('radar_assinaturas').upsert({ user_id: user.id, valida_ate: ate, atualizado_em: new Date().toISOString() });
+      return resp({ ok: true, nome: c.nome, dias: c.dias ?? null });
     }
     // ───────── LGPD: baixar meus dados
     case 'exportar': {
@@ -134,7 +141,7 @@ Deno.serve(async req => {
       const { data: mesmoDia } = dias.length ? await db.from('radar_provas').select('id, nome, data, cidade, distancias').in('data', dias) : { data: [] };
       const ids = [...new Set([...(res ?? []).map(r => r.user_id), ...(sug ?? []).map(x => x.user_id), ...(cont ?? []).flatMap(c => [c.autor_id, c.radar_resultados?.user_id])].filter(Boolean))];
       const { data: perfis } = ids.length ? await db.from('radar_perfis').select('user_id, apelido, nome_completo, cidade, whatsapp').in('user_id', ids) : { data: [] };
-      const { data: cort } = await db.from('radar_cortesias').select('codigo, nome, user_id, usado_em').is('revogado_em', null).order('criado_em');
+      const { data: cort } = await db.from('radar_cortesias').select('codigo, nome, user_id, usado_em, dias').is('revogado_em', null).order('criado_em');
       const idsC = (cort ?? []).map(c => c.user_id).filter(Boolean);
       const { data: apC } = idsC.length ? await db.from('radar_perfis').select('user_id, apelido').in('user_id', idsC) : { data: [] };
       const cortesias = (cort ?? []).map(c => ({ ...c, apelido: (apC ?? []).find(x => x.user_id === c.user_id)?.apelido ?? null }));
@@ -221,8 +228,9 @@ Deno.serve(async req => {
     }
     case 'admin_cortesia_criar': { // gera um link de cortesia novo
       const nome = String(b.nome ?? '').trim().slice(0, 60) || `Cortesia ${new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`;
+      const dias = b.dias === null || b.dias === '' || b.dias === undefined ? null : Math.min(3650, Math.max(1, Math.round(Number(b.dias)) || 60));
       const codigo = Array.from(crypto.getRandomValues(new Uint8Array(5))).map(x => x.toString(16).padStart(2, '0')).join('');
-      const { error } = await db.from('radar_cortesias').insert({ codigo, nome });
+      const { error } = await db.from('radar_cortesias').insert({ codigo, nome, dias });
       if (error) return resp({ erro: error.message }, 400);
       return resp({ ok: true, codigo, link: `https://radarcorridasma.com.br/?pro=cortesia&k=${codigo}` });
     }

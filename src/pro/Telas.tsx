@@ -795,12 +795,13 @@ export function ZapConta({ perfil, pronto }: { perfil: Perfil; pronto: () => voi
 
 /* ───────── Administração (só o Vinik) ───────── */
 type ProvaDia = { id: string; nome: string; data: string; cidade: string; distancias: number[] };
-type Cortesia = { codigo: string; nome: string; user_id: string | null; usado_em: string | null; apelido: string | null };
+type Cortesia = { codigo: string; nome: string; user_id: string | null; usado_em: string | null; apelido: string | null; dias?: number | null };
 type Pend = { cortesias: Cortesia[]; sugestoes: (Sugestao & { user_id: string })[]; provas_mesmo_dia: ProvaDia[]; resultados: (Resultado & { user_id: string })[]; contestacoes: { id: string; motivo: string; autor_id: string; criado_em: string; radar_resultados: Resultado & { user_id: string } }[]; perfis: { user_id: string; apelido: string; nome_completo: string; cidade: string; whatsapp?: string | null }[] };
 export function TelaAdmin() {
   const [p, setP] = useState<Pend | null>(null);
   const [apelido, setApelido] = useState('');
   const [nomeCort, setNomeCort] = useState('');
+  const [diasCort, setDiasCort] = useState('60');
   const [dias, setDias] = useState('30');
   const [msg, setMsg] = useState<string | null>(null);
   const carregar = () => chamar<Pend>('radar-acoes', { acao: 'admin_pendentes' }).then(r => (r.erro ? setMsg(r.erro) : setP(r)));
@@ -825,10 +826,10 @@ export function TelaAdmin() {
         <div className="pro-linha pro-quebra"><input className="pro-input" value={apelido} onChange={e => setApelido(e.target.value)} placeholder="@apelido" aria-label="Apelido" /><input className="pro-input pro-curto" inputMode="numeric" value={dias} onChange={e => setDias(e.target.value)} aria-label="Dias" /><button className="btn solid" onClick={liberar}>Liberar</button></div>
       </section>
       <section className="pro-card"><p className="pro-k cinza">Cortesias ativas ({p?.cortesias?.length ?? '…'})</p>
-        <div className="pro-linha pro-quebra"><input className="pro-input" value={nomeCort} onChange={e => setNomeCort(e.target.value)} placeholder="Para quem (opcional)" aria-label="Nome da cortesia" /><button className="btn solid" onClick={async () => { const r = await chamar<{ link: string }>('radar-acoes', { acao: 'admin_cortesia_criar', nome: nomeCort }); if (r.erro) return setMsg(r.erro); setNomeCort(''); try { await navigator.clipboard.writeText(r.link); setMsg('Cortesia criada e link copiado: ' + r.link); } catch { setMsg('Cortesia criada: ' + r.link); } carregar(); }}>Gerar cortesia</button></div>
+        <div className="pro-linha pro-quebra"><input className="pro-input" value={nomeCort} onChange={e => setNomeCort(e.target.value)} placeholder="Para quem (opcional)" aria-label="Nome da cortesia" /><input className="pro-input pro-curto" inputMode="numeric" value={diasCort} onChange={e => setDiasCort(e.target.value.replace(/\D/g, ''))} placeholder="dias" aria-label="Dias (vazio = vitalícia)" title="Dias de Pro. Vazio = vitalícia, até você tirar." /><button className="btn solid" onClick={async () => { const r = await chamar<{ link: string }>('radar-acoes', { acao: 'admin_cortesia_criar', nome: nomeCort, dias: diasCort || null }); if (r.erro) return setMsg(r.erro); setNomeCort(''); try { await navigator.clipboard.writeText(r.link); setMsg('Cortesia criada e link copiado: ' + r.link); } catch { setMsg('Cortesia criada: ' + r.link); } carregar(); }}>Gerar cortesia</button></div>
         <ul className="pro-provas">{p?.cortesias?.map(c => (
           <li key={c.codigo}>
-            <div className="pro-linha"><b>{c.nome}</b>{c.apelido ? <span className="pro-st ok">@{c.apelido}</span> : <span className="pro-st dec">Ainda não usado</span>}</div>
+            <div className="pro-linha"><b>{c.nome} <small className="cinza">· {c.dias ? `${c.dias} dias` : 'vitalícia'}</small></b>{c.apelido ? <span className="pro-st ok">@{c.apelido}</span> : <span className="pro-st dec">Ainda não usado</span>}</div>
             <p className="fine pro-sem-margem">radarcorridasma.com.br/?pro=cortesia&amp;k={c.codigo}</p>
             <div className="pro-linha pro-quebra">
               <button className="btn outline" onClick={() => { navigator.clipboard?.writeText(`https://radarcorridasma.com.br/?pro=cortesia&k=${c.codigo}`); setMsg('Link copiado.'); }}><Copy size={16} aria-hidden="true" />Copiar link</button>
