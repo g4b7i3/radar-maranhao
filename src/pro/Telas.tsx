@@ -408,7 +408,8 @@ export function RivalCard({ perfil }: { perfil: Perfil }) {
   const [link, setLink] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   useEffect(() => { sb.rpc('radar_rival').then(({ data }) => setR((data as Rival) ?? null)); }, []);
-  if (!r) return null;
+  if (r === undefined) return null;
+  if (r === null) return <section className="pro-card"><p className="pro-k cinza"><Swords size={14} aria-hidden="true" /> Seu rival do momento</p><p className="fine pro-sem-margem">Aparece quando você tiver uma prova com resultado oficial: o Radar acha o atleta da sua liga e da sua faixa etária com o índice mais perto do seu.</p></section>;
   const km = r.km && DIST_DUELO.find(d => Math.abs(d - Number(r.km)) < 0.3) ? Number(r.km) : 10;
   const kmReal = DIST_DUELO.find(d => Math.abs(d - km) < 0.3) ?? 10;
   const dif = r.meu_tempo != null && r.tempo_dele != null ? r.meu_tempo - r.tempo_dele : null;
@@ -428,7 +429,7 @@ export function RivalCard({ perfil }: { perfil: Perfil }) {
         <em>vs</em>
         <div><a href={linkPerfil(r.apelido)}><Avatar foto={r.foto} apelido={r.apelido} tam={56} /></a><b><a href={linkPerfil(r.apelido)}>@{r.apelido}</a></b><small>índice {pct(r.indice)} · {r.cidade}</small></div>
       </div>
-      <p className="pro-sem-margem">{LIGAS.find(l => l.id === r.liga)?.nome ? `Mesma liga ${LIGAS.find(l => l.id === r.liga)!.nome}` : 'Nível parecido'}{r.faixa ? `, faixa ${r.faixa}` : ''}{dif != null && r.km ? <>. Nos {kmTxt(Number(r.km))}, {dif > 0 ? <>ele está <b>{relogio(dif)}</b> na sua frente</> : dif < 0 ? <>você está <b>{relogio(-dif)}</b> na frente</> : <>vocês estão <b>empatados</b></>}.</> : '.'}</p>
+      <p className="pro-sem-margem">Mesma liga {LIGAS.find(l => l.id === r.liga)?.nome}, mesma faixa ({r.faixa} anos){dif != null && r.km ? <>. Nos {kmTxt(Number(r.km))}, {dif > 0 ? <>ele está <b>{relogio(dif)}</b> na sua frente</> : dif < 0 ? <>você está <b>{relogio(-dif)}</b> na frente</> : <>vocês estão <b>empatados</b></>}.</> : '.'}</p>
       {link
         ? <p className="pro-ok">Duelo criado! Se o WhatsApp não abriu, <a href={`https://wa.me/?text=${encodeURIComponent(`Te desafio no Radar Pro! Duelo de ${kmTxt(kmReal)}: ${link}`)}`} target="_blank" rel="noopener">mande o convite</a>. Acompanhe na aba Duelos.</p>
         : <button className="btn solid pro-btn" onClick={desafiar}><Swords size={16} aria-hidden="true" />Desafiar nos {kmTxt(kmReal)}</button>}
@@ -511,7 +512,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
 
       <p className="fine pro-sem-margem">{{
         geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas.`,
-        eficiencia: 'Índice (nota por idade): compara atletas de idades e sexos diferentes de forma justa.',
+        eficiencia: 'Índice = média das 3 melhores notas por idade (ou das que tiver, a partir de 1 prova oficial). Compara idades e sexos diferentes de forma justa.',
         assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
         pelotao: pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
         reis: '',
