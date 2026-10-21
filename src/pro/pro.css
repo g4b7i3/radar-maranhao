@@ -346,3 +346,10 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-rival-vs>div a{color:inherit;text-decoration:none}
 .pro-rival-vs small{color:var(--muted);font-size:.75rem}
 .pro-rival-vs em{font-style:normal;font-weight:900;color:#c99a06;font-size:1.1rem}
+.pro-mapa svg{width:100%;max-height:260px;display:block}
+.pro-mapa-estado{fill:var(--cobalt-tint);stroke:var(--cobalt);stroke-width:1.5;stroke-linejoin:round}
+.pro-mapa-pin circle{fill:#f2b705;stroke:#fff;stroke-width:1.5}
+.pro-mapa-pin .halo{fill:rgba(242,183,5,.3);stroke:none;animation:pro-halo 2s ease-out infinite}
+@keyframes pro-halo{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.pro-mapa-pin{transform-box:fill-box;transform-origin:center}
+.pro-mapa-pin .halo{transform-box:fill-box;transform-origin:center}

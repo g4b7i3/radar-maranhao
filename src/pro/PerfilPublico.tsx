@@ -7,6 +7,7 @@ import { Avatar } from './Foto';
 import { Aplauso, Seguir, type Reacoes, type TipoReacao } from './Feed';
 import { Metas } from './Metas';
 import { Recordes } from './Recordes';
+import { MapaCidades } from './Mapa';
 import { linkAssessoria } from './Assessoria';
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
@@ -84,6 +85,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
         )}
 
         <Metas provas={d.resultados.map(r => ({ data: r.data, cidade: r.cidade, status: r.status }))} indice={d.indice} liga={d.liga} />
+        {d.resultados.length > 0 && <MapaCidades cidades={d.resultados.map(r => r.cidade)} titulo={`O Maranhão de @${d.apelido}`} />}
 
         <section className="pro-card">
           <div className="pro-linha"><p className="pro-k cinza">Medalhas</p><b>{ganhas.length} / {MEDALHAS.length}</b></div>
