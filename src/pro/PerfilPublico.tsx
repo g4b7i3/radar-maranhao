@@ -5,6 +5,7 @@ import { GRUPOS, MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
 import './pro.css';
 import { Avatar } from './Foto';
 import { Aplauso, Seguir } from './Feed';
+import { Metas } from './Metas';
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
 // Mostra só o que já aparece no ranking (apelido, cidade, liga, provas e medalhas). Nada de nome completo, idade ou contato.
@@ -82,6 +83,8 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
             {d.reis.map(k => <div key={k.prova + k.km} className="pro-rei"><span className={'pro-coroa ' + (d.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span><div><b>{k.prova}</b><small>{dataBR(k.data)} · {kmTxt(Number(k.km))}</small></div><div className="pro-dir"><b>{pct(k.nota)}%</b></div></div>)}
           </section>
         )}
+
+        <Metas provas={d.resultados.map(r => ({ data: r.data, cidade: r.cidade, status: r.status }))} indice={d.indice} liga={d.liga} />
 
         <section className="pro-card">
           <div className="pro-linha"><p className="pro-k cinza">Medalhas</p><b>{ganhas.length} / {MEDALHAS.length}</b></div>

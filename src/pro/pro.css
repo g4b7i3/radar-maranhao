@@ -292,3 +292,9 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-pub-acoes .pro-seguir.text{color:#fff}
 .pro-pub-acoes .pro-aplauso{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4)}
 .pro-pub-acoes .pro-aplauso.on{background:#fff;color:var(--cobalt);border-color:#fff}
+.pro-metas{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.pro-metas li b{display:inline-flex;align-items:center;gap:5px;font-size:.95rem}
+.pro-metas li b svg{color:#e2641b}
+.pro-metas li .pro-med-barra{margin-top:6px}
+.pro-metas li.ok .pro-med-barra i{background:linear-gradient(90deg,#18a957,#2e52d6)}
+.pro-metas small{color:var(--muted);font-size:.8rem;display:block;margin-top:4px}
