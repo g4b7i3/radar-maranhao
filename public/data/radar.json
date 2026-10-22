@@ -2157,7 +2157,7 @@
       "location": "UEMA, Campus Paulo VI",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceName": "Crono Esportes",
@@ -2169,12 +2169,13 @@
         "top": 700,
         "summary": "5 e 10 km comunidade: troféu + R$ 700, R$ 500 e R$ 300 aos 3 primeiros (masc. e fem.); troféus nas categorias UEMA e PCD."
       },
+      "elevation": null,
       "price": {
         "min": 60,
         "text": "R$ 60 a R$ 90 + 1 kg de alimento"
       },
       "start": "05:45",
-      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "verifiedAt": "2026-10-22T14:15:45.952Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3139,6 +3140,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "bd7a81e4-1716-4400-94d4-2fd222ea0c03",
+      "eventId": "uema-viii-2026-sao-luis",
+      "version": "[\"2026-12-13\",[3,5,10],\"UEMA, Campus Paulo VI\",null,null,\"Esgotadas\",\"https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-22T14:15:45.952Z",
+      "notifiedAt": null
+    },
     {
       "id": "441f72b1-cd1c-4000-8cf7-abdf970b5404",
       "eventId": "corrida-contra-as-drigas-2026-montes-altos",
@@ -4668,7 +4677,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-22T10:56:46.652Z",
+  "lastChecked": "2026-10-22T14:15:45.952Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
