@@ -539,3 +539,12 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-mapa-br-legenda span.on{color:var(--ink);font-weight:700}
 .pro-mapa-br-legenda i{width:10px;height:10px;border-radius:3px;display:inline-block}
 .pro-mapa-br-legenda .r-norte i{background:#5fd0a0}.pro-mapa-br-legenda .r-nordeste i{background:#f2b705}.pro-mapa-br-legenda .r-centro_oeste i{background:#e07a3c}.pro-mapa-br-legenda .r-sudeste i{background:#3d5fe0}.pro-mapa-br-legenda .r-sul i{background:#a56cf0}
+
+/* abas do ranking: fileira deslizável, com ícone; a ativa fica azul */
+.pro-recortes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;margin:0 calc(var(--safe-r) * -1) 0 calc(var(--safe-l) * -1);padding:4px var(--safe-r) 6px var(--safe-l);scroll-snap-type:x proximity;scroll-padding:0 var(--safe-l)}
+.pro-recortes::-webkit-scrollbar{display:none}
+.pro-recortes button{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:84px;padding:10px 12px 9px;border-radius:16px;border:1px solid var(--pro-fio);background:var(--surface);color:var(--muted);font-weight:700;font-size:.78rem;line-height:1;box-shadow:var(--pro-sombra);scroll-snap-align:center;transition:transform .12s ease,background .2s ease,color .2s ease}
+.pro-recortes button svg{opacity:.8}
+.pro-recortes button:active{transform:scale(.95)}
+.pro-recortes button[aria-selected="true"]{background:linear-gradient(180deg,#2f55e3,var(--cobalt-deep));color:#fff;border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 22px -10px rgb(29 63 191 / .7)}
+.pro-recortes button[aria-selected="true"] svg{opacity:1;color:#ffd34d}

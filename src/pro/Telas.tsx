@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, type LucideIcon } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -503,8 +503,10 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   const mudouSigo = (ap: string) => (v: boolean) => setSigo(prev => { const n = new Set(prev); if (v) n.add(ap); else n.delete(ap); return n; });
   return (
     <div className="pro-cont">
-      <div className="seg pro-seg" role="group" aria-label="Tipo de ranking">
-        {([['geral', 'Pontos'], ['eficiencia', 'Eficiência'], ['reis', 'Reis 👑'], ['viajantes', 'Viajantes ✈️'], ['assessorias', 'Assessorias'], ['pelotao', 'Pelotão']] as [Rec, string][]).map(([k, n]) => <button key={k} aria-pressed={rec === k} onClick={() => setRec(k)}>{n}</button>)}
+      <div className="pro-recortes" role="tablist" aria-label="Tipo de ranking">
+        {([['geral', 'Pontos', Trophy], ['eficiencia', 'Eficiência', Gauge], ['reis', 'Reis', Crown], ['viajantes', 'Viajantes', Plane], ['assessorias', 'Assessorias', Users], ['pelotao', 'Pelotão', Flag]] as [Rec, string, LucideIcon][]).map(([k, n, I]) => (
+          <button key={k} role="tab" aria-selected={rec === k} onClick={e => { setRec(k); (e.currentTarget as HTMLButtonElement).scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }}><I size={18} aria-hidden="true" /><span>{n}</span></button>
+        ))}
       </div>
       {rec === 'reis' ? <Reis /> : <>
 
