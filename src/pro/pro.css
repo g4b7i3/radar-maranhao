@@ -612,3 +612,5 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-prova-info small{color:var(--muted);display:flex;align-items:center;gap:4px}
 .pro-prova-info .tag{align-self:flex-start;margin-top:2px}
 .pro-prova-card .btn{flex:none}
+.pro-aviso-google{margin:4px 0 0;line-height:1.35}
+.pro-aviso-google b{word-break:break-all}
