@@ -621,3 +621,11 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-pts-conta{margin:0;font-size:.9rem;line-height:1.35}
 .pro-pts-conta small{color:var(--muted)}
 .pro-pts-unid{display:block;font-size:.62rem;font-weight:600;color:var(--muted);text-align:right}
+/* regras dos campeonatos */
+.pro-regras-cab{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.pro-regras-cab span{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;color:var(--cobalt)}
+.pro-regras-lista{margin:4px 0 0;padding:0;list-style:none;counter-reset:r;display:flex;flex-direction:column;gap:12px}
+.pro-regras-lista li{counter-increment:r;display:grid;grid-template-columns:28px 1fr;gap:2px 10px}
+.pro-regras-lista li::before{content:counter(r);grid-row:span 2;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--cobalt-tint);color:var(--cobalt);font-weight:800;font-size:.85rem}
+.pro-regras-lista b{font-size:.95rem}
+.pro-regras-lista span{font-size:.9rem;line-height:1.4;color:var(--muted)}

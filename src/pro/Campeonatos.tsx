@@ -1,6 +1,6 @@
 // Campeonatos: disputa prova a prova (pontos por colocação na nota por idade). O primeiro é a Liga Maranhense.
 import { useEffect, useState } from 'react';
-import { Trophy, ChevronRight, ArrowLeft, Check, CalendarDays, Footprints } from 'lucide-react';
+import { Trophy, ChevronRight, ArrowLeft, Check, CalendarDays, Footprints, ScrollText, ChevronDown } from 'lucide-react';
 import { sb, linkPerfil, type Perfil } from './sb';
 import { Avatar } from './Foto';
 
@@ -59,13 +59,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
         <p className="pro-sub">{c.inicio > hoje ? `Começa em ${dataBR(c.inicio)}/${c.inicio.slice(0, 4)}.` : `${c.realizadas} de ${c.provas} provas realizadas.`}{c.tipo === 'etapas' ? ` Valem as ${c.melhores} melhores.` : ' Toda prova conta.'}</p>
       </section>
       {c.premio && <section className="pro-card pro-camp-premio-card"><p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Em jogo</p><p className="pro-sem-margem">{c.premio}</p></section>}
-      {c.descricao && <p className="fine pro-sem-margem">{c.descricao}{c.tipo === 'etapas' ? ' Pontos por prova: 25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (do 15º em diante, 1 ponto). Empate: melhor etapa, depois mais etapas, depois a maior nota por idade.' : ' Sábado e domingo da mesma semana contam como um fim de semana só. Empate: mais provas, depois mais cidades.'}</p>}
-      {c.tipo === 'etapas' && <section className="pro-card pro-como-pontos">
-        <p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Pontos de etapa (não são os do Ranking)</p>
-        <p className="pro-sem-margem">Em cada prova, os atletas do Radar são colocados em ordem pela <b>nota por idade</b>, feminino e masculino separados. Quem fica em 1º leva 25, o 2º leva 20, o 3º leva 16…</p>
-        <ul><li><b>1º</b> 25</li><li><b>2º</b> 20</li><li><b>3º</b> 16</li><li><b>4º</b> 13</li><li><b>5º</b> 11</li><li><b>6º</b> 10</li><li><b>7º ao 15º</b> 9 a 1</li></ul>
-        <p className="fine pro-sem-margem">Somam as {c.melhores} melhores etapas. Toque no atleta pra ver o lugar dele em cada prova.</p>
-      </section>}
+      <Regras c={c} />
       <div className="chips" role="group" aria-label="Tabela">
         <button className="chip" aria-pressed={sexo === 'F'} onClick={() => setSexo('F')}>Feminino</button>
         <button className="chip" aria-pressed={sexo === 'M'} onClick={() => setSexo('M')}>Masculino</button>
@@ -113,5 +107,44 @@ function EtapasDe({ camp, apelido }: { camp: string; apelido: string }) {
       ))}
       {!lista.length && <li className="fine">Sem etapas ainda.</li>}
     </ul>
+  );
+}
+
+/** Regras do campeonato, numeradas, na ordem em que a pessoa precisa entender. */
+function Regras({ c }: { c: Camp }) {
+  const [aberto, setAberto] = useState(false);
+  const periodo = `${dataBR(c.inicio)}/${c.inicio.slice(0, 4)} a ${dataBR(c.fim)}/${c.fim.slice(0, 4)}`;
+  const liga: [string, string][] = [
+    ['Quem participa', 'Todo atleta do Radar Pro. Só conta prova com resultado oficial (verificada pelo link da cronometragem ou aprovada pelo Radar). Prova só declarada não conta.'],
+    ['Quais provas valem', `Toda prova do Maranhão que está na agenda do Radar entre ${periodo}. A lista cresce sozinha quando entra prova nova na agenda.`],
+    ['Tabelas', 'Feminino e masculino separados. Cada atleta compete na tabela do sexo do seu perfil.'],
+    ['Como é a etapa', 'Cada prova é uma etapa. Nela, os atletas do Radar são colocados em ordem pela nota por idade (a mesma da Eficiência), não pelo tempo. Assim um atleta de 50 anos disputa de igual pra igual com um de 25. Se a pessoa correu mais de uma distância na mesma prova, vale a melhor nota.'],
+    ['Pontos de etapa', 'Pela colocação na etapa: 1º 25 · 2º 20 · 3º 16 · 4º 13 · 5º 11 · 6º 10 · 7º 9 · 8º 8 · 9º 7 · 10º 6 · 11º 5 · 12º 4 · 13º 3 · 14º 2 · do 15º em diante 1. Nota igual na mesma etapa: os dois levam os pontos da mesma posição.'],
+    ['Não é o ponto do Ranking', 'Os pontos de etapa são só da Liga. Os pontos do Ranking (concluir, distância, pódio, recorde, cidade nova) são outra conta e não entram aqui.'],
+    ['Melhores etapas', `Somam as ${c.melhores} melhores etapas de cada atleta. Correr mais provas aumenta a chance de trocar uma etapa fraca por uma melhor.`],
+    ['Desempate', 'Mais pontos de etapa; depois a melhor etapa; depois o maior número de etapas; depois a maior nota por idade. Empate em tudo divide a posição.'],
+    ['Campeões', `Ao fim do período, o 1º do feminino e o 1º do masculino são os campeões.${c.premio ? ' ' + c.premio : ''}`],
+  ];
+  const copa: [string, string][] = [
+    ['Quem participa', 'Todo atleta do Radar Pro. Só conta prova com resultado oficial (verificada ou aprovada). Prova só declarada não conta.'],
+    ['Quais provas valem', `Toda prova do Maranhão da agenda do Radar entre ${periodo}.`],
+    ['Tabelas', 'Feminino e masculino separados, pelo sexo do perfil.'],
+    ['O que conta', 'Aparecer. Não importa tempo, nota nem distância: a Copa premia quem corre com regularidade.'],
+    ['Pontos', '10 por prova concluída (duas distâncias na mesma prova contam uma vez) · +3 na primeira prova em cada cidade · +5 a cada fim de semana que completa uma sequência de 3 seguidos com prova (3 seguidos = +5; 4 seguidos = +10; 5 seguidos = +15).'],
+    ['Fim de semana', 'Sábado e domingo da mesma semana contam como um fim de semana só. Duas provas no mesmo fim de semana valem 10 cada, mas contam um fim de semana na sequência.'],
+    ['Não é o ponto do Ranking', 'São pontos só da Copa; não se misturam com o Ranking nem com a Liga.'],
+    ['Desempate', 'Mais pontos; depois mais provas; depois mais cidades. Empate em tudo divide a posição.'],
+    ['Campeões', `Ao fim do período, o 1º do feminino e o 1º do masculino são os campeões.${c.premio ? ' ' + c.premio : ''}`],
+  ];
+  const regras = c.tipo === 'etapas' ? liga : copa;
+  return (
+    <section className="pro-card pro-regras">
+      <button className="pro-regras-cab" onClick={() => setAberto(a => !a)} aria-expanded={aberto}>
+        <span><ScrollText size={18} aria-hidden="true" /> Regras {c.tipo === 'etapas' ? 'da Liga' : 'da Copa'}</span>
+        <ChevronDown size={20} aria-hidden="true" style={{ transform: aberto ? 'rotate(180deg)' : undefined, transition: 'transform .2s' }} />
+      </button>
+      {!aberto && <p className="fine pro-sem-margem">{c.tipo === 'etapas' ? 'Em cada prova, ordem pela nota por idade: 1º 25, 2º 20, 3º 16… Somam as ' + c.melhores + ' melhores. Toque pra ver todas as regras.' : '10 por prova, +3 por cidade nova, +5 a cada 3 fins de semana seguidos. Toque pra ver todas as regras.'}</p>}
+      {aberto && <ol className="pro-regras-lista">{regras.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ol>}
+    </section>
   );
 }
