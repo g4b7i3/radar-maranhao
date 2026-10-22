@@ -145,19 +145,19 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
     <div className="pro-cont">
       <section className="pro-card azul">
         <div className="pro-linha"><p className="pro-k">Seu índice</p><SeloLiga liga={liga} /></div>
-        <p className="pro-big">{temp.indice == null ? '–' : pct(temp.indice)}</p>
-        <div className="pro-trilha" aria-hidden="true">{LIGAS.map((l, k) => <span key={l.id} className={i >= k ? 'on' : ''} />)}</div>
+        <p className="pro-big">{temp.indice == null ? '–' : <Contador valor={Number(temp.indice)} fmt={pct} />}</p>
+        <div className="pro-trilha pro-anima" aria-hidden="true">{LIGAS.map((l, k) => <span key={l.id} className={i >= k ? 'on' : ''} style={{ animationDelay: `${.25 + k * .18}s` }} />)}</div>
         <div className="pro-trilha-nomes" aria-hidden="true">{LIGAS.map(l => <span key={l.id}>{l.nome}</span>)}</div>
         <p className="pro-sub">{temp.indice == null
           ? 'Sua liga aparece quando você tiver uma prova com resultado oficial (verificado).'
           : prox ? <>Faltam <b>{pct(prox.min - Number(temp.indice))} pontos de índice</b> para a liga {prox.nome}.</> : <>Você está na liga mais alta. Segure o nível!</>}</p>
       </section>
 
-      <div className="pro-mini">
-        <div><b>{temp.pontos}</b><small>pontos</small></div>
-        <div><b>{temp.provas}</b><small>provas</small></div>
-        <div><b>{temp.cidades}</b><small>cidades</small></div>
-        <div><b>{temp.posicao_ma ? `${temp.posicao_ma}º` : '–'}</b><small>no Maranhão</small></div>
+      <div className="pro-mini pro-anima">
+        <div><b><Contador valor={temp.pontos} /></b><small>pontos</small></div>
+        <div><b><Contador valor={temp.provas} /></b><small>provas</small></div>
+        <div><b><Contador valor={temp.cidades} /></b><small>cidades</small></div>
+        <div><b>{temp.posicao_ma ? <><Contador valor={temp.posicao_ma} />º</> : '–'}</b><small>no Maranhão</small></div>
       </div>
       {temp.pontos_pendentes > 0 && <p className="fine pro-sem-margem">+{temp.pontos_pendentes} pontos esperando o resultado oficial ou o comprovante.</p>}
 
@@ -525,7 +525,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
       {linhas?.length === 0 && <p className="fine">Ainda não há atletas com provas verificadas neste recorte.</p>}
       <ol className="pro-rank">
         {linhas?.map((l, k) => (
-          <li key={k} className={l.eu ? 'eu' : ''}>
+          <li key={k} className={(l.eu ? 'eu ' : '') + (l.posicao <= 3 && Number(l.pontos ?? l.indice ?? 0) > 0 ? `podio p${l.posicao}` : '')}>
             <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
               {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={36} />}
@@ -1085,3 +1085,16 @@ function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => v
     </>
   );
 }
+
+/* ───────── Contador: o número sobe contando, como placar (respeita "reduzir movimento") ───────── */
+export function Contador({ valor, fmt, dur = 900 }: { valor: number; fmt?: (n: number) => string; dur?: number }) {
+  const [v, setV] = useState(() => (typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches ? valor : 0));
+  useEffect(() => {
+    if (typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches) { setV(valor); return; }
+    let raf = 0; const t0 = performance.now(); const de = v;
+    const passo = (t: number) => { const k = Math.min(1, (t - t0) / dur); const e = 1 - Math.pow(1 - k, 3); setV(de + (valor - de) * e); if (k < 1) raf = requestAnimationFrame(passo); };
+    raf = requestAnimationFrame(passo); return () => cancelAnimationFrame(raf);
+  }, [valor]); // eslint-disable-line react-hooks/exhaustive-deps
+  return <>{fmt ? fmt(v) : Math.round(v)}</>;
+}
+
