@@ -513,7 +513,6 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
           <button className="chip" aria-pressed={!sexo} onClick={() => setSexo('')}>Todos</button>
           <button className="chip" aria-pressed={sexo === 'F'} onClick={() => setSexo('F')}>Feminino</button>
           <button className="chip" aria-pressed={sexo === 'M'} onClick={() => setSexo('M')}>Masculino</button>
-          <button className="chip" aria-pressed={cidade === perfil.cidade} onClick={() => setCidade(cidade ? '' : perfil.cidade)}>{perfil.cidade}</button>
         </div>
         <label className="ct-cidade pro-sel">Faixa etária<select value={faixa} onChange={e => setFaixa(e.target.value)}><option value="">Todas</option>{FAIXAS.map(f => <option key={f} value={f}>{f} anos</option>)}</select></label>
       </>}
