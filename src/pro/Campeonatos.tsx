@@ -58,7 +58,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
         <p className="pro-sub">{c.inicio > hoje ? `Começa em ${dataBR(c.inicio)}/${c.inicio.slice(0, 4)}.` : `${c.realizadas} de ${c.provas} provas realizadas.`}{c.tipo === 'etapas' ? ` Valem as ${c.melhores} melhores.` : ' Toda prova conta.'}</p>
       </section>
       {c.premio && <section className="pro-card pro-camp-premio-card"><p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Em jogo</p><p className="pro-sem-margem">{c.premio}</p></section>}
-      {c.descricao && <p className="fine pro-sem-margem">{c.descricao}{c.tipo === 'etapas' ? ' Pontos por prova: 25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (do 15º em diante, 1 ponto).' : ' Sábado e domingo da mesma semana contam como um fim de semana só. Empate: mais provas, depois mais cidades.'}</p>}
+      {c.descricao && <p className="fine pro-sem-margem">{c.descricao}{c.tipo === 'etapas' ? ' Pontos por prova: 25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (do 15º em diante, 1 ponto). Empate: melhor etapa, depois mais etapas, depois a maior nota por idade.' : ' Sábado e domingo da mesma semana contam como um fim de semana só. Empate: mais provas, depois mais cidades.'}</p>}
       <div className="chips" role="group" aria-label="Tabela">
         <button className="chip" aria-pressed={sexo === 'F'} onClick={() => setSexo('F')}>Feminino</button>
         <button className="chip" aria-pressed={sexo === 'M'} onClick={() => setSexo('M')}>Masculino</button>
