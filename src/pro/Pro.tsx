@@ -75,6 +75,13 @@ function ProTelas() {
   const [resgatando, setResgatando] = useState(() => !!codigoCortesia());
   const [notifAberto, setNotifAberto] = useState(false);
   const [stravaVersao, setStravaVersao] = useState(0); // recarrega a Conta depois de conectar o Strava
+  const [bemVindo, setBemVindo] = useState(false); // tela cheia na hora em que o Pro é liberado (Pix, cortesia ou equipe)
+  const eraAssinante = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    if (!temp) return;
+    if (eraAssinante.current === false && temp.assinante) setBemVindo(true);
+    eraAssinante.current = temp.assinante;
+  }, [temp]);
   const notif = useNotificacoes();
   const [fotoPulada, setFotoPulada] = useState(() => { try { return localStorage.getItem('radar-foto-pulada') === '1'; } catch { return true; } });
   const pularFoto = () => { try { localStorage.setItem('radar-foto-pulada', '1'); } catch { /* */ } setFotoPulada(true); };
@@ -188,6 +195,7 @@ function ProTelas() {
       <PushConvite userId={perfil.user_id} />
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você só observa. Pontos, ranking, duelos e medalhas abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
+      {bemVindo && <BemVindoPro fechar={() => { setBemVindo(false); setAba('temporada'); window.scrollTo(0, 0); }} />}
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {fimDuelos.map(d => (
         <section key={d.id} className={'pro-card pro-fim-duelo ' + d.resultado}>
@@ -421,3 +429,19 @@ function AvisoVencimento({ validaAte, renovar }: { validaAte: string | null; ren
     </div>
   );
 }
+
+/* ───────── Boas-vindas ao Pro: tela cheia, uma vez, na hora em que o acesso é liberado ───────── */
+function BemVindoPro({ fechar }: { fechar: () => void }) {
+  useEffect(() => { const t = setTimeout(() => document.getElementById('bemvindo-btn')?.focus(), 400); return () => clearTimeout(t); }, []);
+  return (
+    <div className="pro-bemvindo" role="dialog" aria-modal="true" aria-labelledby="bemvindo-titulo">
+      <div className="pro-bemvindo-cx">
+        <p className="pro-bemvindo-k">Bem-vindo ao</p>
+        <h1 id="bemvindo-titulo">Radar Pro</h1>
+        <p className="pro-bemvindo-frase">Cada prova que você correr agora vira ponto, medalha e lugar no ranking do Maranhão.<br />A largada é sua.</p>
+        <button id="bemvindo-btn" className="btn solid pro-bemvindo-btn" onClick={fechar}>Vamos lá</button>
+      </div>
+    </div>
+  );
+}
+

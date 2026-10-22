@@ -403,3 +403,16 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-strava-grade small{color:var(--muted);font-weight:700;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
 .pro-strava-grade b{font-size:1.35rem;line-height:1.1;font-variant-numeric:tabular-nums}
 .pro-strava-grade span{font-size:.85rem;color:var(--muted)}
+
+/* Boas-vindas ao Pro (tela cheia, uma vez) */
+.pro-bemvindo{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-end;justify-content:center;background:#0d1324 url('/bemvindo-pro.jpg') 45% top/cover no-repeat;animation:pro-bv-entra .5s ease-out}
+.pro-bemvindo::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,19,36,.2) 0%,rgba(13,19,36,.35) 40%,rgba(13,19,36,.9) 62%,#0d1324 76%)}
+.pro-bemvindo-cx{position:relative;width:100%;max-width:520px;padding:0 24px calc(32px + env(safe-area-inset-bottom));text-align:center;color:#fff;animation:pro-bv-sobe .6s .15s ease-out both}
+.pro-bemvindo-k{margin:0;font-size:.8rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:#ffd34d}
+.pro-bemvindo h1{margin:4px 0 14px;font-size:3rem;line-height:1;font-weight:800;letter-spacing:-.02em}
+.pro-bemvindo-frase{margin:0 0 22px;font-size:1.05rem;line-height:1.45;color:rgba(255,255,255,.88)}
+.pro-bemvindo .btn.pro-bemvindo-btn{width:100%;padding:16px;font-size:1.05rem;background:#ffd34d;color:#0d1324;border:0;font-weight:800}
+.pro-bemvindo .btn.pro-bemvindo-btn:hover{background:#ffc81a}
+@keyframes pro-bv-entra{from{opacity:0}to{opacity:1}}
+@keyframes pro-bv-sobe{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (min-width:700px){.pro-bemvindo{align-items:center}.pro-bemvindo-cx{padding-bottom:0}}
