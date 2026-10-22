@@ -63,7 +63,7 @@ Deno.serve(async req => {
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const privB64 = Deno.env.get('VAPID_PRIVATE_KEY');
   const resend = Deno.env.get('RESEND_API_KEY');
-  const remetente = Deno.env.get('EMAIL_REMETENTE') || 'Radar Corridas MA <onboarding@resend.dev>';
+  const remetente = Deno.env.get('EMAIL_REMETENTE') || 'Radar Corridas MA <radar@radarcorridasma.com.br>';
 
   const { data: lembretes } = await db.rpc('radar_gerar_lembretes');
   const { data: avisos } = await db.from('radar_avisos').select('*').is('enviado_em', null).order('criado_em').limit(200);
