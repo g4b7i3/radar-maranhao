@@ -16,6 +16,7 @@ const DIA = 86400_000;
 const classe = (km: number) => (Math.abs(km - 5) <= 0.3 ? '5k' : Math.abs(km - 10) <= 0.3 ? '10k' : km >= 14.5 && km <= 16.5 ? '15k' : Math.abs(km - 21.0975) < 0.3 ? 'meia' : Math.abs(km - 42.195) < 0.3 ? 'maratona' : km > 42.5 ? 'ultra' : null);
 const hora = (s: string | null) => (s && /^\d{1,2}:\d{2}/.test(s) ? Number(s.split(':')[0]) * 60 + Number(s.split(':')[1].slice(0, 2)) : null);
 
+const REGIAO: Record<string, string> = { AC: 'norte', AP: 'norte', AM: 'norte', PA: 'norte', RO: 'norte', RR: 'norte', TO: 'norte', AL: 'nordeste', BA: 'nordeste', CE: 'nordeste', MA: 'nordeste', PB: 'nordeste', PE: 'nordeste', PI: 'nordeste', RN: 'nordeste', SE: 'nordeste', DF: 'centro_oeste', GO: 'centro_oeste', MT: 'centro_oeste', MS: 'centro_oeste', ES: 'sudeste', MG: 'sudeste', RJ: 'sudeste', SP: 'sudeste', PR: 'sul', RS: 'sul', SC: 'sul' };
 const ILHA = ['sao luis', 'sao jose de ribamar', 'paco do lumiar', 'raposa'];
 const LENCOIS = ['barreirinhas', 'santo amaro do maranhao', 'santo amaro'];
 const TOCANTINA = ['imperatriz', 'acailandia', 'joao lisboa', 'davinopolis', 'governador edison lobao', 'senador la rocque', 'buritirana', 'amarante do maranhao', 'ribamar fiquene', 'montes altos', 'sitio novo', 'cidelandia', 'vila nova dos martirios', 'sao pedro da agua branca', 'itinga do maranhao', 'porto franco', 'estreito', 'campestre do maranhao', 'lajeado novo', 'sao joao do paraiso'];
@@ -56,7 +57,7 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
   if (!COORD) COORD = await fetch(SITE + '/data/cidades-ma-geo.json').then(r => r.json()).catch(() => null);
   const coord = new Map(Object.entries(COORD ?? {}).map(([k, v]) => [cid(k), v as [number, number]]));
   const [{ data: todos }, { data: perfis }, { data: ass }, { data: duelos }] = await Promise.all([
-    paginar((de, ate) => db.from('radar_resultados').select('id, user_id, prova_id, prova_nome, prova_data, cidade, largada, distancia_km, tempo_s, nota, status, podio, peito, nome_inscricao, criado_em, colocacao_geral, colocacao_faixa, total_dist').neq('status', 'recusado').order('id').range(de, ate)).then(data => ({ data })),
+    paginar((de, ate) => db.from('radar_resultados').select('id, user_id, prova_id, prova_nome, prova_data, cidade, uf, largada, distancia_km, tempo_s, nota, status, podio, peito, nome_inscricao, criado_em, colocacao_geral, colocacao_faixa, total_dist').neq('status', 'recusado').order('id').range(de, ate)).then(data => ({ data })),
     db.from('radar_perfis').select('user_id, nome_completo, nascimento, assessoria'),
     db.from('radar_assinaturas').select('user_id, valida_ate, atualizado_em'),
     db.from('radar_duelos').select('id, desafiante, desafiado, distancia_km, mes, aceito_em').not('aceito_em', 'is', null),
@@ -240,6 +241,16 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
       const sab = [...new Set(ry.map(r => fds(r.prova_data)).filter(Boolean) as string[])].sort();
       for (let k = 2; k < sab.length; k++) if (dia(sab[k]).getTime() - dia(sab[k - 1]).getTime() === 7 * DIA && dia(sab[k - 1]).getTime() - dia(sab[k - 2]).getTime() === 7 * DIA) { dar('trinca', y, ry.find(r => fds(r.prova_data) === sab[k])); break; }
     }
+
+    // ---------- Brasil: estados, regiões e marcos (só com resultado comprovado: verificado/aprovado) ----------
+    { const ufs: string[] = []; const regs = new Map<string, Set<string>>();
+      for (const r of rs) { if (!VAL(r.status)) continue; const u = String(r.uf ?? 'MA').toUpperCase(); const y = ano(r.prova_data);
+        if (!ufs.includes(u)) { ufs.push(u); darUmaVez(u === 'EX' ? 'exterior' : `estado_${u.toLowerCase()}`, y, r);
+          const fora = ufs.filter(x => x !== 'MA' && x !== 'EX').length; for (const n of [3, 5, 10]) if (fora === n) darUmaVez(`brasil_${n}`, y, r);
+          const reg = REGIAO[u]; if (reg) { if (!regs.has(reg)) regs.set(reg, new Set()); regs.get(reg)!.add(u);
+            // Nordeste é a casa: só vale com um estado nordestino além do Maranhão
+            if (regs.get(reg)!.size >= (reg === 'nordeste' ? 2 : 1)) darUmaVez(`regiao_${reg}`, y, r); }
+          if (['norte', 'nordeste', 'centro_oeste', 'sudeste', 'sul'].every(x => regs.has(x))) darUmaVez('cinco_regioes', y, r); } } }
 
     // ---------- carreira ----------
     for (const n of [25, 50, 100]) if (rs.length >= n) darUmaVez(`carreira_${n}`, ano(rs[n - 1].prova_data), rs[n - 1]);

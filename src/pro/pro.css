@@ -520,3 +520,22 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 @keyframes pro-ab-reflexo{from{transform:translateX(-80%) skewX(-12deg)}to{transform:translateX(80%) skewX(-12deg)}}
 @keyframes pro-ab-sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pro-abertura-logo,.pro-abertura-logo i,.pro-abertura-nome,.pro-abertura-sub{animation:none}.pro-abertura-logo i{display:none}}
+
+.pro-cidade-uf{display:grid;grid-template-columns:1fr 128px;gap:10px}
+.pro-cidade-uf select{width:100%}
+
+/* Mapa do Brasil */
+.pro-mapa-br svg{width:100%;max-height:320px;display:block}
+.pro-mapa-br .uf{stroke:var(--surface);stroke-width:1.2;stroke-linejoin:round;fill:var(--cobalt-tint);transition:fill .3s}
+.pro-mapa-br .uf.r-norte{fill:color-mix(in srgb,var(--cobalt-tint) 70%,#5fd0a0 30%)}
+.pro-mapa-br .uf.r-nordeste{fill:color-mix(in srgb,var(--cobalt-tint) 70%,#f2b705 30%)}
+.pro-mapa-br .uf.r-centro_oeste{fill:color-mix(in srgb,var(--cobalt-tint) 70%,#e07a3c 30%)}
+.pro-mapa-br .uf.r-sudeste{fill:color-mix(in srgb,var(--cobalt-tint) 70%,#3d5fe0 30%)}
+.pro-mapa-br .uf.r-sul{fill:color-mix(in srgb,var(--cobalt-tint) 70%,#a56cf0 30%)}
+.pro-mapa-br .uf.on{fill:#f2b705;stroke:#fff}
+.pro-mapa-br .uf-nome{font-size:11px;font-weight:900;text-anchor:middle;fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.pro-mapa-br-legenda{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.75rem;color:var(--muted)}
+.pro-mapa-br-legenda span{display:inline-flex;align-items:center;gap:5px}
+.pro-mapa-br-legenda span.on{color:var(--ink);font-weight:700}
+.pro-mapa-br-legenda i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.pro-mapa-br-legenda .r-norte i{background:#5fd0a0}.pro-mapa-br-legenda .r-nordeste i{background:#f2b705}.pro-mapa-br-legenda .r-centro_oeste i{background:#e07a3c}.pro-mapa-br-legenda .r-sudeste i{background:#3d5fe0}.pro-mapa-br-legenda .r-sul i{background:#a56cf0}

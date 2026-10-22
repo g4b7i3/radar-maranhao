@@ -8,11 +8,12 @@ import { Aplauso, Seguir, type Reacoes, type TipoReacao } from './Feed';
 import { Metas } from './Metas';
 import { Recordes } from './Recordes';
 import { MapaCidades } from './Mapa';
+import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
 // Mostra só o que já aparece no ranking (apelido, cidade, liga, provas e medalhas). Nada de nome completo, idade ou contato.
-type Prova = { id: string; prova: string; data: string; cidade: string; km: number; tempo: number; nota: number; status: string; geral: number | null; faixa: number | null; total: number | null };
+type Prova = { id: string; prova: string; data: string; cidade: string; uf?: string; km: number; tempo: number; nota: number; status: string; geral: number | null; faixa: number | null; total: number | null };
 type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[]; seguidores: number; seguindo: number; reacoes: Reacoes; minha: TipoReacao | null; eu: boolean; sigo: boolean; logado: boolean };
 
 function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
@@ -86,6 +87,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
 
         <Metas provas={d.resultados.map(r => ({ data: r.data, cidade: r.cidade, status: r.status }))} indice={d.indice} liga={d.liga} />
         {d.resultados.length > 0 && <MapaCidades cidades={d.resultados.map(r => r.cidade)} titulo={`O Maranhão de @${d.apelido}`} />}
+        {d.resultados.some(r => (r.uf ?? 'MA') !== 'MA' && ['verificado', 'aprovado'].includes(r.status)) && <MapaBrasil ufs={d.resultados.filter(r => ['verificado', 'aprovado'].includes(r.status)).map(r => r.uf ?? 'MA')} titulo={`O Brasil de @${d.apelido}`} />}
 
         <section className="pro-card">
           <div className="pro-linha"><p className="pro-k cinza">Medalhas</p><b>{ganhas.length} / {MEDALHAS.length}</b></div>

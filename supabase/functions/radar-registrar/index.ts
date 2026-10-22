@@ -4,6 +4,7 @@
 // Calcula aqui no servidor a nota por idade, os pontos e as medalhas, para ninguém mexer pelo navegador.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { acharNoOficial, gravarOficiais, lerLink, lerOficiais, parecenca, semelhante, conferirRegistros, norm as normNome, type Lido } from '../_comum/resultados.ts';
+const UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO','EX'];
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
@@ -49,7 +50,7 @@ Deno.serve(async req => {
   if (!user) return resp({ erro: 'Faça login de novo.' }, 401);
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
-  let b: { prova_id?: string; distancia_km?: number; tempo_s?: number; peito?: string; nome_inscricao?: string; link_resultado?: string; nova_prova?: { nome?: string; data?: string; cidade?: string; obs?: string } };
+  let b: { prova_id?: string; distancia_km?: number; tempo_s?: number; peito?: string; nome_inscricao?: string; link_resultado?: string; nova_prova?: { nome?: string; data?: string; cidade?: string; obs?: string; uf?: string } };
   try { b = await req.json(); } catch { return resp({ erro: 'Envio inválido.' }, 400); }
 
   if (!TAB) TAB = await fetch(SITE + '/data/idade-tabela.json').then(r => r.json()).catch(() => null);
@@ -62,11 +63,13 @@ Deno.serve(async req => {
   // Prova que não está na agenda: com o link da cronometragem, o Radar confere e cria a prova na hora.
   // Sem link (ou link que o Radar não sabe ler), vira pedido para o administrador.
   let lidoNovo: Lido | null = null;
-  let provaNova: { id: string; name: string; date: string; city: string; distances: number[]; start: string | null } | null = null;
+  let provaNova: { id: string; name: string; date: string; city: string; uf: string; distances: number[]; start: string | null } | null = null;
   if (b.nova_prova) {
     const np = b.nova_prova;
     const nome = limpa(np.nome, 120), cidade = limpa(np.cidade, 60), dia = String(np.data ?? '').slice(0, 10), kmN = Number(b.distancia_km);
     const lk = limpa(b.link_resultado, 400), obs = limpa(np.obs, 300);
+    const uf = String(np.uf ?? 'MA').toUpperCase().slice(0, 2);
+    if (!UFS.includes(uf)) return resp({ erro: 'Escolha o estado da prova.' }, 400);
     const hojeN = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
     if (nome.length < 5) return resp({ erro: 'Escreva o nome da prova.' }, 400);
     if (cidade.length < 3) return resp({ erro: 'Diga a cidade da prova.' }, 400);
@@ -80,7 +83,7 @@ Deno.serve(async req => {
     const pedido = async (motivo: string) => {
       const { count } = await db.from('radar_sugestoes_provas').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('status', 'pendente');
       if ((count ?? 0) >= 5) return resp({ erro: 'Você já tem 5 pedidos esperando. Aguarde a resposta do Radar.' }, 429);
-      await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, data: dia, distancia_km: kmN, link: lk || null, obs: [obs, motivo].filter(Boolean).join(' · ').slice(0, 300) || null });
+      await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk || null, obs: [obs, motivo].filter(Boolean).join(' · ').slice(0, 300) || null });
       return resp({ pedido: true, motivo });
     };
     if (!lk) return await pedido('');
@@ -109,24 +112,24 @@ Deno.serve(async req => {
       await db.from('radar_provas').update({ distancias: todas(igual.distancias ?? []), atualizado_em: new Date().toISOString() }).eq('id', pid);
     } else {
       pid = 'pro-' + crypto.randomUUID().slice(0, 8);
-      const { error: e1 } = await db.from('radar_provas').insert({ id: pid, nome: nome, data: dia, cidade, distancias: todas([]), modalidade: 'corrida' });
+      const { error: e1 } = await db.from('radar_provas').insert({ id: pid, nome: nome, data: dia, cidade, uf, distancias: todas([]), modalidade: 'corrida' });
       if (e1) return resp({ erro: 'Não deu para criar a prova agora.' }, 500);
     }
     const { data: pv } = await db.from('radar_provas').select('*').eq('id', pid).single();
-    provaNova = { id: pv.id, name: pv.nome, date: pv.data, city: pv.cidade, distances: (pv.distancias ?? []).map(Number), start: pv.largada };
-    await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, data: dia, distancia_km: kmN, link: lk, obs: obs || null, status: 'aprovada', prova_id: pid, resposta: 'Aprovada na hora pelo link do resultado.', decidido_em: new Date().toISOString() });
+    provaNova = { id: pv.id, name: pv.nome, date: pv.data, city: pv.cidade, uf: pv.uf ?? 'MA', distances: (pv.distancias ?? []).map(Number), start: pv.largada };
+    await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk, obs: obs || null, status: 'aprovada', prova_id: pid, resposta: 'Aprovada na hora pelo link do resultado.', decidido_em: new Date().toISOString() });
     b.prova_id = pid;
   }
 
   // A prova precisa estar na agenda do Radar e já ter acontecido.
   const agenda = await fetch(SITE + '/data/radar.json', { headers: { 'Cache-Control': 'no-cache' } }).then(r => r.json()).catch(() => null);
   const naAgenda = agenda?.events?.find((e: { id: string }) => e.id === b.prova_id);
-  let prova: { id: string; name: string; date: string; city: string; distances: number[]; start: string | null } | null = provaNova;
+  let prova: { id: string; name: string; date: string; city: string; uf: string; distances: number[]; start: string | null } | null = provaNova;
   if (prova) { /* prova criada agora pelo link */ }
-  else if (naAgenda?.date) prova = { id: naAgenda.id, name: naAgenda.name, date: naAgenda.date, city: naAgenda.city, distances: naAgenda.distances ?? [], start: naAgenda.start ?? null };
+  else if (naAgenda?.date) prova = { id: naAgenda.id, name: naAgenda.name, date: naAgenda.date, city: naAgenda.city, uf: 'MA', distances: naAgenda.distances ?? [], start: naAgenda.start ?? null };
   else { // prova antiga que já saiu da agenda: vem do arquivo de provas
     const { data: a } = await db.from('radar_provas').select('*').eq('id', String(b.prova_id ?? '')).maybeSingle();
-    if (a) prova = { id: a.id, name: a.nome, date: a.data, city: a.cidade, distances: (a.distancias ?? []).map(Number), start: a.largada };
+    if (a) prova = { id: a.id, name: a.nome, date: a.data, city: a.cidade, uf: a.uf ?? 'MA', distances: (a.distancias ?? []).map(Number), start: a.largada };
   }
   if (!prova?.date) return resp({ erro: 'Escolha uma prova da agenda do Radar.' }, 400);
   if (prova.date.slice(0, 10) < new Date(Date.now() - 400 * 86400_000).toISOString().slice(0, 10)) return resp({ erro: 'Só valem provas dos últimos 12 meses.' }, 400);
@@ -206,7 +209,7 @@ Deno.serve(async req => {
   const pontos = Object.values(d).reduce((a, x) => a + x, 0);
 
   const { data: novo, error } = await db.from('radar_resultados').insert({
-    user_id: user.id, prova_id: prova.id, prova_nome: prova.name, prova_data: prova.date.slice(0, 10), cidade: prova.city,
+    user_id: user.id, prova_id: prova.id, prova_nome: prova.name, prova_data: prova.date.slice(0, 10), cidade: prova.city, uf: prova.uf,
     largada: prova.start, distancia_km: km, tempo_s: tempo, idade, nota: n, peito: status === 'verificado' ? peito : null, peito_declarado: peito, nome_inscricao: nomeIns || null, link_resultado: link,
     status, motivo_analise: motivo, podio, pontos, detalhes_pontos: d,
   }).select().single();

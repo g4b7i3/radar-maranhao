@@ -181,7 +181,7 @@ Deno.serve(async req => {
       } else {
         provaId = 'pro-' + crypto.randomUUID().slice(0, 8);
         const todas = [...new Set([...dists, kmS])].sort((x, y) => x - y);
-        const { error } = await db.from('radar_provas').insert({ id: provaId, nome: limpa(b.nome, 120) || sg.nome, data: sg.data, cidade: limpa(b.cidade, 60) || sg.cidade, distancias: todas, modalidade: 'corrida' });
+        const { error } = await db.from('radar_provas').insert({ id: provaId, nome: limpa(b.nome, 120) || sg.nome, data: sg.data, cidade: limpa(b.cidade, 60) || sg.cidade, uf: sg.uf ?? 'MA', distancias: todas, modalidade: 'corrida' });
         if (error) return resp({ erro: error.message }, 400);
       }
       await db.from('radar_sugestoes_provas').update({ status: 'aprovada', prova_id: provaId, resposta: limpa(b.resposta, 300) || null, decidido_em: new Date().toISOString() }).eq('id', sg.id);

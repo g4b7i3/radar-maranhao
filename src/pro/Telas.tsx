@@ -19,6 +19,7 @@ import { Retro } from './Retro';
 import { MeuGrupo } from './Grupo';
 import { PushConta } from './Push';
 import { StravaConta } from './Strava';
+import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
@@ -172,6 +173,7 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
       {res && <Recordes provas={res.map(r => ({ prova: r.prova_nome, data: r.prova_data, km: Number(r.distancia_km), tempo: r.tempo_s, status: r.status }))} />}
       {res && <Metas provas={res.map(r => ({ data: r.prova_data, cidade: r.cidade, status: r.status }))} indice={temp.indice} liga={temp.liga} />}
       {res && res.length > 0 && <MapaCidades cidades={res.filter(r => r.status !== 'recusado').map(r => r.cidade)} />}
+      {res && res.length > 0 && <MapaBrasil ufs={res.filter(r => ['verificado', 'aprovado'].includes(r.status)).map(r => r.uf ?? 'MA')} />}
       {res && <Retro perfil={perfil} res={res} meds={meds} reis={reis} liga={temp.liga} indice={temp.indice} posicao={temp.posicao_ma} />}
 
       <Medalhas meds={meds} />
@@ -241,8 +243,9 @@ type Resposta = { nota: number; pontos: number; detalhes: Record<string, number>
 type Sugestao = { id: string; nome: string; data: string; cidade: string; distancia_km: number; link: string | null; obs: string | null; status: 'pendente' | 'aprovada' | 'recusada'; prova_id: string | null; resposta: string | null; criado_em: string };
 const INICIO = '2026-10-15';
 const hojeBR = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
+export const UFS: [string, string][] = [['MA', 'Maranhão'], ['AC', 'Acre'], ['AL', 'Alagoas'], ['AP', 'Amapá'], ['AM', 'Amazonas'], ['BA', 'Bahia'], ['CE', 'Ceará'], ['DF', 'Distrito Federal'], ['ES', 'Espírito Santo'], ['GO', 'Goiás'], ['MT', 'Mato Grosso'], ['MS', 'Mato Grosso do Sul'], ['MG', 'Minas Gerais'], ['PA', 'Pará'], ['PB', 'Paraíba'], ['PR', 'Paraná'], ['PE', 'Pernambuco'], ['PI', 'Piauí'], ['RJ', 'Rio de Janeiro'], ['RN', 'Rio Grande do Norte'], ['RS', 'Rio Grande do Sul'], ['RO', 'Rondônia'], ['RR', 'Roraima'], ['SC', 'Santa Catarina'], ['SP', 'São Paulo'], ['SE', 'Sergipe'], ['TO', 'Tocantins'], ['EX', 'Fora do Brasil']];
 function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resposta & { pedido?: boolean; motivo?: string }) => void }) {
-  const [f, setF] = useState({ nome: '', data: '', cidade: '', link: '', obs: '' });
+  const [f, setF] = useState({ nome: '', data: '', cidade: '', link: '', obs: '', uf: 'MA' });
   const [km, setKm] = useState<number | null>(null);
   const [outra, setOutra] = useState('');
   const [peito, setPeito] = useState('');
@@ -258,7 +261,7 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
     if (f.cidade.trim().length < 3) return setErro('Diga a cidade.');
     if (!dist) return setErro('Escolha a distância que você correu.');
     setIndo(true);
-    const r = await chamar<Resposta & { pedido?: boolean; motivo?: string }>('radar-registrar', { nova_prova: { nome: f.nome, data: f.data, cidade: f.cidade, obs: f.obs }, distancia_km: dist, link_resultado: f.link || undefined, peito: peito || undefined });
+    const r = await chamar<Resposta & { pedido?: boolean; motivo?: string }>('radar-registrar', { nova_prova: { nome: f.nome, data: f.data, cidade: f.cidade, obs: f.obs, uf: f.uf }, distancia_km: dist, link_resultado: f.link || undefined, peito: peito || undefined });
     setIndo(false);
     if (r.erro) return setErro(r.erro);
     enviado(r);
@@ -269,7 +272,11 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
       <p className="fine pro-sem-margem"><b>Com o link do resultado, é na hora:</b> o Radar lê o link, acha você e já registra a prova com o tempo oficial. Sem o link, o pedido vai para conferência.</p>
       <label className="ct-cidade">Nome da prova<input value={f.nome} onChange={muda('nome')} placeholder="Ex.: Corrida do Sol 2026" maxLength={120} /></label>
       <label className="ct-cidade">Data<input type="date" min={INICIO} max={hojeBR()} value={f.data} onChange={muda('data')} /></label>
-      <label className="ct-cidade">Cidade<input list="pro-cidades-pedir" value={f.cidade} onChange={muda('cidade')} /><datalist id="pro-cidades-pedir">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
+      <div className="pro-cidade-uf">
+        <label className="ct-cidade">Cidade<input list="pro-cidades-pedir" value={f.cidade} onChange={muda('cidade')} />{f.uf === 'MA' && <datalist id="pro-cidades-pedir">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist>}</label>
+        <label className="ct-cidade">Estado<select value={f.uf} onChange={muda('uf')}>{UFS.map(u => <option key={u[0]} value={u[0]}>{u[0] === 'EX' ? 'Fora do Brasil' : u[0]}</option>)}</select></label>
+      </div>
+      {f.uf !== 'MA' && <p className="fine pro-sem-margem">Prova de fora do Maranhão: com o link do resultado ela acende o estado no seu mapa do Brasil, vale medalha e entra no ranking Viajantes.</p>}
       <p className="ct-cidade pro-sem-margem">Distância que você correu</p>
       <div className="chips" role="group" aria-label="Distância">{[3, 5, 7, 10, 15, 21, 42].map(d => <button key={d} className="chip" aria-pressed={km === d} onClick={() => { setKm(km === d ? null : d); setOutra(''); }}>{d} km</button>)}</div>
       <label className="ct-cidade">Outra distância <small>(em km)</small><input inputMode="decimal" value={outra} onChange={e => { setOutra(e.target.value.replace(/[^\d.,]/g, '').slice(0, 6)); setKm(null); }} placeholder="Ex.: 8" /></label>
@@ -465,9 +472,9 @@ export function CorreramComigo({ provaId, titulo = 'Quem mais correu essa prova'
 }
 
 /* ───────── Ranking do Maranhão ───────── */
-type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; faixa?: string; pontos?: number; provas?: number; indice?: number; eu?: boolean; assessoria?: string; atletas?: number; tamanho?: number };
+type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; faixa?: string; pontos?: number; provas?: number; indice?: number; eu?: boolean; assessoria?: string; atletas?: number; tamanho?: number; estados?: number; ufs?: string };
 const FAIXAS = ['até 19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60+'];
-type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao' | 'reis';
+type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao' | 'reis' | 'viajantes';
 
 export function TelaRanking({ perfil }: { perfil: Perfil }) {
   const [rec, setRec] = useState<Rec>('geral');
@@ -484,6 +491,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
     const q = rec === 'geral' ? sb.rpc('radar_ranking', { temporada: ANO, recorte_sexo: sexo || null, recorte_cidade: cidade || null, recorte_faixa: faixa || null })
       : rec === 'eficiencia' ? sb.rpc('radar_ranking_eficiencia', { temporada: ANO })
       : rec === 'assessorias' ? sb.rpc('radar_ranking_assessorias', { temporada: ANO })
+      : rec === 'viajantes' ? sb.rpc('radar_ranking_viajantes', { temporada: ANO })
       : sb.rpc(pelotaoCidade ? 'radar_pelotao_cidade' : 'radar_pelotao', {});
     q.then(({ data }) => setLinhas((data ?? []) as Linha[]));
   }, [rec, sexo, cidade, faixa, pelotaoCidade]);
@@ -496,7 +504,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   return (
     <div className="pro-cont">
       <div className="seg pro-seg" role="group" aria-label="Tipo de ranking">
-        {([['geral', 'Pontos'], ['eficiencia', 'Eficiência'], ['reis', 'Reis 👑'], ['assessorias', 'Assessorias'], ['pelotao', 'Pelotão']] as [Rec, string][]).map(([k, n]) => <button key={k} aria-pressed={rec === k} onClick={() => setRec(k)}>{n}</button>)}
+        {([['geral', 'Pontos'], ['eficiencia', 'Eficiência'], ['reis', 'Reis 👑'], ['viajantes', 'Viajantes ✈️'], ['assessorias', 'Assessorias'], ['pelotao', 'Pelotão']] as [Rec, string][]).map(([k, n]) => <button key={k} aria-pressed={rec === k} onClick={() => setRec(k)}>{n}</button>)}
       </div>
       {rec === 'reis' ? <Reis /> : <>
 
@@ -519,18 +527,19 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
         assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
         pelotao: pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
         reis: '',
+        viajantes: `Quem mais correu fora do Maranhão em ${ANO}: estados diferentes com resultado comprovado; empate decide por provas fora. Registre a prova de fora com o link do resultado.`,
       }[rec]}</p>
 
       {linhas === null && <p className="fine">Carregando…</p>}
-      {linhas?.length === 0 && <p className="fine">Ainda não há atletas com provas verificadas neste recorte.</p>}
+      {linhas?.length === 0 && <p className="fine">{rec === 'viajantes' ? 'Ninguém comprovou prova fora do Maranhão ainda. Seja o primeiro: registre a prova de fora com o link do resultado.' : 'Ainda não há atletas com provas verificadas neste recorte.'}</p>}
       <ol className="pro-rank">
         {linhas?.map((l, k) => (
-          <li key={k} className={(l.eu ? 'eu ' : '') + (l.posicao <= 3 && Number(l.pontos ?? l.indice ?? 0) > 0 ? `podio p${l.posicao}` : '')}>
+          <li key={k} className={(l.eu ? 'eu ' : '') + (l.posicao <= 3 && Number(l.pontos ?? l.indice ?? l.estados ?? 0) > 0 ? `podio p${l.posicao}` : '')}>
             <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
               {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={36} />}
-              <span>{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a> <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
-              <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : Math.round(Number(l.pontos ?? 0))}</b>
+              <span>{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a> <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {rec === 'viajantes' ? `${l.ufs} · ${l.provas} ${l.provas === 1 ? 'prova' : 'provas'}` : l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
+              <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : rec === 'viajantes' ? `${l.estados} UF` : Math.round(Number(l.pontos ?? 0))}</b>
             </button>
             {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} sigo={sigo.has(l.apelido)} mudouSigo={mudouSigo(l.apelido)} />}
           </li>
