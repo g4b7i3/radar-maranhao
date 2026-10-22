@@ -394,8 +394,10 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 
 /* Strava (só a própria pessoa vê) */
 .pro-strava-ponto{display:inline-block;width:12px;height:12px;border-radius:50%;background:#FC4C02;vertical-align:-1px}
-.pro-strava-btn{background:#FC4C02;color:#fff;border:0;display:flex;align-items:center;justify-content:center;gap:8px}
-.pro-strava-btn:hover{background:#e04400}
+.pro-strava-btn{background:none;border:0;padding:0;cursor:pointer;align-self:flex-start;line-height:0}
+.pro-strava-btn img{height:48px;width:auto;display:block}
+.pro-strava-btn:disabled{opacity:.6}
+.pro-strava-powered{height:22px;width:auto;align-self:flex-start;margin-top:2px}
 .pro-strava-grade{display:grid;grid-template-columns:1fr;gap:8px}
 .pro-strava-grade>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:var(--cobalt-tint)}
 .pro-strava-grade small{color:var(--muted);font-weight:700;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}

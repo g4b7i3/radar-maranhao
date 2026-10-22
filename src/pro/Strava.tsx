@@ -49,7 +49,7 @@ export function StravaConta() {
     <section className="pro-card">
       <p className="pro-k cinza"><StravaLogo /> Strava</p>
       <p className="fine pro-sem-margem">Conecte e veja aqui seus km das últimas 4 semanas, do ano e da vida, seus tênis e seus clubes. Só você vê; isso não entra no ranking.</p>
-      <button className="btn pro-btn pro-strava-btn" disabled={indo} onClick={conectar}><StravaLogo /> Conectar com Strava</button>
+      <button className="pro-strava-btn" disabled={indo} onClick={conectar} aria-label="Conectar com Strava"><img src="/strava/conectar.svg" alt="Connect with Strava" width={237} height={48} /></button>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
     </section>
   );
@@ -67,7 +67,8 @@ export function StravaConta() {
         <button className="btn text pro-btn-p" disabled={indo} onClick={desconectar}><Unlink size={15} aria-hidden="true" />Desconectar</button>
       </div>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-sem-margem">Só você vê estes dados; eles não contam no ranking do Radar.{d.atualizado_em ? ` Atualizado em ${new Date(d.atualizado_em).toLocaleDateString('pt-BR')}.` : ''} Powered by Strava.</p>
+      <p className="fine pro-sem-margem">Só você vê estes dados; eles não contam no ranking do Radar.{d.atualizado_em ? ` Atualizado em ${new Date(d.atualizado_em).toLocaleDateString('pt-BR')}.` : ''}</p>
+      <img className="pro-strava-powered" src="/strava/powered.svg" alt="Powered by Strava" width={365} height={37} />
     </section>
   );
 }
