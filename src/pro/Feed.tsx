@@ -1,16 +1,17 @@
 // Feed "Aconteceu no Radar": provas verificadas, Rei/Rainha da prova e duelos, com a foto de cada atleta.
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
 import { useEffect, useMemo, useState } from 'react';
-import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck } from 'lucide-react';
+import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2 } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil } from './sb';
-import { Avatar } from './Foto';
+import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
 
 export type Evento = {
-  quando: string; tipo: 'prova' | 'rei' | 'duelo'; alvo: string; apelido: string; foto: string | null; cidade: string;
+  quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post'; alvo: string; apelido: string; foto: string | null; cidade: string;
   dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string };
   reacoes: Reacoes; minha: TipoReacao | null;
 };
+type DadosPost = { id?: string; texto?: string; foto?: string | null; meu?: boolean };
 
 const quandoTxt = (iso: string) => {
   const d = (Date.now() - new Date(iso).getTime()) / 60000;
@@ -73,8 +74,10 @@ function Meds({ ids }: { ids: string[] }) {
   );
 }
 
-export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void }) {
+export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void; apagou?: () => void }) {
   const d = e.dados, meu = e.apelido === eu;
+  const post = e.tipo === 'post' ? (e.dados as unknown as DadosPost) : null;
+  const apagar = async () => { if (!post?.id || !confirm('Apagar este post?')) return; const { data } = await sb.rpc('radar_post_apagar', { p_id: post.id }); if (data) apagou?.(); };
   const nome = meu ? 'Você' : `@${e.apelido}`;
   return (
     <article className={'pro-card pro-feed-item ' + e.tipo}>
@@ -95,10 +98,14 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar }: { e: E
       {e.tipo === 'rei' && (
         <p className="pro-feed-txt"><Crown size={16} aria-hidden="true" /> É {d.sexo === 'F' ? <b>Rainha</b> : <b>Rei</b>} da prova nos {kmTxt(Number(d.km))} da <b>{d.prova}</b>: melhor nota por idade entre {d.atletas ? `${d.atletas} atletas` : 'todos'} ({pct(d.nota)}%, {relogio(Number(d.tempo))}).</p>
       )}
+      {post && <>
+        {post.texto && <p className="pro-feed-post">{post.texto}</p>}
+        {post.foto && <img className="pro-feed-foto" src={post.foto} alt="" loading="lazy" />}
+      </>}
       {e.tipo === 'duelo' && (
         <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} travado={!pro} onTravado={assinar} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}</footer>
+      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} travado={!pro} onTravado={assinar} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && (meu || post.meu) && <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button>}</footer>
     </article>
   );
 }
@@ -108,7 +115,8 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
   const [lista, setLista] = useState<Evento[] | null>(null);
   const [sigo, setSigo] = useState<Set<string>>(new Set());
   useEffect(() => { sb.rpc('radar_sigo').then(({ data }) => setSigo(new Set((data as string[]) ?? []))); }, []);
-  useEffect(() => { setLista(null); sb.rpc('radar_feed', { p_so_sigo: soSigo }).then(({ data }) => setLista((data as Evento[]) ?? [])); }, [soSigo]);
+  const carregar = () => sb.rpc('radar_feed', { p_so_sigo: soSigo }).then(({ data }) => setLista((data as Evento[]) ?? []));
+  useEffect(() => { setLista(null); carregar(); }, [soSigo]); // eslint-disable-line react-hooks/exhaustive-deps
   const mudou = (ap: string) => (s: boolean) => setSigo(prev => { const n = new Set(prev); if (s) n.add(ap); else n.delete(ap); return n; });
   return (
     <div className="pro-cont">
@@ -116,10 +124,60 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
         <button className="chip" aria-pressed={!soSigo} onClick={() => setSoSigo(false)}>Todo mundo</button>
         <button className="chip" aria-pressed={soSigo} onClick={() => pro ? setSoSigo(true) : assinar?.()}>{pro ? '' : '🔒 '}Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
       </div>
+      <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} />
       {lista === null && <p className="fine">Carregando…</p>}
       {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova verificada aparece aqui.'}</p>}
-      {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} pro={pro} assinar={assinar} />)}
-      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só reações.</p>}
+      {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} pro={pro} assinar={assinar} apagou={carregar} />)}
+      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que a galera publica e o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só reações.</p>}
     </div>
   );
 }
+
+/* ───────── Publicar: texto até 1000 caracteres (10 por dia) e foto a cada 2 dias, reduzida no celular. Só no Pro. ───────── */
+function Publicar({ perfil, pro, assinar, publicou }: { perfil: Perfil; pro: boolean; assinar?: () => void; publicou: () => void }) {
+  const [aberto, setAberto] = useState(false);
+  const [texto, setTexto] = useState('');
+  const [foto, setFoto] = useState<{ blob: Blob; url: string } | null>(null);
+  const [proximaFoto, setProximaFoto] = useState<string | null>(null); // quando a próxima foto libera (null = agora)
+  const [indo, setIndo] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  useEffect(() => { if (aberto && pro) sb.rpc('radar_post_proxima_foto').then(({ data }) => setProximaFoto((data as string | null) ?? null)); }, [aberto, pro]);
+  const fotoLiberada = !proximaFoto || new Date(proximaFoto) <= new Date();
+  const quandoLibera = proximaFoto ? new Date(proximaFoto).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(',', ' às') : '';
+  const escolher = async (f: File | null) => { if (!f) return; setErro(null); const blob = await reduzirFoto(f, 800, .82); if (foto) URL.revokeObjectURL(foto.url); setFoto({ blob, url: URL.createObjectURL(blob) }); };
+  const limpar = () => { if (foto) URL.revokeObjectURL(foto.url); setFoto(null); setTexto(''); setAberto(false); setErro(null); };
+  const enviar = async () => {
+    if (!texto.trim() && !foto) return setErro('Escreva algo ou escolha uma foto.');
+    setIndo(true); setErro(null);
+    let fotoUrl: string | null = null;
+    if (foto) {
+      const caminho = `${perfil.user_id}/${Date.now()}.jpg`;
+      const { error } = await sb.storage.from('posts').upload(caminho, foto.blob, { contentType: 'image/jpeg', cacheControl: '31536000', upsert: false });
+      if (error) { setIndo(false); return setErro('Não deu para enviar a foto. Tente de novo.'); }
+      fotoUrl = sb.storage.from('posts').getPublicUrl(caminho).data.publicUrl;
+    }
+    const { error } = await sb.rpc('radar_post_criar', { p_texto: texto, p_foto_url: fotoUrl });
+    setIndo(false);
+    if (error) return setErro(error.message.replace(/^.*?: /, ''));
+    limpar(); publicou();
+  };
+  if (!pro) return <button className="pro-card pro-publicar-fechado" onClick={assinar}><Avatar foto={perfil.foto_url ?? null} apelido={perfil.apelido} tam={36} /><span>🔒 Publicar no feed é do Radar Pro</span></button>;
+  if (!aberto) return <button className="pro-card pro-publicar-fechado" onClick={() => setAberto(true)}><Avatar foto={perfil.foto_url ?? null} apelido={perfil.apelido} tam={36} /><span>Conta aí: como foi o treino, a prova, a cidade…</span><ImagemIc size={20} aria-hidden="true" /></button>;
+  return (
+    <section className="pro-card pro-publicar">
+      <div className="pro-linha"><p className="pro-k cinza">Publicar no feed</p><button className="btn text" onClick={limpar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
+      <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, 1000))} rows={4} placeholder="Como foi? Treino, prova, cidade, o que você quiser contar pra galera." autoFocus />
+      {foto && <div className="pro-publicar-previa"><img src={foto.url} alt="" /><button className="btn solid" onClick={() => { URL.revokeObjectURL(foto.url); setFoto(null); }} aria-label="Tirar foto"><X size={16} aria-hidden="true" /></button></div>}
+      <div className="pro-linha">
+        {fotoLiberada
+          ? <label className="btn outline pro-btn-p"><ImagemIc size={16} aria-hidden="true" />{foto ? 'Trocar foto' : 'Foto'}<input type="file" accept="image/*" hidden onChange={e => escolher(e.target.files?.[0] ?? null)} /></label>
+          : <small title={`Foto: uma a cada 2 dias. Libera em ${quandoLibera}.`}><ImagemIc size={14} aria-hidden="true" /> foto libera {quandoLibera}</small>}
+        <small className={texto.length > 950 ? 'pro-vermelho-txt' : ''}>{texto.length}/1000</small>
+        <button className="btn solid pro-btn-p" disabled={indo || (!texto.trim() && !foto)} onClick={enviar}><Send size={16} aria-hidden="true" />{indo ? 'Publicando…' : 'Publicar'}</button>
+      </div>
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+      <p className="fine pro-sem-margem">Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir. Sem comentários: a galera reage com 👏 🔥 😮 e você recebe no sininho.</p>
+    </section>
+  );
+}
+

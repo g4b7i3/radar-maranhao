@@ -1,13 +1,13 @@
 // Sininho de notificações: avisos (resultado verificado, duelo, renovação) e convites de grupo (com aceitar/recusar).
 import { useEffect, useState } from 'react';
-import { Bell, X, Check, Trophy, Swords, Users, CreditCard, Sparkles } from 'lucide-react';
+import { Bell, X, Check, Trophy, Swords, Users, CreditCard, Sparkles, Heart } from 'lucide-react';
 import { sb } from './sb';
 
 export type Notif = { id: string; tipo: string; titulo: string; corpo: string; url: string | null; quando: string; lido: boolean; convite?: { grupo: string; pendente: boolean; aceito: boolean | null } | null };
 type Dados = { nao_lidas: number; lista: Notif[] };
 
 const quando = (iso: string) => { const d = (Date.now() - new Date(iso).getTime()) / 60000; if (d < 60) return `há ${Math.max(1, Math.round(d))} min`; if (d < 36 * 60) return `há ${Math.round(d / 60)} h`; return `há ${Math.round(d / 1440)} dias`; };
-const Icone = ({ tipo }: { tipo: string }) => tipo === 'resultado_verificado' ? <Trophy size={18} aria-hidden="true" /> : tipo.startsWith('duelo') ? <Swords size={18} aria-hidden="true" /> : tipo === 'renovacao' ? <CreditCard size={18} aria-hidden="true" /> : tipo.includes('grupo') ? <Users size={18} aria-hidden="true" /> : <Sparkles size={18} aria-hidden="true" />;
+const Icone = ({ tipo }: { tipo: string }) => tipo === 'resultado_verificado' ? <Trophy size={18} aria-hidden="true" /> : tipo.startsWith('duelo') ? <Swords size={18} aria-hidden="true" /> : tipo === 'renovacao' ? <CreditCard size={18} aria-hidden="true" /> : tipo === 'reacao' ? <Heart size={18} aria-hidden="true" /> : tipo.includes('grupo') ? <Users size={18} aria-hidden="true" /> : <Sparkles size={18} aria-hidden="true" />;
 
 /** Carrega as notificações; atualiza a cada 60 s enquanto o app está aberto. */
 export function useNotificacoes() {
@@ -39,7 +39,7 @@ export function PainelNotificacoes({ lista, fechar, recarregar, irPara }: { list
       <section className="pro-notif" onClick={e => e.stopPropagation()} role="dialog" aria-label="Notificações">
         <div className="pro-linha"><p className="pro-k cinza"><Bell size={14} aria-hidden="true" /> Notificações</p><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
         {msg && <p className="pro-ok">{msg}</p>}
-        {lista.length === 0 && <p className="fine">Nada por aqui ainda. Você recebe aviso quando um resultado oficial sai, quando aceitam o seu duelo, quando te chamam pra um grupo e antes do seu Pro vencer.</p>}
+        {lista.length === 0 && <p className="fine">Nada por aqui ainda. Você recebe aviso quando alguém reage ao que você publicou, quando um resultado oficial sai, quando aceitam o seu duelo, quando te chamam pra um grupo e antes do seu Pro vencer.</p>}
         <ul className="pro-notif-lista">
           {lista.map(n => (
             <li key={n.id} className={n.lido ? '' : 'nova'}>

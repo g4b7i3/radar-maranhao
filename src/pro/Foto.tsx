@@ -23,6 +23,18 @@ export function useFotos(apelidos: string[]) {
   return fotos;
 }
 
+/** Reduz uma imagem para caber em `lado` px (sem recortar), JPEG. Se não for imagem, devolve o original. */
+export async function reduzirFoto(arq: File, lado = 800, qualidade = .82): Promise<Blob> {
+  const url = URL.createObjectURL(arq);
+  try {
+    const img = await new Promise<HTMLImageElement>((ok, erro) => { const i = new Image(); i.onload = () => ok(i); i.onerror = erro; i.src = url; });
+    const k = Math.min(1, lado / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
+    return await new Promise<Blob>(ok => c.toBlob(b => ok(b ?? arq), 'image/jpeg', qualidade));
+  } catch { return arq; } finally { URL.revokeObjectURL(url); }
+}
+
 async function reduzir(arq: File): Promise<Blob> {
   const url = URL.createObjectURL(arq);
   try {
