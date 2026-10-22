@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Camera, Download, Share2, Trash2 } from 'lucide-react';
 import { AZUL, FONTE, SIMBOLO, caber, fonte, type Ctx, type Foto } from './EuVou';
+import { salvarImagem } from './salvar';
 
 // Card do treino para o story (estilo dos cards do Strava), montado no próprio celular.
 // A pessoa põe distância e ritmo (ou tempo), escolhe a zona, e baixa o card pronto.
@@ -335,7 +336,7 @@ export default function CardTreino() {
     baixar();
   }
   function baixar() {
-    if (!url) return; const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+    if (!url) return; salvarImagem(url, nome);
     setAviso(fundo === 'transparente' ? 'Imagem salva. No story, ponha sua foto e use o adesivo de foto (ou cole) para colocar o card por cima.' : 'Imagem salva. É só postar no story.');
     track('baixou');
   }

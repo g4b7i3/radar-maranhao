@@ -6,6 +6,7 @@ import { sb, MEDALHAS, relogio, pct, kmTxt, type Perfil, type Resultado, type Li
 import { fotoPerfil, fotoRedonda } from './CardResultado';
 import { recordes } from './Recordes';
 import { sequenciaMeses } from './Metas';
+import { salvarImagem } from '../salvar';
 
 const W = 1080, H = 1920;
 type Num = { ano: number; provas: number; km: number; cidades: number; melhorNota: number | null; melhorProva: string | null; pontos: number; medalhas: number; reis: number; liga: Liga | null; indice: number | null; posicao: number | null; seq: number; recs: { rot: string; t: number }[] };
@@ -94,7 +95,7 @@ export function Retro({ perfil, res, meds, reis, liga, indice, posicao }: { perf
     return () => { ativo = false; };
   }, [aberto]); // eslint-disable-line react-hooks/exhaustive-deps
   const nome = `radar-temporada-${ano}-${perfil.apelido}.jpg`;
-  const baixar = () => { if (!url) return; const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
+  const baixar = () => { if (!url) return; salvarImagem(url, nome); };
   const compartilhar = async () => {
     if (!blob.current) return; const f = new File([blob.current], nome, { type: 'image/jpeg' });
     if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }

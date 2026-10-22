@@ -3,6 +3,7 @@ import { ArrowLeft, Download, Share2, ChevronDown } from 'lucide-react';
 import TABELA from './idade-tabela.json';
 import { lerTempo, fmtTempo, mascaraTempo } from './CardTreino';
 import { AZUL, SIMBOLO, fonte, type Ctx } from './EuVou';
+import { salvarImagem } from './salvar';
 
 // Tabelas de idade para corrida de rua 2025 (WMA / Alan Jones, domínio público CC0):
 // github.com/AlanLyttonJones/Age-Grade-Tables
@@ -143,7 +144,7 @@ export default function NotaIdade() {
     if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); track('compartilhou ' + ver); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }
     baixar(ver);
   }
-  function baixar(f: Formato) { const u = urls?.[f]; if (!u) return; const a = document.createElement('a'); a.href = u; a.download = `nota-por-idade-${f}.png`; document.body.appendChild(a); a.click(); a.remove(); track('baixou ' + f); }
+  function baixar(f: Formato) { const u = urls?.[f]; if (!u) return; salvarImagem(u, `nota-por-idade-${f}.png`); track('baixou ' + f); }
   const n = ok ? nivel(ok.pct) : null;
 
   return (

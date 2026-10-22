@@ -3,6 +3,7 @@ import { Download, Share2, X, Swords } from 'lucide-react';
 import { AZUL, SIMBOLO, fonte, type Ctx } from '../EuVou';
 import { pct, kmTxt } from './sb';
 import { FUNDOS, fotoPerfil, fotoRedonda } from './CardResultado';
+import { salvarImagem } from '../salvar';
 
 // Resultado do duelo (venceu, perdeu ou empatou) como card para o story (1080×1920).
 export type FimDuelo = { id: string; adversario: string | null; distancia_km: number; mes: string; minha_nota: number | null; nota_adv: number | null; resultado: 'venci' | 'perdi' | 'empate' | 'ninguem' };
@@ -75,7 +76,7 @@ export default function CardDuelo({ d, eu, fechar }: { d: FimDuelo; eu: string; 
     return () => { ativo = false; };
   }, [d, eu, fundo, fotos]);
   const nome = `duelo-${d.mes.slice(0, 7)}.jpg`;
-  const baixar = () => { if (!url) return; const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
+  const baixar = () => { if (!url) return; salvarImagem(url, nome); };
   const compartilhar = async () => {
     if (!blob.current) return; const f = new File([blob.current], nome, { type: 'image/jpeg' });
     if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }

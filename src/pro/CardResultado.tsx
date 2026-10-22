@@ -3,6 +3,7 @@ import { Download, Share2, X, Camera } from 'lucide-react';
 import { AZUL, SIMBOLO, caber, fonte, type Ctx } from '../EuVou';
 import { sb, relogio, kmTxt, type Resultado } from './sb';
 import { MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
+import { salvarImagem } from '../salvar';
 
 // Card do resultado para os stories (1080×1920): tempo oficial, nota por idade, colocação e as medalhas da prova.
 const W = 1080, H = 1920;
@@ -202,7 +203,7 @@ export default function CardResultado({ r, apelido, fechar }: { r: Resultado; ap
     baixar();
   }
   function baixar() {
-    if (!url) return; const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+    if (!url) return; salvarImagem(url, nome);
     setAviso('Imagem salva. É só postar no story.');
   }
 

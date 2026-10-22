@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera, Download, Share2, Trash2, X } from 'lucide-react';
 import { fmt, type Race } from './lib';
 import { diasAte, horaLargada } from './Clima';
+import { salvarImagem } from './salvar';
 
 // Card "Eu vou!" para os stories do Instagram (1080×1920), desenhado no próprio celular, sem servidor.
 
@@ -222,7 +223,7 @@ export default function EuVou({ e, onClose }: { e: Race; onClose: () => void }) 
   }
   function baixar() {
     if (!url) return;
-    const a = document.createElement('a'); a.href = url; a.download = nomeArq; document.body.appendChild(a); a.click(); a.remove();
+    salvarImagem(url, nomeArq);
     setAviso('Imagem salva. Abra o Instagram, crie um story e escolha a imagem na galeria.');
     track('baixou');
   }

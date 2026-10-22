@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Download, Share2, ArrowLeft } from 'lucide-react';
 import type { Race, State } from './lib';
 import { AZUL, FONTE, SIMBOLO, caber, fonte, type Ctx } from './EuVou';
+import { salvarImagem } from './salvar';
 
 // Story "Provas da semana" (1080×1920), montado na hora com a agenda atual.
 // Abra radarcorridasma.com.br/?story=semana (ou pelo radarcorridas.netlify.app), baixe e poste. Sem servidor, sem custo.
@@ -157,7 +158,7 @@ export default function StorySemana() {
     if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }
     baixar();
   }
-  function baixar() { if (!url) return; const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); }
+  function baixar() { if (!url) return; salvarImagem(url, nome); }
 
   return (
     <main className="story-semana">

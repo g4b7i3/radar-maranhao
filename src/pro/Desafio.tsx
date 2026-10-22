@@ -6,6 +6,7 @@ import { sb } from './sb';
 import { Avatar } from './Foto';
 import { linkAssessoria } from './Assessoria';
 import { fotoPerfil, fotoRedonda } from './CardResultado';
+import { salvarImagem } from '../salvar';
 
 type Equipe = { posicao: number; nome: string; km: number; atletas: number; provas: number; quem: { apelido: string; foto: string | null; km: number }[] };
 type Dados = { mes: string; equipes: Equipe[] };
@@ -66,7 +67,7 @@ export function DesafioAssessorias({ minha }: { minha?: string | null }) {
     c.toBlob(b => { if (!b) return; blob.current = b; setCard(u => { if (u) URL.revokeObjectURL(u); return URL.createObjectURL(b); }); }, 'image/jpeg', .92);
   };
   const nome = `desafio-assessorias-${(d?.mes ?? '').slice(0, 7)}.jpg`;
-  const baixar = () => { if (!card) return; const a = document.createElement('a'); a.href = card; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
+  const baixar = () => { if (!card) return; salvarImagem(card, nome); };
   const compartilhar = async () => {
     if (!blob.current) return; const f = new File([blob.current], nome, { type: 'image/jpeg' });
     if (navigator.canShare?.({ files: [f] })) { try { await navigator.share({ files: [f] }); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }
