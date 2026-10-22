@@ -951,7 +951,28 @@ export function TelaAdmin() {
         <ul className="pro-provas">{p?.contestacoes.map(c => <li key={c.id}><p className="pro-sem-margem"><b>Motivo:</b> {c.motivo}<br /><small>por {quem(c.autor_id)}</small></p>{c.radar_resultados && <Item r={c.radar_resultados} />}<button className="btn text pro-esq" onClick={async () => { await chamar('radar-acoes', { acao: 'admin_contestacao', contestacao_id: c.id }); carregar(); }}>Encerrar sem mudar</button></li>)}</ul>
         {p && !p.contestacoes.length && <p className="fine">Nenhuma contestação aberta.</p>}
       </section>
+      <AdminSinalizacoes />
     </div>
+  );
+}
+
+type Sinal = { post_id: string; texto: string | null; foto: string | null; comunidade: string | null; criado_em: string; autor: string; quantas: number; motivos: { por: string; motivo: string; quando: string }[] };
+function AdminSinalizacoes() {
+  const [lista, setLista] = useState<Sinal[] | null>(null);
+  const carregar = () => sb.rpc('radar_admin_sinalizacoes').then(({ data }) => setLista((data ?? []) as Sinal[]));
+  useEffect(() => { carregar(); }, []);
+  const decidir = async (id: string, remover: boolean) => { await sb.rpc('radar_admin_sinalizacao', { p_post: id, p_remover: remover }); carregar(); };
+  return (
+    <section className="pro-card"><p className="pro-k cinza"><Flag size={14} aria-hidden="true" /> Posts sinalizados ({lista?.length ?? '…'})</p>
+      <ul className="pro-provas">{lista?.map(x => <li key={x.post_id}>
+        <p className="pro-sem-margem"><b>@{x.autor}</b>{x.comunidade ? <small> · em {x.comunidade}</small> : null} <small>· {dataBR(x.criado_em)} · {x.quantas} {x.quantas === 1 ? 'sinalização' : 'sinalizações'}</small></p>
+        {x.texto && <p className="pro-feed-post">{x.texto}</p>}
+        {x.foto && <img className="pro-feed-foto" src={x.foto} alt="" loading="lazy" />}
+        <ul className="fine">{x.motivos.map((m, i) => <li key={i}>@{m.por}: {m.motivo || '(sem motivo)'}</li>)}</ul>
+        <div className="pro-linha pro-quebra"><button className="btn outline pro-vermelho-txt" onClick={() => decidir(x.post_id, true)}>Remover post</button><button className="btn text" onClick={() => decidir(x.post_id, false)}>Manter</button></div>
+      </li>)}</ul>
+      {lista && !lista.length && <p className="fine">Nenhum post sinalizado.</p>}
+    </section>
   );
 }
 

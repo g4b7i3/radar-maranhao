@@ -597,3 +597,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-menu::before{left:0;border-radius:26px 0 0 26px;background:linear-gradient(to right,var(--surface) 20%,transparent)}
 .pro-menu::after{right:0;border-radius:0 26px 26px 0;background:linear-gradient(to left,var(--surface) 20%,transparent)}
 .pro-menu.esq::before,.pro-menu.dir::after{opacity:1}
+.pro-feed-sinal{margin-left:auto;color:var(--muted);font-size:.8rem}

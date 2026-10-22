@@ -91,7 +91,7 @@ Deno.serve(async req => {
       } catch (e) { erroPush.push(String(e).slice(0, 120)); }
     }
     const email = emails.get(a.user_id);
-    if (resend && email && ['renovacao', 'resultado_verificado'].includes(a.tipo)) {
+    if (resend && email && ['renovacao', 'resultado_verificado', 'admin_resumo'].includes(a.tipo)) {
       const html = `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;color:#0f1a33"><p style="font-size:12px;letter-spacing:2px;color:#1D3FBF;font-weight:700">RADAR PRO · CORRIDAS MA</p><h2 style="margin:8px 0 12px">${a.titulo}</h2><p style="font-size:16px;line-height:1.5">${a.corpo}</p><p style="margin:24px 0"><a href="${a.url ?? 'https://radarcorridasma.com.br/?pro'}" style="background:#1D3FBF;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:700">Abrir o Radar Pro</a></p><p style="font-size:12px;color:#667">Você recebe este e-mail porque tem conta no Radar Pro. radarcorridasma.com.br</p></div>`;
       try {
         const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${resend}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: remetente, to: [email], subject: a.titulo, html }) });

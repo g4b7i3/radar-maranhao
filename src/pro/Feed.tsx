@@ -1,7 +1,7 @@
 // Feed "Aconteceu no Radar": provas verificadas, Rei/Rainha da prova e duelos, com a foto de cada atleta.
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
 import { useEffect, useMemo, useState } from 'react';
-import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2 } from 'lucide-react';
+import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
@@ -105,9 +105,21 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
       {e.tipo === 'duelo' && (
         <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && (meu || post.meu) && <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button>}</footer>
+      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && ((meu || post.meu) ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button> : <Sinalizar postId={post.id} />)}</footer>
     </article>
   );
+}
+
+/** Sinalizar um post de outra pessoa: cai no Admin e no resumo diário. */
+function Sinalizar({ postId }: { postId: string }) {
+  const [feito, setFeito] = useState(false);
+  const enviar = async () => {
+    const motivo = prompt('O que tem de errado neste post? (opcional)') ?? null;
+    if (motivo === null) return;
+    const { error } = await sb.rpc('radar_sinalizar_post', { p_post: postId, p_motivo: motivo });
+    if (error) alert(error.message.replace(/^.*?: /, '')); else setFeito(true);
+  };
+  return feito ? <small className="pro-feed-sinal">Sinalizado. Valeu.</small> : <button className="btn text pro-feed-apagar" onClick={enviar} aria-label="Sinalizar post" title="Sinalizar"><Flag size={14} aria-hidden="true" /></button>;
 }
 
 export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?: boolean; assinar?: () => void }) {
