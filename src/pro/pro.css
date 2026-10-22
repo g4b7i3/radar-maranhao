@@ -558,3 +558,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-camp-ok{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--cobalt-tint);color:var(--cobalt);font-weight:800;font-size:.8rem;flex:none}
 .pro-camp-ok.feita{background:var(--open-bg);color:var(--open)}
 .pro-camp-card .pro-trilha::after{display:none}
+.pro-camp-premio{margin:4px 0 0;font-size:.82rem;opacity:.85;padding-top:8px;border-top:1px solid rgba(255,255,255,.18)}
+.pro-camp-card.futuro{background-image:radial-gradient(120% 90% at 100% 0%,rgba(255,209,102,.18),transparent 55%),linear-gradient(160deg,#1a2a6c,#0d1840);animation:none}
+.pro-camp-card.futuro::before{animation:none}
