@@ -26,8 +26,8 @@ try { const ref = (qs.get('ref') ?? '').toLowerCase().replace(/[^a-z0-9_.]/g, ''
 const codigoCortesia = (): string | null => { let k = qs.get('pro') === 'cortesia' && new URLSearchParams(window.location.search).get('k') ? qs.get('k') : null; try { k ??= localStorage.getItem('radar-cortesia'); } catch { /* */ } return k; };
 
 /** Logo do Radar Pro: o símbolo do Radar em dourado, no fundo azul-noite (a mesma do ícone do app). */
-export const Logo = () => (
-  <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+export const Logo = ({ tam = 30 }: { tam?: number }) => (
+  <svg width={tam} height={tam} viewBox="0 0 32 32" aria-hidden="true">
     <defs>
       <linearGradient id="logo-pro-f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#1a2a6c" /><stop offset="1" stopColor="#070d26" /></linearGradient>
       <linearGradient id="logo-pro-o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff1b8" /><stop offset=".5" stopColor="#f2b705" /><stop offset="1" stopColor="#ffe28a" /></linearGradient>
@@ -74,6 +74,13 @@ function ProTelas() {
   const [cardDuelo, setCardDuelo] = useState<string | null>(null);
   const [resgatando, setResgatando] = useState(() => !!codigoCortesia());
   const [notifAberto, setNotifAberto] = useState(false);
+  // abertura: logo grande reluzindo, uma vez por abertura do app (1,5 s), depois entra
+  const [abertura, setAbertura] = useState(() => { try { return !sessionStorage.getItem('radar-abertura'); } catch { return true; } });
+  const [aberturaMin, setAberturaMin] = useState(false);
+  useEffect(() => { if (!abertura) return; const t = setTimeout(() => setAberturaMin(true), 1500); try { sessionStorage.setItem('radar-abertura', '1'); } catch { /* */ } return () => clearTimeout(t); }, [abertura]);
+  const carregou = sessao !== undefined && !(sessao && perfil === undefined);
+  useEffect(() => { if (abertura && aberturaMin && carregou) { const t = setTimeout(() => setAbertura(false), 450); return () => clearTimeout(t); } }, [abertura, aberturaMin, carregou]);
+  const telaAbertura = abertura ? <Abertura saindo={aberturaMin && carregou} /> : null;
   const [stravaVersao, setStravaVersao] = useState(0); // recarrega a Conta depois de conectar o Strava
   const [bemVindo, setBemVindo] = useState(false); // tela cheia na hora em que o Pro é liberado (Pix, cortesia ou equipe)
   const eraAssinante = useRef<boolean | undefined>(undefined);
@@ -153,11 +160,11 @@ function ProTelas() {
     <header className="pro-topo"><Logo /><b>{titulo}</b>{extra}</header>
   );
 
-  if (sessao === undefined || (sessao && perfil === undefined)) return <main className="pro"><p className="pro-carregando">Carregando…</p></main>;
+  if (sessao === undefined || (sessao && perfil === undefined)) return <main className="pro">{telaAbertura}<p className="pro-carregando">Carregando…</p></main>;
 
-  if (!sessao) return <main className="pro"><a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a><ConviteDuelo /><Convite /></main>;
+  if (!sessao) return <main className="pro">{telaAbertura}<a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a><ConviteDuelo /><Convite /></main>;
 
-  if (!perfil) return <main className="pro">{topo('Seu perfil de atleta')}<ConviteDuelo /><FormPerfil uid={sessao.user.id} email={sessao.user.email ?? ''} pronto={recarregar} /></main>;
+  if (!perfil) return <main className="pro">{telaAbertura}{topo('Seu perfil de atleta')}<ConviteDuelo /><FormPerfil uid={sessao.user.id} email={sessao.user.email ?? ''} pronto={recarregar} /></main>;
 
   if (!temp || resgatando) return <main className="pro"><p className="pro-carregando">Carregando…</p></main>;
 
@@ -185,6 +192,7 @@ function ProTelas() {
   ];
   return (
     <main className="pro">
+      {telaAbertura}
       {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Minha pré-temporada' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: todas as abas à vista, sem precisar arrastar */}
@@ -441,6 +449,17 @@ function BemVindoPro({ fechar }: { fechar: () => void }) {
         <p className="pro-bemvindo-frase">Cada prova que você correr agora vira ponto, medalha e lugar no ranking do Maranhão.<br />A largada é sua.</p>
         <button id="bemvindo-btn" className="btn solid pro-bemvindo-btn" onClick={fechar}>Vamos lá</button>
       </div>
+    </div>
+  );
+}
+
+/* ───────── Abertura: logo grande entra, um reflexo passa por ela, e o app aparece por baixo ───────── */
+function Abertura({ saindo }: { saindo: boolean }) {
+  return (
+    <div className={'pro-abertura' + (saindo ? ' saindo' : '')} aria-hidden="true">
+      <div className="pro-abertura-logo"><Logo tam={150} /><i /></div>
+      <p className="pro-abertura-nome">Radar <span>Pro</span></p>
+      <p className="pro-abertura-sub">Temporada do Maranhão</p>
     </div>
   );
 }

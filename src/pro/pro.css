@@ -508,3 +508,17 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
   .pro .pro-card.azul, .pro .pro-card.azul::before, .pro .pro-trilha::after, .pro .pro-trilha.pro-anima span.on, .pro .pro-mini.pro-anima div, .pro .btn.solid.pro-btn::after, .pro .pro-rank li.p1 > button > b:first-child, .pro .pro-rank li.eu::after, .pro .pro-menu a[aria-current="page"] svg, .pro .pro-selo { animation: none; }
   .pro .pro-trilha::after { left: var(--fim, 0%); }
 }
+
+/* Abertura do app: logo grande com reflexo, depois some mostrando o app */
+.pro-abertura{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(90% 60% at 50% 35%,#182a7a 0%,#0a1240 60%,#060b2a 100%);color:#fff;transition:opacity .45s ease,transform .45s ease}
+.pro-abertura.saindo{opacity:0;transform:scale(1.06);pointer-events:none}
+.pro-abertura-logo{position:relative;width:150px;height:150px;border-radius:34px;overflow:hidden;animation:pro-ab-pop .6s cubic-bezier(.2,.9,.25,1.2) both;box-shadow:0 30px 60px -20px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08),0 0 60px -10px rgba(242,183,5,.35)}
+.pro-abertura-logo svg{display:block;width:150px;height:150px}
+.pro-abertura-logo i{position:absolute;inset:-20% -60%;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.08) 44%,rgba(255,255,255,.75) 50%,rgba(255,255,255,.08) 56%,transparent 65%);transform:translateX(-80%) skewX(-12deg);animation:pro-ab-reflexo .9s cubic-bezier(.4,0,.2,1) .35s both}
+.pro-abertura-nome{margin:14px 0 0;font-size:2.1rem;font-weight:900;font-stretch:70%;letter-spacing:-.01em;line-height:1;animation:pro-ab-sobe .5s ease-out .3s both}
+.pro-abertura-nome span{background:linear-gradient(180deg,#fff1b8,#f2b705 60%,#ffe28a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pro-abertura-sub{margin:0;font-size:.85rem;color:rgba(255,255,255,.65);letter-spacing:.06em;animation:pro-ab-sobe .5s ease-out .45s both}
+@keyframes pro-ab-pop{from{opacity:0;transform:scale(.6) rotate(-6deg)}to{opacity:1;transform:none}}
+@keyframes pro-ab-reflexo{from{transform:translateX(-80%) skewX(-12deg)}to{transform:translateX(80%) skewX(-12deg)}}
+@keyframes pro-ab-sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pro-abertura-logo,.pro-abertura-logo i,.pro-abertura-nome,.pro-abertura-sub{animation:none}.pro-abertura-logo i{display:none}}
