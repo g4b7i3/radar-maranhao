@@ -551,3 +551,10 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 
 .pro-recortes-titulo{margin:4px 0 -2px;font-size:1rem;font-weight:800;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .pro-recortes-titulo span{font-size:.75rem;font-weight:600;color:var(--muted)}
+
+/* campeonatos */
+.pro-camp-card{text-align:left;cursor:pointer;width:100%;font:inherit;color:#fff}
+.pro-camp-nome{margin:0;font-size:2rem;font-weight:900;font-stretch:66%;line-height:1}
+.pro-camp-ok{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--cobalt-tint);color:var(--cobalt);font-weight:800;font-size:.8rem;flex:none}
+.pro-camp-ok.feita{background:var(--open-bg);color:var(--open)}
+.pro-camp-card .pro-trilha::after{display:none}

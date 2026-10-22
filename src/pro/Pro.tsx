@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, Radar, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, Shield, Radar, Trophy, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -11,12 +11,13 @@ import CIDADES from '../cidades-ma-geo.json';
 import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin, ZapConta } from './Telas';
 import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
+import { TelaCampeonatos } from './Campeonatos';
 import { PushConvite } from './Push';
 import { terminarConexaoStrava } from './Strava';
 import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
 import './pro.css';
 
-type Aba = 'temporada' | 'feed' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
+type Aba = 'temporada' | 'campeonatos' | 'feed' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
 const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
 // Link de cortesia (/?pro=cortesia&k=código): libera o Radar Pro sem pagar, até o Vinik revogar
@@ -186,7 +187,7 @@ function ProTelas() {
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
-    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
     { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: UserRound },
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
@@ -213,6 +214,7 @@ function ProTelas() {
           {cardDuelo === d.id ? <CardDuelo d={d} eu={perfil.apelido} fechar={() => setCardDuelo(null)} /> : <button className="btn outline pro-btn" onClick={() => setCardDuelo(d.id)}>Card pro story</button>}
         </section>
       ))}
+      {aba === 'campeonatos' && (pro ? <TelaCampeonatos perfil={perfil} /> : <Travado tela="campeonatos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'temporada' && (pro ? <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} /> : <Travado tela="temporada" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'corri' && (pro ? <TelaEuCorri perfil={perfil} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} /> : <Travado tela="corri" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
@@ -225,11 +227,12 @@ function ProTelas() {
 }
 
 /* ───────── Modo grátis: a tela existe, mas está trancada ───────── */
-export function Travado({ tela, perfil, assinar }: { tela: 'temporada' | 'corri' | 'ranking' | 'duelos'; perfil: Perfil; assinar: () => void }) {
+export function Travado({ tela, perfil, assinar }: { tela: 'temporada' | 'corri' | 'ranking' | 'duelos' | 'campeonatos'; perfil: Perfil; assinar: () => void }) {
   const T = {
     temporada: { t: 'Sua temporada', d: 'Índice, liga, pontos, medalhas e a sua posição no Maranhão. Cada prova que você corre entra aqui.', ex: ['Liga Ouro · índice 61,3', '4 provas · 3 cidades · 18º no MA', '12 medalhas'] },
     corri: { t: 'Eu corri uma prova', d: 'Cole o link do resultado e o Radar acha o seu tempo oficial, calcula a nota por idade e dá os pontos na hora.', ex: ['Corrida do Sol · 10 km · 48:12', 'Nota 68,4% · +18 pontos', 'Card pro story pronto'] },
     ranking: { t: 'Ranking do Maranhão', d: 'Por pontos, eficiência, cidade, sexo, faixa etária, assessoria e pelotão da sua liga.', ex: ['1  @zima · Caxias · 33', '2  @robe · Icatu · 23', '3  @…'] },
+    campeonatos: { t: 'Liga Maranhense', d: 'A disputa prova a prova do Maranhão: pontos por colocação em cada prova com resultado oficial, valem as 6 melhores. Feminino e masculino.', ex: ['1  @zima · Caxias · 25', '2  @guilherme · 20', '3  @robe · Icatu · 16'] },
     duelos: { t: 'Duelos', d: 'Desafie um amigo: vence a maior nota por idade do mês. Dá pra duelar com quem tem idade diferente.', ex: ['Você 71,2% × @amigo 68,4%', 'Faltam 9 dias', '🏆 Você está na frente'] },
   }[tela];
   return (
