@@ -527,7 +527,7 @@ export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; p
           <li><b>10</b> por concluir</li><li><b>+5</b> se for 10 km ou mais</li><li><b>+10</b> se for meia</li><li><b>+20</b> se for maratona</li>
           <li><b>+10</b> pódio (geral ou faixa)</li><li><b>+5</b> recorde pessoal</li><li><b>+3</b> cidade nova na temporada</li>
         </ul>
-        <p className="fine pro-sem-margem">A nota por idade não entra aqui: ela vale na Eficiência e na Liga Maranhense.</p>
+        <p className="fine pro-sem-margem">Só esses itens dão ponto. Medalha não dá ponto: é coleção (o pódio e o recorde dão ponto e também medalha, mas são coisas separadas). A nota por idade também não entra aqui: ela vale na Eficiência e na Liga Maranhense.</p>
       </section>}
       {rec === 'assessorias' && <DesafioAssessorias minha={perfil.assessoria} />}
       {rec === 'pelotao' && <div className="chips" role="group" aria-label="Pelotão"><button className="chip" aria-pressed={!pelotaoCidade} onClick={() => setPelotaoCidade(false)}>Da minha liga</button><button className="chip" aria-pressed={pelotaoCidade} onClick={() => setPelotaoCidade(true)}>De {perfil.cidade}</button></div>}
