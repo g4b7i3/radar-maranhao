@@ -70,7 +70,9 @@ Deno.serve(async req => {
   const { data: avisos } = await db.from('radar_avisos').select('*').is('enviado_em', null).order('criado_em').limit(200);
   if (!avisos?.length) return resp({ ok: true, lembretes, enviados: 0 });
 
-  const priv = privB64 ? await chaveVapid(privB64).catch(() => null) : null;
+  let erroVapid: string | null = null;
+  const priv = privB64 ? await chaveVapid(privB64.trim()).catch(e => { erroVapid = String(e?.message ?? e); return null; }) : null;
+  let erroEmail: string | null = null;
   const ids = [...new Set(avisos.map(a => a.user_id))];
   const { data: subs } = await db.from('radar_push').select('*').in('user_id', ids);
   const emails = new Map<string, string>();
@@ -92,10 +94,10 @@ Deno.serve(async req => {
       const html = `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;color:#0f1a33"><p style="font-size:12px;letter-spacing:2px;color:#1D3FBF;font-weight:700">RADAR PRO · CORRIDAS MA</p><h2 style="margin:8px 0 12px">${a.titulo}</h2><p style="font-size:16px;line-height:1.5">${a.corpo}</p><p style="margin:24px 0"><a href="${a.url ?? 'https://radarcorridasma.com.br/?pro'}" style="background:#1D3FBF;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:700">Abrir o Radar Pro</a></p><p style="font-size:12px;color:#667">Você recebe este e-mail porque tem conta no Radar Pro. radarcorridasma.com.br</p></div>`;
       try {
         const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${resend}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: remetente, to: [email], subject: a.titulo, html }) });
-        if (r.ok) mail++;
-      } catch { /* próximo */ }
+        if (r.ok) mail++; else erroEmail = `${r.status} ${(await r.text()).slice(0, 200)}`;
+      } catch (e) { erroEmail = String(e); }
     }
     await db.from('radar_avisos').update({ enviado_em: new Date().toISOString() }).eq('id', a.id);
   }
-  return resp({ ok: true, lembretes, avisos: avisos.length, push, email: mail, inscricoes_removidas: mortos, push_ativo: !!priv, email_ativo: !!resend });
+  return resp({ ok: true, lembretes, avisos: avisos.length, push, email: mail, inscricoes_removidas: mortos, push_ativo: !!priv, email_ativo: !!resend, vapid_tam: privB64?.length ?? 0, erro_vapid: erroVapid, erro_email: erroEmail, remetente });
 });
