@@ -573,3 +573,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-feed-post{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45}
 .pro-feed-foto{display:block;width:100%;border-radius:14px;background:var(--cobalt-tint);max-height:520px;object-fit:cover}
 .pro-feed-apagar{margin-left:auto;color:var(--muted)}
+
+.pro-gratis-aviso{display:flex;align-items:center;gap:10px;background:#fff6d6;border:1px solid #f2d27a}
+.pro-gratis-aviso p{flex:1;font-size:.9rem;line-height:1.3}

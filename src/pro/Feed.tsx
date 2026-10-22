@@ -87,7 +87,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
           <b><a href={linkPerfil(e.apelido)}>{nome}</a></b>
           <small>{e.cidade} · {quandoTxt(e.quando)}</small>
         </div>
-        {!meu && sigo !== undefined && mudouSigo && (pro ? <Seguir apelido={e.apelido} sigo={sigo} mudou={mudouSigo} /> : <button className="btn outline pro-seguir" onClick={assinar} title="Só no Pro">🔒 Seguir</button>)}
+        {!meu && sigo !== undefined && mudouSigo && <Seguir apelido={e.apelido} sigo={sigo} mudou={mudouSigo} />}
       </header>
       {e.tipo === 'prova' && (
         <>
@@ -105,7 +105,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
       {e.tipo === 'duelo' && (
         <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} travado={!pro} onTravado={assinar} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && (meu || post.meu) && <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button>}</footer>
+      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && (meu || post.meu) && <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button>}</footer>
     </article>
   );
 }
@@ -122,7 +122,7 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
     <div className="pro-cont">
       <div className="chips" role="group" aria-label="Filtro do feed">
         <button className="chip" aria-pressed={!soSigo} onClick={() => setSoSigo(false)}>Todo mundo</button>
-        <button className="chip" aria-pressed={soSigo} onClick={() => pro ? setSoSigo(true) : assinar?.()}>{pro ? '' : '🔒 '}Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
+        <button className="chip" aria-pressed={soSigo} onClick={() => setSoSigo(true)}>Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
       </div>
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} />
       {lista === null && <p className="fine">Carregando…</p>}
@@ -161,22 +161,22 @@ function Publicar({ perfil, pro, assinar, publicou }: { perfil: Perfil; pro: boo
     if (error) return setErro(error.message.replace(/^.*?: /, ''));
     limpar(); publicou();
   };
-  if (!pro) return <button className="pro-card pro-publicar-fechado" onClick={assinar}><Avatar foto={perfil.foto_url ?? null} apelido={perfil.apelido} tam={36} /><span>🔒 Publicar no feed é do Radar Pro</span></button>;
+  const max = pro ? 1000 : 600; // modo grátis: texto até 600, sem foto
   if (!aberto) return <button className="pro-card pro-publicar-fechado" onClick={() => setAberto(true)}><Avatar foto={perfil.foto_url ?? null} apelido={perfil.apelido} tam={36} /><span>Conta aí: como foi o treino, a prova, a cidade…</span><ImagemIc size={20} aria-hidden="true" /></button>;
   return (
     <section className="pro-card pro-publicar">
       <div className="pro-linha"><p className="pro-k cinza">Publicar no feed</p><button className="btn text" onClick={limpar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
-      <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, 1000))} rows={4} placeholder="Como foi? Treino, prova, cidade, o que você quiser contar pra galera." autoFocus />
+      <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, max))} rows={4} placeholder="Como foi? Treino, prova, cidade, o que você quiser contar pra galera." autoFocus />
       {foto && <div className="pro-publicar-previa"><img src={foto.url} alt="" /><button className="btn solid" onClick={() => { URL.revokeObjectURL(foto.url); setFoto(null); }} aria-label="Tirar foto"><X size={16} aria-hidden="true" /></button></div>}
       <div className="pro-linha">
-        {fotoLiberada
+        {!pro ? <button className="btn text pro-btn-p" onClick={assinar} title="Foto é do Radar Pro"><ImagemIc size={16} aria-hidden="true" />🔒 Foto</button> : fotoLiberada
           ? <label className="btn outline pro-btn-p"><ImagemIc size={16} aria-hidden="true" />{foto ? 'Trocar foto' : 'Foto'}<input type="file" accept="image/*" hidden onChange={e => escolher(e.target.files?.[0] ?? null)} /></label>
           : <small title={`Foto: uma a cada 2 dias. Libera em ${quandoLibera}.`}><ImagemIc size={14} aria-hidden="true" /> foto libera {quandoLibera}</small>}
-        <small className={texto.length > 950 ? 'pro-vermelho-txt' : ''}>{texto.length}/1000</small>
+        <small className={texto.length > max - 50 ? 'pro-vermelho-txt' : ''}>{texto.length}/{max}</small>
         <button className="btn solid pro-btn-p" disabled={indo || (!texto.trim() && !foto)} onClick={enviar}><Send size={16} aria-hidden="true" />{indo ? 'Publicando…' : 'Publicar'}</button>
       </div>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-sem-margem">Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir. Sem comentários: a galera reage com 👏 🔥 😮 e você recebe no sininho.</p>
+      <p className="fine pro-sem-margem">{pro ? 'Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir.' : 'Modo grátis: texto até 600 caracteres, 10 posts por dia. Foto (uma a cada 2 dias) é do Radar Pro.'} Sem comentários: a galera reage com 👏 🔥 😮 e você recebe no sininho.</p>
     </section>
   );
 }

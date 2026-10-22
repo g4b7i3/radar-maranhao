@@ -212,6 +212,8 @@ export async function conferirRegistros(db: any, prova: string) {
   const { data: perfis } = await db.from('radar_perfis').select('user_id, nome_completo').in('user_id', regs.map((r: any) => r.user_id));
   const nomes = new Map((perfis ?? []).map((p: any) => [p.user_id, p.nome_completo]));
   for (const r of regs) {
+    const { data: pro } = await db.rpc('radar_eh_assinante', { uid: r.user_id }); // modo grátis: não verifica (verificar é do Pro)
+    if (!pro) continue;
     const nomePerfil = String(nomes.get(r.user_id) ?? '');
     const { of, outroAtleta } = acharNoOficial(ofs, Number(r.distancia_km), { peito: r.peito_declarado, nomePerfil, nomeBusca: r.nome_inscricao || nomePerfil, tempo: r.tempo_s });
     if (outroAtleta) {

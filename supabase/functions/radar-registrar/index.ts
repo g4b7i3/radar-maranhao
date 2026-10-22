@@ -58,7 +58,8 @@ Deno.serve(async req => {
   const { data: perfil } = await db.from('radar_perfis').select('*').eq('user_id', user.id).maybeSingle();
   if (!perfil) return resp({ erro: 'Complete seu perfil antes.' }, 400);
   const { data: ehPro } = await db.rpc('radar_eh_assinante', { uid: user.id }); // pago, cortesia ou plano assessoria
-  if (!ehPro) return resp({ erro: 'Sua assinatura do Radar Pro não está ativa.' }, 402);
+  // modo grátis: registra como "declarada" e não confere com o resultado oficial (verificar é do Pro)
+  const gratis = !ehPro;
 
   // Prova que não está na agenda: com o link da cronometragem, o Radar confere e cria a prova na hora.
   // Sem link (ou link que o Radar não sabe ler), vira pedido para o administrador.
@@ -87,6 +88,7 @@ Deno.serve(async req => {
       return resp({ pedido: true, motivo });
     };
     if (!lk) return await pedido('');
+    if (gratis) return await pedido('Modo grátis: a verificação pelo link é do Radar Pro');
     try { lidoNovo = await lerLink(lk); } catch { lidoNovo = null; }
     if (!lidoNovo?.linhas.length) return await pedido('Link não lido automaticamente');
     if (lidoNovo.data && Math.abs(new Date(lidoNovo.data.slice(0, 10)).getTime() - new Date(dia).getTime()) > 86400_000)
@@ -145,7 +147,7 @@ Deno.serve(async req => {
   if (nomeIns && !semelhante(nomeIns, perfil.nome_completo)) return resp({ erro: 'O nome da inscrição precisa ter pelo menos um nome do seu nome completo.' }, 400);
   const link = (b.link_resultado ?? '').trim().slice(0, 400) || null;
 
-  let ofs = await lerOficiais(db, prova.id);
+  let ofs = gratis ? [] : await lerOficiais(db, prova.id);
   // 1b) Link do resultado: o Radar lê na hora (Racezone, Wiclax). Se for da prova certa, vira o resultado oficial da prova.
   let linkLido = false, avisoLink: string | null = null;
   if (lidoNovo && link && !ofs?.length) { // prova nova: o link já foi conferido acima
@@ -153,7 +155,7 @@ Deno.serve(async req => {
     ofs = await lerOficiais(db, prova.id); linkLido = true;
     await conferirRegistros(db, prova.id).catch(() => null);
   }
-  if (link && !ofs?.length) {
+  if (link && !ofs?.length && !gratis) {
     try {
       const lido = await lerLink(link);
       if (lido?.linhas.length) {
@@ -193,10 +195,10 @@ Deno.serve(async req => {
   const melhorAntes = mesmaDist.length ? Math.min(...mesmaDist.map(h => h.tempo_s)) : null;
 
   // 2) Status e alarmes contra fraude
-  let status = oficial ? 'verificado' : link ? 'em_analise' : 'declarado';
-  let motivo: string | null = oficial ? null : link ? (linkLido ? 'O Radar leu o resultado, mas não achou o seu nome/peito: conferir.' : 'Comprovante enviado: aguardando aprovação.') : null;
-  if (!oficial && n > 80) { status = 'em_analise'; motivo = 'Nota por idade acima de 80%: precisa do resultado oficial.'; }
-  if (!oficial && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
+  let status = oficial ? 'verificado' : link && !gratis ? 'em_analise' : 'declarado';
+  let motivo: string | null = oficial ? null : gratis ? 'Verificar com o resultado oficial é do Radar Pro. Assine para validar esta prova.' : link ? (linkLido ? 'O Radar leu o resultado, mas não achou o seu nome/peito: conferir.' : 'Comprovante enviado: aguardando aprovação.') : null;
+  if (!oficial && !gratis && n > 80) { status = 'em_analise'; motivo = 'Nota por idade acima de 80%: precisa do resultado oficial.'; }
+  if (!oficial && !gratis && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
 
   // 3) Pontos
   const temporada = Number(prova.date.slice(0, 4));
@@ -229,5 +231,5 @@ Deno.serve(async req => {
   const novas = (await medalhasDe(ids))[user.id] ?? [];
   const { data: final } = await db.from('radar_resultados').select('*').eq('id', novo.id).maybeSingle();
 
-  return resp({ resultado: final ?? novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado', link_lido: linkLido });
+  return resp({ resultado: final ?? novo, nota: n, pontos, detalhes: d, status, motivo, medalhas_novas: novas, indice: iDepois, liga: liga(iDepois), subiu_de_liga: subiu, oficial: status === 'verificado', link_lido: linkLido, gratis });
 });

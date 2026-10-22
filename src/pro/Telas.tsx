@@ -289,7 +289,7 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
   );
 }
 
-export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; pronto: () => void; irTemporada: () => void }) {
+export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }: { perfil: Perfil; pronto: () => void; irTemporada: () => void; pro?: boolean; assinar?: () => void }) {
   const [provas, setProvas] = useState<Prova[] | null>(null);
   const [busca, setBusca] = useState('');
   const [prova, setProva] = useState<Prova | null>(null);
@@ -347,9 +347,10 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
           <p className="fine pro-sem-margem">{kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · {STATUS[r.status].dica}</p>
           {feito.oficial && feito.link_lido && <p className="fine pro-sem-margem">O Radar leu o link e achou você no resultado oficial.</p>}
           {feito.motivo && <p className="fine pro-sem-margem">{feito.motivo}</p>}
+          {!pro && assinar && <button className="btn solid pro-btn-p" onClick={assinar}>Assinar o Radar Pro · R$ 10</button>}
         </section>
         {[...new Set(feito.medalhas_novas)].map(m => { const x = MEDALHAS.find(y => y.id === m); return x ? <section key={m} className="pro-card pro-nova"><Desenho m={x} tam={76} /><div><span className="pro-k">Nova medalha!</span><b>{x.nome}</b><p className="pro-sem-margem">{x.como}</p></div></section> : null; })}
-        {!feito.oficial && <a className="btn whats pro-btn" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={18} aria-hidden="true" />Enviar comprovante pelo WhatsApp</a>}
+        {!feito.oficial && pro && <a className="btn whats pro-btn" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={18} aria-hidden="true" />Enviar comprovante pelo WhatsApp</a>}
         {!feito.oficial && <p className="fine pro-sem-margem">Quando a cronometragem publicar o resultado, o Radar confere sozinho e muda para “Verificado”.</p>}
         <CardResultado r={r} apelido={perfil.apelido} fechar={() => { /* fica aberto */ }} />
         <CorreramComigo provaId={r.prova_id} />
@@ -397,7 +398,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada }: { perfil: Perfil; p
       {prova && <>
         <p className="euvou-pergunta">2. Distância</p>
         <div className="chips" role="group" aria-label="Distância">{prova.distancias.map(d => <button key={d} className="chip" aria-pressed={km === Number(d)} onClick={() => setKm(Number(d))}>{kmTxt(real(Number(d)))}</button>)}</div>
-        <label className="ct-cidade">3. Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={link} onChange={e => setLink(e.target.value.trim())} placeholder="cole aqui o link do resultado" /><small>O Radar lê na hora e pega o seu tempo oficial. Funciona com SA Crono, RaceTag, Meta Sport e Crono Esportes.</small></label>
+        <label className="ct-cidade">3. Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={link} onChange={e => setLink(e.target.value.trim())} placeholder="cole aqui o link do resultado" /><small>{pro ? 'O Radar lê na hora e pega o seu tempo oficial. Funciona com SA Crono, RaceTag, Meta Sport e Crono Esportes.' : 'No modo grátis a prova fica como declarada. Verificar com o resultado oficial (e pontuar) é do Radar Pro.'}</small></label>
         <label className="ct-cidade">Número de peito <small>(ajuda a achar você no resultado)</small><input inputMode="numeric" value={peito} onChange={e => setPeito(e.target.value.replace(/\D/g, '').slice(0, 8))} placeholder="Ex.: 1234" /></label>
         <label className="ct-cidade">Tempo líquido (do chip) <small>{link ? '(opcional com o link)' : ''}</small><input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" /><small>Se o resultado oficial já saiu, usamos o tempo de lá.</small></label>
         <button className="btn text pro-esq" aria-expanded={mais} onClick={() => setMais(!mais)}>{mais ? 'Menos opções' : 'Inscrito com outro nome?'}</button>
@@ -476,7 +477,7 @@ type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; f
 const FAIXAS = ['até 19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60+'];
 type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao' | 'reis' | 'viajantes';
 
-export function TelaRanking({ perfil }: { perfil: Perfil }) {
+export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; pro?: boolean; assinar?: () => void }) {
   const [rec, setRec] = useState<Rec>('geral');
   const [sexo, setSexo] = useState<'' | 'F' | 'M'>('');
   const [cidade, setCidade] = useState('');
@@ -509,7 +510,8 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
           <button key={k} role="tab" aria-selected={rec === k} onClick={e => { setRec(k); (e.currentTarget as HTMLButtonElement).scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }}><I size={18} aria-hidden="true" /><span>{n}</span></button>
         ))}
       </div>
-      {rec === 'reis' ? <Reis /> : <>
+      {!pro && <section className="pro-card pro-gratis-aviso"><p className="pro-sem-margem">🔒 <b>No modo grátis você vê o ranking, mas não entra nele.</b> Para pontuar com as suas provas verificadas, é o Pro.</p><button className="btn solid pro-btn-p" onClick={assinar}>Assinar · R$ 10</button></section>}
+      {rec === 'pelotao' && !pro ? <section className="pro-card"><p className="pro-k cinza">Pelotão</p><p className="pro-sem-margem">Até 25 atletas da sua liga disputando os pontos do mês. O pelotão é do Radar Pro.</p><button className="btn solid pro-btn" onClick={assinar}>Assinar o Radar Pro · R$ 10</button></section> : rec === 'reis' ? <Reis /> : <>
 
       {rec === 'geral' && <>
         <div className="chips" role="group" aria-label="Recorte">
