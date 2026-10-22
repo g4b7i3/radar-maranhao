@@ -349,10 +349,8 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-mapa svg{width:100%;max-height:260px;display:block}
 .pro-mapa-estado{fill:var(--cobalt-tint);stroke:var(--cobalt);stroke-width:1.5;stroke-linejoin:round}
 .pro-mapa-pin circle{fill:#f2b705;stroke:#fff;stroke-width:1.5}
-.pro-mapa-pin .halo{fill:rgba(242,183,5,.3);stroke:none;animation:pro-halo 2s ease-out infinite}
-@keyframes pro-halo{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
-.pro-mapa-pin{transform-box:fill-box;transform-origin:center}
-.pro-mapa-pin .halo{transform-box:fill-box;transform-origin:center}
+.pro-mapa-pin .halo{fill:rgba(242,183,5,.45);stroke:none}
+.pro-mapa-pin circle:not(.halo){filter:drop-shadow(0 0 3px rgba(242,183,5,.9))}
 .pro-desafio-lista{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .pro-desafio-lista li{display:grid;grid-template-columns:36px 1fr auto auto;gap:8px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line)}
 .pro-desafio-lista li:last-child{border-bottom:0}

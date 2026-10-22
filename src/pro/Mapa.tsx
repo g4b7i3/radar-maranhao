@@ -20,12 +20,19 @@ export function MapaCidades({ cidades, titulo = 'Meu Maranhão', compacto = fals
       <div className="pro-linha"><p className="pro-k cinza"><MapPin size={14} aria-hidden="true" /> {titulo}</p><b>{pontos.length} de {total} cidades</b></div>
       <svg viewBox={`0 0 ${M.w} ${M.h}`} role="img" aria-label={`Mapa do Maranhão com ${pontos.length} cidades onde já correu`}>
         <path d={M.d} className="pro-mapa-estado" />
-        {pontos.map(p => (
+        {pontos.map((p, k) => { const r = p.n > 1 ? 5.5 : 4.5; const ini = `${(k * .37) % 2}s`; return (
           <g key={p.nome} className="pro-mapa-pin">
-            <circle cx={p.xy[0]} cy={p.xy[1]} r={p.n > 1 ? 9 : 7} className="halo" />
-            <circle cx={p.xy[0]} cy={p.xy[1]} r={p.n > 1 ? 5.5 : 4.5} />
+            {/* halo que se expande e some, e a bolinha que pisca; cada cidade começa num instante diferente */}
+            <circle cx={p.xy[0]} cy={p.xy[1]} r={r} className="halo">
+              <animate attributeName="r" values={`${r};${r * 3.2}`} dur="2s" begin={ini} repeatCount="indefinite" />
+              <animate attributeName="opacity" values=".9;0" dur="2s" begin={ini} repeatCount="indefinite" />
+            </circle>
+            <circle cx={p.xy[0]} cy={p.xy[1]} r={r}>
+              <animate attributeName="opacity" values="1;.35;1" dur="2s" begin={ini} repeatCount="indefinite" />
+              <animate attributeName="r" values={`${r};${r * 1.25};${r}`} dur="2s" begin={ini} repeatCount="indefinite" />
+            </circle>
           </g>
-        ))}
+        ); })}
       </svg>
       {pontos.length > 0
         ? <p className="fine pro-sem-margem">{pontos.sort((a, b) => b.n - a.n).map(p => p.n > 1 ? `${p.nome} (${p.n})` : p.nome).join(' · ')}</p>
