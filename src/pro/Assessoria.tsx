@@ -37,7 +37,7 @@ export default function Assessoria({ nome }: { nome: string }) {
           <a href="/" className="pro-pub-marca">Radar Corridas MA · <b>PRO</b></a>
           <div className="pro-ass-fotos" aria-hidden="true">{d.atletas.slice(0, 5).map(a => <Avatar key={a.apelido} foto={a.foto} apelido={a.apelido} tam={56} />)}</div>
           <p className="pro-medio">{d.nome}</p>
-          <p className="pro-sub pro-sem-margem"><Users size={15} aria-hidden="true" /> {d.atletas.length} {d.atletas.length === 1 ? 'atleta' : 'atletas'} no Radar Pro{comProva ? ` · ${comProva} com prova na ${d.temporada === 2026 ? 'pré-temporada' : `temporada ${d.temporada}`}` : ''}</p>
+          <p className="pro-sub pro-sem-margem"><Users size={15} aria-hidden="true" /> {d.atletas.length} {d.atletas.length === 1 ? 'atleta' : 'atletas'} no Radar Pro{comProva ? ` · ${comProva} com prova na ${d.temporada === 2026 ? 'pré-temporada 2027' : `temporada ${d.temporada}`}` : ''}</p>
           <div className="pro-tags">
             {d.posicao ? <span className="pro-liga l-ouro">{d.posicao}º entre {d.total_assessorias} assessorias</span> : <span className="pro-liga l-sem">Ainda sem pontos no ranking</span>}
             <span className="pro-liga l-verde">{Math.round(Number(d.pontos))} pontos</span>

@@ -210,7 +210,7 @@ export const GRUPOS: { nome: string; itens: Medalha[] }[] = [
     { id: 'estado_to', nome: 'Tocantins', como: 'Resultado comprovado numa prova no Tocantins.', tier: 'prata', num: 'TO' },
   ] },
   { nome: 'Radar', itens: [
-    { id: 'fundador', nome: 'Fundador', como: 'Assinou o Radar Pro em 2026, a primeira temporada.', tier: 'especial', ic: 'pioneiro' },
+    { id: 'fundador', nome: 'Fundador', como: 'Assinou o Radar Pro até 31/12/2026, na pré-temporada 2027.', tier: 'especial', ic: 'pioneiro' },
     { id: 'no_pelotao', nome: 'No pelotão', como: 'Corra a mesma prova que alguém do seu pelotão.', tier: 'bronze', ic: 'pelotao' },
     { id: 'lider_pelotao', nome: 'Puxou o pelotão', como: 'Tenha a melhor nota do seu pelotão numa prova.', tier: 'ouro', ic: 'coroa' },
   ]},

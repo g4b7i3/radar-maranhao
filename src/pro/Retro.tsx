@@ -41,7 +41,7 @@ async function desenhar(c: HTMLCanvasElement, n: Num, apelido: string, avatar: H
   fonte(ctx, 600, 26, false); ctx.globalAlpha = .9; ctx.fillText('Corridas MA', X + 98, 166); ctx.globalAlpha = 1;
   // título
   ctx.textAlign = 'center';
-  fonte(ctx, 700, 34, false); ctx.globalAlpha = .9; try { ctx.letterSpacing = '5px'; } catch { /* */ } ctx.fillText(pre ? `PRÉ-TEMPORADA ${n.ano}` : `TEMPORADA ${n.ano}`, W / 2, 330); try { ctx.letterSpacing = '0px'; } catch { /* */ } ctx.globalAlpha = 1;
+  fonte(ctx, 700, 34, false); ctx.globalAlpha = .9; try { ctx.letterSpacing = '5px'; } catch { /* */ } ctx.fillText(pre ? `PRÉ-TEMPORADA ${n.ano + 1}` : `TEMPORADA ${n.ano}`, W / 2, 330); try { ctx.letterSpacing = '0px'; } catch { /* */ } ctx.globalAlpha = 1;
   if (avatar) fotoRedonda(ctx, avatar, W / 2, 470, 88);
   fonte(ctx, 900, 64, true); ctx.fillText(`@${apelido}`, W / 2, avatar ? 620 : 470);
   const gg = ctx.createLinearGradient(0, 640, 0, 760); gg.addColorStop(0, '#fff1b8'); gg.addColorStop(.6, '#f2b705'); gg.addColorStop(1, '#e2a400');
@@ -104,7 +104,7 @@ export function Retro({ perfil, res, meds, reis, liga, indice, posicao }: { perf
   if (n.provas === 0) return null;
   return (
     <section className={'pro-card pro-retro' + (dezembro ? ' dezembro' : '')}>
-      <div className="pro-linha"><p className="pro-k cinza"><Sparkles size={14} aria-hidden="true" /> {ano === 2026 ? 'Minha pré-temporada' : `Minha temporada ${ano}`} em números</p>{aberto && <button className="btn text" onClick={() => setAberto(false)} aria-label="Fechar"><X size={18} aria-hidden="true" /></button>}</div>
+      <div className="pro-linha"><p className="pro-k cinza"><Sparkles size={14} aria-hidden="true" /> {ano === 2026 ? 'Minha pré-temporada 2027' : `Minha temporada ${ano}`} em números</p>{aberto && <button className="btn text" onClick={() => setAberto(false)} aria-label="Fechar"><X size={18} aria-hidden="true" /></button>}</div>
       {dezembro && <p className="pro-sem-margem"><b>O ano está acabando.</b> Poste a sua retrospectiva.</p>}
       <div className="pro-retro-nums"><div><b>{n.provas}</b><small>provas</small></div><div><b>{n.km}</b><small>km</small></div><div><b>{n.cidades}</b><small>cidades</small></div><div><b>{n.medalhas}</b><small>medalhas</small></div><div><b>{n.melhorNota != null ? `${pct(n.melhorNota)}%` : '–'}</b><small>melhor nota</small></div><div><b>{n.reis}</b><small>reis</small></div></div>
       {aberto

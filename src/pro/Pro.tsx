@@ -196,11 +196,11 @@ function ProTelas() {
   return (
     <main className="pro">
       {telaAbertura}
-      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Minha pré-temporada' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
+      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Pré-temporada 2027' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
       <MenuAbas abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
-      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
+      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <PushConvite userId={perfil.user_id} />
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />

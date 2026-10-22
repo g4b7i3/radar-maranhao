@@ -534,7 +534,7 @@ export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; p
       {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">{pelotaoCidade ? `Pelotão de ${perfil.cidade}` : `Pelotão ${LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}`}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
 
       <p className="fine pro-sem-margem">{{
-        geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas. Toque no atleta pra ver de onde vem cada ponto.`,
+        geral: `${ANO === 2026 ? 'Pré-temporada 2027' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas. Toque no atleta pra ver de onde vem cada ponto.`,
         eficiencia: 'Índice = média das 3 melhores notas por idade (ou das que tiver, a partir de 1 prova oficial). Compara idades e sexos diferentes de forma justa.',
         assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
         pelotao: pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',

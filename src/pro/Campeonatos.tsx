@@ -21,7 +21,7 @@ export function TelaCampeonatos({ perfil }: { perfil: Perfil }) {
       {lista?.map(c => (
         <button key={c.id} className={'pro-card azul pro-camp-card' + (c.inicio > hoje ? ' futuro' : '')} onClick={() => setAberto(c)}>
           <div className="pro-linha"><p className="pro-k">{c.tipo === 'constancia' ? <Footprints size={14} aria-hidden="true" /> : <Trophy size={14} aria-hidden="true" />} {c.rotulo ?? `Campeonato ${c.temporada}`}</p><ChevronRight size={20} aria-hidden="true" /></div>
-          <p className="pro-camp-nome">{c.nome}{c.nome.includes(String(c.temporada)) ? '' : ` ${c.temporada}`}</p>
+          <p className="pro-camp-nome">{c.nome}{/\b20\d\d\b/.test(c.nome) ? '' : ` ${c.temporada}`}</p>
           {c.inicio > hoje
             ? <p className="pro-sub">Começa em {dataBR(c.inicio)}/{c.inicio.slice(0, 4)}. Toda prova oficial do ano vai contar.</p>
             : <><p className="pro-sub">{c.realizadas} de {c.provas} provas realizadas · {c.atletas} {c.atletas === 1 ? 'atleta pontuou' : 'atletas pontuaram'}</p>
@@ -53,7 +53,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
       <button className="btn text pro-esq" onClick={voltar}><ArrowLeft size={16} aria-hidden="true" />Campeonatos</button>
       <section className="pro-card azul">
         <p className="pro-k">{c.tipo === 'constancia' ? <Footprints size={14} aria-hidden="true" /> : <Trophy size={14} aria-hidden="true" />} {c.rotulo ?? `Campeonato ${c.temporada}`}</p>
-        <p className="pro-camp-nome">{c.nome}{c.nome.includes(String(c.temporada)) ? '' : ` ${c.temporada}`}</p>
+        <p className="pro-camp-nome">{c.nome}{/\b20\d\d\b/.test(c.nome) ? '' : ` ${c.temporada}`}</p>
         {eu ? <><p className="pro-big">{eu.posicao}º</p><p className="pro-sub">Você, no {eu.sexo === 'F' ? 'feminino' : 'masculino'}: <b>{eu.pontos} pontos</b> em {eu.provas} {eu.provas === 1 ? 'prova' : 'provas'}{c.tipo === 'constancia' ? ` · ${eu.cidades} ${eu.cidades === 1 ? 'cidade' : 'cidades'}${eu.sequencias ? ` · ${eu.sequencias} ${eu.sequencias === 1 ? 'sequência' : 'sequências'}` : ''}` : ''}.</p></>
           : <><p className="pro-medio">Entre na disputa</p><p className="pro-sub">Corra uma prova com resultado oficial e você já pontua.</p></>}
         <p className="pro-sub">{c.inicio > hoje ? `Começa em ${dataBR(c.inicio)}/${c.inicio.slice(0, 4)}.` : `${c.realizadas} de ${c.provas} provas realizadas.`}{c.tipo === 'etapas' ? ` Valem as ${c.melhores} melhores.` : ' Toda prova conta.'}</p>
