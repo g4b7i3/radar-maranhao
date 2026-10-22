@@ -416,3 +416,51 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 @keyframes pro-bv-entra{from{opacity:0}to{opacity:1}}
 @keyframes pro-bv-sobe{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @media (min-width:700px){.pro-bemvindo{align-items:center}.pro-bemvindo-cx{padding-bottom:0}}
+
+/* ═══════ Visual 2.0: profundidade, luz e toque (pontual, sem mudar a estrutura) ═══════ */
+:root { --pro-sombra: 0 1px 2px rgb(15 26 51 / .04), 0 8px 24px -12px rgb(15 26 51 / .18); --pro-vidro: rgba(255,255,255,.78); --pro-fio: rgba(15,26,51,.08); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --pro-sombra: 0 1px 2px rgb(0 0 0 / .3), 0 12px 32px -14px rgb(0 0 0 / .6); --pro-vidro: rgba(20,28,49,.78); --pro-fio: rgba(255,255,255,.08); } }
+:root[data-theme="dark"] { --pro-sombra: 0 1px 2px rgb(0 0 0 / .3), 0 12px 32px -14px rgb(0 0 0 / .6); --pro-vidro: rgba(20,28,49,.78); --pro-fio: rgba(255,255,255,.08); }
+
+/* cards: fio quase invisível + sombra em camadas, em vez da borda dura */
+.pro .pro-card { border: 1px solid var(--pro-fio); border-radius: 22px; box-shadow: var(--pro-sombra); }
+.pro .pro-mini div { border: 1px solid var(--pro-fio); border-radius: 18px; box-shadow: var(--pro-sombra); padding: 12px 4px; }
+.pro .pro-mini b { background: linear-gradient(180deg, var(--cobalt), var(--cobalt-deep)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pro .pro-mini b { background: linear-gradient(180deg, #e8ecf6, #9fb3ff); -webkit-background-clip: text; background-clip: text; } }
+
+/* card azul: o ponto forte. Luz dourada no canto, anéis de radar bem discretos, brilho azul por baixo */
+.pro .pro-card.azul { position: relative; overflow: hidden; isolation: isolate; border: 0; border-radius: 24px;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(255,209,102,.28), transparent 55%), linear-gradient(160deg, #2a52e8 0%, #1d3fbf 45%, #121f6b 100%);
+  box-shadow: 0 1px 2px rgb(15 26 51 / .1), 0 18px 40px -16px rgb(29 63 191 / .55); }
+.pro .pro-card.azul::before { content: ''; position: absolute; inset: -40% -30% auto auto; width: 120%; aspect-ratio: 1; border-radius: 50%; z-index: -1; pointer-events: none;
+  background: repeating-radial-gradient(circle at center, rgba(255,255,255,.09) 0 1px, transparent 1px 26px); mask: radial-gradient(circle at center, #000 35%, transparent 70%); }
+.pro .pro-card.azul::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent); pointer-events: none; }
+.pro .pro-big { text-shadow: 0 2px 0 rgba(0,0,0,.12), 0 12px 30px rgba(0,0,0,.25); letter-spacing: -.01em; }
+.pro .pro-trilha { gap: 5px; margin-top: 6px; }
+.pro .pro-trilha span { height: 9px; border-radius: 6px; background: rgba(255,255,255,.16); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); transition: background .3s; }
+.pro .pro-trilha span.on { background: linear-gradient(90deg, #ffc93c, #ffe08a); box-shadow: 0 0 10px rgba(255,209,102,.55), inset 0 1px 0 rgba(255,255,255,.5); }
+
+/* botões: gradiente com brilho em cima, afunda levemente ao toque */
+.pro .btn.solid { background: linear-gradient(180deg, #2f55e3, var(--cobalt) 55%, var(--cobalt-deep)); box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 6px 16px -8px rgb(29 63 191 / .6); border: 0; transition: transform .12s ease, box-shadow .2s ease; }
+.pro .btn.solid:hover { background: linear-gradient(180deg, #2f55e3, var(--cobalt) 40%, var(--cobalt-deep)); }
+.pro .btn:active { transform: scale(.97); }
+.pro .btn.outline { border-color: var(--pro-fio); box-shadow: var(--pro-sombra); transition: transform .12s ease; }
+
+/* menu de baixo: pílula flutuante de vidro, item ativo preenchido */
+.pro .pro-menu { left: 50%; right: auto; transform: translateX(-50%); bottom: calc(10px + env(safe-area-inset-bottom)); width: min(520px, calc(100% - 20px));
+  padding: 6px; border-radius: 26px; border: 1px solid var(--pro-fio); background: var(--pro-vidro); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: 0 1px 2px rgb(15 26 51 / .06), 0 16px 40px -12px rgb(15 26 51 / .35); }
+.pro .pro-menu a { border-radius: 20px; padding: 8px 2px; gap: 4px; transition: background .2s ease, color .2s ease, transform .15s ease; }
+.pro .pro-menu a svg { transition: transform .2s ease; }
+.pro .pro-menu a[aria-current="page"] { color: #fff; background: linear-gradient(180deg, #2f55e3, var(--cobalt-deep)); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 14px -6px rgb(29 63 191 / .7); }
+.pro .pro-menu a[aria-current="page"] svg { transform: translateY(-1px) scale(1.08); }
+.pro .pro-menu a:active { transform: scale(.94); }
+main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-bottom)); }
+
+/* topo: selo Pro com brilho dourado */
+.pro .pro-selo { background: linear-gradient(180deg, #ffd96b, #f5b700); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 4px 10px -4px rgba(245,183,0,.7); }
+
+/* aviso do sininho e notificações seguem a mesma profundidade */
+.pro .pro-notif { border-radius: 24px; box-shadow: 0 24px 60px -20px rgb(0 0 0 / .45); }
+
+@media (prefers-reduced-motion: reduce) { .pro .btn, .pro .pro-menu a, .pro .pro-menu a svg, .pro .pro-trilha span { transition: none; } .pro .btn:active, .pro .pro-menu a:active { transform: none; } }
