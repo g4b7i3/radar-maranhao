@@ -12,6 +12,7 @@ import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdm
 import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
 import { PushConvite } from './Push';
+import { terminarConexaoStrava } from './Strava';
 import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
 import './pro.css';
 
@@ -73,6 +74,7 @@ function ProTelas() {
   const [cardDuelo, setCardDuelo] = useState<string | null>(null);
   const [resgatando, setResgatando] = useState(() => !!codigoCortesia());
   const [notifAberto, setNotifAberto] = useState(false);
+  const [stravaVersao, setStravaVersao] = useState(0); // recarrega a Conta depois de conectar o Strava
   const notif = useNotificacoes();
   const [fotoPulada, setFotoPulada] = useState(() => { try { return localStorage.getItem('radar-foto-pulada') === '1'; } catch { return true; } });
   const pularFoto = () => { try { localStorage.setItem('radar-foto-pulada', '1'); } catch { /* */ } setFotoPulada(true); };
@@ -116,6 +118,17 @@ function ProTelas() {
       await recarregar(); setResgatando(false);
     });
   }, [perfil, recarregar]);
+
+  // volta do Strava (strava.html guardou o código): termina a conexão e abre a Conta
+  const stravaFeito = useRef(false);
+  useEffect(() => {
+    if (!perfil || stravaFeito.current) return;
+    let tem = false; try { tem = !!(sessionStorage.getItem('radar-strava-code') || sessionStorage.getItem('radar-strava-erro')); } catch { /* */ }
+    if (!tem) return;
+    stravaFeito.current = true;
+    setAba('conta');
+    terminarConexaoStrava().then(m => { if (m) setAviso(m); setStravaVersao(v => v + 1); });
+  }, [perfil]);
 
   // convite de duelo guardado antes do login
   useEffect(() => {
@@ -189,7 +202,7 @@ function ProTelas() {
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'ranking' && (pro ? <TelaRanking perfil={perfil} /> : <Travado tela="ranking" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
-      {aba === 'conta' && <TelaConta perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
+      {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
       {aba === 'admin' && admin && <TelaAdmin />}
     </main>
   );

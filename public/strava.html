@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Voltando do Strava · Radar Pro</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f3f5f9; color: #0f1a33; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  @media (prefers-color-scheme: dark) { body { background: #0d1324; color: #e8ecf6; } }
+  p { margin: 0; padding: 0 24px; text-align: center; }
+</style>
+</head>
+<body>
+<p id="m">Conectando com o Strava…</p>
+<script>
+  // O Strava volta aqui com ?code=…; guardo o código e mando a pessoa para a aba Conta do Radar Pro, que termina a conexão.
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var code = q.get('code'), erro = q.get('error');
+    try {
+      if (code) sessionStorage.setItem('radar-strava-code', code);
+      else if (erro) sessionStorage.setItem('radar-strava-erro', erro);
+    } catch (e) {}
+    location.replace('/?pro#conta');
+  })();
+</script>
+</body>
+</html>

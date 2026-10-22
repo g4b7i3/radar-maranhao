@@ -18,6 +18,7 @@ import { DesafioAssessorias } from './Desafio';
 import { Retro } from './Retro';
 import { MeuGrupo } from './Grupo';
 import { PushConta } from './Push';
+import { StravaConta } from './Strava';
 import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
@@ -694,6 +695,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
         {renovar && <Assinar perfil={perfil} pronto={() => { setRenovar(false); pronto(); }} />}
       </section>}
       <PushConta userId={perfil.user_id} />
+      <StravaConta />
       <MeuGrupo perfil={perfil} pronto={pronto} />
       <Indicacao perfil={perfil} />
       {perfil.assessoria && <Equipe perfil={perfil} pronto={pronto} />}

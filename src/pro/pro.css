@@ -391,3 +391,13 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-push-convite{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:14px;background:var(--cobalt-tint);border:1px solid var(--cobalt);font-size:.9rem;line-height:1.35}
 .pro-push-convite>svg{color:var(--cobalt)}
 .pro-push-convite .btn.solid{padding:7px 14px;font-size:.85rem}
+
+/* Strava (só a própria pessoa vê) */
+.pro-strava-ponto{display:inline-block;width:12px;height:12px;border-radius:50%;background:#FC4C02;vertical-align:-1px}
+.pro-strava-btn{background:#FC4C02;color:#fff;border:0;display:flex;align-items:center;justify-content:center;gap:8px}
+.pro-strava-btn:hover{background:#e04400}
+.pro-strava-grade{display:grid;grid-template-columns:1fr;gap:8px}
+.pro-strava-grade>div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:var(--cobalt-tint)}
+.pro-strava-grade small{color:var(--muted);font-weight:700;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+.pro-strava-grade b{font-size:1.35rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.pro-strava-grade span{font-size:.85rem;color:var(--muted)}
