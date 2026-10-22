@@ -503,6 +503,7 @@ export function TelaRanking({ perfil }: { perfil: Perfil }) {
   const mudouSigo = (ap: string) => (v: boolean) => setSigo(prev => { const n = new Set(prev); if (v) n.add(ap); else n.delete(ap); return n; });
   return (
     <div className="pro-cont">
+      <p className="pro-recortes-titulo">Escolha o ranking <span>deslize para ver todos →</span></p>
       <div className="pro-recortes" role="tablist" aria-label="Tipo de ranking">
         {([['geral', 'Pontos', Trophy], ['eficiencia', 'Eficiência', Gauge], ['reis', 'Reis', Crown], ['viajantes', 'Viajantes', Plane], ['assessorias', 'Assessorias', Users], ['pelotao', 'Pelotão', Flag]] as [Rec, string, LucideIcon][]).map(([k, n, I]) => (
           <button key={k} role="tab" aria-selected={rec === k} onClick={e => { setRec(k); (e.currentTarget as HTMLButtonElement).scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }}><I size={18} aria-hidden="true" /><span>{n}</span></button>

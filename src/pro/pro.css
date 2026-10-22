@@ -548,3 +548,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-recortes button:active{transform:scale(.95)}
 .pro-recortes button[aria-selected="true"]{background:linear-gradient(180deg,#2f55e3,var(--cobalt-deep));color:#fff;border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 22px -10px rgb(29 63 191 / .7)}
 .pro-recortes button[aria-selected="true"] svg{opacity:1;color:#ffd34d}
+
+.pro-recortes-titulo{margin:4px 0 -2px;font-size:1rem;font-weight:800;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.pro-recortes-titulo span{font-size:.75rem;font-weight:600;color:var(--muted)}
