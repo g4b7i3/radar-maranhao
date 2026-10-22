@@ -9,6 +9,44 @@ const suporta = () => 'serviceWorker' in navigator && 'PushManager' in window &&
 const instalado = () => window.matchMedia('(display-mode: standalone)').matches || (navigator as unknown as { standalone?: boolean }).standalone === true;
 const ehIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent);
 
+/** Convite para ligar as notificações: aparece uma vez, logo no topo, para quem ainda não ligou. */
+export function PushConvite({ userId }: { userId: string }) {
+  const [mostrar, setMostrar] = useState(false);
+  const [indo, setIndo] = useState(false);
+  useEffect(() => {
+    (async () => {
+      try { if (localStorage.getItem('radar-push-convite') === '1') return; } catch { /* */ }
+      if (!suporta() || Notification.permission !== 'default') return;
+      if (ehIOS() && !instalado()) return;
+      const reg = await navigator.serviceWorker.ready.catch(() => null);
+      if (await reg?.pushManager.getSubscription()) return;
+      setMostrar(true);
+    })();
+  }, []);
+  const fechar = () => { try { localStorage.setItem('radar-push-convite', '1'); } catch { /* */ } setMostrar(false); };
+  const ligar = async () => {
+    setIndo(true);
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: unb64u(VAPID_PUBLIC) });
+        const j = sub.toJSON();
+        await sb.from('radar_push').upsert({ endpoint: sub.endpoint, user_id: userId, p256dh: j.keys!.p256dh, auth: j.keys!.auth, falhas: 0 });
+      }
+    } catch { /* fica sem */ }
+    fechar();
+  };
+  if (!mostrar) return null;
+  return (
+    <div className="pro-push-convite" role="status">
+      <BellRing size={20} aria-hidden="true" />
+      <span><b>Quer saber na hora quando seu resultado oficial sair?</b> Também avisamos de duelos, grupos e renovação.</span>
+      <div className="pro-linha"><button className="btn solid" disabled={indo} onClick={ligar}>Ativar</button><button className="btn text" onClick={fechar}>Depois</button></div>
+    </div>
+  );
+}
+
 export function PushConta({ userId }: { userId: string }) {
   const [estado, setEstado] = useState<'carregando' | 'sem_suporte' | 'ios_instalar' | 'desligado' | 'ligado' | 'bloqueado'>('carregando');
   const [indo, setIndo] = useState(false);

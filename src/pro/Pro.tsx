@@ -11,6 +11,7 @@ import CIDADES from '../cidades-ma-geo.json';
 import { TelaTemporada, TelaEuCorri, TelaRanking, TelaDuelos, TelaConta, TelaAdmin, ZapConta } from './Telas';
 import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
+import { PushConvite } from './Push';
 import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
 import './pro.css';
 
@@ -171,6 +172,7 @@ function ProTelas() {
         {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
       </nav>
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
+      <PushConvite userId={perfil.user_id} />
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você só observa. Pontos, ranking, duelos e medalhas abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
