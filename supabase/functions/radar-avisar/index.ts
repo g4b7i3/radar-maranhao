@@ -55,6 +55,7 @@ async function enviarPush(priv: CryptoKey, sub: { endpoint: string; p256dh: stri
   const corpo = await cifrar(sub.p256dh, sub.auth, payload);
   const jwt = await jwtVapid(priv, new URL(sub.endpoint).origin);
   const r = await fetch(sub.endpoint, { method: 'POST', headers: { Authorization: `vapid t=${jwt}, k=${VAPID_PUBLIC}`, 'Content-Type': 'application/octet-stream', 'Content-Encoding': 'aes128gcm', TTL: '86400', Urgency: 'normal' }, body: corpo });
+  if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 150)}`);
   return r.status;
 }
 
@@ -78,7 +79,7 @@ Deno.serve(async req => {
   const emails = new Map<string, string>();
   if (resend) for (const id of ids) { const { data } = await db.auth.admin.getUserById(id); if (data?.user?.email) emails.set(id, data.user.email); }
 
-  let push = 0, mail = 0, mortos = 0;
+  let push = 0, mail = 0, mortos = 0; const erroPush: string[] = [];
   for (const a of avisos) {
     const payload = JSON.stringify({ titulo: a.titulo, corpo: a.corpo, url: a.url ?? 'https://radarcorridasma.com.br/?pro', tag: a.tipo });
     if (priv) for (const s of (subs ?? []).filter(x => x.user_id === a.user_id)) {
@@ -86,8 +87,8 @@ Deno.serve(async req => {
         const st = await enviarPush(priv, s, payload);
         if (st === 404 || st === 410) { await db.from('radar_push').delete().eq('endpoint', s.endpoint); mortos++; }
         else if (st >= 200 && st < 300) push++;
-        else await db.from('radar_push').update({ falhas: (s.falhas ?? 0) + 1 }).eq('endpoint', s.endpoint);
-      } catch { /* próximo */ }
+        else { erroPush.push(`${st} ${s.endpoint.slice(8, 30)}`); await db.from('radar_push').update({ falhas: (s.falhas ?? 0) + 1 }).eq('endpoint', s.endpoint); }
+      } catch (e) { erroPush.push(String(e).slice(0, 120)); }
     }
     const email = emails.get(a.user_id);
     if (resend && email && ['renovacao', 'resultado_verificado'].includes(a.tipo)) {
@@ -99,5 +100,5 @@ Deno.serve(async req => {
     }
     await db.from('radar_avisos').update({ enviado_em: new Date().toISOString() }).eq('id', a.id);
   }
-  return resp({ ok: true, lembretes, avisos: avisos.length, push, email: mail, inscricoes_removidas: mortos, push_ativo: !!priv, email_ativo: !!resend, vapid_tam: privB64?.length ?? 0, erro_vapid: erroVapid, erro_email: erroEmail, remetente });
+  return resp({ ok: true, lembretes, avisos: avisos.length, push, email: mail, inscricoes_removidas: mortos, push_ativo: !!priv, email_ativo: !!resend, vapid_tam: privB64?.length ?? 0, erro_vapid: erroVapid, erro_email: erroEmail, erro_push: erroPush, remetente });
 });
