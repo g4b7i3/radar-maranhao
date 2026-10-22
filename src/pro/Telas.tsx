@@ -17,6 +17,7 @@ import { MapaCidades } from './Mapa';
 import { DesafioAssessorias } from './Desafio';
 import { Retro } from './Retro';
 import { MeuGrupo } from './Grupo';
+import { PushConta } from './Push';
 import { linkAssessoria } from './Assessoria';
 
 const ANO = new Date().getFullYear();
@@ -692,6 +693,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
         {!renovar && <button className="btn outline pro-btn" onClick={() => setRenovar(true)}>Renovar com Pix</button>}
         {renovar && <Assinar perfil={perfil} pronto={() => { setRenovar(false); pronto(); }} />}
       </section>}
+      <PushConta userId={perfil.user_id} />
       <MeuGrupo perfil={perfil} pronto={pronto} />
       <Indicacao perfil={perfil} />
       {perfil.assessoria && <Equipe perfil={perfil} pronto={pronto} />}

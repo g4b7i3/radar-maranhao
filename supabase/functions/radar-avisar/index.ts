@@ -1,7 +1,7 @@
 // Radar Pro · envia os avisos pendentes (tabela radar_avisos) por push (Web Push/VAPID) e, se houver, por e-mail (Resend).
 // Chamado de hora em hora pelo GitHub Actions (junto com a coleta) com o cabeçalho x-radar-interno = service role.
 // Antes de enviar, gera os lembretes de renovação do dia (radar_gerar_lembretes).
-// Segredos: VAPID_PRIVATE_KEY (obrigatório para push), RESEND_API_KEY (opcional, e-mail).
+// Segredos: VAPID_PRIVATE_KEY (obrigatório para push), RESEND_API_KEY (opcional, e-mail), RADAR_INTERNO (token do agendador do banco).
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
 const VAPID_PUBLIC = 'BL_ZVgJfCqE2Nir0YwSrJEUko4IkvkxoGwNMhb2--ZzhAzabIj4Dxuarm_QTzID9PIEnj5QFkYoL4n0AVOotv_o';
@@ -59,7 +59,8 @@ async function enviarPush(priv: CryptoKey, sub: { endpoint: string; p256dh: stri
 }
 
 Deno.serve(async req => {
-  if (req.headers.get('x-radar-interno') !== Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')) return resp({ erro: 'Sem permissão.' }, 403);
+  const interno = req.headers.get('x-radar-interno') ?? '';
+  if (!interno || (interno !== Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') && interno !== Deno.env.get('RADAR_INTERNO'))) return resp({ erro: 'Sem permissão.' }, 403);
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const privB64 = Deno.env.get('VAPID_PRIVATE_KEY');
   const resend = Deno.env.get('RESEND_API_KEY');
