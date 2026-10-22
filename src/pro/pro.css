@@ -598,3 +598,17 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-menu::after{right:0;border-radius:0 26px 26px 0;background:linear-gradient(to left,var(--surface) 20%,transparent)}
 .pro-menu.esq::before,.pro-menu.dir::after{opacity:1}
 .pro-feed-sinal{margin-left:auto;color:var(--muted);font-size:.8rem}
+/* provas (agenda do Radar dentro do Pro) */
+.pro-busca{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:14px;padding:0 12px;background:var(--surface);color:var(--muted)}
+.pro-busca input{flex:1;border:0;background:none;padding:12px 0;font:inherit;color:var(--ink);min-width:0;outline:none}
+.pro-provas-mes{display:flex;flex-direction:column;gap:8px}
+.pro-prova-card{flex-direction:row;align-items:center;gap:12px;padding:12px 14px}
+.pro-prova-corpo{flex:1;min-width:0;display:flex;gap:12px;align-items:flex-start;color:inherit;text-decoration:none}
+.pro-prova-data{flex:none;width:52px;text-align:center;border-radius:12px;background:var(--cobalt-tint);color:var(--cobalt);padding:6px 0}
+.pro-prova-data b{display:block;font-size:1.3rem;line-height:1.1}
+.pro-prova-data small{display:block;font-size:.7rem;text-transform:uppercase;font-weight:700}
+.pro-prova-info{min-width:0;display:flex;flex-direction:column;gap:3px}
+.pro-prova-info b{line-height:1.2}
+.pro-prova-info small{color:var(--muted);display:flex;align-items:center;gap:4px}
+.pro-prova-info .tag{align-self:flex-start;margin-top:2px}
+.pro-prova-card .btn{flex:none}
