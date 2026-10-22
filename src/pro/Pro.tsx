@@ -197,10 +197,8 @@ function ProTelas() {
       {telaAbertura}
       {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Minha pré-temporada' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
-      {/* menu fixo embaixo, como app: todas as abas à vista, sem precisar arrastar */}
-      <nav className="pro-menu" aria-label="Radar Pro">
-        {ABAS.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setAba(a.id); window.scrollTo(0, 0); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
-      </nav>
+      {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
+      <MenuAbas abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <PushConvite userId={perfil.user_id} />
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
@@ -225,6 +223,22 @@ function ProTelas() {
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
       {aba === 'admin' && admin && <TelaAdmin />}
     </main>
+  );
+}
+
+/* ───────── Menu de baixo: rola de lado, a aba ativa fica à vista, esfumado nas pontas quando tem mais ───────── */
+function MenuAbas({ abas, aba, ir }: { abas: { id: Aba; nome: string; Icone: LucideIcon }[]; aba: Aba; ir: (a: Aba) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [borda, setBorda] = useState({ esq: false, dir: true });
+  const medir = () => { const el = ref.current; if (!el) return; setBorda({ esq: el.scrollLeft > 6, dir: el.scrollLeft + el.clientWidth < el.scrollWidth - 6 }); };
+  useEffect(() => { medir(); const el = ref.current; el?.addEventListener('scroll', medir, { passive: true }); window.addEventListener('resize', medir); return () => { el?.removeEventListener('scroll', medir); window.removeEventListener('resize', medir); }; }, []);
+  useEffect(() => { ref.current?.querySelector<HTMLElement>('a[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }, [aba]);
+  return (
+    <nav className={'pro-menu' + (borda.esq ? ' esq' : '') + (borda.dir ? ' dir' : '')} aria-label="Radar Pro">
+      <div className="pro-menu-rol" ref={ref}>
+        {abas.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); ir(a.id); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
+      </div>
+    </nav>
   );
 }
 

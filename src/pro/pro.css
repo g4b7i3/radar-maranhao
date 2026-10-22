@@ -588,8 +588,12 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-comun-topo{display:flex;align-items:center;gap:12px}
 .pro-comun-topo .pro-comun-emoji{width:56px;height:56px;font-size:1.8rem}
 .pro-comun-nome{margin:0;font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
-/* menu com 8 abas: no celular estreito a fonte encolhe e o menu desliza de lado se precisar */
-.pro-menu{overflow-x:auto;scrollbar-width:none}
-.pro-menu::-webkit-scrollbar{display:none}
-.pro-menu a{flex:1 0 auto;min-width:44px}
-@media (max-width:430px){.pro-menu a{font-size:.6rem;padding:6px 1px;gap:2px}.pro-menu a svg{width:20px;height:20px}}
+/* menu de baixo: rola de lado, nativo (snap), com esfumado nas pontas avisando que tem mais */
+.pro .pro-menu{overflow:hidden;padding:4px 0;justify-content:flex-start}
+.pro-menu-rol{display:flex;gap:2px;width:100%;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;padding:0 10px}
+.pro-menu-rol::-webkit-scrollbar{display:none}
+.pro .pro-menu a{flex:0 0 auto;min-width:68px;max-width:none;scroll-snap-align:center;font-size:.68rem;padding:8px 10px}
+.pro-menu::before,.pro-menu::after{content:"";position:absolute;top:0;bottom:0;width:34px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:1}
+.pro-menu::before{left:0;border-radius:26px 0 0 26px;background:linear-gradient(to right,var(--surface) 20%,transparent)}
+.pro-menu::after{right:0;border-radius:0 26px 26px 0;background:linear-gradient(to left,var(--surface) 20%,transparent)}
+.pro-menu.esq::before,.pro-menu.dir::after{opacity:1}
