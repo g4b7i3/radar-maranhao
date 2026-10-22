@@ -614,3 +614,10 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-prova-card .btn{flex:none}
 .pro-aviso-google{margin:4px 0 0;line-height:1.35}
 .pro-aviso-google b{word-break:break-all}
+/* explicação dos pontos */
+.pro-como-pontos ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.pro-como-pontos li{font-size:.85rem;padding:5px 10px;border-radius:999px;background:var(--cobalt-tint);color:var(--ink)}
+.pro-como-pontos li b{color:var(--cobalt)}
+.pro-pts-conta{margin:0;font-size:.9rem;line-height:1.35}
+.pro-pts-conta small{color:var(--muted)}
+.pro-pts-unid{display:block;font-size:.62rem;font-weight:600;color:var(--muted);text-align:right}

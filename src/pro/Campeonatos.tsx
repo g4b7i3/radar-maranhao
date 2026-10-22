@@ -39,6 +39,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
   const [linhas, setLinhas] = useState<Linha[] | null>(null);
   const [provas, setProvas] = useState<Prova[] | null>(null);
   const [verProvas, setVerProvas] = useState(false);
+  const [aberto, setAberto] = useState<string | null>(null);
   useEffect(() => {
     sb.rpc('radar_campeonato_tabela', { p_id: c.id }).then(({ data }) => setLinhas((data ?? []) as Linha[]));
     sb.rpc('radar_campeonato_provas', { p_id: c.id }).then(({ data }) => setProvas((data ?? []) as Prova[]));
@@ -59,6 +60,12 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
       </section>
       {c.premio && <section className="pro-card pro-camp-premio-card"><p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Em jogo</p><p className="pro-sem-margem">{c.premio}</p></section>}
       {c.descricao && <p className="fine pro-sem-margem">{c.descricao}{c.tipo === 'etapas' ? ' Pontos por prova: 25, 20, 16, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 (do 15º em diante, 1 ponto). Empate: melhor etapa, depois mais etapas, depois a maior nota por idade.' : ' Sábado e domingo da mesma semana contam como um fim de semana só. Empate: mais provas, depois mais cidades.'}</p>}
+      {c.tipo === 'etapas' && <section className="pro-card pro-como-pontos">
+        <p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Pontos de etapa (não são os do Ranking)</p>
+        <p className="pro-sem-margem">Em cada prova, os atletas do Radar são colocados em ordem pela <b>nota por idade</b>, feminino e masculino separados. Quem fica em 1º leva 25, o 2º leva 20, o 3º leva 16…</p>
+        <ul><li><b>1º</b> 25</li><li><b>2º</b> 20</li><li><b>3º</b> 16</li><li><b>4º</b> 13</li><li><b>5º</b> 11</li><li><b>6º</b> 10</li><li><b>7º ao 15º</b> 9 a 1</li></ul>
+        <p className="fine pro-sem-margem">Somam as {c.melhores} melhores etapas. Toque no atleta pra ver o lugar dele em cada prova.</p>
+      </section>}
       <div className="chips" role="group" aria-label="Tabela">
         <button className="chip" aria-pressed={sexo === 'F'} onClick={() => setSexo('F')}>Feminino</button>
         <button className="chip" aria-pressed={sexo === 'M'} onClick={() => setSexo('M')}>Masculino</button>
@@ -68,12 +75,13 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
       <ol className="pro-rank">
         {tabela.map(l => (
           <li key={l.apelido} className={(l.eu ? 'eu ' : '') + (l.posicao <= 3 ? `podio p${l.posicao}` : '')}>
-            <button className="com-foto" disabled>
+            <button className="com-foto" disabled={c.tipo !== 'etapas'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={c.tipo === 'etapas' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
               <Avatar foto={l.foto} apelido={l.apelido} tam={36} />
               <span>{l.eu ? <b>Você</b> : <a href={linkPerfil(l.apelido)} target="_blank" rel="noopener">@{l.apelido}</a>} <small>· {l.cidade} · {l.provas} {l.provas === 1 ? 'prova' : 'provas'}{c.tipo === 'constancia' ? ` · ${l.cidades} ${l.cidades === 1 ? 'cidade' : 'cidades'}${l.sequencias ? ` · ${l.sequencias}× 3 seguidos` : ''}` : ''}</small></span>
-              <b>{l.pontos}</b>
+              <b>{l.pontos}<small className="pro-pts-unid">{c.tipo === 'etapas' ? ' pts de etapa' : ' pts'}</small></b>
             </button>
+            {aberto === l.apelido && <EtapasDe camp={c.id} apelido={l.apelido} />}
           </li>
         ))}
       </ol>
@@ -87,5 +95,23 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
         <p className="fine pro-sem-margem">{!verProvas && provas && provas.length > 7 ? `Mostrando as últimas realizadas e as próximas; toque em "Ver todas" para a lista completa (${provas.length}). ` : ''}A lista cresce sozinha: toda prova do Maranhão que entra na agenda do Radar dentro do período passa a contar.</p>
       </section>
     </div>
+  );
+}
+
+type Etapa = { prova_id: string; prova_nome: string; prova_data: string; colocacao: number; atletas: number; pts: number; nota: number; conta: boolean };
+function EtapasDe({ camp, apelido }: { camp: string; apelido: string }) {
+  const [lista, setLista] = useState<Etapa[] | null>(null);
+  useEffect(() => { sb.rpc('radar_campeonato_etapas_de', { p_id: camp, p_apelido: apelido }).then(({ data }) => setLista((data ?? []) as Etapa[])); }, [camp, apelido]);
+  if (!lista) return <p className="fine pro-dentro">Carregando…</p>;
+  return (
+    <ul className="pro-provas pro-dentro">
+      {lista.map(e => (
+        <li key={e.prova_id}>
+          <b>{e.prova_nome}</b>
+          <p className="pro-pts-conta">{dataBR(e.prova_data)} · nota {String(Number(e.nota).toFixed(1)).replace('.', ',')}% · <b>{e.colocacao}º de {e.atletas}</b> do Radar → <b>{e.pts} pts de etapa</b>{e.conta ? '' : <small> · fora das melhores, não soma</small>}</p>
+        </li>
+      ))}
+      {!lista.length && <li className="fine">Sem etapas ainda.</li>}
+    </ul>
   );
 }

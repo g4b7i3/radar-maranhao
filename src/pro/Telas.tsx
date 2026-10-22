@@ -521,12 +521,20 @@ export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; p
         </div>
         <label className="ct-cidade pro-sel">Faixa etária<select value={faixa} onChange={e => setFaixa(e.target.value)}><option value="">Todas</option>{FAIXAS.map(f => <option key={f} value={f}>{f} anos</option>)}</select></label>
       </>}
+      {rec === 'geral' && <section className="pro-card pro-como-pontos">
+        <p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Como se ganha ponto em cada prova</p>
+        <ul>
+          <li><b>10</b> por concluir</li><li><b>+5</b> se for 10 km ou mais</li><li><b>+10</b> se for meia</li><li><b>+20</b> se for maratona</li>
+          <li><b>+10</b> pódio (geral ou faixa)</li><li><b>+5</b> recorde pessoal</li><li><b>+3</b> cidade nova na temporada</li>
+        </ul>
+        <p className="fine pro-sem-margem">A nota por idade não entra aqui: ela vale na Eficiência e na Liga Maranhense.</p>
+      </section>}
       {rec === 'assessorias' && <DesafioAssessorias minha={perfil.assessoria} />}
       {rec === 'pelotao' && <div className="chips" role="group" aria-label="Pelotão"><button className="chip" aria-pressed={!pelotaoCidade} onClick={() => setPelotaoCidade(false)}>Da minha liga</button><button className="chip" aria-pressed={pelotaoCidade} onClick={() => setPelotaoCidade(true)}>De {perfil.cidade}</button></div>}
       {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">{pelotaoCidade ? `Pelotão de ${perfil.cidade}` : `Pelotão ${LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}`}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
 
       <p className="fine pro-sem-margem">{{
-        geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas.`,
+        geral: `${ANO === 2026 ? 'Pré-temporada' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas. Toque no atleta pra ver de onde vem cada ponto.`,
         eficiencia: 'Índice = média das 3 melhores notas por idade (ou das que tiver, a partir de 1 prova oficial). Compara idades e sexos diferentes de forma justa.',
         assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
         pelotao: pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
@@ -560,7 +568,7 @@ function ProvasDe({ apelido, meu, sigo, mudouSigo }: { apelido: string; meu: boo
   const [contesta, setContesta] = useState<string | null>(null);
   const [motivo, setMotivo] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
-  useEffect(() => { sb.rpc('radar_resultados_de', { p_apelido: apelido, p_temporada: ANO }).then(({ data }) => setLista((data ?? []) as Resultado[])); }, [apelido]);
+  useEffect(() => { sb.rpc('radar_resultados_de_v2', { p_apelido: apelido, p_temporada: ANO }).then(({ data }) => setLista((data ?? []) as Resultado[])); }, [apelido]);
   const enviar = async (id: string) => {
     const r = await chamar('radar-acoes', { acao: 'contestar', resultado_id: id, motivo });
     setMsg(r.erro ?? `Contestação enviada (protocolo ${r.protocolo}). O Radar vai conferir.`); if (!r.erro) { setContesta(null); setMotivo(''); }
@@ -572,7 +580,8 @@ function ProvasDe({ apelido, meu, sigo, mudouSigo }: { apelido: string; meu: boo
       {lista.map(r => (
         <li key={r.id}>
           <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
-          <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}% · {r.pontos} pts</p>
+          <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}%</p>
+          <p className="pro-pts-conta"><b>{r.pontos} pts</b>{r.detalhes_pontos && Object.keys(r.detalhes_pontos).length ? <> = {Object.entries(r.detalhes_pontos).map(([k, v]) => `${v} ${PONTOS_TXT[k] ?? k}`).join(' + ')}</> : null}{r.status !== 'verificado' && r.status !== 'aprovado' ? <small> · ainda não contam no ranking</small> : null}</p>
           {!meu && contesta !== r.id && <button className="btn text pro-esq" onClick={() => { setContesta(r.id); setMsg(null); }}><Flag size={15} aria-hidden="true" />Contestar</button>}
           {contesta === r.id && (
             <div className="pro-form">
