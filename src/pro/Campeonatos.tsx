@@ -118,8 +118,9 @@ function Regras({ c }: { c: Camp }) {
     ['Quem participa', 'Todo atleta do Radar Pro. Só conta prova com resultado oficial (verificada pelo link da cronometragem ou aprovada pelo Radar). Prova só declarada não conta.'],
     ['Quais provas valem', `Toda prova do Maranhão que está na agenda do Radar entre ${periodo}. A lista cresce sozinha quando entra prova nova na agenda.`],
     ['Tabelas', 'Feminino e masculino separados. Cada atleta compete na tabela do sexo do seu perfil.'],
-    ['Como é a etapa', 'Cada prova é uma etapa. Nela, os atletas do Radar são colocados em ordem pela nota por idade (a mesma da Eficiência), não pelo tempo. Assim um atleta de 50 anos disputa de igual pra igual com um de 25. Se a pessoa correu mais de uma distância na mesma prova, vale a melhor nota.'],
+    ['Como é a etapa', 'Cada prova é uma etapa. Nela, só os atletas do Radar que correram aquela prova (todas as idades juntas, sem categoria) são colocados em ordem pela nota por idade (a mesma da Eficiência), não pelo tempo. A colocação na corrida oficial, geral ou por categoria, não entra. Assim um atleta de 50 anos disputa de igual pra igual com um de 25. Se a pessoa correu mais de uma distância na mesma prova, vale a melhor nota.'],
     ['Pontos de etapa', 'Pela colocação na etapa: 1º 25 · 2º 20 · 3º 16 · 4º 13 · 5º 11 · 6º 10 · 7º 9 · 8º 8 · 9º 7 · 10º 6 · 11º 5 · 12º 4 · 13º 3 · 14º 2 · do 15º em diante 1. Nota igual na mesma etapa: os dois levam os pontos da mesma posição.'],
+    ['A tabela muda o tempo todo', 'Nada fica travado e a ordem de cadastro não conta. A etapa é recalculada sempre que alguém registra aquela prova: se você foi o único atleta do Radar numa prova, leva 25 até aparecer alguém com nota maior; aí essa pessoa passa a ser a 1ª e você cai pra 2º (20). Vale até o fim do período, inclusive prova antiga registrada depois.'],
     ['Não é o ponto do Ranking', 'Os pontos de etapa são só da Liga. Os pontos do Ranking (concluir, distância, pódio, recorde, cidade nova) são outra conta e não entram aqui.'],
     ['Melhores etapas', `Somam as ${c.melhores} melhores etapas de cada atleta. Correr mais provas aumenta a chance de trocar uma etapa fraca por uma melhor.`],
     ['Desempate', 'Mais pontos de etapa; depois a melhor etapa; depois o maior número de etapas; depois a maior nota por idade. Empate em tudo divide a posição.'],
@@ -133,6 +134,7 @@ function Regras({ c }: { c: Camp }) {
     ['Pontos', '10 por prova concluída (duas distâncias na mesma prova contam uma vez) · +3 na primeira prova em cada cidade · +5 a cada fim de semana que completa uma sequência de 3 seguidos com prova (3 seguidos = +5; 4 seguidos = +10; 5 seguidos = +15).'],
     ['Fim de semana', 'Sábado e domingo da mesma semana contam como um fim de semana só. Duas provas no mesmo fim de semana valem 10 cada, mas contam um fim de semana na sequência.'],
     ['Não é o ponto do Ranking', 'São pontos só da Copa; não se misturam com o Ranking nem com a Liga.'],
+    ['A tabela muda o tempo todo', 'Nada fica travado: toda prova verificada dentro do período entra na conta, inclusive prova antiga registrada depois.'],
     ['Desempate', 'Mais pontos; depois mais provas; depois mais cidades. Empate em tudo divide a posição.'],
     ['Campeões', `Ao fim do período, o 1º do feminino e o 1º do masculino são os campeões.${c.premio ? ' ' + c.premio : ''}`],
   ];
@@ -143,7 +145,7 @@ function Regras({ c }: { c: Camp }) {
         <span><ScrollText size={18} aria-hidden="true" /> Regras {c.tipo === 'etapas' ? 'da Liga' : 'da Copa'}</span>
         <ChevronDown size={20} aria-hidden="true" style={{ transform: aberto ? 'rotate(180deg)' : undefined, transition: 'transform .2s' }} />
       </button>
-      {!aberto && <p className="fine pro-sem-margem">{c.tipo === 'etapas' ? 'Em cada prova, ordem pela nota por idade: 1º 25, 2º 20, 3º 16… Somam as ' + c.melhores + ' melhores. Toque pra ver todas as regras.' : '10 por prova, +3 por cidade nova, +5 a cada 3 fins de semana seguidos. Toque pra ver todas as regras.'}</p>}
+      {!aberto && <p className="fine pro-sem-margem">{c.tipo === 'etapas' ? 'Em cada prova, só os atletas do Radar, em ordem pela nota por idade: 1º 25, 2º 20, 3º 16… A tabela é recalculada a cada prova registrada. Somam as ' + c.melhores + ' melhores. Toque pra ver todas as regras.' : '10 por prova, +3 por cidade nova, +5 a cada 3 fins de semana seguidos. Toque pra ver todas as regras.'}</p>}
       {aberto && <ol className="pro-regras-lista">{regras.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ol>}
     </section>
   );
