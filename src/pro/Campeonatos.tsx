@@ -78,13 +78,13 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
         ))}
       </ol>
       <section className="pro-card">
-        <div className="pro-linha"><p className="pro-k cinza"><CalendarDays size={14} aria-hidden="true" /> Provas do campeonato</p><button className="btn text pro-btn-p" onClick={() => setVerProvas(v => !v)}>{verProvas ? 'Esconder' : 'Ver todas'}</button></div>
+        <div className="pro-linha"><p className="pro-k cinza"><CalendarDays size={14} aria-hidden="true" /> Provas do campeonato até agora</p><button className="btn text pro-btn-p" onClick={() => setVerProvas(v => !v)}>{verProvas ? 'Esconder' : 'Ver todas'}</button></div>
         {provas === null ? <p className="fine">Carregando…</p> : <ul className="pro-companheiros">
           {(verProvas ? provas : [...feitas.slice(-3), ...proximas.slice(0, 4)]).map(p => (
             <li key={p.prova_id}><span className={'pro-camp-ok' + (p.oficiais > 0 ? ' feita' : '')}>{p.oficiais > 0 ? <Check size={14} aria-hidden="true" /> : dataBR(p.data).slice(0, 2)}</span><div><b>{p.nome}</b><small>{dataBR(p.data)} · {p.cidade}{p.oficiais > 0 ? ` · ${p.oficiais} ${p.oficiais === 1 ? 'atleta pontuou' : 'atletas pontuaram'}` : ''}</small></div></li>
           ))}
         </ul>}
-        {!verProvas && provas && provas.length > 7 && <p className="fine pro-sem-margem">Mostrando as últimas realizadas e as próximas. Toque em "Ver todas" para a lista completa ({provas.length}).</p>}
+        <p className="fine pro-sem-margem">{!verProvas && provas && provas.length > 7 ? `Mostrando as últimas realizadas e as próximas; toque em "Ver todas" para a lista completa (${provas.length}). ` : ''}A lista cresce sozinha: toda prova do Maranhão que entra na agenda do Radar dentro do período passa a contar.</p>
       </section>
     </div>
   );
