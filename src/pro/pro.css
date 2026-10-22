@@ -576,3 +576,20 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 
 .pro-gratis-aviso{display:flex;align-items:center;gap:10px;background:#fff6d6;border:1px solid #f2d27a}
 .pro-gratis-aviso p{flex:1;font-size:.9rem;line-height:1.3}
+/* comunidades (menu estilo WhatsApp: cada uma é um feed fechado) */
+.pro-comun{display:flex;flex-direction:column;gap:10px}
+.pro-comun-card{display:flex;align-items:center;gap:12px;text-align:left;font:inherit;cursor:pointer;width:100%;padding:12px 14px}
+.pro-comun-card.fora{cursor:default}
+.pro-comun-emoji{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:var(--cor,#dbe8ff)}
+.pro-comun-card>div{flex:1;min-width:0}
+.pro-comun-card b{display:block;font-size:1.05rem}
+.pro-comun-card small{display:block;color:var(--muted);line-height:1.3}
+.pro-comun-card .btn{flex:none}
+.pro-comun-topo{display:flex;align-items:center;gap:12px}
+.pro-comun-topo .pro-comun-emoji{width:56px;height:56px;font-size:1.8rem}
+.pro-comun-nome{margin:0;font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
+/* menu com 8 abas: no celular estreito a fonte encolhe e o menu desliza de lado se precisar */
+.pro-menu{overflow-x:auto;scrollbar-width:none}
+.pro-menu::-webkit-scrollbar{display:none}
+.pro-menu a{flex:1 0 auto;min-width:44px}
+@media (max-width:430px){.pro-menu a{font-size:.6rem;padding:6px 1px;gap:2px}.pro-menu a svg{width:20px;height:20px}}

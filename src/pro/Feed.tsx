@@ -134,7 +134,7 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
 }
 
 /* ───────── Publicar: texto até 1000 caracteres (10 por dia) e foto a cada 2 dias, reduzida no celular. Só no Pro. ───────── */
-function Publicar({ perfil, pro, assinar, publicou }: { perfil: Perfil; pro: boolean; assinar?: () => void; publicou: () => void }) {
+export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: { perfil: Perfil; pro: boolean; assinar?: () => void; publicou: () => void; comunidade?: { id: string; nome: string }; dica?: string }) {
   const [aberto, setAberto] = useState(false);
   const [texto, setTexto] = useState('');
   const [foto, setFoto] = useState<{ blob: Blob; url: string } | null>(null);
@@ -156,17 +156,17 @@ function Publicar({ perfil, pro, assinar, publicou }: { perfil: Perfil; pro: boo
       if (error) { setIndo(false); return setErro('Não deu para enviar a foto. Tente de novo.'); }
       fotoUrl = sb.storage.from('posts').getPublicUrl(caminho).data.publicUrl;
     }
-    const { error } = await sb.rpc('radar_post_criar', { p_texto: texto, p_foto_url: fotoUrl });
+    const { error } = await sb.rpc('radar_publicar', { p_texto: texto, p_foto_url: fotoUrl, p_comunidade: comunidade?.id ?? null });
     setIndo(false);
     if (error) return setErro(error.message.replace(/^.*?: /, ''));
     limpar(); publicou();
   };
   const max = pro ? 1000 : 600; // modo grátis: texto até 600, sem foto
-  if (!aberto) return <button className="pro-card pro-publicar-fechado" onClick={() => setAberto(true)}><Avatar foto={perfil.foto_url ?? null} apelido={perfil.apelido} tam={36} /><span>Conta aí: como foi o treino, a prova, a cidade…</span><ImagemIc size={20} aria-hidden="true" /></button>;
+  if (!aberto) return <button className="pro-card pro-publicar-fechado" onClick={() => setAberto(true)}><Avatar foto={perfil.foto_url ?? null} apelido={perfil.apelido} tam={36} /><span>{dica ?? 'Conta aí: como foi o treino, a prova, a cidade…'}</span><ImagemIc size={20} aria-hidden="true" /></button>;
   return (
     <section className="pro-card pro-publicar">
-      <div className="pro-linha"><p className="pro-k cinza">Publicar no feed</p><button className="btn text" onClick={limpar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
-      <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, max))} rows={4} placeholder="Como foi? Treino, prova, cidade, o que você quiser contar pra galera." autoFocus />
+      <div className="pro-linha"><p className="pro-k cinza">{comunidade ? `Publicar em ${comunidade.nome}` : 'Publicar no feed'}</p><button className="btn text" onClick={limpar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
+      <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, max))} rows={4} placeholder={comunidade ? `Só quem está em ${comunidade.nome} vê. Treino, prova, dica, pergunta…` : 'Como foi? Treino, prova, cidade, o que você quiser contar pra galera.'} autoFocus />
       {foto && <div className="pro-publicar-previa"><img src={foto.url} alt="" /><button className="btn solid" onClick={() => { URL.revokeObjectURL(foto.url); setFoto(null); }} aria-label="Tirar foto"><X size={16} aria-hidden="true" /></button></div>}
       <div className="pro-linha">
         {!pro ? <button className="btn text pro-btn-p" onClick={assinar} title="Foto é do Radar Pro"><ImagemIc size={16} aria-hidden="true" />🔒 Foto</button> : fotoLiberada
