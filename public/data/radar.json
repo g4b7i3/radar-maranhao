@@ -3100,7 +3100,7 @@
       "sourceName": "Marakarun Eventos (inscrição)",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h (a descrição diz 6h; o resumo da plataforma mostra 09:00). Kit no 1º lote por R$ 90 + R$ 2,70 de taxa: camisa, medalha, número de peito e pulseira. Premiação por categoria. Toda a renda vai para a construção da Igreja Batista no bairro Monteiro Lobato. Restavam 83 vagas em 21/10/2026. Organização: Marakarun Eventos (Maracaçumé), (98) 98502-4870.",
+      "notes": "Largada às 6h (a descrição diz 6h; o resumo da plataforma mostra outro horário). Kit no 1º lote por R$ 90 + R$ 2,70 de taxa: camisa, medalha, número de peito e pulseira. A página fala em \"premiação por categoria\", sem dizer se é troféu ou dinheiro. Toda a renda vai para a construção da Igreja Batista no bairro Monteiro Lobato. Restavam 82 vagas na coleta de 21/10/2026. Local de largada ainda não divulgado. Organização: Marakarun Eventos (Maracaçumé), (98) 98502-4870.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3108,12 +3108,12 @@
         "text": "R$ 90 + taxa (1º lote)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-21T17:05:54.960Z",
+      "verifiedAt": "2026-10-22T10:56:46.652Z",
       "firstSeenAt": "2026-10-21T17:05:54.960Z"
     },
     {
       "id": "corrida-contra-as-drigas-2026-montes-altos",
-      "name": "Corrida Contra As Drigas",
+      "name": "Corrida Contra as Drogas",
       "edition": "2026",
       "city": "Montes Altos",
       "state": "MA",
@@ -3124,28 +3124,36 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
-      "officialUrl": "https://topchip.com.br/calendario",
+      "officialUrl": "https://topchip.com.br/drogasmontesaltos",
       "sourceUrl": "https://topchip.com.br/calendario",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Largada às 05h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "notes": "Largada às 5h30 de domingo, 22/11, em Montes Altos, segundo o calendário da Topchip (que escreve o nome como \"Corrida Contra As Drigas\", erro de digitação). Prova sem cronometragem eletrônica pela Topchip. Distâncias, local de largada, preço e abertura das inscrições ainda não divulgados: confirmar na página da Topchip.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-21T20:24:12.739Z",
+      "start": "05:30",
+      "verifiedAt": "2026-10-22T10:56:46.652Z",
       "firstSeenAt": "2026-10-21T20:24:12.739Z"
     }
   ],
   "changes": [
+    {
+      "id": "441f72b1-cd1c-4000-8cf7-abdf970b5404",
+      "eventId": "corrida-contra-as-drigas-2026-montes-altos",
+      "version": "[\"2026-11-22\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/drogasmontesaltos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-22T10:56:46.652Z",
+      "notifiedAt": "2026-10-22T10:57:16.346Z"
+    },
     {
       "id": "2056f152-ca87-4ff9-b4ba-433f0b2c40fc",
       "eventId": "corrida-contra-as-drigas-2026-montes-altos",
       "version": "[\"2026-11-22\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-10-21T20:24:12.739Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-22T10:57:16.346Z"
     },
     {
       "id": "e0dcdad4-29aa-4616-8d0d-6ba06de9702c",
@@ -3153,7 +3161,7 @@
       "version": "[\"2026-12-06\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.marakarun.com/evento/64e26bca-406b-4539-9635-eb8de5f9f58b\"]",
       "kind": "Nova prova",
       "at": "2026-10-21T17:05:54.960Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-22T10:57:16.346Z"
     },
     {
       "id": "aadb9435-b8be-433a-9f52-8284cded3099",
@@ -4660,7 +4668,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-21T20:24:12.739Z",
+  "lastChecked": "2026-10-22T10:56:46.652Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
