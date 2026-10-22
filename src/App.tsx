@@ -599,7 +599,7 @@ export default function App() {
 /** Mesmo formato de endereço das páginas geradas em scripts/paginas-cidades.mjs */
 const slugCidade = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
+export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const [card, setCard] = useState(startCard);
   useEffect(() => {

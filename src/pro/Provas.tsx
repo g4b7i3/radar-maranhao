@@ -1,8 +1,9 @@
 // Provas: a agenda do Radar normal dentro do Pro. Toque abre a prova no Radar (/?prova=id); "Inscrição" vai direto ao site oficial.
 import { useEffect, useMemo, useState } from 'react';
 import { CalendarDays, ExternalLink, MapPin, Search } from 'lucide-react';
-import { status, type Race } from '../lib';
-import { norm } from '../lib';
+import { status, norm, load, store, icsFor, type Race } from '../lib';
+import { Sheet } from '../App';
+import { useClimas } from '../Clima';
 
 type Filtro = 'proximas' | 'abertas' | 'mes' | 'trail' | 'passadas';
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00-03:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).replace('.', '');
@@ -14,6 +15,9 @@ export function TelaProvas() {
   const [erro, setErro] = useState(false);
   const [filtro, setFiltro] = useState<Filtro>('proximas');
   const [busca, setBusca] = useState('');
+  const [aberta, setAberta] = useState<Race | null>(null);
+  const [salvas, setSalvas] = useState<string[]>(() => load('radar-favorites', []));
+  const salvar = (e: Race) => { const v = salvas.includes(e.id) ? salvas.filter(id => id !== e.id) : [...salvas, e.id]; setSalvas(v); store('radar-favorites', v); };
   useEffect(() => { fetch('/data/radar.json', { cache: 'no-store' }).then(r => r.json()).then(d => setLista((d.events ?? []) as Race[])).catch(() => setErro(true)); }, []);
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
   const mes = hoje.slice(0, 7);
@@ -30,6 +34,7 @@ export function TelaProvas() {
     }).filter(e => !q || norm(`${e.name} ${e.city} ${e.location}`).includes(q));
     return base.sort((a, b) => (filtro === 'passadas' ? b.date!.localeCompare(a.date!) : a.date!.localeCompare(b.date!)));
   }, [lista, filtro, busca, hoje, mes]);
+  const previsoes = useClimas(useMemo(() => (lista ?? []).filter(e => e.date && e.date >= hoje), [lista, hoje]));
   const grupos = useMemo(() => { const g = new Map<string, Race[]>(); for (const e of vis) { const k = e.date!.slice(0, 7); if (!g.has(k)) g.set(k, []); g.get(k)!.push(e); } return [...g.entries()]; }, [vis]);
   const nomeMes = (k: string) => new Date(k + '-15T12:00:00-03:00').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
   return (
@@ -46,7 +51,7 @@ export function TelaProvas() {
           <p className="pro-k cinza"><CalendarDays size={14} aria-hidden="true" /> {nomeMes(k)} · {provas.length}</p>
           {provas.map(e => { const st = status(e); return (
             <article key={e.id} className="pro-card pro-prova-card">
-              <a className="pro-prova-corpo" href={`/?prova=${encodeURIComponent(e.id)}`}>
+              <button className="pro-prova-corpo" onClick={() => setAberta(e)}>
                 <div className="pro-prova-data"><b>{e.date!.slice(8, 10)}</b><small>{dataLonga(e.date!).split(' ')[0]}</small></div>
                 <div className="pro-prova-info">
                   <b>{e.name}</b>
@@ -54,13 +59,14 @@ export function TelaProvas() {
                   <small>{e.distances.map(d => `${d} km`).join(' · ')}{e.price?.text ? ` · ${e.price.text}` : ''}</small>
                   <span className={`tag ${tom(st)}`}>{rotulo(st)}</span>
                 </div>
-              </a>
+              </button>
               {e.officialUrl && (st === 'Abertas' || st === 'Abertura anunciada' || st === 'Consultar') && <a className="btn outline pro-btn-p" href={e.officialUrl} target="_blank" rel="noopener"><ExternalLink size={14} aria-hidden="true" />Inscrição</a>}
             </article>
           ); })}
         </section>
       ))}
-      <p className="fine pro-centro">É a mesma agenda do Radar: {lista?.length ?? '…'} provas do Maranhão, conferidas todo dia. Toque numa prova pra ver tudo (kit, largada, percurso, clima) no Radar.</p>
+      <p className="fine pro-centro">É a mesma agenda do Radar: {lista?.length ?? '…'} provas do Maranhão, conferidas todo dia. Toque numa prova pra ver kit, largada, percurso e clima.</p>
+      {aberta && <Sheet race={aberta} clima={previsoes[aberta.id]} saved={salvas.includes(aberta.id)} onClose={() => setAberta(null)} onSave={() => salvar(aberta)} onCalendar={() => icsFor([aberta])} />}
     </div>
   );
 }
