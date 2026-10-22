@@ -1,7 +1,7 @@
 /* Radar Corridas Maranhão — service worker.
    Página e agenda: busca sempre a versão nova na internet; sem internet, usa a última guardada.
    Arquivos do site (JS, CSS, fontes, ícones): guardados depois do primeiro acesso. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL = `radar-shell-${VERSION}`;
 const DATA = `radar-data-${VERSION}`;
 const PRECACHE = ['/', '/manifest.webmanifest', '/favicon.svg', '/icons/icon-192.png', '/icons/apple-touch-icon.png'];
@@ -59,7 +59,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('push', event => {
   let d = { titulo: 'Radar Pro', corpo: '', url: '/?pro', tag: 'radar' };
   try { d = { ...d, ...event.data.json() }; } catch { /* sem corpo */ }
-  event.waitUntil(self.registration.showNotification(d.titulo, { body: d.corpo, icon: '/icons/pro-192.png', badge: '/icons/pro-192.png', tag: d.tag, data: { url: d.url }, vibrate: [80, 40, 80] }));
+  event.waitUntil(self.registration.showNotification(d.titulo, { body: d.corpo, icon: '/icons/pro-512.png', badge: '/icons/badge-96.png', tag: d.tag, data: { url: d.url }, vibrate: [80, 40, 80] }));
 });
 self.addEventListener('notificationclick', event => {
   event.notification.close();
