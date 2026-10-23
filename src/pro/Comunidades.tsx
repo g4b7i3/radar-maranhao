@@ -136,7 +136,7 @@ function Membros({ c }: { c: Comunidade }) {
         {lista.map(m => (
           <li key={m.apelido}><a href={`/?atleta=${encodeURIComponent(m.apelido)}`}>
             <Avatar foto={m.foto} apelido={m.apelido} tam={38} />
-            <span><b>{m.eu ? 'Você' : `@${m.apelido}`}</b><small>{m.cidade}</small></span>
+            <span className="pro-membro-txt"><b>{m.eu ? 'Você' : `@${m.apelido}`}</b><small>{m.cidade}</small></span>
             {m.criador && <em className="pro-membro-tag">Criou</em>}
             {m.online && <em className="pro-membro-on">Online</em>}
           </a></li>
