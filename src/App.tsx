@@ -111,7 +111,8 @@ function Anuncie() {
     <aside className="anuncie" aria-label="Espaço para anunciantes">
       <div className="anuncie-pista" aria-hidden="true" />
       <ul className="anuncie-quem" aria-label="Pra quem é">
-        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia', 'Fotógrafo', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
+        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia', 'Crossfit', 'Estética', 'Fotógrafo', 'Assessoria', 'Suplementos', 'Restaurante e café', 'Ótica', 'Hotel e pousada', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
+        <li className="anuncie-mais">e outros serviços</li>
       </ul>
       <div className="anuncie-pe">
         <a className="anuncie-btn" href={`https://wa.me/${ZAP_ANUNCIO}?text=${encodeURIComponent(msg)}`} target="_blank" rel="noopener" data-umami-event="Anuncie: WhatsApp">Quero anunciar aqui<span aria-hidden="true">→</span></a>
