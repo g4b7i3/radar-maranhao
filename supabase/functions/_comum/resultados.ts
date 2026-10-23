@@ -76,31 +76,39 @@ async function racezone(url: string): Promise<Lido | null> {
 const attrs = (tag: string) => Object.fromEntries([...tag.matchAll(/(\w+)="([^"]*)"/g)].map(m => [m[1], m[2].replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")]));
 async function wiclax(url: string): Promise<Lido | null> {
   const u = new URL(url);
-  const arq = u.searchParams.get('f') ? `${u.origin}/${u.searchParams.get('f')}` : /\.clax$/i.test(u.pathname) ? url : null;
+  // o arquivo fica na pasta da página (resultadonline: raiz; brlive: /brlive/)
+  const arq = u.searchParams.get('f') ? new URL(u.searchParams.get('f')!, u.origin + u.pathname.replace(/[^/]*$/, '')).href : /\.clax$/i.test(u.pathname) ? url : null;
   if (!arq) return null;
   const xml: string = await pegar(arq.replace(/ /g, '%20'), false);
   const ep = attrs(xml.match(/<Epreuve [^>]*>/)?.[0] ?? '');
   const pcs = new Map<string, { km: number | null; ok: boolean }>();
-  for (const m of xml.matchAll(/<Pcs [^>]*\/?>/g)) { const a = attrs(m[0]); pcs.set(a.nom, { km: Number(a.distance) > 0 ? real(Number(a.distance) / 1000) : null, ok: !a.noPlaces && Number(a.distance) > 0 }); }
+  for (const m of xml.matchAll(/<Pcs [^>]*\/?>/g)) {
+    const a = attrs(m[0]);
+    // alguns arquivos (EuCorro/brlive) vêm com distance="0": a distância sai do nome do percurso ("5KM ASSOCIADO", "10 km")
+    const doNome = (a.nom ?? '').match(/(\d+(?:[.,]\d+)?)\s*k/i);
+    const km = Number(a.distance) > 0 ? real(Number(a.distance) / 1000) : doNome ? real(Number(doNome[1].replace(',', '.'))) : null;
+    pcs.set(a.nom, { km, ok: !a.noPlaces && km != null && km >= 1 && !/caminhada/i.test(a.nom ?? '') });
+  }
   const eng = new Map<string, Record<string, string>>();
   const blocoE = xml.match(/<Engages>([\s\S]*?)<\/Engages>/)?.[1] ?? '';
   for (const m of blocoE.matchAll(/<E [^>]*\/>/g)) { const a = attrs(m[0]); if (a.d) eng.set(a.d, a); }
   const blocoR = xml.match(/<Resultats>([\s\S]*?)<\/Resultats>/)?.[1] ?? '';
+  const tPrimeiro = u.hostname.endsWith('brlive.info'); // no brlive a classificação é pelo "t" (o "re" é o tempo bruto)
   const linhas: Linha[] = [];
-  const anoProva = ep.date && /^\d+$/.test(ep.date) ? new Date(Date.UTC(1899, 11, 30) + Number(ep.date) * 86400_000).getUTCFullYear() : new Date().getUTCFullYear();
+  const anoProva = ep.date && /^\d+$/.test(ep.date) ? new Date(Date.UTC(1899, 11, 30) + Number(ep.date) * 86400_000).getUTCFullYear() : /^\d{4}-/.test(ep.dt1 ?? '') ? Number(ep.dt1.slice(0, 4)) : new Date().getUTCFullYear();
   for (const m of blocoR.matchAll(/<R [^>]*\/>/g)) {
     const r = attrs(m[0]); const e = eng.get(r.d); if (!e?.n) continue;
     const p = pcs.get(e.p); if (p && !p.ok) continue; // "análise", "tempo não oficial"
-    const t = seg(r.re) ?? seg(r.t); if (!t || !possivel(p?.km ?? null, t)) continue;
+    const t = (tPrimeiro ? seg(r.t) ?? seg(r.re) : seg(r.re) ?? seg(r.t)); if (!t || !possivel(p?.km ?? null, t)) continue;
     linhas.push({ distancia_km: p?.km ?? null, nome: e.n.trim(), peito: r.d, tempo_s: t, sexo: e.x === 'F' || e.x === 'M' ? e.x : null, faixa: e.ca || null, colocacao_geral: null, colocacao_faixa: null, idade: Number(e.a) > 1900 && anoProva - Number(e.a) >= 5 && anoProva - Number(e.a) <= 100 ? anoProva - Number(e.a) : null });
   }
   // data do Excel (dias desde 1899-12-30)
-  const data = ep.date && /^\d+$/.test(ep.date) ? new Date(Date.UTC(1899, 11, 30) + Number(ep.date) * 86400_000).toISOString().slice(0, 10) : null;
+  const data = ep.date && /^\d+$/.test(ep.date) ? new Date(Date.UTC(1899, 11, 30) + Number(ep.date) * 86400_000).toISOString().slice(0, 10) : /^\d{4}-\d{2}-\d{2}/.test(ep.dt1 ?? '') ? ep.dt1.slice(0, 10) : null;
   return { fonte: u.hostname, evento: ep.nom ?? '', data, linhas: colocar(linhas) };
 }
 
 /** Sites de cronometragem que o Radar sabe ler. */
-export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br'];
+export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info'];
 /** Lê um link de resultado. Devolve null se o formato não é conhecido. */
 export async function lerLink(url: string): Promise<Lido | null> {
   let u: URL; try { u = new URL(url.trim()); } catch { return null; }
@@ -121,6 +129,19 @@ export async function listarEventos(): Promise<EventoRes[]> {
   }));
   const hoje = new Date(Date.now() - 3 * 3600_000);
   const dias = [0, 1].map(k => new Date(hoje.getTime() - k * 86400_000).toISOString().slice(0, 10).replace(/-/g, ''));
+  // EuCorro (brlive.info): a página de resultados lista os links .clax; nome e data vêm do próprio arquivo
+  try {
+    const html: string = await pegar('http://eucorromais.com.br/categoria/resultados/', false);
+    const links = [...new Set([...html.matchAll(/https?:\/\/brlive\.info\/[^"'\s<>]+?\.clax/g)].map(m => m[0].replace(/&amp;/g, '&').replace(/^http:/, 'https:')))].slice(0, 10);
+    await Promise.all(links.map(async l => {
+      try {
+        const u = new URL(l); const f = u.searchParams.get('f'); if (!f) return;
+        const xml: string = await pegar(new URL(f, u.origin + u.pathname.replace(/[^/]*$/, '')).href, false);
+        const ep = attrs(xml.match(/<Epreuve [^>]*>/)?.[0] ?? '');
+        if (ep.nom && /^\d{4}-\d{2}-\d{2}/.test(ep.dt1 ?? '')) out.push({ nome: ep.nom, data: ep.dt1.slice(0, 10), url: l });
+      } catch { /* um arquivo fora do ar */ }
+    }));
+  } catch { /* EuCorro fora do ar */ }
   await Promise.all(['cronoesportes', 'sacrono'].map(async cli => {
     for (const d of dias) {
       try {
