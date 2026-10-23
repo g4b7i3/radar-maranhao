@@ -1,7 +1,7 @@
 // Comunidades: menu estilo WhatsApp. Cada uma é um feed fechado: só quem está dentro lê e publica.
 // "Elas correm" e "Eles correm" entram pelo sexo do perfil (sem pedido, sem lista de membros). As outras, qualquer um entra e sai.
 import { useEffect, useRef, useState } from 'react';
-import { Check, ImagePlus, Lock, LogOut, Pencil, Plus, UsersRound } from 'lucide-react';
+import { Check, ImagePlus, Lock, LogOut, Pencil, Plus, Search, UsersRound } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { reduzirFoto } from './Foto';
 import { conviteComunidade } from './Pro';
@@ -13,6 +13,7 @@ type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 
 
 export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfil: Perfil; pro: boolean; assinar: () => void; admin?: boolean }) {
   const [criando, setCriando] = useState(false);
+  const [busca, setBusca] = useState('');
   const [lista, setLista] = useState<Comunidade[] | null>(null);
   const [aberta, setAberta] = useState<Comunidade | null>(null);
   useVoltar(!!aberta, () => setAberta(null), aberta?.id);
@@ -32,7 +33,10 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
   useEffect(() => { carregar(); }, [aberta]);
   const entrar = async (c: Comunidade, sim: boolean) => { setIndo(c.id); await sb.rpc('radar_comunidade_entrar', { p_id: c.id, p_entrar: sim }); await carregar(); setIndo(null); if (sim) setAberta({ ...c, membro: true }); };
   if (aberta) return <ComunidadeFeed c={aberta} perfil={perfil} pro={pro} assinar={assinar} admin={admin} voltar={() => setAberta(null)} mudou={c => { if (c) setAberta(c); else { setAberta(null); carregar(); } }} sair={() => entrar(aberta, false).then(() => setAberta(null))} />;
-  const minhas = (lista ?? []).filter(c => c.membro), outras = (lista ?? []).filter(c => !c.membro);
+  const sem = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const q = sem(busca.trim());
+  const filtradas = (lista ?? []).filter(c => !q || sem(`${c.nome} ${c.descricao} ${c.criador ?? ''}`).includes(q));
+  const minhas = filtradas.filter(c => c.membro), outras = filtradas.filter(c => !c.membro);
   const Card = ({ c }: { c: Comunidade }) => {
     const fechada = c.tipo === 'sexo' && !c.membro;
     const quem = c.tipo === 'sexo' ? (c.sexo === 'F' ? 'mulheres' : 'homens') : (c.membros === 1 ? 'membro' : 'membros');
@@ -54,7 +58,9 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
       {criando
         ? <FormComunidade admin={admin} fechar={() => setCriando(false)} salvou={() => { setCriando(false); carregar(); }} />
         : <button className="btn outline pro-comun-nova" onClick={() => setCriando(true)}><Plus size={16} aria-hidden="true" />Criar uma comunidade</button>}
+      {(lista?.length ?? 0) > 4 && <label className="pro-busca"><Search size={18} aria-hidden="true" /><input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Pesquisar comunidade" aria-label="Pesquisar comunidade" /></label>}
       {lista === null && <p className="fine">Carregando…</p>}
+      {lista && q && !filtradas.length && <p className="fine">Nenhuma comunidade com “{busca.trim()}”. Que tal criar?</p>}
       {minhas.length > 0 && <><p className="pro-k cinza"><UsersRound size={14} aria-hidden="true" /> Suas comunidades</p><div className="pro-comun">{minhas.map(c => <Card key={c.id} c={c} />)}</div></>}
       {outras.length > 0 && <><p className="pro-k cinza">Para entrar</p><div className="pro-comun">{outras.map(c => <Card key={c.id} c={c} />)}</div></>}
       <p className="fine pro-sem-margem">Cada comunidade é um feed fechado: só quem está dentro lê e publica. "Elas correm" e "Eles correm" são pelo sexo do perfil, sem pedido e sem lista de membros. Sem comentários, só reações.</p>
@@ -133,7 +139,7 @@ function FormComunidade({ c, fechar, salvou, admin = false }: { c?: Comunidade; 
   return (
     <section className="pro-card pro-comun-form">
       <p className="pro-k cinza">{c ? 'Editar comunidade' : 'Criar uma comunidade'}</p>
-      {!c && <p className="fine pro-sem-margem">Qualquer atleta pode criar: grupo de treino, assessoria, bairro, amigos de prova. Você entra automaticamente e pode editar ou tirar do ar quando quiser (até 2 comunidades por pessoa).</p>}
+      {!c && <p className="fine pro-sem-margem">Qualquer atleta pode criar: grupo de treino, assessoria, bairro, amigos de prova. Você entra automaticamente e pode editar ou tirar do ar quando quiser (até 10 comunidades por dia).</p>}
       <div className="pro-linha pro-comun-form-topo">
         <label className="ct-cidade pro-comun-emoji-campo">Emoji<input value={f.emoji} maxLength={8} onChange={e => setF({ ...f, emoji: e.target.value })} /></label>
         <label className="ct-cidade">Nome<input value={f.nome} maxLength={40} onChange={e => setF({ ...f, nome: e.target.value })} placeholder="Ex.: Corredores de Imperatriz" /></label>
