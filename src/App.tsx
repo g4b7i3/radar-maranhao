@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
@@ -103,6 +103,28 @@ function StatusTag({ e }: { e: Race }) {
 
 /** Chamada animada para o Radar Pro, logo abaixo da marca. */
 const FRASES_PRO = ['Pré-temporada valendo', '97 medalhas para ganhar', 'Seja Rei ou Rainha da prova', 'Ranking do Maranhão', 'Resultado oficial na hora'];
+/** Espaço de publicidade na agenda: chama negócios pra anunciar, direto no WhatsApp comercial. */
+const ZAP_ANUNCIO = '5598991379476';
+function Anuncie() {
+  const msg = 'Olá! Vi o espaço de anúncio no Radar Corridas Maranhão e quero colocar meu negócio na frente dos corredores. Como funciona?';
+  return (
+    <aside className="anuncie" aria-labelledby="anuncie-tit">
+      <div className="anuncie-pista" aria-hidden="true" />
+      <p className="anuncie-k">Espaço para anunciantes</p>
+      <h2 id="anuncie-tit">Todo corredor do Maranhão passa por aqui <em>antes de largar.</em></h2>
+      <p className="anuncie-txt">É aqui que eles escolhem a próxima prova, salvam a data e se programam. Coloque sua marca no caminho de quem treina, se cuida e compra.</p>
+      <ul className="anuncie-quem" aria-label="Pra quem é">
+        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia e crossfit', 'Fotógrafo', 'Assessoria', 'Comida perto da largada', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
+      </ul>
+      <div className="anuncie-pe">
+        <a className="anuncie-btn" href={`https://wa.me/${ZAP_ANUNCIO}?text=${encodeURIComponent(msg)}`} target="_blank" rel="noopener" data-umami-event="Anuncie: WhatsApp">Quero anunciar aqui<span aria-hidden="true">→</span></a>
+        <span className="anuncie-slot" aria-hidden="true"><b>SUA</b><b>MARCA</b><small>aqui</small></span>
+      </div>
+      <p className="anuncie-fine">Resposta pelo WhatsApp · (98) 99137-9476</p>
+    </aside>
+  );
+}
+
 function ChamadaPro() {
   const [i, setI] = useState(0);
   useEffect(() => {
@@ -448,8 +470,10 @@ export default function App() {
           </div>
 
           {tab === 'agenda' && vista === 'mapa' && <MapaProvas events={filtered} onAbrir={e => setSelected(e)} onVerLista={c => { setCity(c); setVista('lista'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
-          {(tab !== 'agenda' || vista === 'lista') && groups.map(([key, list]) => (
-            <section className="month" key={key} aria-labelledby={'m-' + key}>
+          {(tab !== 'agenda' || vista === 'lista') && groups.map(([key, list], gi) => (
+            <Fragment key={key}>
+            {tab === 'agenda' && gi === 1 && <Anuncie />}
+            <section className="month" aria-labelledby={'m-' + key}>
               <h2 id={'m-' + key}>{key === 'sem-data' ? 'Data a confirmar' : fmt.monthName(key)}{key !== 'sem-data' && fmt.year(key) !== t.slice(0, 4) && <small> {fmt.year(key)}</small>}</h2>
               <ol className="races">
                 {list.map(e => {
@@ -482,7 +506,9 @@ export default function App() {
                 })}
               </ol>
             </section>
+            </Fragment>
           ))}
+          {tab === 'agenda' && (vista === 'lista') && groups.length === 1 && <Anuncie />}
 
           {tab === 'agenda' && <MissingRace />}
           {tab === 'agenda' && cidadesFuturas.length > 0 && (

@@ -968,3 +968,27 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 @keyframes chamada-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .chamada-pro::before, .chamada-pro-selo, .chamada-pro-txt span, .chamada-pro-seta { animation: none; } }
 @media (max-width: 760px) { .chamada-pro { margin: 6px 0 8px; width: calc(100vw - 2 * var(--gutter, 16px)); max-width: 520px; gap: 10px; padding-right: 14px; font-size: .95rem; } .chamada-pro-selo { padding: 5px 9px; font-size: .78rem; } .chamada-pro-txt { flex: 1; white-space: normal; } }
+
+/* ───────── Anuncie aqui (espaço de publicidade na agenda) ───────── */
+.anuncie { position: relative; overflow: hidden; margin: 8px 0 28px; padding: 26px 22px 20px; border-radius: 22px; background: #10131f; color: #f4efe6; isolation: isolate; }
+.anuncie-pista { position: absolute; inset: 0; z-index: -1; background:
+  repeating-linear-gradient(115deg, transparent 0 46px, rgb(255 255 255 / .035) 46px 50px),
+  radial-gradient(120% 90% at 100% 0%, rgb(244 196 106 / .16), transparent 55%); }
+.anuncie-pista::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: repeating-linear-gradient(90deg, #f4c46a 0 28px, transparent 28px 44px); opacity: .9; }
+.anuncie-k { margin: 0; font-size: .72rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: #f4c46a; }
+.anuncie h2 { margin: 10px 0 0; font-size: clamp(1.7rem, 6.4vw, 2.3rem); line-height: 1.02; font-weight: 800; font-stretch: 72%; letter-spacing: -.01em; max-width: 16ch; color: #f4efe6; }
+.anuncie h2 em { font-style: normal; color: #f4c46a; }
+.anuncie-txt { margin: 12px 0 0; font-size: .98rem; line-height: 1.45; color: rgb(244 239 230 / .78); max-width: 46ch; }
+.anuncie-quem { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.anuncie-quem li { font-size: .8rem; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid rgb(244 239 230 / .22); color: rgb(244 239 230 / .9); }
+.anuncie-pe { margin-top: 20px; display: flex; align-items: center; gap: 14px; }
+.anuncie-btn { flex: 1; min-width: 0; white-space: nowrap; display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 52px; padding: 0 20px; border-radius: 14px; background: #f4c46a; color: #1a1306; font-weight: 800; font-size: 1.02rem; text-decoration: none; transition: transform .15s ease, background .2s ease; }
+.anuncie-btn span { font-size: 1.3rem; transition: transform .2s ease; }
+.anuncie-btn:hover { background: #ffd27d; }
+.anuncie-btn:hover span { transform: translateX(4px); }
+.anuncie-btn:active { transform: scale(.98); }
+.anuncie-slot { flex: none; width: 70px; height: 70px; border: 1.5px dashed rgb(244 239 230 / .45); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; transform: rotate(-4deg); }
+.anuncie-slot b { font-size: .82rem; font-weight: 800; font-stretch: 72%; letter-spacing: .06em; }
+.anuncie-slot small { margin-top: 3px; font-size: .68rem; color: #f4c46a; letter-spacing: .12em; text-transform: uppercase; }
+.anuncie-fine { margin: 12px 0 6px; font-size: .78rem; color: rgb(244 239 230 / .55); }
+@media (prefers-reduced-motion: reduce) { .anuncie-btn, .anuncie-btn span { transition: none; } }
