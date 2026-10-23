@@ -17,11 +17,11 @@ import { TelaProvas } from './Provas';
 import { PushConvite } from './Push';
 import { terminarConexaoStrava } from './Strava';
 import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
-import { useVoltar } from './voltar';
+import { useVoltar, iniciarHistorico, irParaAba, abaDepoisDoVoltar, lerEndereco } from './voltar';
 import './pro.css';
 
 const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
-const abaDoEndereco = (): Aba | null => { const h = location.hash.replace('#', ''); return (ABAS_VALIDAS as readonly string[]).includes(h) ? h as Aba : null; };
+const abaDoEndereco = (): Aba | null => { const h = lerEndereco().aba; return (ABAS_VALIDAS as readonly string[]).includes(h) ? h as Aba : null; };
 type Aba = 'temporada' | 'campeonatos' | 'feed' | 'comunidades' | 'provas' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
 const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
@@ -74,21 +74,15 @@ function ProTelas() {
   const [sessao, setSessao] = useState<Session | null | undefined>(undefined);
   const [perfil, setPerfil] = useState<Perfil | null | undefined>(undefined);
   const [temp, setTemp] = useState<Temporada | null>(null);
-  // aba vem do endereço (#feed, #conta…) e cada troca entra no histórico: o voltar do celular volta de aba em aba
-  const [aba, setAbaEstado] = useState<Aba>(() => abaDoEndereco() ?? 'temporada');
+  // aba vem do endereço (#feed, #comunidades/feminina…): atualizar mantém a tela; o voltar leva à Temporada e depois sai
+  const [aba, setAbaEstado] = useState<Aba>(() => { const a = abaDoEndereco() ?? 'temporada'; iniciarHistorico(a); return a; });
   const abaRef = useRef(aba); abaRef.current = aba;
   const setAba = useCallback((a: Aba) => {
     if (a === abaRef.current) return;
-    history.pushState({ radarAba: a }, '', `${location.pathname}${location.search}#${a}`);
-    setAbaEstado(a);
+    irParaAba(a, x => { setAbaEstado(x as Aba); window.scrollTo(0, 0); });
   }, []);
   useEffect(() => {
-    // começa sempre com a Temporada embaixo: do primeiro voltar em diante, chega nela e depois sai do app
-    if (/access_token=|error_description=/.test(location.hash)) return;
-    const ini = abaRef.current;
-    history.replaceState({ radarAba: 'temporada' }, '', `${location.pathname}${location.search}#temporada`);
-    if (ini !== 'temporada') history.pushState({ radarAba: ini }, '', `${location.pathname}${location.search}#${ini}`);
-    const onPop = (e: PopStateEvent) => { const a = (e.state?.radarAba as Aba | undefined) ?? abaDoEndereco() ?? 'temporada'; setAbaEstado(a); window.scrollTo(0, 0); };
+    const onPop = () => { const a = abaDepoisDoVoltar(); setAbaEstado(((ABAS_VALIDAS as readonly string[]).includes(a) ? a : 'temporada') as Aba); };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);

@@ -1,19 +1,20 @@
 // Comunidades: menu estilo WhatsApp. Cada uma é um feed fechado: só quem está dentro lê e publica.
 // "Elas correm" e "Eles correm" entram pelo sexo do perfil (sem pedido, sem lista de membros). As outras, qualquer um entra e sai.
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Lock, LogOut, UsersRound } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { ItemFeed, Publicar, type Evento } from './Feed';
-import { useVoltar } from './voltar';
+import { useVoltar, telaInicial } from './voltar';
 
 type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
 
 export function TelaComunidades({ perfil, pro, assinar }: { perfil: Perfil; pro: boolean; assinar: () => void }) {
   const [lista, setLista] = useState<Comunidade[] | null>(null);
   const [aberta, setAberta] = useState<Comunidade | null>(null);
-  useVoltar(!!aberta, () => setAberta(null));
+  useVoltar(!!aberta, () => setAberta(null), aberta?.id);
+  const pedida = useRef(telaInicial('comunidades')); // atualizou com uma comunidade aberta: reabre ela
   const [indo, setIndo] = useState<string | null>(null);
-  const carregar = () => sb.rpc('radar_comunidades').then(({ data }) => setLista((data ?? []) as Comunidade[]));
+  const carregar = () => sb.rpc('radar_comunidades').then(({ data }) => { const l = (data ?? []) as Comunidade[]; setLista(l); if (pedida.current) { const c = l.find(x => x.id === pedida.current && x.membro); pedida.current = null; if (c) setAberta(c); } });
   useEffect(() => { carregar(); }, [aberta]);
   const entrar = async (c: Comunidade, sim: boolean) => { setIndo(c.id); await sb.rpc('radar_comunidade_entrar', { p_id: c.id, p_entrar: sim }); await carregar(); setIndo(null); if (sim) setAberta({ ...c, membro: true }); };
   if (aberta) return <ComunidadeFeed c={aberta} perfil={perfil} pro={pro} assinar={assinar} voltar={() => setAberta(null)} sair={() => entrar(aberta, false).then(() => setAberta(null))} />;

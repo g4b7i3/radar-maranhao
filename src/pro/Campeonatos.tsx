@@ -1,9 +1,9 @@
 // Campeonatos: disputa prova a prova (pontos por colocação na nota por idade). O primeiro é a Liga Maranhense.
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Trophy, ChevronRight, ArrowLeft, Check, CalendarDays, Footprints, ScrollText, ChevronDown } from 'lucide-react';
 import { sb, linkPerfil, type Perfil } from './sb';
 import { Avatar } from './Foto';
-import { useVoltar } from './voltar';
+import { useVoltar, telaInicial } from './voltar';
 
 type Camp = { id: string; nome: string; rotulo: string | null; premio: string | null; descricao: string | null; temporada: number; inicio: string; fim: string; melhores: number; tipo: 'etapas' | 'constancia'; provas: number; realizadas: number; atletas: number };
 type Linha = { sexo: 'F' | 'M'; posicao: number; apelido: string; cidade: string; foto: string | null; pontos: number; provas: number; cidades: number; sequencias: number; eu: boolean | null };
@@ -13,8 +13,9 @@ const dataBR = (d: string) => d.slice(0, 10).split('-').reverse().slice(0, 2).jo
 export function TelaCampeonatos({ perfil }: { perfil: Perfil }) {
   const [lista, setLista] = useState<Camp[] | null>(null);
   const [aberto, setAberto] = useState<Camp | null>(null);
-  useVoltar(!!aberto, () => setAberto(null));
-  useEffect(() => { sb.rpc('radar_campeonatos_v2').then(({ data }) => setLista((data ?? []) as Camp[])); }, []);
+  useVoltar(!!aberto, () => setAberto(null), aberto?.id);
+  const pedida = useRef(telaInicial('campeonatos'));
+  useEffect(() => { sb.rpc('radar_campeonatos_v2').then(({ data }) => { const l = (data ?? []) as Camp[]; setLista(l); if (pedida.current) { const c = l.find(x => x.id === pedida.current); pedida.current = null; if (c) setAberto(c); } }); }, []);
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
   if (aberto) return <Campeonato c={aberto} perfil={perfil} voltar={() => setAberto(null)} />;
   return (

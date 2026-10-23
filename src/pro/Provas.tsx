@@ -1,10 +1,10 @@
 // Provas: a agenda do Radar normal dentro do Pro. Toque abre a prova no Radar (/?prova=id); "Inscrição" vai direto ao site oficial.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CalendarDays, ExternalLink, MapPin, Search } from 'lucide-react';
 import { status, norm, load, store, icsFor, type Race } from '../lib';
 import { Sheet } from '../App';
 import { useClimas } from '../Clima';
-import { useVoltar } from './voltar';
+import { useVoltar, telaInicial } from './voltar';
 
 type Filtro = 'proximas' | 'abertas' | 'mes' | 'trail' | 'passadas';
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00-03:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).replace('.', '');
@@ -17,10 +17,11 @@ export function TelaProvas() {
   const [filtro, setFiltro] = useState<Filtro>('proximas');
   const [busca, setBusca] = useState('');
   const [aberta, setAberta] = useState<Race | null>(null);
-  useVoltar(!!aberta, () => setAberta(null));
+  useVoltar(!!aberta, () => setAberta(null), aberta?.id);
+  const pedida = useRef(telaInicial('provas'));
   const [salvas, setSalvas] = useState<string[]>(() => load('radar-favorites', []));
   const salvar = (e: Race) => { const v = salvas.includes(e.id) ? salvas.filter(id => id !== e.id) : [...salvas, e.id]; setSalvas(v); store('radar-favorites', v); };
-  useEffect(() => { fetch('/data/radar.json', { cache: 'no-store' }).then(r => r.json()).then(d => setLista((d.events ?? []) as Race[])).catch(() => setErro(true)); }, []);
+  useEffect(() => { fetch('/data/radar.json', { cache: 'no-store' }).then(r => r.json()).then(d => { const l = (d.events ?? []) as Race[]; setLista(l); if (pedida.current) { const e = l.find(x => x.id === pedida.current); pedida.current = null; if (e) setAberta(e); } }).catch(() => setErro(true)); }, []);
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
   const mes = hoje.slice(0, 7);
   const vis = useMemo(() => {
