@@ -85,8 +85,9 @@ function ProTelas() {
   // aba vem do endereço (#feed, #comunidades/feminina…): atualizar mantém a tela; o voltar leva à Temporada e depois sai
   const [aba, setAbaEstado] = useState<Aba>(() => { const a = abaDoEndereco() ?? (conviteComunidade() ? 'comunidades' : 'temporada'); iniciarHistorico(a); return a; });
   const abaRef = useRef(aba); abaRef.current = aba;
+  const fecharCamadas = useRef<() => boolean>(() => false); // fecha perfil/assessoria/notificações abertos por cima
   const setAba = useCallback((a: Aba) => {
-    if (a === abaRef.current) return;
+    if (a === abaRef.current) { if (fecharCamadas.current()) window.scrollTo(0, 0); return; } // tocar na aba atual com algo aberto por cima: fecha e volta pra aba
     irParaAba(a, x => { setAbaEstado(x as Aba); window.scrollTo(0, 0); });
   }, []);
   useEffect(() => {
@@ -106,6 +107,7 @@ function ProTelas() {
     const s = telaInicialGeral('assessoria'); return s ? { tipo: 'assessoria', nome: s } : null;
   });
   useVoltar(!!aberto, () => setAberto(null), aberto ? `${aberto.tipo}/${aberto.nome}` : undefined);
+  fecharCamadas.current = () => { const algo = !!aberto || notifAberto; if (aberto) setAberto(null); if (notifAberto) setNotifAberto(false); return algo; };
   // ao abrir outro perfil por dentro de um perfil (lista de seguidores, equipe), volta pro topo
   const sobreRef = useRef<HTMLDivElement>(null);
   useEffect(() => { sobreRef.current?.scrollTo(0, 0); }, [aberto?.tipo, aberto?.nome]);
