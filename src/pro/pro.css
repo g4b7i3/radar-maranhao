@@ -629,3 +629,11 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-regras-lista li::before{content:counter(r);grid-row:span 2;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--cobalt-tint);color:var(--cobalt);font-weight:800;font-size:.85rem}
 .pro-regras-lista b{font-size:.95rem}
 .pro-regras-lista span{font-size:.9rem;line-height:1.4;color:var(--muted)}
+/* foto do perfil no topo da Temporada */
+.pro-foto-topo{display:flex;align-items:center;gap:12px;padding:2px 2px 0}
+.pro-foto-topo-av{position:relative;flex:none;padding:0;border:0;background:none;border-radius:50%;cursor:pointer}
+.pro-foto-topo-av .pro-avatar,.pro-foto-topo-av img{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--cobalt)}
+.pro-foto-topo-cam{position:absolute;right:-2px;bottom:-2px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--cobalt);color:#fff;border:2px solid var(--surface)}
+.pro-foto-topo>div{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:0}
+.pro-foto-topo b{font-size:1.05rem}
+.pro-foto-topo .btn{padding-left:0;min-height:30px}

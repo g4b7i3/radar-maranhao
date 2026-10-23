@@ -54,7 +54,7 @@ async function reduzir(arq: File): Promise<Blob> {
 }
 
 /** Escolher ou trocar a foto do perfil. */
-export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil' }: { perfil: Perfil; pronto: () => void; titulo?: string }) {
+export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil', compacto }: { perfil: Perfil; pronto: () => void; titulo?: string; compacto?: boolean }) {
   const entrada = useRef<HTMLInputElement>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
@@ -75,10 +75,24 @@ export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil' }: { perfi
       // apaga a foto anterior
       const antiga = perfil.foto_url?.split('/avatares/')[1];
       if (antiga && antiga !== caminho) sb.storage.from('avatares').remove([decodeURIComponent(antiga)]).catch(() => null);
-      setMsg('Salvo!'); pronto();
+      setMsg('Foto salva!'); pronto();
     } catch { setMsg('Não deu para enviar a foto agora. Tente de novo.'); }
     setEnviando(false);
   };
+  if (compacto) return (
+    <section className="pro-foto-topo">
+      <button className="pro-foto-topo-av" disabled={enviando} onClick={() => entrada.current?.click()} aria-label={perfil.foto_url ? 'Trocar foto do perfil' : 'Escolher foto do perfil'}>
+        <Avatar foto={perfil.foto_url} apelido={perfil.apelido} tam={64} />
+        <span className="pro-foto-topo-cam" aria-hidden="true"><Camera size={14} /></span>
+      </button>
+      <div>
+        <b>@{perfil.apelido}</b>
+        <button className="btn text pro-btn-p" disabled={enviando} onClick={() => entrada.current?.click()}>{enviando ? 'Enviando…' : perfil.foto_url ? 'Trocar foto' : 'Colocar foto'}</button>
+        {msg && <small className={msg === 'Foto salva!' ? 'pro-ok' : 'ct-erro'} role="status">{msg}</small>}
+      </div>
+      <input ref={entrada} type="file" accept="image/*" hidden onChange={e => { escolher(e.target.files?.[0]); e.target.value = ''; }} />
+    </section>
+  );
   return (
     <section className="pro-card pro-foto-conta">
       <p className="pro-k cinza">{titulo}</p>

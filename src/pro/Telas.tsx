@@ -124,7 +124,7 @@ function Medalhas({ meds }: { meds: string[] }) {
 }
 
 /* ───────── 3 · Minha temporada ───────── */
-export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp: Temporada; irCorri: () => void }) {
+export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Perfil; temp: Temporada; irCorri: () => void; fotoMudou?: () => void }) {
   const [res, setRes] = useState<Resultado[] | null>(null);
   const [card, setCard] = useState<string | null>(null);
   const [quem, setQuem] = useState<string | null>(null);
@@ -144,6 +144,7 @@ export function TelaTemporada({ perfil, temp, irCorri }: { perfil: Perfil; temp:
 
   return (
     <div className="pro-cont">
+      <FotoConta perfil={perfil} pronto={() => fotoMudou?.()} compacto />
       <section className="pro-card azul">
         <div className="pro-linha"><p className="pro-k">Seu índice</p><SeloLiga liga={liga} /></div>
         <p className="pro-big">{temp.indice == null ? '–' : <Contador valor={Number(temp.indice)} fmt={pct} />}</p>
