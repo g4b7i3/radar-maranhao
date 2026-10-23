@@ -602,14 +602,6 @@ export default function App() {
       )}
 
       <div className={rolou ? 'fabs rolou' : 'fabs'}>
-        {!escolhendo && !semFabTreino && <div className="euvou-wrap">
-          <button className="euvou-fechar" onClick={() => setSemFabTreino(true)} aria-label="Fechar o botão do card do treino" data-umami-event="Card do treino: fechou o botão"><X size={12} strokeWidth={3} aria-hidden="true" /></button>
-          <a className="euvou-fab treino-fab" href="/?card=treino" title="Monte o card do seu treino (distância, ritmo, tempo e zona) para os stories" data-umami-event="Card do treino: botão flutuante"><Activity size={18} aria-hidden="true" /><span><b>Meu treino</b><small>Card pro seu story</small></span></a>
-        </div>}
-        {!escolhendo && !semFabCard && <div className="euvou-wrap">
-          <button className="euvou-fechar" onClick={() => setSemFabCard(true)} aria-label="Fechar o botão do card" data-umami-event="Eu vou: fechou o botão"><X size={12} strokeWidth={3} aria-hidden="true" /></button>
-          <button className="euvou-fab" onClick={comecarEuVou} title="Monte um card com a sua foto e a prova que você vai correr, para postar nos stories" data-umami-event="Eu vou: botão flutuante"><PartyPopper size={18} aria-hidden="true" /><span><b>Eu vou!</b><small>Card pro seu story</small></span></button>
-        </div>}
       <a className="insta-fab" data-umami-event="Instagram (botão flutuante)" href="https://www.instagram.com/radarcorridasma/" target="_blank" rel="noopener noreferrer" aria-label="Siga o Radar no Instagram: @radarcorridasma" title="@radarcorridasma no Instagram"><Instagram size={22} aria-hidden="true" /></a>
       </div>
       <InstallPrompt blocked={!!selected} onInstalled={onInstalled} />
