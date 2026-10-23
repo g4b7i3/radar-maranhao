@@ -806,8 +806,12 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-membro-on{background:#dcfce7;color:#166534}
 
 /* ───── Aniversariantes do mês ───── */
-.pro-aniver{padding:14px 12px 10px}
-.pro-aniver-tit{margin:0 4px 8px;font-weight:800;font-size:1rem;display:flex;align-items:center;gap:8px}
+.pro-aniver{padding:4px 8px}
+.pro-aniver-tit{width:100%;margin:0;padding:10px 6px;border:0;background:none;font:inherit;color:inherit;cursor:pointer;font-weight:800;font-size:1rem;display:flex;align-items:center;gap:8px;text-align:left}
+.pro-aniver-tit em{font-style:normal;font-size:.75rem;font-weight:800;padding:2px 8px;border-radius:999px;background:#fff4cf;color:#8a5a00}
+.pro-aniver-seta{margin-left:auto;color:var(--muted);transition:transform .2s ease;flex:none}
+.pro-aniver-seta.virado{transform:rotate(180deg)}
+.pro-aniver ul{padding-bottom:8px!important}
 .pro-aniver-tit small{font-size:.75rem;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--cobalt-tint,#e9eefc);color:var(--cobalt)}
 .pro-aniver ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
 .pro-aniver li{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 4px;border-radius:14px}

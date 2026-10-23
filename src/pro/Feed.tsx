@@ -1,7 +1,7 @@
 // Feed "Aconteceu no Radar": provas verificadas, Rei/Rainha da prova e duelos, com a foto de cada atleta.
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
 import { useEffect, useMemo, useState } from 'react';
-import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag } from 'lucide-react';
+import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
@@ -128,13 +128,21 @@ const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julh
 function Aniversariantes() {
   const [lista, setLista] = useState<Aniver[] | null>(null);
   const [todos, setTodos] = useState(false);
+  const [aberto, setAberto] = useState(() => { try { return localStorage.getItem('radar-aniver-aberto') === '1'; } catch { return false; } });
+  const trocar = () => { const v = !aberto; setAberto(v); try { localStorage.setItem('radar-aniver-aberto', v ? '1' : '0'); } catch { /* */ } };
   useEffect(() => { sb.rpc('radar_aniversariantes').then(({ data }) => setLista((data ?? []) as Aniver[])); }, []);
   if (!lista?.length) return null;
   const mes = MESES[new Date(Date.now() - 3 * 3600_000).getUTCMonth()];
   const vis = todos ? lista : lista.slice(0, 5);
   return (
     <section className="pro-card pro-aniver">
-      <p className="pro-aniver-tit">🎂 Aniversariantes de {mes} <small>{lista.length}</small></p>
+      <button className="pro-aniver-tit" onClick={trocar} aria-expanded={aberto}>
+        <span>🎂 Aniversariantes de {mes}</span>
+        <small>{lista.length}</small>
+        {lista.some(a => a.hoje) && <em>{lista.filter(a => a.hoje).length} hoje 🎉</em>}
+        <ChevronDown size={18} aria-hidden="true" className={'pro-aniver-seta' + (aberto ? ' virado' : '')} />
+      </button>
+      {aberto && <>
       <ul>
         {vis.map(a => (
           <li key={a.apelido} className={a.hoje ? 'hoje' : ''}>
@@ -147,6 +155,7 @@ function Aniversariantes() {
         ))}
       </ul>
       {lista.length > 5 && <button className="btn text pro-btn-p" onClick={() => setTodos(!todos)}>{todos ? 'Ver menos' : `Ver todos (${lista.length})`}</button>}
+      </>}
     </section>
   );
 }
