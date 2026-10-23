@@ -880,3 +880,5 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-segue-lista .pro-seguir{flex:none}
 .pro-pub-topo .pro-segue-lista,.pro-pub-topo .pro-segue-lista a,.pro-pub-topo .pro-segue-lista .pro-sub{color:var(--ink)}
 .pro-pub-topo .pro-segue-lista .pro-sub{opacity:.75}
+.pro-pub-topo .pro-pub-ass{text-decoration:underline;text-underline-offset:3px;font-weight:inherit}
+.pro-pub-topo .pro-segue-lista .pro-segue-mais{color:var(--azul,#1d3fbf);font-weight:700;font-size:14px;text-decoration:none;margin-top:4px}

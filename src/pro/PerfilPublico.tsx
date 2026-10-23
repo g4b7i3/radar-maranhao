@@ -26,7 +26,7 @@ function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
 
 export default function PerfilPublico({ apelido }: { apelido: string }) {
   const [d, setD] = useState<Dados | null | undefined>(undefined);
-  const [lista, setLista] = useState<'seguidores' | 'seguindo' | null>(null);
+  const [lista, setLista] = useState<'seguidores' | 'seguindo' | 'equipe' | null>(null);
   const [todas, setTodas] = useState(false);
   const [painel, setPainel] = useState(false);
   const online = useOnline(apelido.toLowerCase());
@@ -64,14 +64,14 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
           <Avatar foto={d.foto} apelido={d.apelido} tam={112} />
           <p className="pro-medio">@{d.apelido}</p>
           {d.logado && !d.eu && <p className={'pro-status' + (online ? ' on' : '')}><i aria-hidden="true" />{online ? 'Online agora' : 'Offline'}</p>}
-          <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? <> · <a href={linkAssessoria(d.assessoria)}>{d.assessoria}</a></> : ''}</p>
+          <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? <> · <button type="button" className={'pro-pub-seg pro-pub-ass' + (lista === 'equipe' ? ' on' : '')} aria-expanded={lista === 'equipe'} onClick={() => setLista(l => l === 'equipe' ? null : 'equipe')}>{d.assessoria}</button></> : ''}</p>
           {d.bio && <p className="pro-pub-bio">{d.bio}</p>}
           <p className="pro-pub-social">
             <button type="button" className={'pro-pub-seg' + (lista === 'seguidores' ? ' on' : '')} aria-expanded={lista === 'seguidores'} onClick={() => setLista(l => l === 'seguidores' ? null : 'seguidores')}><b>{d.seguidores}</b> {d.seguidores === 1 ? 'seguidor' : 'seguidores'}</button>
             {' · '}
             <button type="button" className={'pro-pub-seg' + (lista === 'seguindo' ? ' on' : '')} aria-expanded={lista === 'seguindo'} onClick={() => setLista(l => l === 'seguindo' ? null : 'seguindo')}><b>{d.seguindo}</b> seguindo</button>
           </p>
-          {lista && <ListaSegue apelido={d.apelido} tipo={lista} logado={d.logado} />}
+          {lista === 'equipe' && d.assessoria ? <ListaEquipe nome={d.assessoria} /> : lista && lista !== 'equipe' ? <ListaSegue apelido={d.apelido} tipo={lista} logado={d.logado} /> : null}
           <div className="pro-linha pro-pub-acoes">
             {d.logado && !d.eu && <Seguir apelido={d.apelido} sigo={d.sigo} mudou={v => setD(x => x ? { ...x, sigo: v, seguidores: x.seguidores + (v ? 1 : -1) } : x)} />}
             {d.logado && !d.eu && <Aplauso alvo={`perfil:${d.apelido}`} reacoes={d.reacoes} minha={d.minha} />}
@@ -162,6 +162,24 @@ function ListaSegue({ apelido, tipo, logado }: { apelido: string; tipo: 'seguido
             ))}
           </ul>}
       {r && r.ocultos > 0 && <p className="pro-sub pro-sem-margem">+ {r.ocultos} com perfil privado</p>}
+    </div>
+  );
+}
+
+type AtletaEq = { apelido: string; foto: string | null; cidade: string; pontos: number; provas: number };
+/** Todos da mesma assessoria/grupo, ao tocar no nome da equipe. */
+function ListaEquipe({ nome }: { nome: string }) {
+  const [at, setAt] = useState<AtletaEq[] | null>(null);
+  useEffect(() => { setAt(null); sb.rpc('radar_assessoria_publica', { p_nome: nome }).then(({ data }) => setAt(((data as { atletas?: AtletaEq[] } | null)?.atletas) ?? [])); }, [nome]);
+  return (
+    <div className="pro-segue-lista">
+      <p className="pro-k cinza">{nome}{at ? ` · ${at.length} ${at.length === 1 ? 'atleta' : 'atletas'}` : ''}</p>
+      {!at ? <p className="pro-sub pro-sem-margem">Carregando…</p>
+        : !at.length ? <p className="pro-sub pro-sem-margem">Ninguém com perfil público nessa equipe.</p>
+        : <ul>{at.map(a => (
+            <li key={a.apelido}><a href={linkPerfil(a.apelido)}><Avatar foto={a.foto} apelido={a.apelido} tam={40} /><span><b>@{a.apelido}</b><small>{a.cidade}{a.provas ? ` · ${a.provas} ${a.provas === 1 ? 'prova' : 'provas'} · ${a.pontos} pts` : ''}</small></span></a></li>
+          ))}</ul>}
+      <a className="pro-segue-mais" href={linkAssessoria(nome)}>Ver página da equipe →</a>
     </div>
   );
 }
