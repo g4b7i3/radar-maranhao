@@ -660,3 +660,15 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-pub-chave.on .pro-pub-trilho span{transform:translateX(18px)}
 .pro-pub-chave.on small{color:var(--cobalt)}
 @media (prefers-reduced-motion:reduce){.pro-pub-trilho,.pro-pub-trilho span{transition:none}}
+.pro-comun-nova{width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.pro-comun-nova small{opacity:.7;font-weight:500}
+.pro-comun-form textarea{width:100%;font:inherit;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#d6dbe4);resize:vertical}
+.pro-comun-form-topo{align-items:flex-end;gap:10px}
+.pro-comun-form-topo .ct-cidade{flex:1}
+.pro-comun-form-topo .pro-comun-emoji-campo{flex:0 0 76px}
+.pro-comun-emoji-campo input{text-align:center;font-size:1.3rem}
+.pro-comun-cores{display:flex;gap:10px;margin:6px 0 10px}
+.pro-comun-cores button{width:34px;height:34px;border-radius:50%;border:2px solid #c9ced8;cursor:pointer}
+.pro-comun-cores button[aria-pressed="true"]{border:3px solid var(--cobalt);box-shadow:0 0 0 2px #fff inset}
+.pro-check{display:flex;align-items:center;gap:8px;margin:6px 0 10px;font-weight:600;font-size:.95rem;cursor:pointer}
+.pro-check input{width:20px;height:20px;accent-color:var(--cobalt)}

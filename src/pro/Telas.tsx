@@ -1067,6 +1067,7 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
 type AreaAdm = { perfil: Perfil & { criado_em?: string }; email: string | null; valida_ate: string | null; resultados: (Resultado & { user_id: string })[]; medalhas: { medalha: string; temporada: number; resultado_id: string | null }[]; pagamentos: { status: string; valor: number; criado_em: string }[]; pedidos: { nome: string; data: string; cidade: string; status: string; prova_id?: string | null }[]; duelos: number };
 export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => void; aviso: (m: string) => void }) {
   const [d, setD] = useState<AreaAdm | null>(null);
+  const [editar, setEditar] = useState(false);
   const carregar = () => chamar<AreaAdm>('radar-acoes', { acao: 'admin_usuario', user_id: uid }).then(r => r.erro ? aviso(r.erro) : setD(r));
   useEffect(() => { carregar(); }, [uid]);
   if (!d) return <section className="pro-card"><p className="fine">Carregando a área do atleta…</p></section>;
@@ -1101,7 +1102,9 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
         <p className="pro-sub pro-sem-margem">{p.nome_completo}</p>
         <p className="pro-sub pro-sem-margem">{p.sexo === 'F' ? 'Feminino' : 'Masculino'} · {idade} anos · {p.cidade}{p.assessoria ? ` · ${p.assessoria}` : ''}</p>
         <div className="pro-tags"><span className={`pro-st ${st.cls}`}>{st.txt}</span>{p.publico === false && <span className="pro-st dec">Perfil privado</span>}</div>
+        {!editar && <button className="btn outline pro-adm-btn" onClick={() => setEditar(true)}><Pencil size={16} aria-hidden="true" />Editar perfil</button>}
       </section>
+      {editar && <AdminEditarPerfil p={p} fechar={() => setEditar(false)} salvou={() => { setEditar(false); aviso('Perfil atualizado.'); carregar(); }} />}
       <section className="pro-card">
         <p className="pro-k cinza">Contato e conta</p>
         <p className="pro-sem-margem">{d.email ?? 'sem e-mail'}</p>
@@ -1136,6 +1139,40 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
       </section>
       {d.pedidos.length > 0 && <section className="pro-card"><p className="pro-k cinza">Provas pedidas</p><ul className="pro-provas">{d.pedidos.map((x, i) => <li key={i}><b>{x.nome}</b><p>{dataBR(x.data)} · {x.cidade} · {x.status}</p></li>)}</ul></section>}
     </>
+  );
+}
+
+/** Admin: edita qualquer campo do perfil de qualquer pessoa (o servidor só aceita do admin). */
+function AdminEditarPerfil({ p, fechar, salvou }: { p: Perfil; fechar: () => void; salvou: () => void }) {
+  const [f, setF] = useState({ apelido: p.apelido, nome_completo: p.nome_completo, cidade: p.cidade, sexo: p.sexo, nascimento: p.nascimento, assessoria: p.assessoria ?? '', whatsapp: p.whatsapp ? zapMascara(p.whatsapp) : '', publico: p.publico !== false });
+  const [msg, setMsg] = useState<string | null>(null);
+  const [indo, setIndo] = useState(false);
+  const muda = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
+  const salvar = async () => {
+    setIndo(true); setMsg(null);
+    const { data, error } = await sb.rpc('radar_admin_perfil_editar', { p_user: p.user_id, p_dados: { ...f, apelido: f.apelido.trim().toLowerCase() } });
+    setIndo(false);
+    const r = (data ?? {}) as { erro?: string };
+    if (error || r.erro) return setMsg(r.erro ?? 'Não deu para salvar agora.');
+    salvou();
+  };
+  return (
+    <section className="pro-card">
+      <p className="pro-k cinza">Editar perfil de @{p.apelido}</p>
+      <label className="ct-cidade">Apelido<input value={f.apelido} maxLength={20} onChange={muda('apelido')} autoCapitalize="none" /></label>
+      <label className="ct-cidade">Nome completo<input value={f.nome_completo} maxLength={120} onChange={muda('nome_completo')} /></label>
+      <label className="ct-cidade">Cidade<input list="adm-cidades" value={f.cidade} onChange={muda('cidade')} /><datalist id="adm-cidades">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
+      <label className="ct-cidade">Assessoria <small>(vazio = sem assessoria)</small><input value={f.assessoria} maxLength={60} onChange={muda('assessoria')} /></label>
+      <div className="pro-linha pro-quebra">
+        <label className="ct-cidade">Sexo<select value={f.sexo} onChange={muda('sexo')}><option value="F">Feminino</option><option value="M">Masculino</option></select></label>
+        <label className="ct-cidade">Nascimento<input type="date" value={f.nascimento} onChange={muda('nascimento')} /></label>
+      </div>
+      <label className="ct-cidade">WhatsApp<input inputMode="tel" value={f.whatsapp} onChange={muda('whatsapp')} placeholder="(98) 98765-4321" /></label>
+      <label className="pro-check"><input type="checkbox" checked={f.publico} onChange={e => setF({ ...f, publico: e.target.checked })} /> Perfil público</label>
+      {msg && <p className="ct-erro" role="alert">{msg}</p>}
+      <div className="pro-linha pro-quebra"><button className="btn solid" disabled={indo} onClick={salvar}>{indo ? 'Salvando…' : 'Salvar alterações'}</button><button className="btn text" disabled={indo} onClick={fechar}>Cancelar</button></div>
+      <p className="fine pro-sem-margem">Sem limite de edições para você. Trocar o apelido muda o link do perfil e leva junto as reações.</p>
+    </section>
   );
 }
 

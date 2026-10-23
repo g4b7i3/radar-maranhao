@@ -251,7 +251,7 @@ function ProTelas() {
       {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} fotoMudou={recarregar} />}
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pro={pro} assinar={irAssinar} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
-      {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} />}
+      {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'provas' && <TelaProvas />}
       {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
