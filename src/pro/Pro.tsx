@@ -304,6 +304,26 @@ export function Travado({ tela, perfil, assinar }: { tela: 'temporada' | 'corri'
   );
 }
 
+/* ───────── Vitrine: fotos dos atletas passando + quantos já estão no Radar (número real) ───────── */
+function Vitrine() {
+  const [d, setD] = useState<{ total: number; fotos: { foto: string; apelido: string }[] } | null>(null);
+  useEffect(() => { sb.rpc('radar_vitrine').then(({ data }) => { if (data) setD(data as typeof d); }); }, []);
+  if (!d || d.total < 1) return null;
+  const dez = Math.floor(d.total / 10) * 10;
+  const txt = d.total < 10 || d.total === dez ? `${d.total} atletas inscritos` : `Mais de ${dez} atletas inscritos`;
+  const fotos = d.fotos.length >= 4 ? d.fotos : [];
+  return (
+    <section className="pro-vitrine" aria-label={`${txt} até o momento`}>
+      {fotos.length > 0 && <div className="pro-vitrine-faixa" aria-hidden="true">
+        <div className="pro-vitrine-trilho" style={{ animationDuration: `${Math.max(18, fotos.length * 2.2)}s` }}>
+          {[...fotos, ...fotos].map((f, i) => <img key={i} src={f.foto} alt="" loading="lazy" decoding="async" />)}
+        </div>
+      </div>}
+      <p><b>{txt}</b> até o momento</p>
+    </section>
+  );
+}
+
 /* ───────── 1 · Convite + login ───────── */
 function Convite() {
   const [email, setEmail] = useState('');
@@ -341,6 +361,7 @@ function Convite() {
         <h1>Sua corrida<br />vira <span>temporada.</span></h1>
         <p>Cada prova soma pontos, medalhas e te leva para a liga do seu nível.</p>
       </section>
+      <Vitrine />
       <ol className="pro-lista">
         <li><i>1</i><span><b>Seu nível e sua liga</b><small>Bronze, Prata, Ouro ou Elite, pela nota por idade.</small></span></li>
         <li><i>2</i><span><b>Medalhas e pontos</b><small>Toda prova que você corre entra na sua estante.</small></span></li>
