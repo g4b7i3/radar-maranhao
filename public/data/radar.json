@@ -43,7 +43,7 @@
         5,
         10
       ],
-      "location": "São Luís Shopping (a confirmar)",
+      "location": "São Luís Shopping · Av. Prof. Carlos Cunha, 1000, Jaracaty",
       "registrationOpen": null,
       "registrationClose": "2026-10-23",
       "status": "Abertas",
@@ -51,17 +51,88 @@
       "sourceUrl": "https://www.maranhaoesportes.com/santander-night-run-movimenta-sao-luis-com-corrida-noturna/",
       "sourceName": "Maranhão Esportes",
       "publishedAt": "2026-09-25",
-      "confidence": "Notícia + site oficial",
-      "notes": "Corrida noturna. Inscrições abertas no site oficial. Kit em 23/10 (10h–19h) e 24/10 (10h–15h) na Centauro do Shopping da Ilha. Local de largada informado como São Luís Shopping, ainda a confirmar. Segundo o Maranhão Esportes, troféus para os três primeiros (masculino e feminino) nas duas distâncias e medalha para quem concluir.",
+      "confidence": "Site oficial + página de inscrição (Running Land)",
+      "notes": "Corrida noturna, largada única às 20h no São Luís Shopping (Jaracaty), segundo a página de inscrição na Running Land ligada ao site oficial. Percursos de 5 e 10 km publicados no Google My Maps. Kit em 23/10 (10h–19h) e 24/10 (10h–15h) na Centauro do Shopping da Ilha. Kit Night R$ 169,99; meia-inscrição R$ 79,99. Segundo o Maranhão Esportes, troféus para os três primeiros (masculino e feminino) nas duas distâncias e medalha para todos.",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Troféus para os 3 primeiros no masculino e no feminino nos 5 e nos 10 km; medalha para quem concluir (segundo o Maranhão Esportes; regulamento não aberto)."
       },
-      "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "elevation": {
+        "level": "plano",
+        "gain": 45,
+        "km": 9.93,
+        "profile": [
+          11,
+          13,
+          13,
+          12,
+          11,
+          9,
+          11,
+          14,
+          18,
+          17,
+          13,
+          12,
+          12,
+          10,
+          9,
+          9,
+          9,
+          9,
+          10,
+          14,
+          15,
+          12,
+          10,
+          11,
+          13,
+          15,
+          12,
+          15,
+          15,
+          9,
+          5,
+          6,
+          11,
+          14,
+          13,
+          11,
+          13,
+          13,
+          11,
+          11,
+          13,
+          15,
+          13,
+          10,
+          9,
+          8,
+          9,
+          10,
+          11,
+          12,
+          12,
+          16,
+          18,
+          16,
+          13,
+          11,
+          11,
+          12,
+          12,
+          12
+        ],
+        "routeUrl": "https://www.google.com/maps/d/viewer?mid=1Tnr_RrGnuql64azzZksdn2JpVkkgajE",
+        "summary": "Percurso oficial de 10 km (Google My Maps da organização), plano: altitude entre 5 e 18 m, com altitudes do Open-Meteo."
+      },
+      "price": {
+        "min": 79.99,
+        "text": "R$ 169,99 (meia-inscrição R$ 79,99)"
+      },
+      "start": "20:00",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -325,16 +396,19 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30 na Beira Rio, na Concha Acústica. Distâncias de 3, 5 e 10 km, mais kids (cerca de 500 m); categorias PcD e trabalhadores do transporte. Inscrições pelo Inscrição Fácil (inscricaofacil.com/sestsenat2026); prazo não informado. Regulamento: percurso será divulgado pela organização.",
+      "notes": "Largada às 6h30 na Beira Rio, na Concha Acústica. Distâncias de 3, 5 e 10 km, mais kids (cerca de 500 m); categorias PcD e trabalhadores do transporte. Inscrições pelo Inscrição Fácil (inscricaofacil.com/sestsenat2026); o regulamento cita lote único de 26/08 a 20/09 (datas sujeitas a alteração): R$ 70 público geral, R$ 35 dependentes, crianças e idosos, gratuito para titulares do transporte e PcD. Regulamento: percurso será divulgado pela organização.",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Regulamento: troféus do 1º ao 3º lugar no geral, categoria Transporte e faixas etárias dos 5 e 10 km (PcD: 1º e 2º); 3 km só medalha. Sem dinheiro."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 35,
+        "text": "R$ 70 (idosos e crianças R$ 35; transporte/PcD grátis)"
+      },
       "start": "06:30",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -358,16 +432,19 @@
       "sourceName": "SA Crono",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h. Premiação em dinheiro nos 5 km (R$ 500, 300 e 200); os 3 km são de participação.",
+      "notes": "Largada às 6h. Premiação em dinheiro nos 5 km (R$ 500, 300 e 200); os 3 km são de participação. Regulamento: lote promocional R$ 85, 1º lote R$ 95 (desde 20/07), 2º R$ 110 (desde 20/08) e 3º R$ 120 (desde 20/09), sempre + taxa; 60+ e PcD pagam 50% do último lote.",
       "prize": {
         "kind": "dinheiro",
         "top": 500,
         "summary": "R$ 500, R$ 300 e R$ 200 para os 3 primeiros dos 5 km (os 3 km são de participação)."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 120,
+        "text": "R$ 120 + taxa (3º lote); 60+ e PcD pagam 50%"
+      },
       "start": "06:00",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -503,7 +580,7 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Também tem caminhada. Distâncias segundo o running.life.",
+      "notes": "Largada às 6h30. Também tem caminhada. Distâncias segundo o running.life. Regulamento: 1º lote de 01/08 a 10/09/2026 por R$ 90 (valor atual não divulgado); limite de 700 atletas.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -512,7 +589,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -536,16 +613,19 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30.",
+      "notes": "Largada às 6h30. Regulamento: R$ 80 para o público geral (550 vagas, desde 01/09); 300 vagas gratuitas para servidores e acadêmicos da UEMASUL mediante doação de um pacote de fraldas geriátricas.",
       "prize": {
         "kind": "dinheiro",
         "top": 300,
         "summary": "Regulamento: público geral masc. e fem. R$ 300, 250 e 150; troféu e medalha aos 3 primeiros de cada categoria (servidores, acadêmicos, público geral); troféus por faixa etária."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 80,
+        "text": "R$ 80 (servidores e alunos UEMASUL: doação)"
+      },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -713,16 +793,19 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Também tem caminhada de 3 km. Atenção: no mesmo dia há a III Corrida Hiper Farma, outra prova em Açailândia.",
+      "notes": "Largada às 6h30. Também tem caminhada de 3 km. Atenção: no mesmo dia há a III Corrida Hiper Farma, outra prova em Açailândia. Regulamento: inscrição R$ 98 + 1 kg de alimento ou produto de limpeza; cooperados Sicoob Oeste Maranhense têm 40% de desconto.",
       "prize": {
         "kind": "dinheiro",
         "top": 1000,
         "summary": "Regulamento: só nos 5 km. Geral e Local (Açailândia), masc. e fem.: R$ 1.000, 800, 600, 400 e 200 em PIX + troféu."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 98,
+        "text": "R$ 98 + 1 kg de alimento (cooperados: 40% off)"
+      },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -810,16 +893,19 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista.",
+      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto.",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Regulamento: troféu do 1º ao 3º lugar da comunidade geral nos 5 km, masc. e fem."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 90,
+        "text": "R$ 90 + taxa"
+      },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1078,23 +1164,26 @@
       ],
       "location": "Local a confirmar",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-11-15",
       "status": "Consultar",
       "officialUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra.",
+      "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra. Regulamento: inscrições presenciais e pela internet até 15/11/2026 às 12h (300 vagas), R$ 100; kit e chip na loja Top Sport em 18 e 19/11.",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Regulamento: troféus aos 3 primeiros no geral e por faixa etária, masc. e fem."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 100,
+        "text": "R$ 100"
+      },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1363,16 +1452,19 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Distâncias segundo o running.life.",
+      "notes": "Largada às 6h30. Distâncias segundo o running.life. Regulamento: R$ 100, 1.500 inscrições pela Topchip.",
       "prize": {
         "kind": "trofeu",
         "top": null,
         "summary": "Regulamento: troféu + brindes do 1º ao 5º no geral dos 5 e 10 km; troféus do 1º ao 5º por faixa etária. Sem dinheiro."
       },
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 100,
+        "text": "R$ 100"
+      },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -2713,12 +2805,12 @@
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Listada pelo Road Runners com cronometragem da Topchip, mas não aparece no calendário atual da Topchip (que já mostra a edição 2027, em 08/08/2027) e a página da prova não abriu. Distâncias, horário e local não informados: confirmar se a edição 2026 vai acontecer. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
+      "notes": "Listada pelo Road Runners com cronometragem da Topchip, mas não aparece no calendário atual da Topchip (que já mostra a edição 2027, em 08/08/2027) e a página da prova não abriu. Distâncias, horário e local não informados: confirmar se a edição 2026 vai acontecer. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\"). Em 23/10 a página do running.life que listava a Salvar Vidas passou a mostrar a Corrida SEST SENAT (mesmo dia e cidade, também da Topchip): pode ter sido substituída, mas nenhuma fonte oficial confirma.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-23T13:38:20.653Z",
       "firstSeenAt": "2026-10-16T11:55:03.983Z"
     },
     {
@@ -3173,6 +3265,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "d463c4c7-d643-4426-b9ea-20da20eb2530",
+      "eventId": "negro-cosme-2026-imperatriz",
+      "version": "[\"2026-11-20\",[5],\"Local a confirmar\",null,\"2026-11-15\",\"Consultar\",\"https://topchip.com.br/ii-corrida-da-consciencia-negra\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-23T13:38:20.653Z",
+      "notifiedAt": "2026-10-23T13:38:48.112Z"
+    },
+    {
+      "id": "5be8fcf5-f888-44d4-853f-df45549d743c",
+      "eventId": "night-run-2026-sao-luis",
+      "version": "[\"2026-10-24\",[5,10],\"São Luís Shopping · Av. Prof. Carlos Cunha, 1000, Jaracaty\",null,\"2026-10-23\",\"Abertas\",\"https://www.nightrun.com.br/sao-luis\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-23T13:38:20.653Z",
+      "notifiedAt": "2026-10-23T13:38:48.112Z"
+    },
     {
       "id": "20d4ca84-f9e3-48d3-846c-080e4269d072",
       "eventId": "movimente-se-4-2026-nova-iorque",
@@ -4718,7 +4826,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-23T13:19:43.298Z",
+  "lastChecked": "2026-10-23T13:38:20.653Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
