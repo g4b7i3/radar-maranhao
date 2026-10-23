@@ -4,6 +4,7 @@
 // Calcula aqui no servidor a nota por idade, os pontos e as medalhas, para ninguém mexer pelo navegador.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { acharNoOficial, gravarOficiais, lerLink, lerOficiais, parecenca, semelhante, conferirRegistros, norm as normNome, type Lido } from '../_comum/resultados.ts';
+import { lerComIA, type LeituraIA } from '../_comum/ia.ts';
 const UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO','EX'];
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -178,6 +179,12 @@ Deno.serve(async req => {
     if (achado.outroAtleta) return resp({ erro: 'Recusado: esse número de peito é de outro atleta no resultado oficial.' }, 400);
     oficial = achado.of;
   }
+  // 1c) Link que o Radar não conhece (página, PDF, imagem): leitura com IA, aceita só se tudo conferir
+  let viaIA: LeituraIA | null = null;
+  if (!oficial && link && !gratis && !linkLido) {
+    try { viaIA = await lerComIA(link, { nomePerfil: perfil.nome_completo, nomeInscricao: nomeIns || null, peito, km, dataProva: prova.date.slice(0, 10), nomeProva: prova.name }); } catch { viaIA = null; }
+    if (viaIA) oficial = { tempo_s: viaIA.tempo_s, colocacao_geral: null, colocacao_faixa: null, nome: viaIA.nome }; // pódio só com cronometragem conhecida
+  }
 
   const tempo = oficial ? oficial.tempo_s : Math.round(Number(b.tempo_s));
   if (!(tempo > 0)) return resp({ erro: ofs?.length ? 'Não achamos você no resultado oficial. Confira o nome da inscrição e o número de peito, ou informe o tempo.' : 'Informe o tempo líquido (do chip).' }, 400);
@@ -199,6 +206,11 @@ Deno.serve(async req => {
   let motivo: string | null = oficial ? null : gratis ? 'Verificar com o resultado oficial é do Radar Pro. Assine para validar esta prova.' : link ? (linkLido ? 'O Radar leu o resultado, mas não achou o seu nome/peito: conferir.' : 'Comprovante enviado: aguardando aprovação.') : null;
   if (!oficial && !gratis && n > 80) { status = 'em_analise'; motivo = 'Nota por idade acima de 80%: precisa do resultado oficial.'; }
   if (!oficial && !gratis && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
+  if (viaIA) {
+    motivo = `Verificado por leitura automática do link (${viaIA.fonte}).`;
+    if (n > 80) { status = 'em_analise'; motivo = 'Leitura automática com nota acima de 80%: o Radar confere.'; }
+    else if (melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Leitura automática com melhora de mais de 8%: o Radar confere.'; }
+  }
 
   // 3) Pontos
   const temporada = Number(prova.date.slice(0, 4));
