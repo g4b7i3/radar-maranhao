@@ -772,3 +772,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro .pro-camp-card.com-foto .pro-camp-nome{font-size:2.3rem;text-shadow:0 4px 18px rgba(0,0,0,.45)}
 .pro .pro-camp-card.com-foto .pro-sub{text-shadow:0 2px 8px rgba(0,0,0,.4)}
 .pro .pro-camp-topo{cursor:default;min-height:260px}
+.pro-comun-criador{margin-top:6px!important;padding:0 16px}

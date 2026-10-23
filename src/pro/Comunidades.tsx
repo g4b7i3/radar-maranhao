@@ -2,14 +2,14 @@
 // "Elas correm" e "Eles correm" entram pelo sexo do perfil (sem pedido, sem lista de membros). As outras, qualquer um entra e sai.
 import { useEffect, useRef, useState } from 'react';
 import { Check, ImagePlus, Lock, LogOut, Pencil, Plus, UsersRound } from 'lucide-react';
-import { sb, ADMIN_EMAIL, type Perfil } from './sb';
+import { sb, type Perfil } from './sb';
 import { reduzirFoto } from './Foto';
 import { conviteComunidade } from './Pro';
 import { ItemFeed, Publicar, type Evento } from './Feed';
 import { useVoltar, telaInicial } from './voltar';
 import { TopoVoltar } from './Topo';
 
-type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; foto?: string | null; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
+type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; foto?: string | null; criador?: string | null; minha?: boolean; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
 
 export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfil: Perfil; pro: boolean; assinar: () => void; admin?: boolean }) {
   const [criando, setCriando] = useState(false);
@@ -51,9 +51,9 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
   };
   return (
     <div className="pro-cont">
-      {admin && (criando
-        ? <FormComunidade fechar={() => setCriando(false)} salvou={() => { setCriando(false); carregar(); }} />
-        : <button className="btn outline pro-comun-nova" onClick={() => setCriando(true)}><Plus size={16} aria-hidden="true" />Nova comunidade <small>(só você vê)</small></button>)}
+      {criando
+        ? <FormComunidade admin={admin} fechar={() => setCriando(false)} salvou={() => { setCriando(false); carregar(); }} />
+        : <button className="btn outline pro-comun-nova" onClick={() => setCriando(true)}><Plus size={16} aria-hidden="true" />Criar uma comunidade</button>}
       {lista === null && <p className="fine">Carregando…</p>}
       {minhas.length > 0 && <><p className="pro-k cinza"><UsersRound size={14} aria-hidden="true" /> Suas comunidades</p><div className="pro-comun">{minhas.map(c => <Card key={c.id} c={c} />)}</div></>}
       {outras.length > 0 && <><p className="pro-k cinza">Para entrar</p><div className="pro-comun">{outras.map(c => <Card key={c.id} c={c} />)}</div></>}
@@ -80,9 +80,10 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair, admin, mudou: m
           <div><p className="pro-k"><Lock size={12} aria-hidden="true" /> Comunidade fechada</p><p className="pro-comun-nome">{c.nome}</p></div>
         </div>
         <p className="pro-sub pro-sem-margem">{c.descricao}</p>
-        {admin && !editando && <button className="btn text pro-btn-p" onClick={() => setEditando(true)}><Pencil size={14} aria-hidden="true" />Editar comunidade</button>}
+        {c.criador && <p className="fine pro-sem-margem pro-comun-criador">Criada por @{c.criador}</p>}
+        {(admin || c.minha) && !editando && <button className="btn text pro-btn-p" onClick={() => setEditando(true)}><Pencil size={14} aria-hidden="true" />Editar comunidade</button>}
       </section>
-      {admin && editando && <FormComunidade c={c} fechar={() => setEditando(false)} salvou={d => { setEditando(false); mudouCom(d ? { ...c, ...d } : null); }} />}
+      {(admin || c.minha) && editando && <FormComunidade admin={admin} c={c} fechar={() => setEditando(false)} salvou={d => { setEditando(false); mudouCom(d ? { ...c, ...d } : null); }} />}
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} comunidade={{ id: c.id, nome: c.nome }} dica={`Publicar em ${c.nome}…`} />
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       {lista === null && !erro && <p className="fine">Carregando…</p>}
@@ -95,15 +96,15 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair, admin, mudou: m
 
 const CORES = ['#dbe8ff', '#ffe1ec', '#dff5e6', '#fff1cc', '#ece3ff', '#ffe4d1'];
 /** Admin: cria ou edita uma comunidade (o servidor confere se é o admin). */
-function FormComunidade({ c, fechar, salvou }: { c?: Comunidade; fechar: () => void; salvou: (d?: { nome: string; descricao: string; emoji: string; cor: string; foto: string | null } | null) => void }) {
-  const [f, setF] = useState({ nome: c?.nome ?? '', descricao: c?.descricao ?? '', emoji: c?.emoji ?? '👥', cor: c?.cor ?? CORES[0], avisar: true, foto: c?.foto ?? '' });
+function FormComunidade({ c, fechar, salvou, admin = false }: { c?: Comunidade; admin?: boolean; fechar: () => void; salvou: (d?: { nome: string; descricao: string; emoji: string; cor: string; foto: string | null } | null) => void }) {
+  const [f, setF] = useState({ nome: c?.nome ?? '', descricao: c?.descricao ?? '', emoji: c?.emoji ?? '👥', cor: c?.cor ?? CORES[0], avisar: admin, foto: c?.foto ?? '' });
   const [subindo, setSubindo] = useState(false);
   const entrada = useRef<HTMLInputElement>(null);
   const escolherFoto = async (arq?: File) => {
     if (!arq) return; setSubindo(true); setMsg(null);
     try {
       const { data: { user } } = await sb.auth.getUser();
-      if (!user || user.email !== ADMIN_EMAIL) throw new Error('Só o administrador.');
+      if (!user) throw new Error('Faça login.');
       const blob = await reduzirFoto(arq, 900, .8);
       const caminho = `${user.id}/comunidade-${Date.now()}.jpg`;
       const { error } = await sb.storage.from('posts').upload(caminho, blob, { contentType: 'image/jpeg', cacheControl: '31536000', upsert: false });
@@ -116,7 +117,7 @@ function FormComunidade({ c, fechar, salvou }: { c?: Comunidade; fechar: () => v
   const [indo, setIndo] = useState(false);
   const salvar = async () => {
     setIndo(true); setMsg(null);
-    const { data, error } = await sb.rpc('radar_admin_comunidade_salvar', { p_dados: { id: c?.id ?? null, ...f } });
+    const { data, error } = await sb.rpc('radar_comunidade_salvar', { p_dados: { id: c?.id ?? null, ...f } });
     setIndo(false);
     const r = (data ?? {}) as { erro?: string; avisados?: number };
     if (error || r.erro) return setMsg(r.erro ?? 'Não deu para salvar agora.');
@@ -125,13 +126,14 @@ function FormComunidade({ c, fechar, salvou }: { c?: Comunidade; fechar: () => v
   };
   const apagar = async () => {
     if (!c || !confirm(`Tirar "${c.nome}" do ar? Ninguém mais vê a comunidade (as publicações ficam guardadas).`)) return;
-    setIndo(true); const { data } = await sb.rpc('radar_admin_comunidade_apagar', { p_id: c.id }); setIndo(false);
+    setIndo(true); const { data } = await sb.rpc('radar_comunidade_apagar', { p_id: c.id }); setIndo(false);
     if ((data as { erro?: string })?.erro) return setMsg((data as { erro: string }).erro);
     salvou(null);
   };
   return (
     <section className="pro-card pro-comun-form">
-      <p className="pro-k cinza">{c ? 'Editar comunidade' : 'Nova comunidade'}</p>
+      <p className="pro-k cinza">{c ? 'Editar comunidade' : 'Criar uma comunidade'}</p>
+      {!c && <p className="fine pro-sem-margem">Qualquer atleta pode criar: grupo de treino, assessoria, bairro, amigos de prova. Você entra automaticamente e pode editar ou tirar do ar quando quiser (até 2 comunidades por pessoa).</p>}
       <div className="pro-linha pro-comun-form-topo">
         <label className="ct-cidade pro-comun-emoji-campo">Emoji<input value={f.emoji} maxLength={8} onChange={e => setF({ ...f, emoji: e.target.value })} /></label>
         <label className="ct-cidade">Nome<input value={f.nome} maxLength={40} onChange={e => setF({ ...f, nome: e.target.value })} placeholder="Ex.: Corredores de Imperatriz" /></label>
@@ -150,7 +152,7 @@ function FormComunidade({ c, fechar, salvou }: { c?: Comunidade; fechar: () => v
         <input ref={entrada} type="file" accept="image/*" hidden onChange={e => { escolherFoto(e.target.files?.[0]); e.target.value = ''; }} />
       </div>
       <div className="pro-comun-cores" role="group" aria-label="Cor">{CORES.map(cor => <button key={cor} type="button" aria-label={`Cor ${cor}`} aria-pressed={f.cor === cor} style={{ background: cor }} onClick={() => setF({ ...f, cor })} />)}</div>
-      {!c && <label className="pro-check"><input type="checkbox" checked={f.avisar} onChange={e => setF({ ...f, avisar: e.target.checked })} /> Avisar todo mundo no sininho</label>}
+      {!c && admin && <label className="pro-check"><input type="checkbox" checked={f.avisar} onChange={e => setF({ ...f, avisar: e.target.checked })} /> Avisar todo mundo no sininho</label>}
       {msg && <p className="ct-erro" role="alert">{msg}</p>}
       <div className="pro-linha pro-quebra">
         <button className="btn solid" disabled={indo} onClick={salvar}>{indo ? 'Salvando…' : c ? 'Salvar' : 'Criar comunidade'}</button>

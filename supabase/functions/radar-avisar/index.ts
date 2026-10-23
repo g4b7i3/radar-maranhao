@@ -59,6 +59,51 @@ async function enviarPush(priv: CryptoKey, sub: { endpoint: string; p256dh: stri
   return r.status;
 }
 
+// E-mail de convite para quem tem conta e ainda não assinou (tipo 'convite_pro'): o corpo do aviso é a saudação
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const CONVITE_PRO = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;padding:0;background:#eef1f7">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:24px 12px"><tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:22px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#0f1a33">
+  <tr><td style="background:#0a1240;background-image:linear-gradient(160deg,#1d3fbf 0%,#0a1240 70%);padding:34px 28px 30px">
+    <p style="margin:0;font-size:12px;letter-spacing:3px;font-weight:700;color:#ffd34d">RADAR PRO · CORRIDAS MA</p>
+    <h1 style="margin:14px 0 0;font-size:34px;line-height:1.05;color:#ffffff;font-weight:900">Sua corrida já pode<br><span style="color:#ffd34d">valer ponto.</span></h1>
+    <p style="margin:14px 0 0;font-size:16px;line-height:1.5;color:#dfe6ff">{{SAUDACAO}}</p>
+  </td></tr>
+  <tr><td style="padding:26px 28px 6px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d1840;border-radius:18px;border:2px solid #f2c94c">
+      <tr><td style="padding:18px 20px">
+        <p style="margin:0;font-size:11px;letter-spacing:2px;font-weight:700;color:#ffd34d">EDIÇÃO LIMITADA</p>
+        <p style="margin:6px 0 0;font-size:20px;font-weight:800;color:#ffffff">🏅 Medalha Fundador</p>
+        <p style="margin:6px 0 0;font-size:14px;line-height:1.45;color:#dfe6ff">Só quem assinar até <b style="color:#ffd34d">31/12/2026</b> leva. Depois, ninguém mais conquista: ela fica para sempre no perfil dos primeiros.</p>
+        <p style="margin:10px 0 0"><span style="display:inline-block;background:#3a3410;color:#ffd34d;font-weight:800;font-size:12px;padding:4px 12px;border-radius:999px">{{FALTAM}}</span></p>
+      </td></tr>
+    </table>
+  </td></tr>
+  <tr><td style="padding:18px 28px 0">
+    <p style="margin:0 0 10px;font-size:16px;font-weight:800">Com o Pro você:</p>
+    <p style="margin:0 0 9px;font-size:15px;line-height:1.45">✅ Tem as provas <b>desde 15/10</b> contando no ranking</p>
+    <p style="margin:0 0 9px;font-size:15px;line-height:1.45">🏆 Disputa a <b>Pré-temporada 2027</b>: Liga Maranhense e Copa da Constância</p>
+    <p style="margin:0 0 9px;font-size:15px;line-height:1.45">🎯 Tem sua <b>nota por idade</b>, liga e prova verificada no resultado oficial</p>
+    <p style="margin:0 0 9px;font-size:15px;line-height:1.45">⚔️ Desafia amigos em <b>duelos</b> e entra no pelotão do seu nível</p>
+    <p style="margin:0;font-size:15px;line-height:1.45">🇧🇷 Coleciona <b>mais de 100 medalhas</b> e acende seu mapa do Brasil</p>
+  </td></tr>
+  <tr><td style="padding:22px 28px 6px" align="center">
+    <p style="margin:0;font-size:14px;color:#55607a">Só</p>
+    <p style="margin:0;font-size:44px;font-weight:900;color:#1d3fbf;line-height:1">R$ 10<span style="font-size:16px;color:#55607a;font-weight:700">/mês</span></p>
+    <p style="margin:6px 0 0;font-size:14px;color:#55607a">No Pix, sem fidelidade. Menos que uma inscrição de 5 km.</p>
+  </td></tr>
+  <tr><td style="padding:18px 28px 30px" align="center">
+    <a href="https://radarcorridasma.com.br/pro/" style="display:inline-block;background:#f2b705;background-image:linear-gradient(180deg,#ffe08a,#f2b705);color:#1d1400;font-size:18px;font-weight:900;text-decoration:none;padding:16px 34px;border-radius:999px">Ativar meu Radar Pro →</a>
+  </td></tr>
+  <tr><td style="background:#f5f7fb;padding:18px 28px">
+    <p style="margin:0;font-size:12px;line-height:1.5;color:#7a8499">Você recebe este e-mail porque criou sua conta no Radar Corridas MA, a rede social do corredor maranhense. Não quer mais receber? É só responder com "sair".</p>
+  </td></tr>
+</table>
+</td></tr></table>
+</body></html>
+`;
+
 Deno.serve(async req => {
   const interno = req.headers.get('x-radar-interno') ?? '';
   if (!interno || (interno !== Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') && interno !== Deno.env.get('RADAR_INTERNO'))) return resp({ erro: 'Sem permissão.' }, 403);
@@ -91,8 +136,9 @@ Deno.serve(async req => {
       } catch (e) { erroPush.push(String(e).slice(0, 120)); }
     }
     const email = emails.get(a.user_id);
-    if (resend && email && ['renovacao', 'resultado_verificado', 'admin_resumo'].includes(a.tipo)) {
-      const html = `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;color:#0f1a33"><p style="font-size:12px;letter-spacing:2px;color:#1D3FBF;font-weight:700">RADAR PRO · CORRIDAS MA</p><h2 style="margin:8px 0 12px">${a.titulo}</h2><p style="font-size:16px;line-height:1.5">${a.corpo}</p><p style="margin:24px 0"><a href="${a.url ?? 'https://radarcorridasma.com.br/?pro'}" style="background:#1D3FBF;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:700">Abrir o Radar Pro</a></p><p style="font-size:12px;color:#667">Você recebe este e-mail porque tem conta no Radar Pro. radarcorridasma.com.br</p></div>`;
+    if (resend && email && ['renovacao', 'resultado_verificado', 'admin_resumo', 'convite_pro'].includes(a.tipo)) {
+      const dias = Math.max(0, Math.ceil((new Date('2027-01-01T03:00:00Z').getTime() - Date.now()) / 86400_000));
+      const html = a.tipo === 'convite_pro' ? CONVITE_PRO.replace('{{SAUDACAO}}', esc(a.corpo)).replace('{{FALTAM}}', dias === 1 ? 'Último dia' : `Faltam ${dias} dias`) : `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:24px;color:#0f1a33"><p style="font-size:12px;letter-spacing:2px;color:#1D3FBF;font-weight:700">RADAR PRO · CORRIDAS MA</p><h2 style="margin:8px 0 12px">${a.titulo}</h2><p style="font-size:16px;line-height:1.5">${a.corpo}</p><p style="margin:24px 0"><a href="${a.url ?? 'https://radarcorridasma.com.br/?pro'}" style="background:#1D3FBF;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:700">Abrir o Radar Pro</a></p><p style="font-size:12px;color:#667">Você recebe este e-mail porque tem conta no Radar Pro. radarcorridasma.com.br</p></div>`;
       try {
         const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${resend}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: remetente, to: [email], subject: a.titulo, html }) });
         if (r.ok) mail++; else erroEmail = `${r.status} ${(await r.text()).slice(0, 200)}`;
