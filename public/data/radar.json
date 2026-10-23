@@ -3137,9 +3137,50 @@
       "start": "05:30",
       "verifiedAt": "2026-10-22T10:56:46.652Z",
       "firstSeenAt": "2026-10-21T20:24:12.739Z"
+    },
+    {
+      "id": "movimente-se-4-2026-nova-iorque",
+      "name": "4ª Corrida Movimente-se",
+      "edition": "4ª edição",
+      "city": "Nova Iorque",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-22",
+      "distances": [
+        3,
+        5,
+        10
+      ],
+      "location": "Praia do Caju, Nova Iorque",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://runtra.com.br/eventos/4a-edicao-corrida-movimente-se",
+      "sourceUrl": "https://runtra.com.br/eventos/4a-edicao-corrida-movimente-se",
+      "sourceName": "Runtra",
+      "publishedAt": null,
+      "confidence": "Fonte única: plataforma de inscrição (Runtra)",
+      "notes": "Corrida do Grupo Movimente-se, tema \"Energia que conecta e transforma!\". Largada às 6h na Praia do Caju. 3 km (corrida e caminhada), 5 km e 10 km. Kit com camisa, medalha, número de peito e brindes. Inscrições limitadas, pela Runtra (lote de abertura). A página fala em premiação para os melhores colocados, sem detalhar. Organização: Guilherme Junqueira. Retirada de kit a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "price": {
+        "min": 65.89,
+        "text": "R$ 65,89 (lote de abertura)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-10-23T13:19:43.298Z",
+      "firstSeenAt": "2026-10-23T13:19:43.298Z"
     }
   ],
   "changes": [
+    {
+      "id": "20d4ca84-f9e3-48d3-846c-080e4269d072",
+      "eventId": "movimente-se-4-2026-nova-iorque",
+      "version": "[\"2026-11-22\",[3,5,10],\"Praia do Caju, Nova Iorque\",null,null,\"Abertas\",\"https://runtra.com.br/eventos/4a-edicao-corrida-movimente-se\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-23T13:19:43.298Z",
+      "notifiedAt": null
+    },
     {
       "id": "bd7a81e4-1716-4400-94d4-2fd222ea0c03",
       "eventId": "uema-viii-2026-sao-luis",
@@ -4677,7 +4718,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-23T10:52:13.092Z",
+  "lastChecked": "2026-10-23T13:19:43.298Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
