@@ -17,7 +17,10 @@ import { TelaProvas } from './Provas';
 import { PushConvite } from './Push';
 import { terminarConexaoStrava } from './Strava';
 import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
-import { useVoltar, iniciarHistorico, irParaAba, abaDepoisDoVoltar, lerEndereco } from './voltar';
+import { useVoltar, iniciarHistorico, irParaAba, abaDepoisDoVoltar, lerEndereco, telaInicialGeral } from './voltar';
+import { TopoVoltar } from './Topo';
+import PerfilPublico from './PerfilPublico';
+import AssessoriaPublica from './Assessoria';
 import './pro.css';
 
 const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
@@ -92,6 +95,21 @@ function ProTelas() {
   const [resgatando, setResgatando] = useState(() => !!codigoCortesia());
   const [notifAberto, setNotifAberto] = useState(false);
   useVoltar(notifAberto, () => setNotifAberto(false));
+  // perfil de atleta e página de assessoria abrem dentro do app (seta e voltar do celular trazem de volta)
+  const [aberto, setAberto] = useState<{ tipo: 'atleta' | 'assessoria'; nome: string } | null>(() => {
+    const a = telaInicialGeral('atleta'); if (a) return { tipo: 'atleta', nome: a };
+    const s = telaInicialGeral('assessoria'); return s ? { tipo: 'assessoria', nome: s } : null;
+  });
+  useVoltar(!!aberto, () => setAberto(null), aberto ? `${aberto.tipo}/${aberto.nome}` : undefined);
+  const abrirLinkInterno = (ev: React.MouseEvent) => {
+    const a = (ev.target as HTMLElement).closest('a'); if (!a || ev.defaultPrevented || ev.metaKey || ev.ctrlKey) return;
+    let u: URL; try { u = new URL(a.href); } catch { return; }
+    if (u.hostname !== location.hostname && u.hostname !== 'radarcorridasma.com.br') return;
+    const at = u.searchParams.get('atleta'), as = u.searchParams.get('assessoria');
+    if (!at && !as) return;
+    ev.preventDefault();
+    setAberto(at ? { tipo: 'atleta', nome: at.toLowerCase() } : { tipo: 'assessoria', nome: as! });
+  };
   // abertura: logo grande reluzindo, uma vez por abertura do app (1,5 s), depois entra
   const [abertura, setAbertura] = useState(() => { try { return !sessionStorage.getItem('radar-abertura'); } catch { return true; } });
   const [aberturaMin, setAberturaMin] = useState(false);
@@ -209,7 +227,7 @@ function ProTelas() {
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
   return (
-    <main className="pro">
+    <main className="pro" onClickCapture={abrirLinkInterno}>
       {telaAbertura}
       {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Pré-temporada 2027' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
@@ -238,6 +256,10 @@ function ProTelas() {
       {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
+      {aberto && <div className="pro-sobre" role="dialog" aria-label={aberto.tipo === 'atleta' ? `Perfil de @${aberto.nome}` : aberto.nome}>
+        <TopoVoltar titulo={aberto.tipo === 'atleta' ? `@${aberto.nome}` : aberto.nome} voltar={() => setAberto(null)} />
+        {aberto.tipo === 'atleta' ? <PerfilPublico key={aberto.nome} apelido={aberto.nome} /> : <AssessoriaPublica key={aberto.nome} nome={aberto.nome} />}
+      </div>}
       {aba === 'admin' && admin && <TelaAdmin />}
     </main>
   );

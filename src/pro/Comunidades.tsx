@@ -5,6 +5,7 @@ import { ArrowLeft, Lock, LogOut, UsersRound } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { ItemFeed, Publicar, type Evento } from './Feed';
 import { useVoltar, telaInicial } from './voltar';
+import { TopoVoltar } from './Topo';
 
 type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
 
@@ -49,7 +50,7 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair }: { c: Comunida
   const mudou = (ap: string) => (s: boolean) => setSigo(prev => { const n = new Set(prev); if (s) n.add(ap); else n.delete(ap); return n; });
   return (
     <div className="pro-cont">
-      <div className="pro-linha"><button className="btn text pro-esq" onClick={voltar}><ArrowLeft size={16} aria-hidden="true" />Comunidades</button>{c.tipo === 'aberta' && <button className="btn text pro-btn-p" onClick={() => { if (confirm(`Sair de ${c.nome}?`)) sair(); }}><LogOut size={14} aria-hidden="true" />Sair</button>}</div>
+      <TopoVoltar titulo={c.nome} voltar={voltar} direita={c.tipo === 'aberta' ? <button className="btn text pro-btn-p" onClick={() => { if (confirm(`Sair de ${c.nome}?`)) sair(); }}><LogOut size={14} aria-hidden="true" />Sair</button> : undefined} />
       <section className="pro-card">
         <div className="pro-comun-topo"><span className="pro-comun-emoji" style={{ '--cor': c.cor } as React.CSSProperties} aria-hidden="true">{c.emoji}</span><div><p className="pro-k cinza"><Lock size={12} aria-hidden="true" /> Comunidade fechada</p><p className="pro-comun-nome">{c.nome}</p></div></div>
         <p className="pro-sub pro-sem-margem">{c.descricao}</p>

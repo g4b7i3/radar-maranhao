@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown } from 'lucide-react';
+import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown, ArrowLeft } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
 import { RadarFundo, BandeiraMA } from './HeroRadar';
@@ -614,7 +614,7 @@ export default function App() {
 /** Mesmo formato de endereço das páginas geradas em scripts/paginas-cidades.mjs */
 const slugCidade = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void }) {
+export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar, seta }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void; seta?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const [card, setCard] = useState(startCard);
   useEffect(() => {
@@ -638,7 +638,7 @@ export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSav
   return (
     <div className="scrim" onClick={onClose}>
       <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabIndex={-1} ref={ref} onClick={ev => ev.stopPropagation()}>
-        <button className="close" onClick={onClose} aria-label="Fechar"><X size={20} /></button>
+        {seta ? <button className="close seta" onClick={onClose} aria-label="Voltar"><ArrowLeft size={22} /></button> : <button className="close" onClick={onClose} aria-label="Fechar"><X size={20} /></button>}
         <p className="sheet-kind">{e.modality === 'Rua' ? 'Corrida de rua' : 'Trail'}, edição {e.edition}</p>
         <h2 id="sheet-title">{e.name}</h2>
         <div className="sheet-when">

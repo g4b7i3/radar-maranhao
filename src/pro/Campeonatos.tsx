@@ -4,6 +4,7 @@ import { Trophy, ChevronRight, ArrowLeft, Check, CalendarDays, Footprints, Scrol
 import { sb, linkPerfil, type Perfil } from './sb';
 import { Avatar } from './Foto';
 import { useVoltar, telaInicial } from './voltar';
+import { TopoVoltar } from './Topo';
 
 type Camp = { id: string; nome: string; rotulo: string | null; premio: string | null; descricao: string | null; temporada: number; inicio: string; fim: string; melhores: number; tipo: 'etapas' | 'constancia'; provas: number; realizadas: number; atletas: number };
 type Linha = { sexo: 'F' | 'M'; posicao: number; apelido: string; cidade: string; foto: string | null; pontos: number; provas: number; cidades: number; sequencias: number; eu: boolean | null };
@@ -53,7 +54,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
   const feitas = (provas ?? []).filter(p => p.oficiais > 0), proximas = (provas ?? []).filter(p => p.data >= hoje && p.oficiais === 0);
   return (
     <div className="pro-cont">
-      <button className="btn text pro-esq" onClick={voltar}><ArrowLeft size={16} aria-hidden="true" />Campeonatos</button>
+      <TopoVoltar titulo={c.nome} voltar={voltar} />
       <section className="pro-card azul">
         <p className="pro-k">{c.tipo === 'constancia' ? <Footprints size={14} aria-hidden="true" /> : <Trophy size={14} aria-hidden="true" />} {c.rotulo ?? `Campeonato ${c.temporada}`}</p>
         <p className="pro-camp-nome">{c.nome}{/\b20\d\d\b/.test(c.nome) ? '' : ` ${c.temporada}`}</p>

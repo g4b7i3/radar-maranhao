@@ -35,6 +35,12 @@ export function telaInicial(aba: string): string | null {
   const s = subInicial.sub; subInicial = null; return s;
 }
 
+/** Tela aberta por cima de qualquer aba (ex.: "atleta/zima"), lida no carregamento. */
+export function telaInicialGeral(prefixo: string): string | null {
+  if (!subInicial?.sub.startsWith(prefixo + '/')) return null;
+  const s = subInicial.sub.slice(prefixo.length + 1); subInicial = null; return s;
+}
+
 /** Troca de aba sem empilhar: qualquer aba fica logo acima da Temporada. */
 export function irParaAba(a: string, aplicar: (a: string) => void) {
   const d = prof();

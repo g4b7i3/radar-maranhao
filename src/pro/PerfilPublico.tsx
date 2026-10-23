@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Crown, Share2 } from 'lucide-react';
-import { sb, LIGAS, pct, relogio, kmTxt, dataBR, type Liga } from './sb';
+import { sb, LIGAS, pct, relogio, kmTxt, dataBR, type Liga, linkPerfil } from './sb';
 import { GRUPOS, MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
 import './pro.css';
 import { Avatar } from './Foto';
@@ -44,7 +44,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
   const ganhas = MEDALHAS.filter(m => tem.has(m.id)).sort((a, b) => ordem.indexOf(a.tier) - ordem.indexOf(b.tier));
   const ligaInfo = d.liga ? LIGAS.find(l => l.id === d.liga) : null;
   const compartilhar = async () => {
-    const url = window.location.href;
+    const url = linkPerfil(d.apelido);
     if (navigator.share) { try { await navigator.share({ title: `@${d.apelido} no Radar Pro`, url }); return; } catch { /* */ } }
     try { await navigator.clipboard.writeText(url); alert('Link copiado.'); } catch { /* */ }
   };

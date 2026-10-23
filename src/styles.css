@@ -993,3 +993,6 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .anuncie-slot small { margin-top: 3px; font-size: .46rem; color: #f4c46a; letter-spacing: .08em; text-transform: uppercase; text-align: center; line-height: 1.15; max-width: 60px; }
 .anuncie-fine { margin: 6px 2px 2px; font-size: .66rem; color: rgb(244 239 230 / .4); text-align: right; }
 @media (prefers-reduced-motion: reduce) { .anuncie-btn, .anuncie-btn span { transition: none; } }
+/* ficha aberta dentro do Radar Pro: seta de voltar à esquerda, como no Instagram */
+.close.seta { right: auto; left: 8px; color: var(--ink); }
+.sheet:has(.close.seta) { padding-top: calc(max(16px, env(safe-area-inset-top)) + 52px); }

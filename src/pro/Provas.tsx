@@ -69,7 +69,7 @@ export function TelaProvas() {
         </section>
       ))}
       <p className="fine pro-centro">É a mesma agenda do Radar: {lista?.length ?? '…'} provas do Maranhão, conferidas todo dia. Toque numa prova pra ver kit, largada, percurso e clima.</p>
-      {aberta && <Sheet race={aberta} clima={previsoes[aberta.id]} saved={salvas.includes(aberta.id)} onClose={() => setAberta(null)} onSave={() => salvar(aberta)} onCalendar={() => icsFor([aberta])} />}
+      {aberta && <Sheet race={aberta} clima={previsoes[aberta.id]} saved={salvas.includes(aberta.id)} onClose={() => setAberta(null)} onSave={() => salvar(aberta)} onCalendar={() => icsFor([aberta])} seta />}
     </div>
   );
 }
