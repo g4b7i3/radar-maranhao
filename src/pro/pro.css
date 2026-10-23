@@ -703,3 +703,15 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-vitrine p b{color:var(--cobalt);font-weight:800}
 @keyframes pro-vitrine-anda{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.pro-vitrine-trilho{animation:none}}
+
+.pro-fundador{display:flex;align-items:center;gap:14px;padding:16px;border-radius:22px;color:#fff;background:radial-gradient(120% 140% at 0% 0%,#2a3f9e 0%,#121c55 55%,#0a1036 100%);box-shadow:0 0 0 1.5px rgba(255,211,77,.55),0 18px 36px -18px rgba(10,16,54,.8);position:relative;overflow:hidden}
+.pro-fundador::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,224,138,.18) 45%,transparent 60%);transform:translateX(-100%);animation:pro-fundador-brilho 4.5s ease-in-out 1s infinite}
+.pro-fundador-med{flex:none;filter:drop-shadow(0 8px 16px rgba(255,190,40,.35))}
+.pro-fundador>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pro-fundador-k{margin:0;font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#ffd34d}
+.pro-fundador>div>b{font-size:1.12rem;font-weight:800;line-height:1.15}
+.pro-fundador>div>span{font-size:.88rem;line-height:1.35;color:rgba(255,255,255,.85)}
+.pro-fundador>div>span b{color:#ffd34d}
+.pro-fundador small{align-self:flex-start;margin-top:4px;padding:3px 10px;border-radius:999px;background:rgba(255,211,77,.16);color:#ffd34d;font-weight:800;font-size:.75rem}
+@keyframes pro-fundador-brilho{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@media (prefers-reduced-motion:reduce){.pro-fundador::after{animation:none}}

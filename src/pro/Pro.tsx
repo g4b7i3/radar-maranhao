@@ -13,6 +13,7 @@ import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
 import { TelaCampeonatos } from './Campeonatos';
 import { TelaComunidades } from './Comunidades';
+import { MEDALHAS as LISTA_MEDALHAS, medalhaSVG } from './medalhas';
 import { TelaProvas } from './Provas';
 import { PushConvite } from './Push';
 import { terminarConexaoStrava } from './Strava';
@@ -324,6 +325,26 @@ function Vitrine() {
   );
 }
 
+/* ───────── Medalha Fundador: só quem assinar até 31/12/2026 (some sozinho em 2027) ───────── */
+const FIM_FUNDADOR = new Date('2027-01-01T03:00:00Z');
+function ChamadaFundador() {
+  const agora = Date.now();
+  if (agora >= FIM_FUNDADOR.getTime()) return null;
+  const m = LISTA_MEDALHAS.find(x => x.id === 'fundador');
+  const dias = Math.ceil((FIM_FUNDADOR.getTime() - agora) / 86400_000);
+  return (
+    <section className="pro-fundador">
+      {m && <span className="pro-fundador-med" aria-hidden="true" dangerouslySetInnerHTML={{ __html: medalhaSVG(m, true, 84) }} />}
+      <div>
+        <p className="pro-fundador-k">Edição limitada</p>
+        <b>Conquiste a medalha Fundador</b>
+        <span>Só quem assinar o Radar Pro até <b>31/12/2026</b> leva. Depois disso, ninguém mais conquista: ela fica para sempre no perfil dos primeiros.</span>
+        <small>{dias === 1 ? 'Último dia' : `Faltam ${dias} dias`}</small>
+      </div>
+    </section>
+  );
+}
+
 /* ───────── 1 · Convite + login ───────── */
 function Convite() {
   const [email, setEmail] = useState('');
@@ -379,6 +400,7 @@ function Convite() {
               <p className="pro-oferta-sub2">Anual R$ 96 (2 meses grátis) · Assessoria R$ 150 para até 20 alunos</p>
             </div>
           </div>}
+      {!comunidade && !cortesia && <ChamadaFundador />}
       {modo === 'botoes' && <>
         <button className="btn solid pro-btn pro-cta" onClick={google}><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" /><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" /><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" /></svg>Entrar com Google</button>
         <p className="fine pro-centro pro-aviso-google">A tela do Google mostra o endereço <b>xsijphfxcorjsuxiewch.supabase.co</b>: é o servidor do Radar, pode seguir. O Google só passa seu nome, foto e e-mail.</p>
