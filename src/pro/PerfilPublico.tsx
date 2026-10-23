@@ -10,6 +10,7 @@ import { Recordes } from './Recordes';
 import { MapaCidades } from './Mapa';
 import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
+import { useOnline } from './online';
 // painel do admin: só carrega quando o admin abre (não pesa no perfil público)
 const AreaAdmin = lazy(() => import('./Telas').then(m => ({ default: m.AdminUsuarioArea })));
 
@@ -27,6 +28,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
   const [d, setD] = useState<Dados | null | undefined>(undefined);
   const [todas, setTodas] = useState(false);
   const [painel, setPainel] = useState(false);
+  const online = useOnline(apelido.toLowerCase());
   const [msgAdm, setMsgAdm] = useState('');
   useEffect(() => {
     document.title = `@${apelido} · Radar Pro`;
@@ -60,6 +62,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
           <a href="/" className="pro-pub-marca">Radar Corridas MA · <b>PRO</b></a>
           <Avatar foto={d.foto} apelido={d.apelido} tam={112} />
           <p className="pro-medio">@{d.apelido}</p>
+          {d.logado && !d.eu && <p className={'pro-status' + (online ? ' on' : '')}><i aria-hidden="true" />{online ? 'Online agora' : 'Offline'}</p>}
           <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? <> · <a href={linkAssessoria(d.assessoria)}>{d.assessoria}</a></> : ''}</p>
           <p className="pro-pub-social"><b>{d.seguidores}</b> {d.seguidores === 1 ? 'seguidor' : 'seguidores'} · <b>{d.seguindo}</b> seguindo</p>
           <div className="pro-linha pro-pub-acoes">

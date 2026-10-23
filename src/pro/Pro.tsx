@@ -13,6 +13,7 @@ import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
 import { TelaCampeonatos } from './Campeonatos';
 import { TelaComunidades } from './Comunidades';
+import { iniciarPresenca } from './online';
 import { MEDALHAS as LISTA_MEDALHAS, medalhaSVG } from './medalhas';
 import { TelaProvas } from './Provas';
 import { PushConvite } from './Push';
@@ -222,6 +223,7 @@ function ProTelas() {
   if (!perfil.whatsapp) return <main className="pro">{topo('Falta só um dado')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, informe o seu WhatsApp. É por ele que o Radar fala com você sobre os seus resultados.</p><ZapConta perfil={perfil} pronto={recarregar} /></div></main>;
 
   const admin = sessao.user.email === ADMIN_EMAIL;
+  iniciarPresenca(); // online/offline (liga uma vez só)
   const pro = temp.assinante;
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 

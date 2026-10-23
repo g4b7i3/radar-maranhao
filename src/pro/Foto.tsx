@@ -2,13 +2,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { sb, type Perfil } from './sb';
+import { useOnline } from './online';
 
 
 /** Foto redonda do atleta (ou a inicial do apelido, se ainda não tiver foto). */
 export function Avatar({ foto, apelido, tam = 40 }: { foto?: string | null; apelido: string; tam?: number }) {
   const [erro, setErro] = useState(false);
-  if (foto && !erro) return <img className="pro-avatar" src={foto} alt="" width={tam} height={tam} loading="lazy" onError={() => setErro(true)} style={{ width: tam, height: tam }} />;
-  return <span className="pro-avatar pro-avatar-vazio" style={{ width: tam, height: tam, fontSize: tam * .42 }} aria-hidden="true">{(apelido || '?').slice(0, 1).toUpperCase()}</span>;
+  const on = useOnline(apelido);
+  const img = foto && !erro
+    ? <img className="pro-avatar" src={foto} alt="" width={tam} height={tam} loading="lazy" onError={() => setErro(true)} style={{ width: tam, height: tam }} />
+    : <span className="pro-avatar pro-avatar-vazio" style={{ width: tam, height: tam, fontSize: tam * .42 }} aria-hidden="true">{(apelido || '?').slice(0, 1).toUpperCase()}</span>;
+  if (!on) return img;
+  return <span className="pro-av-on" style={{ width: tam, height: tam }}>{img}<i style={{ width: Math.max(10, tam * .26), height: Math.max(10, tam * .26) }} title="Online agora" /></span>;
 }
 
 /** Busca as fotos de uma lista de apelidos (para os rankings). */

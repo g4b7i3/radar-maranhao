@@ -1,9 +1,9 @@
 // Comunidades: menu estilo WhatsApp. Cada uma é um feed fechado: só quem está dentro lê e publica.
 // "Elas correm" e "Eles correm" entram pelo sexo do perfil (sem pedido, sem lista de membros). As outras, qualquer um entra e sai.
 import { useEffect, useRef, useState } from 'react';
-import { Check, ImagePlus, Lock, LogOut, Pencil, Plus, Search, UsersRound } from 'lucide-react';
+import { Check, ChevronDown, ImagePlus, Lock, LogOut, Pencil, Plus, Search, UsersRound } from 'lucide-react';
 import { sb, type Perfil } from './sb';
-import { reduzirFoto } from './Foto';
+import { Avatar, reduzirFoto } from './Foto';
 import { conviteComunidade } from './Pro';
 import { ItemFeed, Publicar, type Evento } from './Feed';
 import { useVoltar, telaInicial } from './voltar';
@@ -96,6 +96,7 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair, admin, mudou: m
         {c.criador && <p className="fine pro-sem-margem pro-comun-criador">Criada por @{c.criador}</p>}
         {(admin || c.minha) && !editando && <button className="btn text pro-btn-p" onClick={() => setEditando(true)}><Pencil size={14} aria-hidden="true" />Editar comunidade</button>}
       </section>
+      <Membros c={c} />
       {(admin || c.minha) && editando && <FormComunidade admin={admin} c={c} fechar={() => setEditando(false)} salvou={d => { setEditando(false); mudouCom(d ? { ...c, ...d } : null); }} />}
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} comunidade={{ id: c.id, nome: c.nome }} dica={`Publicar em ${c.nome}…`} />
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
@@ -117,6 +118,34 @@ const IDEIAS: Ideia[] = [
   { emoji: '🏁', rotulo: 'Uma prova', desc: 'Quem vai correr essa prova: kit, carona, estratégia e fotos depois.' },
   { emoji: '👨‍👩‍👧', rotulo: 'Família e amigos', desc: 'A turma que corre junto: combina prova, treino e comemoração.' },
 ];
+
+type Membro = { apelido: string; foto: string | null; cidade: string; criador: boolean; online: boolean; eu: boolean };
+/** "Membros": fechado por padrão; toca e abre a lista (quem criou primeiro, depois quem está online). Toca de novo e fecha. */
+function Membros({ c }: { c: Comunidade }) {
+  const [aberto, setAberto] = useState(false);
+  const [lista, setLista] = useState<Membro[] | null>(null);
+  useEffect(() => { if (aberto && !lista) sb.rpc('radar_comunidade_membros_lista', { p_id: c.id }).then(({ data }) => setLista((data ?? []) as Membro[])); }, [aberto, c.id, lista]);
+  const on = (lista ?? []).filter(m => m.online).length;
+  return (
+    <section className="pro-card pro-membros">
+      <button className="pro-membros-cab" onClick={() => setAberto(!aberto)} aria-expanded={aberto}>
+        <UsersRound size={18} aria-hidden="true" /><b>Membros</b><span>{c.membros}{lista && on ? ` · ${on} online` : ''}</span>
+        <ChevronDown size={18} aria-hidden="true" className={aberto ? 'virado' : ''} />
+      </button>
+      {aberto && (lista === null ? <p className="fine">Carregando…</p> : <ul>
+        {lista.map(m => (
+          <li key={m.apelido}><a href={`/?atleta=${encodeURIComponent(m.apelido)}`}>
+            <Avatar foto={m.foto} apelido={m.apelido} tam={38} />
+            <span><b>{m.eu ? 'Você' : `@${m.apelido}`}</b><small>{m.cidade}</small></span>
+            {m.criador && <em className="pro-membro-tag">Criou</em>}
+            {m.online && <em className="pro-membro-on">Online</em>}
+          </a></li>
+        ))}
+        {!lista.length && <li className="fine">Ninguém com perfil público por aqui ainda.</li>}
+      </ul>)}
+    </section>
+  );
+}
 
 const CORES = ['#dbe8ff', '#ffe1ec', '#dff5e6', '#fff1cc', '#ece3ff', '#ffe4d1'];
 /** Admin: cria ou edita uma comunidade (o servidor confere se é o admin). */

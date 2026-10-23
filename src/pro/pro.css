@@ -777,3 +777,27 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-comun-ideias::-webkit-scrollbar{display:none}
 .pro-comun-ideias small{flex:none;font-size:.72rem;font-weight:700;color:var(--muted)}
 .pro-comun-ideias button{flex:none;font-size:.74rem;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--cobalt-tint,#e9eefc);color:var(--cobalt);border:0;cursor:pointer;white-space:nowrap}
+
+/* ───── Online ───── */
+.pro-av-on{position:relative;display:inline-block;flex:none;line-height:0}
+.pro-av-on>i{position:absolute;right:0;bottom:0;border-radius:50%;background:#22c55e;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.pro-status{display:inline-flex;align-items:center;gap:6px;margin:2px 0 0;font-size:.82rem;font-weight:700;color:rgba(255,255,255,.7)}
+.pro-status i{width:9px;height:9px;border-radius:50%;background:#9aa3b5}
+.pro-status.on{color:#bbf7d0}
+.pro-status.on i{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+
+/* ───── Membros da comunidade ───── */
+.pro-membros{padding:0;overflow:hidden}
+.pro-membros-cab{width:100%;display:flex;align-items:center;gap:10px;padding:14px 16px;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.pro-membros-cab b{font-weight:800}
+.pro-membros-cab span{margin-left:auto;color:var(--muted);font-size:.88rem;font-weight:700}
+.pro-membros-cab svg:last-child{transition:transform .2s ease;color:var(--muted)}
+.pro-membros-cab svg.virado{transform:rotate(180deg)}
+.pro-membros ul{list-style:none;margin:0;padding:0 8px 10px;border-top:1px solid var(--line)}
+.pro-membros li a{display:flex;align-items:center;gap:12px;padding:9px 8px;color:inherit;text-decoration:none;border-radius:12px}
+.pro-membros li a:hover{background:var(--cobalt-tint,#e9eefc)}
+.pro-membros li span{display:flex;flex-direction:column;min-width:0;flex:1}
+.pro-membros li small{color:var(--muted);font-size:.78rem}
+.pro-membros em{font-style:normal;font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:999px}
+.pro-membro-tag{background:#fff4cf;color:#8a5a00}
+.pro-membro-on{background:#dcfce7;color:#166534}
