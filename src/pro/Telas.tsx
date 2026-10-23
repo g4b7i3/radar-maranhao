@@ -1081,7 +1081,8 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
   const idade = Math.floor((Date.now() - new Date(p.nascimento + 'T12:00:00Z').getTime()) / (365.25 * 86400_000));
   const st = situacao({ valida_ate: d.valida_ate, cortesia: !!d.valida_ate && new Date(d.valida_ate).getFullYear() >= 2090 });
   const acao = async (corpo: Record<string, unknown>, ok: string) => { const r = await chamar('radar-acoes', corpo); aviso(r.erro ?? ok); carregar(); };
-  const liberar = (dias: number) => acao({ acao: 'admin_liberar', apelido: p.apelido, dias }, `+${dias} dias liberados para @${p.apelido}.`);
+  const liberar = (dias: number) => { if (confirm(`Liberar +${dias} dias de Pro para @${p.apelido}, sem pagamento?`)) acao({ acao: 'admin_liberar', apelido: p.apelido, dias }, `+${dias} dias liberados para @${p.apelido}.`); };
+  const tirarPro = async () => { if (!confirm(`Tirar o Pro de @${p.apelido}? A conta volta para o modo grátis.`)) return; const { data, error } = await sb.rpc('radar_admin_tirar_pro', { p_user: p.user_id }); aviso((data as { erro?: string })?.erro ?? (error ? 'Não deu agora.' : `@${p.apelido} voltou para o modo grátis.`)); carregar(); };
   // mensagens prontas para o WhatsApp, conforme a situação do atleta
   const primeiro = p.nome_completo.trim().split(/\s+/)[0].replace(/^./, c => c.toUpperCase());
   const oi = `Oi, ${primeiro}! Aqui é do Radar Corridas MA 🏃`;
@@ -1120,7 +1121,7 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
           <a className="btn outline" href={linkPerfil(p.apelido)} target="_blank" rel="noopener"><ExternalLink size={16} aria-hidden="true" />Perfil público</a>
         </div>
         {p.whatsapp && zapLimpo(p.whatsapp) && <div className="pro-msgs"><p className="fine pro-sem-margem">Mensagem pronta no WhatsApp:</p>{mensagens.map(m => <a key={m.nome} className="btn outline pro-msg" href={`https://wa.me/${zapLimpo(p.whatsapp!)}?text=${encodeURIComponent(m.texto)}`} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />{m.nome}</a>)}</div>}
-        <div className="pro-linha pro-quebra"><button className="btn outline" onClick={() => liberar(30)}>+30 dias de Pro</button><button className="btn outline" onClick={() => liberar(365)}>+1 ano</button></div>
+        <div className="pro-linha pro-quebra"><button className="btn outline" onClick={() => liberar(30)}>+30 dias de Pro</button><button className="btn outline" onClick={() => liberar(365)}>+1 ano</button>{d.valida_ate && new Date(d.valida_ate) > new Date() && <button className="btn outline pro-vermelho-txt" onClick={tirarPro}>Tirar Pro</button>}</div>
         {d.pagamentos.length > 0 && <p className="fine pro-sem-margem">Pagamentos: {d.pagamentos.map(x => `${new Date(x.criado_em).toLocaleDateString('pt-BR')} R$ ${Number(x.valor).toFixed(2).replace('.', ',')} (${x.status === 'approved' ? 'pago' : x.status})`).join(' · ')}</p>}
         <p className="fine pro-sem-margem">{d.duelos} duelo{d.duelos === 1 ? '' : 's'} · conta criada em {p.criado_em ? new Date(p.criado_em).toLocaleDateString('pt-BR') : '?'}</p>
       </section>
