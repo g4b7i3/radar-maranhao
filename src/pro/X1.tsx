@@ -48,6 +48,35 @@ export function SecaoX1() {
   );
 }
 
+type Sug = { apelido: string; nome: string; foto: string | null; cidade: string };
+/** Campo do @ com sugestões: a cada letra mostra atletas pelo @ ou pelo nome. */
+function BuscaAtleta({ valor, mudou }: { valor: string; mudou: (v: string) => void }) {
+  const [sug, setSug] = useState<Sug[]>([]);
+  const [aberto, setAberto] = useState(false);
+  useEffect(() => {
+    const t = valor.trim().replace(/^@/, '');
+    if (!t || !aberto) { setSug([]); return; }
+    let vivo = true;
+    const id = setTimeout(() => sb.rpc('radar_atletas_sugerir', { p_txt: t }).then(({ data }) => { if (vivo) setSug((data ?? []) as Sug[]); }), 180);
+    return () => { vivo = false; clearTimeout(id); };
+  }, [valor, aberto]);
+  return (
+    <div className="pro-busca-at">
+      <label className="ct-cidade">Desafiar <input value={valor} onChange={e => { mudou(e.target.value); setAberto(true); }} onFocus={() => setAberto(true)} onBlur={() => setTimeout(() => setAberto(false), 150)} placeholder="@ ou nome do atleta" autoCapitalize="none" autoComplete="off" /></label>
+      {aberto && sug.length > 0 && (
+        <ul className="pro-busca-at-lista" role="listbox">
+          {sug.map(u => (
+            <li key={u.apelido}><button type="button" onMouseDown={e => e.preventDefault()} onClick={() => { mudou(u.apelido); setAberto(false); setSug([]); }}>
+              <Avatar foto={u.foto} apelido={u.apelido} tam={34} />
+              <span><b>@{u.apelido}</b><small>{u.nome}{u.cidade ? ` · ${u.cidade}` : ''}</small></span>
+            </button></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function NovoX1({ criado }: { criado: () => void }) {
   const [ap, setAp] = useState('');
   const [km, setKm] = useState(5);
@@ -65,7 +94,7 @@ function NovoX1({ criado }: { criado: () => void }) {
   };
   return (
     <div className="pro-x1-form">
-      <label className="ct-cidade">Desafiar <input value={ap} onChange={e => setAp(e.target.value)} placeholder="@apelido do atleta" autoCapitalize="none" /></label>
+      <BuscaAtleta valor={ap} mudou={setAp} />
       <div className="chips" role="group" aria-label="Distância">{DISTS.map(d => <button key={d} className="chip" aria-pressed={km === d} onClick={() => setKm(d)}>{kmTxt(d)}</button>)}</div>
       <div className="pro-linha pro-quebra">
         <label className="ct-cidade">Dia<input type="date" value={data} onChange={e => setData(e.target.value)} /></label>

@@ -860,3 +860,10 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 @media (max-width:420px){.pro-feed-x1-placar>span{flex-wrap:wrap;justify-content:center}.pro-feed-x1-placar>span small{margin-left:0;width:100%;text-align:center}}
 .pro-x1-idade{margin:6px 0 0;font-size:11.5px;line-height:1.35;color:var(--cinza,#6b7280);text-align:center}
 .pro-feed-x1 .pro-x1-idade{text-align:left}
+.pro-busca-at{position:relative}
+.pro-busca-at-lista{position:absolute;left:0;right:0;top:100%;z-index:20;margin:4px 0 0;padding:4px;list-style:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -12px rgba(10,20,60,.35);max-height:300px;overflow:auto}
+.pro-busca-at-lista button{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border:0;background:none;border-radius:10px;text-align:left;color:inherit;font:inherit;cursor:pointer}
+.pro-busca-at-lista button:hover,.pro-busca-at-lista button:focus-visible{background:rgba(29,63,191,.08)}
+.pro-busca-at-lista span{display:flex;flex-direction:column;min-width:0}
+.pro-busca-at-lista b{font-size:14px}
+.pro-busca-at-lista small{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
