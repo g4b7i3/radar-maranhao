@@ -822,3 +822,14 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-aniver-txt small{color:var(--muted);font-size:.78rem}
 .pro-aniver li.hoje .pro-aniver-txt small{color:#8a5a00;font-weight:700}
 .pro-aniver .pro-reacoes{flex:0 0 auto;margin-left:auto}
+
+/* ───── Bio ───── */
+.pro-bio{display:flex;align-items:flex-start;gap:8px;width:100%;margin:-4px 0 0;padding:8px 10px;border:0;border-radius:12px;background:none;font:inherit;color:var(--ink,#14205e);text-align:left;cursor:pointer;line-height:1.4;font-size:.92rem}
+.pro-bio span{flex:1;white-space:pre-wrap;word-break:break-word}
+.pro-bio svg{flex:none;margin-top:3px;color:var(--muted)}
+.pro-bio.vazia{color:var(--cobalt);font-weight:700}
+.pro-bio:hover{background:var(--cobalt-tint,#e9eefc)}
+.pro-bio-edit{display:flex;flex-direction:column;gap:6px}
+.pro-bio-edit textarea{width:100%;font:inherit;font-size:.95rem;line-height:1.4;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#d6dbe4);resize:none;box-sizing:border-box}
+.pro-bio-edit .pro-linha{justify-content:space-between;align-items:center;gap:6px}
+.pro-pub-bio{margin:6px auto 2px;max-width:340px;font-size:.95rem;line-height:1.4;color:rgba(255,255,255,.92);text-align:center;white-space:pre-wrap;word-break:break-word}

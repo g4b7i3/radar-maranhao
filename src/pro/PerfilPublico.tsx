@@ -17,7 +17,7 @@ const AreaAdmin = lazy(() => import('./Telas').then(m => ({ default: m.AdminUsua
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
 // Mostra só o que já aparece no ranking (apelido, cidade, liga, provas e medalhas). Nada de nome completo, idade ou contato.
 type Prova = { id: string; prova: string; data: string; cidade: string; uf?: string; km: number; tempo: number; nota: number; status: string; geral: number | null; faixa: number | null; total: number | null };
-type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[]; seguidores: number; seguindo: number; reacoes: Reacoes; minha: TipoReacao | null; eu: boolean; sigo: boolean; logado: boolean; privado?: boolean; admin_uid?: string | null };
+type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[]; seguidores: number; seguindo: number; reacoes: Reacoes; minha: TipoReacao | null; eu: boolean; sigo: boolean; logado: boolean; bio?: string | null; privado?: boolean; admin_uid?: string | null };
 
 function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
   const svg = useMemo(() => medalhaSVG(m, true, tam), [m, tam]);
@@ -64,6 +64,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
           <p className="pro-medio">@{d.apelido}</p>
           {d.logado && !d.eu && <p className={'pro-status' + (online ? ' on' : '')}><i aria-hidden="true" />{online ? 'Online agora' : 'Offline'}</p>}
           <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? <> · <a href={linkAssessoria(d.assessoria)}>{d.assessoria}</a></> : ''}</p>
+          {d.bio && <p className="pro-pub-bio">{d.bio}</p>}
           <p className="pro-pub-social"><b>{d.seguidores}</b> {d.seguidores === 1 ? 'seguidor' : 'seguidores'} · <b>{d.seguindo}</b> seguindo</p>
           <div className="pro-linha pro-pub-acoes">
             {d.logado && !d.eu && <Seguir apelido={d.apelido} sigo={d.sigo} mudou={v => setD(x => x ? { ...x, sigo: v, seguidores: x.seguidores + (v ? 1 : -1) } : x)} />}

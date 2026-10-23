@@ -148,6 +148,7 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
         <FotoConta perfil={perfil} pronto={() => fotoMudou?.()} compacto />
         <PublicoMini perfil={perfil} pronto={() => fotoMudou?.()} />
       </div>
+      <BioConta perfil={perfil} pronto={() => fotoMudou?.()} />
       <section className="pro-card azul">
         <div className="pro-linha"><p className="pro-k">Seu índice</p><SeloLiga liga={liga} /></div>
         <p className="pro-big">{temp.indice == null ? '–' : <Contador valor={Number(temp.indice)} fmt={pct} />}</p>
@@ -870,6 +871,35 @@ function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () =
   );
 }
 
+/** Bio do atleta (até 150 caracteres): aparece no perfil público. Toque para escrever ou editar. */
+function BioConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+  const [editando, setEditando] = useState(false);
+  const [texto, setTexto] = useState(perfil.bio ?? '');
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  useEffect(() => { if (!editando) setTexto(perfil.bio ?? ''); }, [perfil.bio, editando]);
+  const salvar = async () => {
+    setSalvando(true); setErro(null);
+    const bio = texto.replace(/\s+/g, ' ').trim().slice(0, 150) || null;
+    const { error } = await sb.from('radar_perfis').update({ bio }).eq('user_id', perfil.user_id);
+    setSalvando(false);
+    if (error) return setErro('Não deu para salvar agora.');
+    setEditando(false); pronto();
+  };
+  if (!editando) return (
+    <button className={'pro-bio' + (perfil.bio ? '' : ' vazia')} onClick={() => setEditando(true)}>
+      {perfil.bio ? <span>{perfil.bio}</span> : <span>+ Escrever uma bio</span>}<Pencil size={14} aria-hidden="true" />
+    </button>
+  );
+  return (
+    <div className="pro-bio-edit">
+      <textarea value={texto} maxLength={150} rows={3} autoFocus onChange={e => setTexto(e.target.value.slice(0, 150))} placeholder="Ex.: Corredor de São Luís, apaixonado por meia maratona. Rumo aos 42 km em 2027." aria-label="Sua bio" />
+      <div className="pro-linha"><small className={texto.length > 140 ? 'pro-vermelho-txt' : 'fine'}>{texto.length}/150</small><span className="pro-linha"><button className="btn text pro-btn-p" disabled={salvando} onClick={() => { setEditando(false); setErro(null); }}>Cancelar</button><button className="btn solid pro-btn-p" disabled={salvando} onClick={salvar}>{salvando ? 'Salvando…' : 'Salvar'}</button></span></div>
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+    </div>
+  );
+}
+
 /** Perfil público: chave pequena ao lado da foto, na Temporada. */
 function PublicoMini({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
   const [pub, setPub] = useState(perfil.publico !== false);
@@ -1176,7 +1206,7 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
 
 /** Admin: edita qualquer campo do perfil de qualquer pessoa (o servidor só aceita do admin). */
 function AdminEditarPerfil({ p, fechar, salvou }: { p: Perfil; fechar: () => void; salvou: () => void }) {
-  const [f, setF] = useState({ apelido: p.apelido, nome_completo: p.nome_completo, cidade: p.cidade, sexo: p.sexo, nascimento: p.nascimento, assessoria: p.assessoria ?? '', whatsapp: p.whatsapp ? zapMascara(p.whatsapp) : '', publico: p.publico !== false });
+  const [f, setF] = useState({ apelido: p.apelido, nome_completo: p.nome_completo, cidade: p.cidade, sexo: p.sexo, nascimento: p.nascimento, assessoria: p.assessoria ?? '', whatsapp: p.whatsapp ? zapMascara(p.whatsapp) : '', publico: p.publico !== false, bio: p.bio ?? '' });
   const [msg, setMsg] = useState<string | null>(null);
   const [indo, setIndo] = useState(false);
   const muda = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
@@ -1199,6 +1229,7 @@ function AdminEditarPerfil({ p, fechar, salvou }: { p: Perfil; fechar: () => voi
         <label className="ct-cidade">Sexo<select value={f.sexo} onChange={muda('sexo')}><option value="F">Feminino</option><option value="M">Masculino</option></select></label>
         <label className="ct-cidade">Nascimento<input type="date" value={f.nascimento} onChange={muda('nascimento')} /></label>
       </div>
+      <label className="ct-cidade">Bio <small>({f.bio.length}/150)</small><textarea rows={2} maxLength={150} value={f.bio} onChange={e => setF({ ...f, bio: e.target.value.slice(0, 150) })} /></label>
       <label className="ct-cidade">WhatsApp<input inputMode="tel" value={f.whatsapp} onChange={muda('whatsapp')} placeholder="(98) 98765-4321" /></label>
       <label className="pro-check"><input type="checkbox" checked={f.publico} onChange={e => setF({ ...f, publico: e.target.checked })} /> Perfil público</label>
       {msg && <p className="ct-erro" role="alert">{msg}</p>}
