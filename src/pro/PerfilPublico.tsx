@@ -26,6 +26,7 @@ function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
 
 export default function PerfilPublico({ apelido }: { apelido: string }) {
   const [d, setD] = useState<Dados | null | undefined>(undefined);
+  const [lista, setLista] = useState<'seguidores' | 'seguindo' | null>(null);
   const [todas, setTodas] = useState(false);
   const [painel, setPainel] = useState(false);
   const online = useOnline(apelido.toLowerCase());
@@ -65,7 +66,12 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
           {d.logado && !d.eu && <p className={'pro-status' + (online ? ' on' : '')}><i aria-hidden="true" />{online ? 'Online agora' : 'Offline'}</p>}
           <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.assessoria ? <> · <a href={linkAssessoria(d.assessoria)}>{d.assessoria}</a></> : ''}</p>
           {d.bio && <p className="pro-pub-bio">{d.bio}</p>}
-          <p className="pro-pub-social"><b>{d.seguidores}</b> {d.seguidores === 1 ? 'seguidor' : 'seguidores'} · <b>{d.seguindo}</b> seguindo</p>
+          <p className="pro-pub-social">
+            <button type="button" className={'pro-pub-seg' + (lista === 'seguidores' ? ' on' : '')} aria-expanded={lista === 'seguidores'} onClick={() => setLista(l => l === 'seguidores' ? null : 'seguidores')}><b>{d.seguidores}</b> {d.seguidores === 1 ? 'seguidor' : 'seguidores'}</button>
+            {' · '}
+            <button type="button" className={'pro-pub-seg' + (lista === 'seguindo' ? ' on' : '')} aria-expanded={lista === 'seguindo'} onClick={() => setLista(l => l === 'seguindo' ? null : 'seguindo')}><b>{d.seguindo}</b> seguindo</button>
+          </p>
+          {lista && <ListaSegue apelido={d.apelido} tipo={lista} logado={d.logado} />}
           <div className="pro-linha pro-pub-acoes">
             {d.logado && !d.eu && <Seguir apelido={d.apelido} sigo={d.sigo} mudou={v => setD(x => x ? { ...x, sigo: v, seguidores: x.seguidores + (v ? 1 : -1) } : x)} />}
             {d.logado && !d.eu && <Aplauso alvo={`perfil:${d.apelido}`} reacoes={d.reacoes} minha={d.minha} />}
@@ -132,5 +138,30 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
         </section>
       </div>
     </main>
+  );
+}
+
+type ItemSegue = { apelido: string; foto: string | null; cidade: string; sigo: boolean; eu: boolean };
+/** Quem segue / quem é seguido: abre ao tocar no número e fecha ao tocar de novo. */
+function ListaSegue({ apelido, tipo, logado }: { apelido: string; tipo: 'seguidores' | 'seguindo'; logado: boolean }) {
+  const [r, setR] = useState<{ lista: ItemSegue[]; ocultos: number; privado?: boolean } | null>(null);
+  useEffect(() => { setR(null); sb.rpc('radar_segue_lista', { p_apelido: apelido, p_tipo: tipo }).then(({ data }) => setR((data ?? { lista: [], ocultos: 0 }) as { lista: ItemSegue[]; ocultos: number })); }, [apelido, tipo]);
+  const muda = (ap: string, v: boolean) => setR(x => x ? { ...x, lista: x.lista.map(i => i.apelido === ap ? { ...i, sigo: v } : i) } : x);
+  return (
+    <div className="pro-segue-lista">
+      <p className="pro-k cinza">{tipo === 'seguidores' ? 'Seguidores' : 'Seguindo'}</p>
+      {!r ? <p className="pro-sub pro-sem-margem">Carregando…</p>
+        : r.privado ? <p className="pro-sub pro-sem-margem">Perfil privado.</p>
+        : !r.lista.length && !r.ocultos ? <p className="pro-sub pro-sem-margem">{tipo === 'seguidores' ? 'Ninguém segue ainda.' : 'Não segue ninguém ainda.'}</p>
+        : <ul>
+            {r.lista.map(i => (
+              <li key={i.apelido}>
+                <a href={linkPerfil(i.apelido)}><Avatar foto={i.foto} apelido={i.apelido} tam={40} /><span><b>@{i.apelido}</b><small>{i.cidade}</small></span></a>
+                {logado && !i.eu && <Seguir apelido={i.apelido} sigo={i.sigo} mudou={v => muda(i.apelido, v)} />}
+              </li>
+            ))}
+          </ul>}
+      {r && r.ocultos > 0 && <p className="pro-sub pro-sem-margem">+ {r.ocultos} com perfil privado</p>}
+    </div>
   );
 }

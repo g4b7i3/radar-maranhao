@@ -867,3 +867,16 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-busca-at-lista span{display:flex;flex-direction:column;min-width:0}
 .pro-busca-at-lista b{font-size:14px}
 .pro-busca-at-lista small{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pro-pub-seg{background:none;border:0;padding:4px 2px;color:inherit;font:inherit;cursor:pointer;border-radius:8px}
+.pro-pub-seg:hover,.pro-pub-seg.on{text-decoration:underline;text-underline-offset:3px}
+.pro-segue-lista{width:100%;align-self:stretch;background:var(--surface);color:var(--ink,#14205e);border-radius:16px;padding:12px 14px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.pro-segue-lista ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:360px;overflow:auto}
+.pro-segue-lista li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.pro-segue-lista li:last-child{border-bottom:0}
+.pro-segue-lista li>a{flex:1;display:flex;align-items:center;gap:10px;min-width:0;color:inherit;text-decoration:none}
+.pro-segue-lista li>a span{display:flex;flex-direction:column;min-width:0}
+.pro-segue-lista li>a b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pro-segue-lista li>a small{font-size:12px;opacity:.7}
+.pro-segue-lista .pro-seguir{flex:none}
+.pro-pub-topo .pro-segue-lista,.pro-pub-topo .pro-segue-lista a,.pro-pub-topo .pro-segue-lista .pro-sub{color:var(--ink)}
+.pro-pub-topo .pro-segue-lista .pro-sub{opacity:.75}
