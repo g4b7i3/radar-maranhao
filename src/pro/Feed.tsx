@@ -37,9 +37,11 @@ export function Aplauso({ alvo, reacoes, minha, travado, onTravado }: { alvo: st
     if (indo) return;
     setIndo(true);
     const tira = st.minha === t;
+    const antes = st;
     setSt(s => { const r = { ...s.r }; if (s.minha) r[s.minha]--; if (!tira) r[t]++; return { r, minha: tira ? null : t }; }); // resposta na hora
     const { data, error } = await sb.rpc('radar_aplaudir', { p_alvo: alvo, p_aplaudir: !tira, p_tipo: t });
     if (!error && data) setSt({ r: { palma: data.palma, fogo: data.fogo, uau: data.uau }, minha: data.minha });
+    else setSt(antes); // não gravou: volta como estava, em vez de mostrar uma reação que some ao atualizar
     setIndo(false);
   };
   return (
