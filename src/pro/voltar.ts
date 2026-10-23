@@ -63,20 +63,31 @@ export function abaDepoisDoVoltar(): string {
 /** Enquanto `aberto`, a tela fica no endereço (#aba/caminho) e o voltar do celular chama `fechar`. */
 export function useVoltar(aberto: boolean, fechar: () => void, caminho?: string) {
   const fecharRef = useRef(fechar); fecharRef.current = fechar;
+  const saindo = useRef<string | null>(null); // passo desta tela, enquanto o React decide se ela fecha ou só troca de caminho
   useEffect(() => {
     if (!aberto) return;
     const base = lerEndereco().aba;
     const alvo = caminho ? `${base}/${caminho}` : null;
-    // depois de atualizar a página, o passo desta tela já está no histórico: reaproveita em vez de empilhar outro
-    const reuso = alvo && camadas().length && decodeURIComponent(location.hash.slice(1)) === alvo ? camadas().at(-1)! : null;
-    const id = reuso ?? Math.random().toString(36).slice(2);
-    if (!reuso) history.pushState({ radarProf: prof() + 1, radarCamadas: [...camadas(), id] }, '', url(caminho ? `${base}/${caminho}` : `${base}${location.hash.includes('/') ? location.hash.slice(location.hash.indexOf('/')) : ''}`));
+    let id: string;
+    if (saindo.current && camadas().at(-1) === saindo.current) {
+      // continua aberta, só mudou o que mostra (ex.: perfil → outro perfil pela lista): troca o endereço sem mexer no histórico
+      id = saindo.current; saindo.current = null;
+      if (alvo) history.replaceState(history.state, '', url(alvo));
+    } else {
+      // depois de atualizar a página, o passo desta tela já está no histórico: reaproveita em vez de empilhar outro
+      const reuso = alvo && camadas().length && decodeURIComponent(location.hash.slice(1)) === alvo ? camadas().at(-1)! : null;
+      id = reuso ?? Math.random().toString(36).slice(2);
+      if (!reuso) history.pushState({ radarProf: prof() + 1, radarCamadas: [...camadas(), id] }, '', url(caminho ? `${base}/${caminho}` : `${base}${location.hash.includes('/') ? location.hash.slice(location.hash.indexOf('/')) : ''}`));
+    }
     let saiu = false;
     const onPop = () => { if (!camadas().includes(id)) { saiu = true; window.removeEventListener('popstate', onPop); fecharRef.current(); } };
     window.addEventListener('popstate', onPop);
     return () => {
       window.removeEventListener('popstate', onPop);
-      if (!saiu && !destino && camadas().at(-1) === id) history.back(); // fechou pelo X
+      if (saiu || destino || camadas().at(-1) !== id) return;
+      saindo.current = id;
+      // se no mesmo instante a tela reabrir com outro caminho, o efeito acima reaproveita o passo; senão fechou pelo X: volta
+      setTimeout(() => { if (saindo.current === id) { saindo.current = null; if (camadas().at(-1) === id) history.back(); } }, 0);
     };
   }, [aberto, caminho]);
 }
