@@ -118,9 +118,9 @@ function Anuncie() {
       </ul>
       <div className="anuncie-pe">
         <a className="anuncie-btn" href={`https://wa.me/${ZAP_ANUNCIO}?text=${encodeURIComponent(msg)}`} target="_blank" rel="noopener" data-umami-event="Anuncie: WhatsApp">Quero anunciar aqui<span aria-hidden="true">→</span></a>
-        <span className="anuncie-slot" aria-hidden="true"><b>SUA</b><b>MARCA</b><small>aqui</small></span>
+        <span className="anuncie-slot" aria-hidden="true"><b>SUA</b><b>MARCA</b><small>no nosso site</small></span>
       </div>
-      <p className="anuncie-fine">Resposta pelo WhatsApp · (98) 99137-9476</p>
+      <p className="anuncie-fine">≈ 2 mil visualizações por dia</p>
     </aside>
   );
 }
@@ -399,6 +399,7 @@ export default function App() {
 
           {tab === 'agenda' && !filtersOn && !perto && <FimDeSemana provas={provasFds} fds={fds} onAbrir={e => abrirProva(e)} onVerTodas={() => { setSoFds(true); setVista('lista'); rastrear('Fim de semana: ver todas'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
           {tab === 'agenda' && <PertoDeVoce perto={perto} mudar={mudarPerto} total={filtered.length} />}
+          {tab === 'agenda' && <Anuncie />}
           {tab === 'agenda' && (
             <div className={filtrosAbertos ? 'filters aberto' : 'filters'} role="search">
               <div className="search-row">
@@ -472,7 +473,6 @@ export default function App() {
           {tab === 'agenda' && vista === 'mapa' && <MapaProvas events={filtered} onAbrir={e => setSelected(e)} onVerLista={c => { setCity(c); setVista('lista'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
           {(tab !== 'agenda' || vista === 'lista') && groups.map(([key, list], gi) => (
             <Fragment key={key}>
-            {tab === 'agenda' && gi === 1 && <Anuncie />}
             <section className="month" aria-labelledby={'m-' + key}>
               <h2 id={'m-' + key}>{key === 'sem-data' ? 'Data a confirmar' : fmt.monthName(key)}{key !== 'sem-data' && fmt.year(key) !== t.slice(0, 4) && <small> {fmt.year(key)}</small>}</h2>
               <ol className="races">
@@ -508,7 +508,6 @@ export default function App() {
             </section>
             </Fragment>
           ))}
-          {tab === 'agenda' && (vista === 'lista') && groups.length === 1 && <Anuncie />}
 
           {tab === 'agenda' && <MissingRace />}
           {tab === 'agenda' && cidadesFuturas.length > 0 && (
