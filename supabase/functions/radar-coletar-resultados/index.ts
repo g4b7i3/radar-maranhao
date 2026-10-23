@@ -32,12 +32,19 @@ Deno.serve(async req => {
   if (ult?.valor && Date.now() - new Date(ult.valor).getTime() < 15 * 60_000) return resp({ ok: true, pulou: 'rodou há pouco' });
   await db.from('radar_config').upsert({ chave: 'coleta_resultados_em', valor: new Date().toISOString() });
 
+  // provas que já têm resultado oficial e registros parados (ex.: a pessoa registrou no grátis e assinou depois): confere de novo
+  const { data: parados } = await db.from('radar_resultados').select('prova_id').in('status', ['declarado', 'em_analise']).limit(500);
+  const reconf: unknown[] = [];
+  for (const pid of [...new Set((parados ?? []).map((x: { prova_id: string }) => x.prova_id))].slice(0, 30)) {
+    const { count } = await db.from('radar_resultados_oficiais').select('id', { count: 'exact', head: true }).eq('prova_id', pid);
+    if (count) reconf.push({ prova: pid, ...(await conferirRegistros(db, pid)) });
+  }
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
   const desde = new Date(Date.now() - 60 * 86400_000).toISOString().slice(0, 10);
   const { data: provas } = await db.from('radar_provas').select('id, nome, data').is('link_resultado', null).gte('data', desde).lte('data', hoje).order('data', { ascending: false });
   // medalhas de todo mundo (duelos que terminaram, pelotão, fundador, resultados que viraram oficiais)
   const medalhas = async () => { try { const m = await atualizarMedalhas(db); return [...m.values()].reduce((a, x) => a + x.length, 0); } catch (e) { return String((e as Error).message).slice(0, 100); } };
-  if (!provas?.length) return resp({ ok: true, provas: 0, medalhas_novas: await medalhas() });
+  if (!provas?.length) return resp({ ok: true, provas: 0, reconferidos: reconf, medalhas_novas: await medalhas() });
 
   const eventos = await listarEventos();
   const feitos: unknown[] = [];
@@ -57,5 +64,5 @@ Deno.serve(async req => {
     }
     if (feitos.length >= 6) break;
   }
-  return resp({ ok: true, provas: provas.length, eventos: eventos.length, feitos, medalhas_novas: await medalhas() });
+  return resp({ ok: true, provas: provas.length, eventos: eventos.length, feitos, reconferidos: reconf, medalhas_novas: await medalhas() });
 });

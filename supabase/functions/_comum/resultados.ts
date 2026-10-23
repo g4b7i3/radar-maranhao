@@ -4,6 +4,7 @@
 //  - Wiclax .clax (Crono Esportes / resultadonline…): <host>/?f=<pasta>/<arquivo>.clax → <host>/<pasta>/<arquivo>.clax
 // Só guardamos nome, peito, sexo, faixa, tempo e colocação (nada de CPF ou outros dados das planilhas).
 // deno-lint-ignore-file no-explicit-any
+import { notaIdade } from './reis.ts';
 
 export type Linha = { distancia_km: number | null; nome: string; peito: string | null; tempo_s: number; sexo: 'F' | 'M' | null; faixa: string | null; colocacao_geral: number | null; colocacao_faixa: number | null; idade?: number | null };
 export type Lido = { fonte: string; evento: string; data: string | null; linhas: Linha[] };
@@ -206,33 +207,50 @@ export function acharNoOficial(ofs: Of[], km: number, o: { peito: string | null;
 export async function conferirRegistros(db: any, prova: string) {
   const ofs = await lerOficiais(db, prova);
   if (!ofs.length) return { verificados: 0, divergentes: 0, recusados: 0 };
-  const { data: regs } = await db.from('radar_resultados').select('id, user_id, distancia_km, tempo_s, peito_declarado, nome_inscricao, status, detalhes_pontos').eq('prova_id', prova).in('status', ['declarado', 'em_analise']);
+  const { data: regs } = await db.from('radar_resultados').select('id, user_id, distancia_km, tempo_s, peito_declarado, nome_inscricao, status, motivo_analise, detalhes_pontos, prova_data').eq('prova_id', prova).in('status', ['declarado', 'em_analise']);
   let verificados = 0, divergentes = 0, recusados = 0;
   if (!regs?.length) return { verificados, divergentes, recusados };
-  const { data: perfis } = await db.from('radar_perfis').select('user_id, nome_completo').in('user_id', regs.map((r: any) => r.user_id));
-  const nomes = new Map((perfis ?? []).map((p: any) => [p.user_id, p.nome_completo]));
+  const { data: perfis } = await db.from('radar_perfis').select('user_id, nome_completo, sexo, nascimento').in('user_id', regs.map((r: any) => r.user_id));
+  const perfil = new Map((perfis ?? []).map((p: any) => [p.user_id, p]));
+  const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
   for (const r of regs) {
     const { data: pro } = await db.rpc('radar_eh_assinante', { uid: r.user_id }); // modo grátis: não verifica (verificar é do Pro)
     if (!pro) continue;
-    const nomePerfil = String(nomes.get(r.user_id) ?? '');
-    const { of, outroAtleta } = acharNoOficial(ofs, Number(r.distancia_km), { peito: r.peito_declarado, nomePerfil, nomeBusca: r.nome_inscricao || nomePerfil, tempo: r.tempo_s });
+    if (r.status === 'em_analise' && r.motivo_analise && !/^Tempo diferente|^Não achamos/.test(r.motivo_analise)) continue; // análise manual aberta pelo Radar
+    const pf: any = perfil.get(r.user_id) ?? {};
+    const nomePerfil = String(pf.nome_completo ?? '');
+    const peito = r.peito_declarado ? String(r.peito_declarado).replace(/\D/g, '') : null;
+    const { of, outroAtleta } = acharNoOficial(ofs, Number(r.distancia_km), { peito, nomePerfil, nomeBusca: r.nome_inscricao || nomePerfil, tempo: r.tempo_s });
     if (outroAtleta) {
       await db.from('radar_resultados').update({ status: 'recusado', motivo_analise: 'O número de peito pertence a outro atleta no resultado oficial.' }).eq('id', r.id);
       await db.from('radar_medalhas').delete().eq('resultado_id', r.id);
       recusados++; continue;
     }
-    if (!of) continue;
-    const podio = (of.colocacao_geral ?? 99) <= 3 || (of.colocacao_faixa ?? 99) <= 3;
-    if (Math.abs(of.tempo_s - r.tempo_s) <= 5) {
-      const det = { ...(r.detalhes_pontos ?? {}) } as Record<string, number>;
-      if (podio && !det.podio) det.podio = 10;
-      const pontos = Object.values(det).reduce((a, x) => a + Number(x), 0);
-      const { error } = await db.from('radar_resultados').update({ status: 'verificado', motivo_analise: null, podio, detalhes_pontos: det, pontos, peito: of.peito ?? r.peito_declarado }).eq('id', r.id);
-      if (error) { await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Peito já confirmado para outro atleta: conferir.' }).eq('id', r.id); divergentes++; } else verificados++;
-    } else {
-      await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: `Tempo diferente do resultado oficial (${Math.floor(of.tempo_s / 60)}:${String(of.tempo_s % 60).padStart(2, '0')}).` }).eq('id', r.id);
-      divergentes++;
+    if (!of) {
+      // assinante, resultado oficial publicado e o nome não está lá: vai pra conferência (aparece no Admin) em vez de ficar parado
+      if (r.status === 'declarado') { await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Não achamos você no resultado oficial desta prova. Mande o comprovante (print ou link) que o Radar confere.' }).eq('id', r.id); divergentes++; }
+      continue;
     }
+    // achou pelo peito (dono confirmado) ou pelo nome com tempo perto: vale o tempo oficial, como quando a pessoa cola o link
+    const pelopeito = !!peito && of.peito?.replace(/\D/g, '') === peito;
+    const diff = Math.abs(of.tempo_s - r.tempo_s);
+    if (diff > 5 && !pelopeito && diff > 120) {
+      await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: `Tempo diferente do resultado oficial (${mmss(of.tempo_s)}).` }).eq('id', r.id);
+      divergentes++; continue;
+    }
+    const upd: Record<string, unknown> = {};
+    if (diff > 5) {
+      upd.tempo_s = of.tempo_s;
+      if (pf.sexo && pf.nascimento) { const n = await notaIdade(pf.sexo, real(Number(r.distancia_km)), idadeEm(pf.nascimento, String(r.prova_data).slice(0, 10)), of.tempo_s); if (n != null && n > 0 && n <= 100) upd.nota = Math.round(n * 100) / 100; }
+    }
+    const podio = (of.colocacao_geral ?? 99) <= 3 || (of.colocacao_faixa ?? 99) <= 3;
+    const det = { ...(r.detalhes_pontos ?? {}) } as Record<string, number>;
+    if (podio && !det.podio) det.podio = 10;
+    const pontos = Object.values(det).reduce((a, x) => a + Number(x), 0);
+    const { error } = await db.from('radar_resultados').update({ ...upd, status: 'verificado', motivo_analise: diff > 5 ? `Tempo ajustado pelo resultado oficial (${mmss(of.tempo_s)}).` : null, podio, detalhes_pontos: det, pontos, peito: of.peito ?? peito }).eq('id', r.id);
+    if (error) { await db.from('radar_resultados').update({ status: 'em_analise', motivo_analise: 'Peito já confirmado para outro atleta: conferir.' }).eq('id', r.id); divergentes++; } else verificados++;
   }
   return { verificados, divergentes, recusados };
 }
+
+const idadeEm = (nasc: string, dia: string) => { const n = new Date(nasc + 'T12:00:00Z'), d = new Date(dia + 'T12:00:00Z'); let a = d.getUTCFullYear() - n.getUTCFullYear(); if (d.getUTCMonth() < n.getUTCMonth() || (d.getUTCMonth() === n.getUTCMonth() && d.getUTCDate() < n.getUTCDate())) a--; return a; };
