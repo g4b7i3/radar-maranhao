@@ -486,6 +486,7 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
 
 /* ───────── 2 · Assinar com Pix ───────── */
 export const PLANOS = {
+  diaria: { nome: 'Diária', preco: 'R$ 4,50', sub: '24 horas de Pro', dias: 1 },
   mensal: { nome: 'Mensal', preco: 'R$ 10', sub: '30 dias · sem fidelidade', dias: 30 },
   anual: { nome: 'Anual', preco: 'R$ 96', sub: '12 meses pelo preço de 10', dias: 365 },
   equipe: { nome: 'Assessoria', preco: 'R$ 150', sub: '30 dias · você + até 20 alunos', dias: 30 },
@@ -521,8 +522,8 @@ export function Assinar({ perfil, pronto, planoInicial = 'mensal', fixo = false 
         </div>
       )}
       <div className="pro-card pro-centro">
-        <p className="pro-k cinza">Radar Pro · {P.nome} · {P.dias === 365 ? '1 ano' : '30 dias'}</p>
-        <p className="pro-valor">{P.preco},00</p>
+        <p className="pro-k cinza">Radar Pro · {P.nome} · {P.dias === 365 ? '1 ano' : P.dias === 1 ? '24 horas' : '30 dias'}</p>
+        <p className="pro-valor">{P.preco.includes(',') ? P.preco : `${P.preco},00`}</p>
         {plano === 'equipe' && estado === 'inicio' && <p className="fine pro-sem-margem">Libera o Pro para você e até 20 alunos que tenham “{perfil.assessoria || 'sua assessoria'}” no perfil. Você escolhe quem entra, na aba Conta.</p>}
         {estado === 'aguardando' && pix && <><img className="pro-qr" src={`data:image/png;base64,${pix.qr_img}`} alt="QR Code do Pix" /><p className="fine">Aponte a câmera do app do seu banco</p></>}
         {estado === 'pago' && <p className="pro-ok">Pagamento recebido! Liberando o seu Radar Pro…</p>}

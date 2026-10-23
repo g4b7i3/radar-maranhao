@@ -317,7 +317,7 @@ main.pro:has(.pro-menu) { padding-bottom: calc(96px + env(safe-area-inset-bottom
 .pro-travado-capa small{color:var(--muted);font-size:.8rem}
 .pro-aplauso small{font-size:.72rem;color:var(--muted);font-weight:400}
 /* ── Planos ── */
-.pro-planos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pro-planos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .pro-plano{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px 10px;border:2px solid var(--line);border-radius:16px;background:var(--surface);text-align:center}
 .pro-plano small{color:var(--muted);font-weight:700;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
 .pro-plano b{font-size:1.25rem;line-height:1.1}

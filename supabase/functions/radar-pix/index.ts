@@ -1,4 +1,4 @@
-// Radar Pro · Pix pelo Mercado Pago. Planos: mensal (R$ 10 = 30 dias), anual (R$ 96 = 365 dias) e equipe (R$ 150 = 30 dias para o treinador e até 20 alunos).
+// Radar Pro · Pix pelo Mercado Pago. Planos: diária (R$ 4,50 = 1 dia), mensal (R$ 10 = 30 dias), anual (R$ 96 = 365 dias) e equipe (R$ 150 = 30 dias para o treinador e até 20 alunos).
 // POST (com login)        → cria a cobrança Pix e devolve QR + copia e cola.
 // POST ?aviso=mp (sem login) → aviso do Mercado Pago. Não confiamos no aviso: buscamos o pagamento
 //                             direto na API do Mercado Pago com o nosso token e só liberamos se estiver "approved".
@@ -8,12 +8,13 @@ import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const resp = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
 const PLANOS = {
+  diaria: { preco: 4.5, dias: 1, desc: 'Radar Pro · 1 dia' },
   mensal: { preco: 10, dias: 30, desc: 'Radar Pro · 30 dias' },
   anual: { preco: 96, dias: 365, desc: 'Radar Pro · 1 ano' },
   equipe: { preco: 150, dias: 30, desc: 'Radar Pro · equipe (30 dias)' },
 } as const;
 type Plano = keyof typeof PLANOS;
-const planoDe = (v: unknown): Plano => (v === 'anual' || v === 'equipe' ? v : 'mensal');
+const planoDe = (v: unknown): Plano => (v === 'anual' || v === 'equipe' || v === 'diaria' ? v : 'mensal');
 const MP = 'https://api.mercadopago.com';
 
 Deno.serve(async req => {
