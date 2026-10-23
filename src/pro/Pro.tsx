@@ -106,6 +106,9 @@ function ProTelas() {
     const s = telaInicialGeral('assessoria'); return s ? { tipo: 'assessoria', nome: s } : null;
   });
   useVoltar(!!aberto, () => setAberto(null), aberto ? `${aberto.tipo}/${aberto.nome}` : undefined);
+  // ao abrir outro perfil por dentro de um perfil (lista de seguidores, equipe), volta pro topo
+  const sobreRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { sobreRef.current?.scrollTo(0, 0); }, [aberto?.tipo, aberto?.nome]);
   const abrirLinkInterno = (ev: React.MouseEvent) => {
     const a = (ev.target as HTMLElement).closest('a'); if (!a || ev.defaultPrevented || ev.metaKey || ev.ctrlKey) return;
     let u: URL; try { u = new URL(a.href); } catch { return; }
@@ -262,7 +265,7 @@ function ProTelas() {
       {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
-      {aberto && <div className="pro-sobre" role="dialog" aria-label={aberto.tipo === 'atleta' ? `Perfil de @${aberto.nome}` : aberto.nome}>
+      {aberto && <div ref={sobreRef} className="pro-sobre" role="dialog" aria-label={aberto.tipo === 'atleta' ? `Perfil de @${aberto.nome}` : aberto.nome}>
         <TopoVoltar titulo={aberto.tipo === 'atleta' ? `@${aberto.nome}` : aberto.nome} voltar={() => setAberto(null)} />
         {aberto.tipo === 'atleta' ? <PerfilPublico key={aberto.nome} apelido={aberto.nome} /> : <AssessoriaPublica key={aberto.nome} nome={aberto.nome} />}
       </div>}
