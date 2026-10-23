@@ -10,7 +10,10 @@ import { FUNDOS, fotoPerfil, fotoRedonda } from './CardResultado';
 import { salvarImagem } from '../salvar';
 
 type X1 = { id: string; km: number; data: string; local: string | null; status: 'convidado' | 'aceito' | 'lancado' | 'confirmado'; sou_criador: boolean; lancei: boolean; outro: string; foto_outro: string | null; eu_apelido: string; eu_foto: string | null; meu_tempo: number | null; tempo_outro: number | null };
-const DISTS = [3, 5, 10, 21.0975];
+const DISTS = [0.2, 0.4, 1, 3, 5, 10, 21.0975];
+// Provas curtas: um número sozinho é segundos (ex.: 28 = 28 s); acima de 1 km, segue o padrão (25 = 25 min).
+const lerX1 = (t: string, km: number) => { const p = t.trim(); if (km <= 1 && /^\d+$/.test(p)) return Number(p) > 0 ? Number(p) : null; return lerTempo(p); };
+const exemplo = (km: number) => km <= 0.2 ? ['28', '30'] : km <= 0.4 ? ['1:05', '1:08'] : km <= 1 ? ['3:40', '3:52'] : ['25:30', '26:10'];
 const hojeISO = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
 
 export function SecaoX1() {
@@ -91,12 +94,12 @@ function CartaoX1({ x, rpc }: { x: X1; rpc: (nome: string, args: Record<string, 
       {x.status === 'aceito' && (x.data > hoje
         ? <p className="pro-sub pro-sem-margem">Marcado para {dataBR(x.data)}. Depois da corrida, qualquer um dos dois lança os tempos.</p>
         : <div className="pro-x1-form">
-            <p className="pro-sem-margem">Lance os tempos do relógio:</p>
+            <p className="pro-sem-margem">Lance os tempos do relógio{Number(x.km) <= 1 ? ' (em segundos ou min:seg)' : ''}:</p>
             <div className="pro-linha pro-quebra">
-              <label className="ct-cidade">Seu tempo<input inputMode="numeric" value={meu} onChange={e => setMeu(mascaraTempo(e.target.value))} placeholder="25:30" /></label>
-              <label className="ct-cidade">Tempo de @{x.outro}<input inputMode="numeric" value={dele} onChange={e => setDele(mascaraTempo(e.target.value))} placeholder="26:10" /></label>
+              <label className="ct-cidade">Seu tempo<input inputMode="numeric" value={meu} onChange={e => setMeu(mascaraTempo(e.target.value))} placeholder={exemplo(Number(x.km))[0]} /></label>
+              <label className="ct-cidade">Tempo de @{x.outro}<input inputMode="numeric" value={dele} onChange={e => setDele(mascaraTempo(e.target.value))} placeholder={exemplo(Number(x.km))[1]} /></label>
             </div>
-            <button className="btn solid pro-btn" disabled={!lerTempo(meu) || !lerTempo(dele)} onClick={() => rpc('radar_x1_lancar', { p_id: x.id, p_meu: lerTempo(meu), p_dele: lerTempo(dele) }, `Tempos enviados. Agora @${x.outro} confirma.`)}>Enviar para @{x.outro} confirmar</button>
+            <button className="btn solid pro-btn" disabled={!lerX1(meu, Number(x.km)) || !lerX1(dele, Number(x.km))} onClick={() => rpc('radar_x1_lancar', { p_id: x.id, p_meu: lerX1(meu, Number(x.km)), p_dele: lerX1(dele, Number(x.km)) }, `Tempos enviados. Agora @${x.outro} confirma.`)}>Enviar para @{x.outro} confirmar</button>
           </div>)}
       {x.status === 'lancado' && <>
         {placar}

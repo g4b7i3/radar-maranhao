@@ -59,7 +59,7 @@ export const relogio = (s: number) => {
   return h ? `${h}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}` : `${m}:${String(x).padStart(2, '0')}`;
 };
 export const pct = (n: number | null | undefined) => (n == null ? '–' : Number(n).toFixed(1).replace('.', ','));
-export const kmTxt = (km: number) => (Math.abs(km - 21.0975) < 0.01 ? '21 km' : Math.abs(km - 42.195) < 0.01 ? '42 km' : `${String(Math.round(km * 100) / 100).replace('.', ',')} km`);
+export const kmTxt = (km: number) => (km < 1 ? `${Math.round(km * 1000)} m` : Math.abs(km - 21.0975) < 0.01 ? '21 km' : Math.abs(km - 42.195) < 0.01 ? '42 km' : `${String(Math.round(km * 100) / 100).replace('.', ',')} km`);
 export const dataBR = (d: string) => d.slice(0, 10).split('-').reverse().slice(0, 2).join('/');
 
 /** WhatsApp: guarda só números com 55 + DDD (ex.: 5598984334880). */
