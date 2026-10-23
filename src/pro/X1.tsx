@@ -10,7 +10,7 @@ import { FUNDOS, fotoPerfil, fotoRedonda } from './CardResultado';
 import { salvarImagem } from '../salvar';
 
 type X1 = { id: string; km: number; data: string; local: string | null; status: 'convidado' | 'aceito' | 'lancado' | 'confirmado'; sou_criador: boolean; lancei: boolean; outro: string; foto_outro: string | null; eu_apelido: string; eu_foto: string | null; meu_tempo: number | null; tempo_outro: number | null; minha_nota: number | null; nota_outro: number | null };
-const DISTS = [0.2, 0.4, 1, 3, 5, 10, 21.0975];
+const DISTS = [0.2, 0.4, 1, 3, 5, 10, 21.0975, 42.195, 50, 60, 70, 80, 100];
 // Provas curtas: um número sozinho é segundos (ex.: 28 = 28 s); acima de 1 km, segue o padrão (25 = 25 min).
 const lerX1 = (t: string, km: number) => { const p = t.trim(); if (km <= 1 && /^\d+$/.test(p)) return Number(p) > 0 ? Number(p) : null; return lerTempo(p); };
 const exemplo = (km: number) => km <= 0.2 ? ['28', '30'] : km <= 0.4 ? ['1:05', '1:08'] : km <= 1 ? ['3:40', '3:52'] : ['25:30', '26:10'];
