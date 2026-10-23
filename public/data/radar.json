@@ -3146,7 +3146,7 @@
       "version": "[\"2026-12-13\",[3,5,10],\"UEMA, Campus Paulo VI\",null,null,\"Esgotadas\",\"https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema\"]",
       "kind": "Alteração importante",
       "at": "2026-10-22T14:15:45.952Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-23T10:52:38.247Z"
     },
     {
       "id": "441f72b1-cd1c-4000-8cf7-abdf970b5404",
@@ -4677,7 +4677,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-22T14:15:45.952Z",
+  "lastChecked": "2026-10-23T10:52:13.092Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
