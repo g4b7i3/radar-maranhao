@@ -549,19 +549,44 @@ export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { pe
 
       {linhas === null && <p className="fine">Carregando…</p>}
       {linhas?.length === 0 && <p className="fine">{rec === 'viajantes' ? 'Ninguém comprovou prova fora do Maranhão ainda. Seja o primeiro: registre a prova de fora com o link do resultado.' : 'Ainda não há atletas com provas verificadas neste recorte.'}</p>}
-      <ol className="pro-rank">
-        {linhas?.map((l, k) => (
-          <li key={k} className={(l.eu ? 'eu ' : '') + (l.posicao <= 3 && Number(l.pontos ?? l.indice ?? l.estados ?? 0) > 0 ? `podio p${l.posicao}` : '')}>
-            <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
-              <b>{l.posicao}</b>
-              {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={36} />}
-              <span>{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a> <small>· {l.atletas} atletas</small></> : <>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>} <small>· {rec === 'viajantes' ? `${l.ufs} · ${l.provas} ${l.provas === 1 ? 'prova' : 'provas'}` : l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
-              <b>{rec === 'eficiencia' ? `${pct(l.indice)}` : rec === 'viajantes' ? `${l.estados} UF` : Math.round(Number(l.pontos ?? 0))}</b>
-            </button>
-            {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} sigo={sigo.has(l.apelido)} mudouSigo={mudouSigo(l.apelido)} />}
-          </li>
-        ))}
-      </ol>
+      {(() => {
+        const valor = (l: Linha) => Number(rec === 'eficiencia' ? l.indice : rec === 'viajantes' ? l.estados : l.pontos) || 0;
+        const txtValor = (l: Linha) => rec === 'eficiencia' ? pct(l.indice) : rec === 'viajantes' ? String(l.estados) : String(Math.round(Number(l.pontos ?? 0)));
+        const unidade = rec === 'eficiencia' ? 'índice' : rec === 'viajantes' ? (n: Linha) => (Number(n.estados) === 1 ? 'estado' : 'estados') : 'pts';
+        const un = (l: Linha) => typeof unidade === 'function' ? unidade(l) : unidade;
+        const comPodio = rec !== 'assessorias' && (linhas?.length ?? 0) >= 1 && (linhas ?? []).slice(0, 3).every(l => valor(l) > 0);
+        const podio = comPodio ? (linhas ?? []).slice(0, 3) : [];
+        const resto = comPodio ? (linhas ?? []).slice(3) : (linhas ?? []);
+        const ordem = podio.length === 3 ? [podio[1], podio[0], podio[2]] : podio.length === 2 ? [podio[1], podio[0]] : podio;
+        return <>
+          {podio.length > 0 && <div className={`pro-podio n${podio.length}`} role="list" aria-label="Pódio">
+            {ordem.map(l => (
+              <button key={l.apelido} role="listitem" className={`pro-podio-card p${l.posicao}${l.eu ? ' eu' : ''}`} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={aberto === l.apelido}>
+                {l.posicao === 1 && <Crown className="pro-podio-coroa" size={26} aria-hidden="true" />}
+                <span className="pro-podio-foto"><Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={l.posicao === 1 ? 76 : 60} /><i>{l.posicao}º</i></span>
+                <b className="pro-podio-nome">{l.eu ? 'Você' : `@${l.apelido}`}</b>
+                <small>{rec === 'viajantes' ? l.ufs : l.cidade}</small>
+                <span className="pro-podio-valor"><b>{txtValor(l)}</b><small>{un(l)}</small></span>
+              </button>
+            ))}
+          </div>}
+          {podio.some(l => l.apelido === aberto) && <ProvasDe apelido={aberto!} meu={!!podio.find(l => l.apelido === aberto)?.eu} sigo={sigo.has(aberto!)} mudouSigo={mudouSigo(aberto!)} />}
+          <ol className="pro-rank pro-rank2">
+            {resto.map((l, k) => (
+              <li key={k} className={(l.eu ? 'eu ' : '') + (!comPodio && l.posicao <= 3 && valor(l) > 0 ? `podio p${l.posicao}` : '')}>
+                <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
+                  <b className="pro-rank-pos">{l.posicao}</b>
+                  {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={40} />}
+                  <span className="pro-rank-nome">{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a><small>{l.atletas} atletas</small></> : <><span>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>}</span><small>{rec === 'viajantes' ? `${l.ufs} · ${l.provas} ${l.provas === 1 ? 'prova' : 'provas'}` : l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
+                  <span className="pro-rank-valor"><b>{rec === 'assessorias' ? Math.round(Number(l.pontos ?? 0)) : txtValor(l)}</b><small>{rec === 'assessorias' ? 'pts' : un(l)}</small></span>
+                </button>
+                {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} sigo={sigo.has(l.apelido)} mudouSigo={mudouSigo(l.apelido)} />}
+              </li>
+            ))}
+          </ol>
+          {eu && rec !== 'assessorias' && rec !== 'pelotao' && <div className="pro-rank-eu" aria-live="polite"><Avatar foto={fotos.get(eu.apelido)} apelido={eu.apelido} tam={30} /><span>Você está em <b>{eu.posicao}º</b>{linhas ? ` de ${linhas.length}` : ''}</span><b>{txtValor(eu)} <small>{un(eu)}</small></b></div>}
+        </>;
+      })()}
       <p className="fine">No ranking aparecem só foto, apelido, cidade e faixa etária. Viu algo estranho? Abra o atleta e toque em “Contestar”.</p>
       </>}
     </div>
