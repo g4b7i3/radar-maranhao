@@ -833,3 +833,28 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-bio-edit textarea{width:100%;font:inherit;font-size:.95rem;line-height:1.4;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#d6dbe4);resize:none;box-sizing:border-box}
 .pro-bio-edit .pro-linha{justify-content:space-between;align-items:center;gap:6px}
 .pro-pub-bio{margin:6px auto 2px;max-width:340px;font-size:.95rem;line-height:1.4;color:rgba(255,255,255,.92);text-align:center;white-space:pre-wrap;word-break:break-word}
+
+/* X1 (desafio manual) */
+.pro-x1-cab .pro-k{display:flex;align-items:center;gap:6px}
+.pro-x1-form{display:grid;gap:10px;margin-top:12px}
+.pro-x1-form .pro-linha>label{flex:1;min-width:130px}
+.pro-x1-msg{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:var(--azul-claro,#eaf0ff);font-size:14px}
+.pro-x1-contra{font-size:13px;font-weight:700;color:var(--azul,#1d3fbf)}
+.pro-x1.venci{border:2px solid #f2b705}
+.pro-x1-res{margin:4px 0 0;text-align:center;font-weight:900;font-size:18px}
+.pro-x1-placar{display:flex;align-items:center;justify-content:center;gap:14px;margin:12px 0}
+.pro-x1-placar>div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:16px;background:rgba(127,127,127,.08);min-width:0}
+.pro-x1-placar>div b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pro-x1-placar>div span{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.pro-x1-placar>div.v{background:rgba(242,183,5,.16);box-shadow:inset 0 0 0 2px #f2b705}
+.pro-x1-placar>div.p{opacity:.75}
+.pro-x1-placar em,.pro-feed-x1-placar em{font-style:normal;font-weight:900;font-size:13px;opacity:.6}
+.pro-centro{text-align:center}
+.pro-feed-x1-placar{display:flex;align-items:center;gap:10px;margin-top:8px}
+.pro-feed-x1-placar>span{flex:1;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(127,127,127,.08);min-width:0}
+.pro-feed-x1-placar>span b{font-variant-numeric:tabular-nums}
+.pro-feed-x1-placar>span small{margin-left:auto;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.pro-feed-x1-placar>span.v{background:rgba(242,183,5,.16)}
+.pro-feed-x1-placar>span.v small{color:#9a6b00}
+.pro-feed-x1-placar>span.p small{opacity:.7}
+@media (max-width:420px){.pro-feed-x1-placar>span{flex-wrap:wrap;justify-content:center}.pro-feed-x1-placar>span small{margin-left:0;width:100%;text-align:center}}

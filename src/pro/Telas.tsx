@@ -21,6 +21,7 @@ import { PushConta } from './Push';
 import { StravaConta } from './Strava';
 import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
+import { SecaoX1 } from './X1';
 
 const ANO = new Date().getFullYear();
 const DIST_DUELO = [5, 10, 21.0975, 42.195];
@@ -662,6 +663,7 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
 
   return (
     <div className="pro-cont">
+      <SecaoX1 />
       {fantasmas.map(f => { const dif = f.hoje.tempo_s - f.antes; return (
         <section key={f.km} className="pro-card">
           <div className="pro-linha"><p className="pro-k cinza">Fantasma · {kmTxt(f.km)}</p><span className={`pro-st ${dif <= 0 ? 'ok' : 'rec'}`}>{dif <= 0 ? '−' : '+'}{relogio(Math.abs(dif))}</span></div>

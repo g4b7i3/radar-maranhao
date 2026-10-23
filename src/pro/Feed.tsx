@@ -7,8 +7,8 @@ import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
 
 export type Evento = {
-  quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post'; alvo: string; apelido: string; foto: string | null; cidade: string;
-  dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string };
+  quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1'; alvo: string; apelido: string; foto: string | null; cidade: string;
+  dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string; perdedor?: string; foto_perdedor?: string | null; local?: string | null; tempo_v?: number; tempo_p?: number; empate?: boolean };
   reacoes: Reacoes; minha: TipoReacao | null;
 };
 type DadosPost = { id?: string; texto?: string; foto?: string | null; meu?: boolean };
@@ -104,6 +104,16 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
       </>}
       {e.tipo === 'duelo' && (
         <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
+      )}
+      {e.tipo === 'x1' && (
+        <div className="pro-feed-x1">
+          <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> {d.empate ? 'Empatou o X1' : 'Venceu o X1'} de <b>{kmTxt(Number(d.km))}</b> contra <a href={linkPerfil(d.perdedor!)}>@{d.perdedor}</a>{d.local ? ` · ${d.local}` : ''}{d.data ? ` · ${dataBR(d.data)}` : ''}</p>
+          <div className="pro-feed-x1-placar">
+            <span className="v"><Avatar foto={e.foto} apelido={e.apelido} tam={34} /><b>{relogio(Number(d.tempo_v))}</b><small>{d.empate ? 'empatou' : 'venceu'}</small></span>
+            <em>vs</em>
+            <span className={d.empate ? 'v' : 'p'}><Avatar foto={d.foto_perdedor ?? null} apelido={d.perdedor!} tam={34} /><b>{relogio(Number(d.tempo_p))}</b><small>{d.empate ? 'empatou' : 'foi derrotado'}</small></span>
+          </div>
+        </div>
       )}
       <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && ((meu || post.meu) ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button> : post.id ? <Sinalizar postId={post.id} /> : null)}</footer>
     </article>
