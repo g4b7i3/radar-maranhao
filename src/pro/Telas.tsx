@@ -144,7 +144,10 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
 
   return (
     <div className="pro-cont">
-      <FotoConta perfil={perfil} pronto={() => fotoMudou?.()} compacto />
+      <div className="pro-topo-linha">
+        <FotoConta perfil={perfil} pronto={() => fotoMudou?.()} compacto />
+        <PublicoMini perfil={perfil} pronto={() => fotoMudou?.()} />
+      </div>
       <section className="pro-card azul">
         <div className="pro-linha"><p className="pro-k">Seu índice</p><SeloLiga liga={liga} /></div>
         <p className="pro-big">{temp.indice == null ? '–' : <Contador valor={Number(temp.indice)} fmt={pct} />}</p>
@@ -710,7 +713,6 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
       </>}
       <FotoConta perfil={perfil} pronto={pronto} />
       <ZapConta perfil={perfil} pronto={pronto} />
-      <PublicoConta perfil={perfil} pronto={pronto} />
       {temp.assinante && <section className="pro-card">
         <p className="pro-k cinza">Assinatura</p>
         <p className="pro-sem-margem">{propria ? <><b className="pro-verde">Ativa</b> · vence em {vence}</> : equipePro ? <><b className="pro-verde">Ativa pela equipe {equipePro.nome}</b> · até {new Date(equipePro.valida_ate).toLocaleDateString('pt-BR')}{equipePro.dono ? ' · você é o treinador' : ''}</> : <><b className="pro-verde">Ativa</b></>}</p>
@@ -842,15 +844,22 @@ function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () =
   );
 }
 
-function PublicoConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+/** Perfil público: chave pequena ao lado da foto, na Temporada. */
+function PublicoMini({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+  const [pub, setPub] = useState(perfil.publico !== false);
   const [salvando, setSalvando] = useState(false);
-  const pub = perfil.publico !== false;
-  const trocar = async () => { setSalvando(true); await sb.from('radar_perfis').update({ publico: !pub }).eq('user_id', perfil.user_id); setSalvando(false); pronto(); };
+  useEffect(() => setPub(perfil.publico !== false), [perfil.publico]);
+  const trocar = async () => {
+    if (pub && !confirm('Deixar o perfil privado? Ninguém vai conseguir abrir o seu perfil pelo link. Você continua aparecendo no ranking só com apelido, cidade e pontos.')) return;
+    setSalvando(true); const novo = !pub;
+    const { error } = await sb.from('radar_perfis').update({ publico: novo }).eq('user_id', perfil.user_id);
+    setSalvando(false); if (!error) { setPub(novo); pronto(); }
+  };
   return (
-    <section className="pro-card">
-      <div className="pro-linha"><p className="pro-k cinza">Perfil público</p><button className="btn outline" disabled={salvando} onClick={trocar}>{pub ? 'Desligar' : 'Ligar'}</button></div>
-      <p className="fine pro-sem-margem">{pub ? <>Ligado: <a href={linkPerfil(perfil.apelido)} target="_blank" rel="noopener">radarcorridasma.com.br/?atleta={perfil.apelido}</a> mostra foto, apelido, cidade, liga, provas e medalhas. Nunca seu nome completo, idade ou contato.</> : 'Desligado: ninguém vê seu perfil pelo link.'}</p>
-    </section>
+    <button className={`pro-pub-chave${pub ? ' on' : ''}`} role="switch" aria-checked={pub} disabled={salvando} onClick={trocar}>
+      <span className="pro-pub-trilho" aria-hidden="true"><span /></span>
+      <small>{pub ? 'Perfil público' : 'Perfil privado'}</small>
+    </button>
   );
 }
 

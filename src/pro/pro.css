@@ -649,3 +649,13 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-sobre main.pro{padding:0;min-height:0;max-width:640px;margin:0 auto}
 .pro-adm-btn { margin-top: 10px; background: #fff; }
 .pro-adm-msg { margin: 0 0 10px; padding: 10px 12px; border-radius: 12px; background: #e8f6ee; color: #146c3b; font-weight: 600; font-size: 14px; }
+.pro-topo-linha{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pro-topo-linha .pro-foto-topo{min-width:0}
+.pro-pub-chave{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;border:0;background:none;color:var(--muted,#5b6475);cursor:pointer;font:inherit}
+.pro-pub-chave small{font-size:.72rem;font-weight:600;white-space:nowrap}
+.pro-pub-trilho{width:42px;height:24px;border-radius:999px;background:#c9ced8;position:relative;transition:background .2s}
+.pro-pub-trilho span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.pro-pub-chave.on .pro-pub-trilho{background:var(--cobalt)}
+.pro-pub-chave.on .pro-pub-trilho span{transform:translateX(18px)}
+.pro-pub-chave.on small{color:var(--cobalt)}
+@media (prefers-reduced-motion:reduce){.pro-pub-trilho,.pro-pub-trilho span{transition:none}}
