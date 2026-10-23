@@ -8,6 +8,8 @@ export const sb = createClient(SB_URL, 'sb_publishable_oWDv6oIHYdRlbCjDveP-7Q_5i
 });
 
 export const ADMIN_EMAIL = 'vinikautor@gmail.com';
+/** Quem está logado é o admin (o servidor confere de novo em cada ação). */
+export const souAdmin = { v: false };
 
 /** Chama uma função do servidor e devolve o JSON (com "erro" quando der problema). */
 export async function chamar<T = any>(fn: string, corpo?: unknown): Promise<T & { erro?: string }> {

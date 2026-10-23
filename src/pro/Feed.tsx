@@ -3,7 +3,7 @@
 import { linhaIdade } from './X1';
 import { useEffect, useMemo, useState } from 'react';
 import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown } from 'lucide-react';
-import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil } from './sb';
+import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil, souAdmin } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
 
@@ -80,7 +80,17 @@ function Meds({ ids }: { ids: string[] }) {
 export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void; apagou?: () => void }) {
   const d = e.dados, meu = e.apelido === eu;
   const post = e.tipo === 'post' ? (e.dados as unknown as DadosPost) : null;
-  const apagar = async () => { if (!post?.id || !confirm('Apagar este post?')) return; const { data } = await sb.rpc('radar_post_apagar', { p_id: post.id }); if (data) apagou?.(); };
+  const adm = souAdmin.v;
+  // apagar: o próprio post; tirar do feed: duelo/X1 de quem participou. O admin pode tudo.
+  const participa = e.tipo === 'duelo' ? (e.apelido === eu || d.adversario === eu) : e.tipo === 'x1' ? (e.apelido === eu || d.perdedor === eu) : false;
+  const podeApagar = (post && (meu || post.meu || adm)) || ((e.tipo === 'duelo' || e.tipo === 'x1') && (participa || adm));
+  const [sumiu, setSumiu] = useState(false);
+  const apagar = async () => {
+    if (!confirm(post ? 'Apagar este post?' : 'Tirar do feed?')) return;
+    const { data } = await sb.rpc('radar_feed_ocultar', { p_alvo: post?.id ? `post:${post.id}` : e.alvo });
+    if (data) { setSumiu(true); apagou?.(); } else alert('Não deu para apagar agora.');
+  };
+  if (sumiu) return null;
   const nome = meu ? 'Você' : `@${e.apelido}`;
   return (
     <article className={'pro-card pro-feed-item ' + e.tipo}>
@@ -119,7 +129,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
           {(() => { const l = linhaIdade(`@${e.apelido}`, d.nota_v, `@${d.perdedor}`, d.nota_p); return l ? <p className="pro-x1-idade">{l}</p> : null; })()}
         </div>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && ((meu || post.meu) ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button> : post.id ? <Sinalizar postId={post.id} /> : null)}</footer>
+      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{podeApagar ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label={post ? 'Apagar post' : 'Tirar do feed'} title={post ? 'Apagar post' : 'Tirar do feed'}><Trash2 size={15} aria-hidden="true" /></button> : post?.id ? <Sinalizar postId={post.id} /> : null}</footer>
     </article>
   );
 }

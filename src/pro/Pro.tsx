@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, type LucideIcon } from 'lucide-react';
-import { sb, chamar, ADMIN_EMAIL, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
+import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
 import CardDuelo, { tituloDuelo, type FimDuelo } from './CardDuelo';
@@ -228,6 +228,7 @@ function ProTelas() {
   if (!perfil.whatsapp) return <main className="pro">{topo('Falta só um dado')}<div className="pro-cont"><p className="pro-sem-margem">Para continuar no Radar Pro, informe o seu WhatsApp. É por ele que o Radar fala com você sobre os seus resultados.</p><ZapConta perfil={perfil} pronto={recarregar} /></div></main>;
 
   const admin = sessao.user.email === ADMIN_EMAIL;
+  souAdmin.v = admin;
   iniciarPresenca(); // online/offline (liga uma vez só)
   const pro = temp.assinante;
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
