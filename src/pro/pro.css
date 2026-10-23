@@ -690,3 +690,7 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-check{display:flex;align-items:center;gap:8px;margin:6px 0 10px;font-weight:600;font-size:.95rem;cursor:pointer}
 .pro-check input{width:20px;height:20px;accent-color:var(--cobalt)}
 .pro-feed-link{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+
+.pro-convite-com{padding:0;overflow:hidden;border:2px solid var(--cobalt)}
+.pro-convite-com>.pro-sub{padding:14px 16px 0}
+.pro-convite-com-gratis{margin:10px 16px 16px;padding:10px 12px;border-radius:12px;background:#e8f6ee;color:#14532d;font-size:.92rem;line-height:1.35}

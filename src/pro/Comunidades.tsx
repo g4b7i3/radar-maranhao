@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Check, ImagePlus, Lock, LogOut, Pencil, Plus, UsersRound } from 'lucide-react';
 import { sb, ADMIN_EMAIL, type Perfil } from './sb';
 import { reduzirFoto } from './Foto';
+import { conviteComunidade } from './Pro';
 import { ItemFeed, Publicar, type Evento } from './Feed';
 import { useVoltar, telaInicial } from './voltar';
 import { TopoVoltar } from './Topo';
@@ -17,7 +18,17 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
   useVoltar(!!aberta, () => setAberta(null), aberta?.id);
   const pedida = useRef(telaInicial('comunidades')); // atualizou com uma comunidade aberta: reabre ela
   const [indo, setIndo] = useState<string | null>(null);
-  const carregar = () => sb.rpc('radar_comunidades').then(({ data }) => { const l = (data ?? []) as Comunidade[]; setLista(l); if (pedida.current) { const c = l.find(x => x.id === pedida.current && x.membro); pedida.current = null; if (c) setAberta(c); } });
+  const carregar = () => sb.rpc('radar_comunidades').then(async ({ data }) => {
+    const l = (data ?? []) as Comunidade[]; setLista(l);
+    // veio por link de convite: entra na comunidade (se ainda não está) e já abre
+    const conv = conviteComunidade();
+    if (conv) {
+      try { localStorage.removeItem('radar-convite-comunidade'); } catch { /* */ }
+      const c = l.find(x => x.id === conv);
+      if (c && c.tipo === 'aberta') { if (!c.membro) await sb.rpc('radar_comunidade_entrar', { p_id: c.id, p_entrar: true }); setAberta({ ...c, membro: true }); return; }
+    }
+    if (pedida.current) { const c = l.find(x => x.id === pedida.current && x.membro); pedida.current = null; if (c) setAberta(c); }
+  });
   useEffect(() => { carregar(); }, [aberta]);
   const entrar = async (c: Comunidade, sim: boolean) => { setIndo(c.id); await sb.rpc('radar_comunidade_entrar', { p_id: c.id, p_entrar: sim }); await carregar(); setIndo(null); if (sim) setAberta({ ...c, membro: true }); };
   if (aberta) return <ComunidadeFeed c={aberta} perfil={perfil} pro={pro} assinar={assinar} admin={admin} voltar={() => setAberta(null)} mudou={c => { if (c) setAberta(c); else { setAberta(null); carregar(); } }} sair={() => entrar(aberta, false).then(() => setAberta(null))} />;

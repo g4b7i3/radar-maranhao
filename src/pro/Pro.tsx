@@ -32,6 +32,9 @@ try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('rada
 try { if (qs.get('pro') === 'cortesia' && qs.get('k')) localStorage.setItem('radar-cortesia', qs.get('k')!); } catch { /* sem armazenamento */ }
 // Link de indicação (/?pro&ref=apelido ou /?ref=apelido): guarda até a pessoa criar o perfil
 try { const ref = (qs.get('ref') ?? '').toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20); if (ref) localStorage.setItem('radar-ref', ref); } catch { /* */ }
+// Convite para comunidade (/?pro&comunidade=id): guarda até a pessoa entrar e criar o perfil; aí ela já entra na comunidade
+try { const com = (qs.get('comunidade') ?? '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 60); if (com) localStorage.setItem('radar-convite-comunidade', com); } catch { /* */ }
+export const conviteComunidade = (): string | null => { try { return localStorage.getItem('radar-convite-comunidade'); } catch { return null; } };
 const codigoCortesia = (): string | null => { let k = qs.get('pro') === 'cortesia' && new URLSearchParams(window.location.search).get('k') ? qs.get('k') : null; try { k ??= localStorage.getItem('radar-cortesia'); } catch { /* */ } return k; };
 
 /** Logo do Radar Pro: o símbolo do Radar em dourado, no fundo azul-noite (a mesma do ícone do app). */
@@ -78,7 +81,7 @@ function ProTelas() {
   const [perfil, setPerfil] = useState<Perfil | null | undefined>(undefined);
   const [temp, setTemp] = useState<Temporada | null>(null);
   // aba vem do endereço (#feed, #comunidades/feminina…): atualizar mantém a tela; o voltar leva à Temporada e depois sai
-  const [aba, setAbaEstado] = useState<Aba>(() => { const a = abaDoEndereco() ?? 'temporada'; iniciarHistorico(a); return a; });
+  const [aba, setAbaEstado] = useState<Aba>(() => { const a = abaDoEndereco() ?? (conviteComunidade() ? 'comunidades' : 'temporada'); iniciarHistorico(a); return a; });
   const abaRef = useRef(aba); abaRef.current = aba;
   const setAba = useCallback((a: Aba) => {
     if (a === abaRef.current) return;
@@ -309,6 +312,8 @@ function Convite() {
   const [erro, setErro] = useState<string | null>(null);
   const [limite, setLimite] = useState(false); // e-mail de login esgotou por agora: o Google entra na hora
   const volta = window.location.origin + '/?pro' + (qs.get('c') ? `=duelo&c=${qs.get('c')}` : cortesia ? `=cortesia&k=${encodeURIComponent(cortesia)}` : '');
+  const [comunidade, setComunidade] = useState<{ nome: string; descricao: string; foto: string | null; emoji: string; cor: string; membros: number } | null>(null);
+  useEffect(() => { const id = conviteComunidade(); if (id) sb.rpc('radar_comunidade_convite', { p_id: id }).then(({ data }) => { if (data) setComunidade(data as typeof comunidade); }); }, []);
   const google = async () => {
     const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: volta } });
     if (error) setErro('O login com Google ainda não está disponível. Use o e-mail.');
@@ -322,6 +327,15 @@ function Convite() {
   };
   return (
     <>
+      {comunidade && <section className="pro-card pro-convite-com">
+        <div className="pro-comun-capa" style={{ '--cor': comunidade.cor } as React.CSSProperties}>
+          {comunidade.foto ? <img src={comunidade.foto} alt="" /> : <span className="pro-comun-semfoto" aria-hidden="true">{comunidade.emoji}</span>}
+          <span className="pro-comun-veu" aria-hidden="true" />
+          <div><p className="pro-k">Você foi convidado para a comunidade</p><p className="pro-comun-nome">{comunidade.nome}</p></div>
+        </div>
+        <p className="pro-sub pro-sem-margem">{comunidade.descricao}</p>
+        <p className="pro-convite-com-gratis"><b>É grátis.</b> Entre com o Google, crie seu perfil de atleta e você já cai dentro da comunidade para ler e publicar.</p>
+      </section>}
       <section className="pro-card azul pro-hero">
         <p className="pro-k">Radar Pro</p>
         <h1>Sua corrida<br />vira <span>temporada.</span></h1>
@@ -333,7 +347,7 @@ function Convite() {
         <li><i>3</i><span><b>Ranking do Maranhão</b><small>Por cidade, sexo, faixa etária, eficiência e assessoria.</small></span></li>
         <li><i>4</i><span><b>Duelo e pelotão</b><small>Desafie amigos e dispute com até 25 atletas do seu nível.</small></span></li>
       </ol>
-      {cortesia
+      {comunidade ? null : cortesia
         ? <div className="pro-card pro-cortesia"><b>🎁 Acesso cortesia</b><span>Entre com o Google e o Radar Pro já vem liberado, sem pagar.</span></div>
         : <div className="pro-oferta">
             <div className="pro-oferta-in">
