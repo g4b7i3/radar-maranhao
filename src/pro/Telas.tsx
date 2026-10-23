@@ -481,12 +481,13 @@ type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; f
 const FAIXAS = ['até 19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60+'];
 type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao' | 'reis' | 'viajantes';
 
-export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; pro?: boolean; assinar?: () => void }) {
+export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { perfil: Perfil; pro?: boolean; assinar?: () => void; admin?: boolean }) {
   const [rec, setRec] = useState<Rec>('geral');
   const [sexo, setSexo] = useState<'' | 'F' | 'M'>('');
   const [cidade, setCidade] = useState('');
   const [faixa, setFaixa] = useState('');
   const [pelotaoCidade, setPelotaoCidade] = useState(false);
+  const [pelotaoTodos, setPelotaoTodos] = useState(false); // só o admin: todos os assinantes do Pro
   const [linhas, setLinhas] = useState<Linha[] | null>(null);
   const [aberto, setAberto] = useState<string | null>(null);
 
@@ -497,9 +498,9 @@ export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; p
       : rec === 'eficiencia' ? sb.rpc('radar_ranking_eficiencia', { temporada: ANO })
       : rec === 'assessorias' ? sb.rpc('radar_ranking_assessorias', { temporada: ANO })
       : rec === 'viajantes' ? sb.rpc('radar_ranking_viajantes', { temporada: ANO })
-      : sb.rpc(pelotaoCidade ? 'radar_pelotao_cidade' : 'radar_pelotao', {});
+      : sb.rpc(pelotaoTodos ? 'radar_admin_pelotao_todos' : pelotaoCidade ? 'radar_pelotao_cidade' : 'radar_pelotao', {});
     q.then(({ data }) => setLinhas((data ?? []) as Linha[]));
-  }, [rec, sexo, cidade, faixa, pelotaoCidade]);
+  }, [rec, sexo, cidade, faixa, pelotaoCidade, pelotaoTodos]);
 
   const eu = linhas?.find(l => l.eu);
   const fotos = useFotos((linhas ?? []).map(l => l.apelido).filter(Boolean));
@@ -534,14 +535,14 @@ export function TelaRanking({ perfil, pro = true, assinar }: { perfil: Perfil; p
         <p className="fine pro-sem-margem">Só esses itens dão ponto. Medalha não dá ponto: é coleção (o pódio e o recorde dão ponto e também medalha, mas são coisas separadas). A nota por idade também não entra aqui: ela vale na Eficiência e na Liga Maranhense.</p>
       </section>}
       {rec === 'assessorias' && <DesafioAssessorias minha={perfil.assessoria} />}
-      {rec === 'pelotao' && <div className="chips" role="group" aria-label="Pelotão"><button className="chip" aria-pressed={!pelotaoCidade} onClick={() => setPelotaoCidade(false)}>Da minha liga</button><button className="chip" aria-pressed={pelotaoCidade} onClick={() => setPelotaoCidade(true)}>De {perfil.cidade}</button></div>}
-      {rec === 'pelotao' && eu && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">{pelotaoCidade ? `Pelotão de ${perfil.cidade}` : `Pelotão ${LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}`}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
+      {rec === 'pelotao' && <div className="chips" role="group" aria-label="Pelotão"><button className="chip" aria-pressed={!pelotaoCidade && !pelotaoTodos} onClick={() => { setPelotaoCidade(false); setPelotaoTodos(false); }}>Da minha liga</button><button className="chip" aria-pressed={pelotaoCidade && !pelotaoTodos} onClick={() => { setPelotaoCidade(true); setPelotaoTodos(false); }}>De {perfil.cidade}</button>{admin && <button className="chip" aria-pressed={pelotaoTodos} onClick={() => setPelotaoTodos(true)}>Todos os Pro (admin)</button>}</div>}
+      {rec === 'pelotao' && eu && !pelotaoTodos && <section className="pro-card azul pro-linha"><div><p className="pro-k">Você está em</p><p className="pro-medio">{eu.posicao}º de {eu.tamanho}</p></div><p className="pro-sub pro-dir">{pelotaoCidade ? `Pelotão de ${perfil.cidade}` : `Pelotão ${LIGAS.find(l => l.id === eu.liga)?.nome ?? ''}`}<br />Top 3 do mês<br />ganha destaque 👑</p></section>}
 
       <p className="fine pro-sem-margem">{{
         geral: `${ANO === 2026 ? 'Pré-temporada 2027' : `Temporada ${ANO}`}: soma dos pontos de provas verificadas. Toque no atleta pra ver de onde vem cada ponto.`,
         eficiencia: 'Índice = média das 3 melhores notas por idade (ou das que tiver, a partir de 1 prova oficial). Compara idades e sexos diferentes de forma justa.',
         assessorias: 'Soma dos pontos dos 5 melhores atletas de cada assessoria. Equipe grande e pequena disputam de igual pra igual.',
-        pelotao: pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
+        pelotao: pelotaoTodos ? 'Só você vê: todos os assinantes do Radar Pro, de todas as ligas e cidades. Pontos do mês.' : pelotaoCidade ? `Até 25 atletas de ${perfil.cidade}, de todas as ligas. Pontos do mês, recomeça todo dia 1º.` : 'Até 25 atletas da sua liga. Pontos do mês, recomeça todo dia 1º.',
         reis: '',
         viajantes: `Quem mais correu fora do Maranhão em ${ANO}: estados diferentes com resultado comprovado; empate decide por provas fora. Registre a prova de fora com o link do resultado.`,
       }[rec]}</p>
@@ -1024,10 +1025,11 @@ function PedidoAdmin({ x, quem, mesmoDia, feito }: { x: Sugestao; quem: string; 
 }
 
 /* ───────── Admin · todos os usuários e a área de cada um ───────── */
-type UsuarioAdm = { foto_url?: string | null; user_id: string; apelido: string; nome_completo: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; nascimento: string; whatsapp: string | null; criado_em: string; email: string | null; valida_ate: string | null; cortesia: boolean; provas: number; oficiais: number };
-const situacao = (u: { valida_ate: string | null; cortesia?: boolean }) => {
+type UsuarioAdm = { foto_url?: string | null; user_id: string; apelido: string; nome_completo: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; nascimento: string; whatsapp: string | null; criado_em: string; email: string | null; valida_ate: string | null; cortesia: boolean; equipe?: { nome: string; valida_ate: string } | null; provas: number; oficiais: number };
+const situacao = (u: { valida_ate: string | null; cortesia?: boolean; equipe?: { nome: string; valida_ate: string } | null }) => {
   if (u.cortesia) return { txt: 'Cortesia', cls: 'ok' };
-  if (u.valida_ate && new Date(u.valida_ate) > new Date()) return { txt: `Pro até ${new Date(u.valida_ate).toLocaleDateString('pt-BR')}`, cls: 'ok' };
+  if (u.valida_ate && new Date(u.valida_ate) > new Date()) return { txt: new Date(u.valida_ate).getFullYear() >= 2090 ? 'Pro vitalício' : `Pro até ${new Date(u.valida_ate).toLocaleDateString('pt-BR')}`, cls: 'ok' };
+  if (u.equipe) return { txt: `Pro pela equipe ${u.equipe.nome}`, cls: 'ok' };
   return { txt: 'Sem assinatura', cls: 'dec' };
 };
 function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
@@ -1036,7 +1038,11 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
   const [busca, setBusca] = useState('');
   const [filtro, setFiltro] = useState<'todos' | 'pro' | 'sem'>('todos');
   const [sel, setSel] = useState<string | null>(null);
-  const carregar = () => chamar<{ usuarios: UsuarioAdm[] }>('radar-acoes', { acao: 'admin_usuarios' }).then(r => r.erro ? aviso(r.erro) : setLista(r.usuarios));
+  const carregar = () => Promise.all([chamar<{ usuarios: UsuarioAdm[] }>('radar-acoes', { acao: 'admin_usuarios' }), sb.rpc('radar_admin_pro_por_equipe')]).then(([r, eq]) => {
+    if (r.erro) return aviso(r.erro);
+    const porEquipe = (eq.data ?? {}) as Record<string, { nome: string; valida_ate: string }>;
+    setLista(r.usuarios.map(u => ({ ...u, equipe: porEquipe[u.user_id] ?? null })));
+  });
   useEffect(() => { carregar(); }, []);
   const norm = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const vis = (lista ?? []).filter(u => (filtro === 'todos' || (filtro === 'pro') === (situacao(u).cls === 'ok')) && (!busca || norm(`${u.apelido} ${u.nome_completo} ${u.email ?? ''} ${u.cidade} ${u.assessoria ?? ''}`).includes(norm(busca))));

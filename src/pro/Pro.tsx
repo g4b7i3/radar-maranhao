@@ -253,7 +253,7 @@ function ProTelas() {
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'provas' && <TelaProvas />}
-      {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} />}
+      {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
       {aberto && <div className="pro-sobre" role="dialog" aria-label={aberto.tipo === 'atleta' ? `Perfil de @${aberto.nome}` : aberto.nome}>
