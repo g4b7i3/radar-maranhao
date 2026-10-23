@@ -11,6 +11,14 @@ type Linha = { sexo: 'F' | 'M'; posicao: number; apelido: string; cidade: string
 type Prova = { prova_id: string; nome: string; data: string; cidade: string; oficiais: number };
 const dataBR = (d: string) => d.slice(0, 10).split('-').reverse().slice(0, 2).join('/');
 
+// Foto do Maranhão de fundo em cada campeonato (um diferente para cada); campeonato novo pega uma da lista
+const FOTOS_CAMP: Record<string, string> = {
+  'liga-maranhense-2026': 'sao-luis', 'copa-constancia-2026': 'centro-historico',
+  'liga-maranhense-2027': 'lencois-aereo', 'copa-constancia-2027': 'lencois-lagoa',
+};
+const LISTA_FOTOS = ['sao-luis', 'lencois-aereo', 'centro-historico', 'lencois-lagoa'];
+export const fotoCamp = (id: string) => `/img/campeonatos/${FOTOS_CAMP[id] ?? LISTA_FOTOS[[...id].reduce((a, ch) => a + ch.charCodeAt(0), 0) % LISTA_FOTOS.length]}.webp`;
+
 export function TelaCampeonatos({ perfil }: { perfil: Perfil }) {
   const [lista, setLista] = useState<Camp[] | null>(null);
   const [aberto, setAberto] = useState<Camp | null>(null);
@@ -23,7 +31,7 @@ export function TelaCampeonatos({ perfil }: { perfil: Perfil }) {
     <div className="pro-cont">
       {lista === null && <p className="fine">Carregando…</p>}
       {lista?.map(c => (
-        <button key={c.id} className={'pro-card azul pro-camp-card' + (c.inicio > hoje ? ' futuro' : '')} onClick={() => setAberto(c)}>
+        <button key={c.id} className={'pro-card azul pro-camp-card com-foto' + (c.inicio > hoje ? ' futuro' : '')} style={{ '--foto': `url(${fotoCamp(c.id)})` } as React.CSSProperties} onClick={() => setAberto(c)}>
           <div className="pro-linha"><p className="pro-k">{c.tipo === 'constancia' ? <Footprints size={14} aria-hidden="true" /> : <Trophy size={14} aria-hidden="true" />} {c.rotulo ?? `Campeonato ${c.temporada}`}</p><ChevronRight size={20} aria-hidden="true" /></div>
           <p className="pro-camp-nome">{c.nome}{/\b20\d\d\b/.test(c.nome) ? '' : ` ${c.temporada}`}</p>
           {c.inicio > hoje
@@ -55,7 +63,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
   return (
     <div className="pro-cont">
       <TopoVoltar titulo={c.nome} voltar={voltar} />
-      <section className="pro-card azul">
+      <section className="pro-card azul pro-camp-card com-foto pro-camp-topo" style={{ '--foto': `url(${fotoCamp(c.id)})` } as React.CSSProperties}>
         <p className="pro-k">{c.tipo === 'constancia' ? <Footprints size={14} aria-hidden="true" /> : <Trophy size={14} aria-hidden="true" />} {c.rotulo ?? `Campeonato ${c.temporada}`}</p>
         <p className="pro-camp-nome">{c.nome}{/\b20\d\d\b/.test(c.nome) ? '' : ` ${c.temporada}`}</p>
         {eu ? <><p className="pro-big">{eu.posicao}º</p><p className="pro-sub">Você, no {eu.sexo === 'F' ? 'feminino' : 'masculino'}: <b>{eu.pontos} pontos</b> em {eu.provas} {eu.provas === 1 ? 'prova' : 'provas'}{c.tipo === 'constancia' ? ` · ${eu.cidades} ${eu.cidades === 1 ? 'cidade' : 'cidades'}${eu.sequencias ? ` · ${eu.sequencias} ${eu.sequencias === 1 ? 'sequência' : 'sequências'}` : ''}` : ''}.</p></>

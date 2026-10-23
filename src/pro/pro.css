@@ -763,3 +763,12 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-rank-eu>span{flex:1;font-size:.92rem}
 .pro-rank-eu>b{font-size:1.05rem;font-weight:900}
 .pro-rank-eu>b small{font-size:.7rem;font-weight:700;opacity:.8}
+
+/* ───── Campeonatos com foto do Maranhão ───── */
+.pro .pro-camp-card.com-foto{background:linear-gradient(180deg,rgba(8,16,58,.35) 0%,rgba(8,16,58,.08) 28%,rgba(8,16,58,.45) 58%,rgba(8,16,58,.9) 100%),var(--foto) center/cover no-repeat,#0d1840;min-height:220px;animation:none;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;box-shadow:0 18px 36px -18px rgba(8,16,58,.7)}
+.pro .pro-camp-card.com-foto::before,.pro .pro-camp-card.com-foto::after{display:none}
+.pro .pro-camp-card.com-foto.futuro{background:linear-gradient(180deg,rgba(8,16,58,.2) 0%,rgba(8,16,58,.5) 40%,rgba(8,16,58,.92) 100%),radial-gradient(120% 90% at 100% 0%,rgba(255,209,102,.22),transparent 55%),var(--foto) center/cover no-repeat,#0d1840}
+.pro .pro-camp-card.com-foto .pro-linha{margin-bottom:auto}
+.pro .pro-camp-card.com-foto .pro-camp-nome{font-size:2.3rem;text-shadow:0 4px 18px rgba(0,0,0,.45)}
+.pro .pro-camp-card.com-foto .pro-sub{text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.pro .pro-camp-topo{cursor:default;min-height:260px}
