@@ -112,9 +112,9 @@ function Anuncie() {
       <div className="anuncie-pista" aria-hidden="true" />
       <p className="anuncie-k">Espaço para anunciantes</p>
       <h2 id="anuncie-tit">Todo corredor do Maranhão passa por aqui <em>antes de largar.</em></h2>
-      <p className="anuncie-txt">É aqui que eles escolhem a próxima prova, salvam a data e se programam. Coloque sua marca no caminho de quem treina, se cuida e compra.</p>
+      <p className="anuncie-txt">Coloque sua marca no caminho de quem treina, se cuida e compra.</p>
       <ul className="anuncie-quem" aria-label="Pra quem é">
-        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia e crossfit', 'Fotógrafo', 'Assessoria', 'Comida perto da largada', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
+        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia', 'Fotógrafo', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
       </ul>
       <div className="anuncie-pe">
         <a className="anuncie-btn" href={`https://wa.me/${ZAP_ANUNCIO}?text=${encodeURIComponent(msg)}`} target="_blank" rel="noopener" data-umami-event="Anuncie: WhatsApp">Quero anunciar aqui<span aria-hidden="true">→</span></a>
