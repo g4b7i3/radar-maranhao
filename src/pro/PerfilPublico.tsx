@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Crown, Share2 } from 'lucide-react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { Crown, Share2, ShieldCheck } from 'lucide-react';
 import { sb, LIGAS, pct, relogio, kmTxt, dataBR, type Liga, linkPerfil } from './sb';
 import { GRUPOS, MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
 import './pro.css';
@@ -10,11 +10,13 @@ import { Recordes } from './Recordes';
 import { MapaCidades } from './Mapa';
 import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
+// painel do admin: só carrega quando o admin abre (não pesa no perfil público)
+const AreaAdmin = lazy(() => import('./Telas').then(m => ({ default: m.AdminUsuarioArea })));
 
 // Perfil público do atleta: radarcorridasma.com.br/?atleta=apelido
 // Mostra só o que já aparece no ranking (apelido, cidade, liga, provas e medalhas). Nada de nome completo, idade ou contato.
 type Prova = { id: string; prova: string; data: string; cidade: string; uf?: string; km: number; tempo: number; nota: number; status: string; geral: number | null; faixa: number | null; total: number | null };
-type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[]; seguidores: number; seguindo: number; reacoes: Reacoes; minha: TipoReacao | null; eu: boolean; sigo: boolean; logado: boolean };
+type Dados = { foto?: string | null; apelido: string; cidade: string; assessoria: string | null; sexo: 'F' | 'M'; faixa: string | null; indice: number | null; liga: Liga | null; resultados: Prova[]; medalhas: string[]; reis: { prova: string; data: string; km: number; nota: number }[]; seguidores: number; seguindo: number; reacoes: Reacoes; minha: TipoReacao | null; eu: boolean; sigo: boolean; logado: boolean; privado?: boolean; admin_uid?: string | null };
 
 function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
   const svg = useMemo(() => medalhaSVG(m, true, tam), [m, tam]);
@@ -24,6 +26,8 @@ function Desenho({ m, tam = 64 }: { m: Medalha; tam?: number }) {
 export default function PerfilPublico({ apelido }: { apelido: string }) {
   const [d, setD] = useState<Dados | null | undefined>(undefined);
   const [todas, setTodas] = useState(false);
+  const [painel, setPainel] = useState(false);
+  const [msgAdm, setMsgAdm] = useState('');
   useEffect(() => {
     document.title = `@${apelido} · Radar Pro`;
     sb.rpc('radar_perfil_publico', { p_apelido: apelido.toLowerCase() }).then(({ data }) => setD((data as Dados) ?? null));
@@ -68,8 +72,14 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
             {ligaInfo && <span className={`pro-liga l-${ligaInfo.id}`}>Liga {ligaInfo.nome}</span>}
             {d.indice != null && <span className="pro-liga l-verde">Índice {pct(d.indice)}</span>}
             {d.reis.length > 0 && <span className="pro-liga l-ouro"><Crown size={14} aria-hidden="true" /> {d.reis.length}× {d.sexo === 'F' ? 'Rainha' : 'Rei'} da prova</span>}
+            {d.privado && <span className="pro-liga">Perfil privado (só você vê)</span>}
           </div>
+          {d.admin_uid && <button className="btn outline pro-adm-btn" onClick={() => setPainel(!painel)} aria-expanded={painel}><ShieldCheck size={16} aria-hidden="true" />{painel ? 'Fechar painel do admin' : 'Painel do admin'}</button>}
         </section>
+        {d.admin_uid && painel && <Suspense fallback={<p className="fine pro-centro">Carregando o painel…</p>}>
+          {msgAdm && <p className="pro-adm-msg" role="status">{msgAdm}</p>}
+          <AreaAdmin uid={d.admin_uid} voltar={() => setPainel(false)} aviso={m => setMsgAdm(m)} />
+        </Suspense>}
 
         <div className="pro-mini">
           <div><b>{d.resultados.length}</b><small>provas</small></div>

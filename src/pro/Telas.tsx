@@ -1056,7 +1056,7 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
   );
 }
 type AreaAdm = { perfil: Perfil & { criado_em?: string }; email: string | null; valida_ate: string | null; resultados: (Resultado & { user_id: string })[]; medalhas: { medalha: string; temporada: number; resultado_id: string | null }[]; pagamentos: { status: string; valor: number; criado_em: string }[]; pedidos: { nome: string; data: string; cidade: string; status: string; prova_id?: string | null }[]; duelos: number };
-function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => void; aviso: (m: string) => void }) {
+export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: () => void; aviso: (m: string) => void }) {
   const [d, setD] = useState<AreaAdm | null>(null);
   const carregar = () => chamar<AreaAdm>('radar-acoes', { acao: 'admin_usuario', user_id: uid }).then(r => r.erro ? aviso(r.erro) : setD(r));
   useEffect(() => { carregar(); }, [uid]);
