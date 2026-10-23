@@ -215,7 +215,7 @@ Deno.serve(async req => {
   // 3) Pontos
   const temporada = Number(prova.date.slice(0, 4));
   const d: Record<string, number> = { concluir: 10 };
-  if (km >= 42) d.maratona = 20; else if (km >= 21) d.meia = 10; else if (km >= 10) d.dez_km = 5;
+  if (km >= 99.5) d.ultra_100 = 50; else if (km > 42.5) d.ultra = 30; else if (km >= 42) d.maratona = 20; else if (km >= 21) d.meia = 10; else if (km >= 10) d.dez_km = 5;
   if (melhorAntes && tempo < melhorAntes) d.recorde_pessoal = 5;
   if (!(hist ?? []).some(h => Number(String(h.prova_data).slice(0, 4)) === temporada && norm(h.cidade) === norm(prova.city))) d.cidade_nova = 3;
   const podio = status === 'verificado' && !!oficial && ((oficial.colocacao_geral ?? 99) <= 3 || (oficial.colocacao_faixa ?? 99) <= 3);
