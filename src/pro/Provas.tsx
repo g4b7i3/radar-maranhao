@@ -4,6 +4,7 @@ import { CalendarDays, ExternalLink, MapPin, Search } from 'lucide-react';
 import { status, norm, load, store, icsFor, type Race } from '../lib';
 import { Sheet } from '../App';
 import { useClimas } from '../Clima';
+import { useVoltar } from './voltar';
 
 type Filtro = 'proximas' | 'abertas' | 'mes' | 'trail' | 'passadas';
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00-03:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).replace('.', '');
@@ -16,6 +17,7 @@ export function TelaProvas() {
   const [filtro, setFiltro] = useState<Filtro>('proximas');
   const [busca, setBusca] = useState('');
   const [aberta, setAberta] = useState<Race | null>(null);
+  useVoltar(!!aberta, () => setAberta(null));
   const [salvas, setSalvas] = useState<string[]>(() => load('radar-favorites', []));
   const salvar = (e: Race) => { const v = salvas.includes(e.id) ? salvas.filter(id => id !== e.id) : [...salvas, e.id]; setSalvas(v); store('radar-favorites', v); };
   useEffect(() => { fetch('/data/radar.json', { cache: 'no-store' }).then(r => r.json()).then(d => setLista((d.events ?? []) as Race[])).catch(() => setErro(true)); }, []);

@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Lock, LogOut, UsersRound } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { ItemFeed, Publicar, type Evento } from './Feed';
+import { useVoltar } from './voltar';
 
 type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
 
 export function TelaComunidades({ perfil, pro, assinar }: { perfil: Perfil; pro: boolean; assinar: () => void }) {
   const [lista, setLista] = useState<Comunidade[] | null>(null);
   const [aberta, setAberta] = useState<Comunidade | null>(null);
+  useVoltar(!!aberta, () => setAberta(null));
   const [indo, setIndo] = useState<string | null>(null);
   const carregar = () => sb.rpc('radar_comunidades').then(({ data }) => setLista((data ?? []) as Comunidade[]));
   useEffect(() => { carregar(); }, [aberta]);
