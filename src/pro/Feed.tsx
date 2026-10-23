@@ -99,7 +99,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
         <p className="pro-feed-txt"><Crown size={16} aria-hidden="true" /> É {d.sexo === 'F' ? <b>Rainha</b> : <b>Rei</b>} da prova nos {kmTxt(Number(d.km))} da <b>{d.prova}</b>: melhor nota por idade entre {d.atletas ? `${d.atletas} atletas` : 'todos'} ({pct(d.nota)}%, {relogio(Number(d.tempo))}).</p>
       )}
       {post && <>
-        {post.texto && <p className="pro-feed-post">{post.texto}</p>}
+        {post.texto && <p className="pro-feed-post"><TextoComLinks texto={post.texto} /></p>}
         {post.foto && <img className="pro-feed-foto" src={post.foto} alt="" loading="lazy" />}
       </>}
       {e.tipo === 'duelo' && (
@@ -145,6 +145,27 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
   );
 }
 
+/* ───────── Links no texto do post: viram clicáveis (só http/https; abre em outra aba) ───────── */
+const RE_LINK = /((?:https?:\/\/|www\.)[^\s<>"']+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|com\.br|br|net|org|app|io|me|info|blog|link|site|store|run)(?:\/[^\s<>"']*)?)/gi;
+function TextoComLinks({ texto }: { texto: string }) {
+  const partes: (string | { href: string; txt: string })[] = [];
+  let i = 0;
+  for (const m of texto.matchAll(RE_LINK)) {
+    let bruto = m[0]; const ini = m.index ?? 0;
+    const sobra = bruto.match(/[.,;:!?)\]]+$/)?.[0] ?? ''; // pontuação no fim da frase não faz parte do link
+    if (sobra) bruto = bruto.slice(0, -sobra.length);
+    if (ini > 0 && texto[ini - 1] === '@') continue; // e-mail ou @menção
+    let href = /^https?:\/\//i.test(bruto) ? bruto : 'https://' + bruto;
+    try { const u = new URL(href); if (!/^https?:$/.test(u.protocol)) continue; href = u.href; } catch { continue; }
+    partes.push(texto.slice(i, ini));
+    const curto = bruto.replace(/^https?:\/\//i, '').replace(/^www\./i, '');
+    partes.push({ href, txt: curto.length > 40 ? curto.slice(0, 38) + '…' : curto });
+    i = ini + bruto.length;
+  }
+  partes.push(texto.slice(i));
+  return <>{partes.map((x, k) => typeof x === 'string' ? x : <a key={k} className="pro-feed-link" href={x.href} target="_blank" rel="noopener noreferrer nofollow ugc">{x.txt}</a>)}</>;
+}
+
 /* ───────── Publicar: texto até 1000 caracteres (10 por dia) e foto a cada 2 dias, reduzida no celular. Só no Pro. ───────── */
 export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: { perfil: Perfil; pro: boolean; assinar?: () => void; publicou: () => void; comunidade?: { id: string; nome: string }; dica?: string }) {
   const [aberto, setAberto] = useState(false);
@@ -188,7 +209,7 @@ export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: {
         <button className="btn solid pro-btn-p" disabled={indo || (!texto.trim() && !foto)} onClick={enviar}><Send size={16} aria-hidden="true" />{indo ? 'Publicando…' : 'Publicar'}</button>
       </div>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-sem-margem">{pro ? 'Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir.' : 'Modo grátis: texto até 600 caracteres, 10 posts por dia. Foto (uma a cada 2 dias) é do Radar Pro.'} Sem comentários: a galera reage com 👏 🔥 😮 e você recebe no sininho.</p>
+      <p className="fine pro-sem-margem">{pro ? 'Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir.' : 'Modo grátis: texto até 600 caracteres, 10 posts por dia. Foto (uma a cada 2 dias) é do Radar Pro.'} Pode colar links: eles ficam clicáveis no post. Sem comentários: a galera reage com 👏 🔥 😮 e você recebe no sininho.</p>
     </section>
   );
 }

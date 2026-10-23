@@ -672,3 +672,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-comun-cores button[aria-pressed="true"]{border:3px solid var(--cobalt);box-shadow:0 0 0 2px #fff inset}
 .pro-check{display:flex;align-items:center;gap:8px;margin:6px 0 10px;font-weight:600;font-size:.95rem;cursor:pointer}
 .pro-check input{width:20px;height:20px;accent-color:var(--cobalt)}
+.pro-feed-link{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
