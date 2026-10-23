@@ -2249,7 +2249,7 @@
       "location": "UEMA, Campus Paulo VI",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Esgotadas",
+      "status": "Abertas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceName": "Crono Esportes",
@@ -2267,7 +2267,7 @@
         "text": "R$ 60 a R$ 90 + 1 kg de alimento"
       },
       "start": "05:45",
-      "verifiedAt": "2026-10-22T14:15:45.952Z",
+      "verifiedAt": "2026-10-23T15:21:48.557Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3128,7 +3128,7 @@
       "location": "São Luís (local de largada a confirmar)",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026",
       "sourceName": "Central da Corrida",
@@ -3139,7 +3139,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-20T18:06:44.443Z",
+      "verifiedAt": "2026-10-23T15:21:48.557Z",
       "firstSeenAt": "2026-10-20T17:54:26.033Z"
     },
     {
@@ -3262,9 +3262,54 @@
       "start": "06:00",
       "verifiedAt": "2026-10-23T13:19:43.298Z",
       "firstSeenAt": "2026-10-23T13:19:43.298Z"
+    },
+    {
+      "id": "corrida-solidaria-2026-sao-luis",
+      "name": "CORRIDA SOLIDÁRIA 2026",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [
+        5,
+        10
+      ],
+      "location": "Praça Dos Pescadores, Avenida Litorânea",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026",
+      "sourceUrl": "https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026",
+      "sourceName": "Crono Esportes",
+      "publishedAt": null,
+      "confidence": "Página de inscrição oficial",
+      "notes": "Largada às 6h. Encontrada automaticamente na Crono Esportes; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-23T15:21:48.557Z",
+      "firstSeenAt": "2026-10-23T15:21:48.557Z"
     }
   ],
   "changes": [
+    {
+      "id": "c8b96f8d-2af2-44b3-ac23-b11660b05704",
+      "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
+      "version": "[\"2026-11-14\",[5,10],\"São Luís (local de largada a confirmar)\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-23T15:21:48.557Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "a9538a90-e11a-4bb5-b21f-89b189cc907d",
+      "eventId": "corrida-solidaria-2026-sao-luis",
+      "version": "[\"2026-12-20\",[5,10],\"Praça Dos Pescadores, Avenida Litorânea\",null,null,\"Abertas\",\"https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-23T15:21:48.557Z",
+      "notifiedAt": null
+    },
     {
       "id": "d463c4c7-d643-4426-b9ea-20da20eb2530",
       "eventId": "negro-cosme-2026-imperatriz",
@@ -4826,7 +4871,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-23T13:38:20.653Z",
+  "lastChecked": "2026-10-23T15:21:48.557Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
