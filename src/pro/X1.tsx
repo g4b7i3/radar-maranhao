@@ -2,18 +2,24 @@
 // Confirmado, vai pro feed ("venceu" / "foi derrotado") e gera card pro story.
 import { useEffect, useRef, useState } from 'react';
 import { Download, Share2, Swords, X } from 'lucide-react';
-import { sb, kmTxt, dataBR, relogio } from './sb';
+import { sb, kmTxt, dataBR, relogio, pct } from './sb';
 import { Avatar } from './Foto';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { AZUL, SIMBOLO, fonte, type Ctx } from '../EuVou';
 import { FUNDOS, fotoPerfil, fotoRedonda } from './CardResultado';
 import { salvarImagem } from '../salvar';
 
-type X1 = { id: string; km: number; data: string; local: string | null; status: 'convidado' | 'aceito' | 'lancado' | 'confirmado'; sou_criador: boolean; lancei: boolean; outro: string; foto_outro: string | null; eu_apelido: string; eu_foto: string | null; meu_tempo: number | null; tempo_outro: number | null };
+type X1 = { id: string; km: number; data: string; local: string | null; status: 'convidado' | 'aceito' | 'lancado' | 'confirmado'; sou_criador: boolean; lancei: boolean; outro: string; foto_outro: string | null; eu_apelido: string; eu_foto: string | null; meu_tempo: number | null; tempo_outro: number | null; minha_nota: number | null; nota_outro: number | null };
 const DISTS = [0.2, 0.4, 1, 3, 5, 10, 21.0975];
 // Provas curtas: um número sozinho é segundos (ex.: 28 = 28 s); acima de 1 km, segue o padrão (25 = 25 min).
 const lerX1 = (t: string, km: number) => { const p = t.trim(); if (km <= 1 && /^\d+$/.test(p)) return Number(p) > 0 ? Number(p) : null; return lerTempo(p); };
 const exemplo = (km: number) => km <= 0.2 ? ['28', '30'] : km <= 0.4 ? ['1:05', '1:08'] : km <= 1 ? ['3:40', '3:52'] : ['25:30', '26:10'];
+/** Linha informativa: quem venceria pela nota por idade (não muda o resultado do X1). */
+export function linhaIdade(a: string, na: number | null | undefined, b: string, nb: number | null | undefined) {
+  if (na == null || nb == null) return null;
+  const quem = na === nb ? 'empate' : na > nb ? `${a} venceria` : `${b} venceria`;
+  return `Pela nota por idade: ${quem} (${pct(na)}% x ${pct(nb)}%). Não conta, vale o tempo.`;
+}
 const hojeISO = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
 
 export function SecaoX1() {
@@ -85,6 +91,7 @@ function CartaoX1({ x, rpc }: { x: X1; rpc: (nome: string, args: Record<string, 
       <div className={!venci && !empate ? 'v' : empate ? '' : 'p'}><Avatar foto={x.foto_outro} apelido={x.outro} tam={48} /><b>@{x.outro}</b><span>{relogio(x.tempo_outro)}</span></div>
     </div>
   );
+  const idade = linhaIdade('você', x.minha_nota, `@${x.outro}`, x.nota_outro);
   return (
     <section className={'pro-card pro-x1' + (x.status === 'confirmado' ? (venci ? ' venci' : empate ? '' : ' perdi') : '')}>
       <div className="pro-linha"><p className="pro-k cinza">X1 · {kmTxt(Number(x.km))} · {dataBR(x.data)}{x.local ? ` · ${x.local}` : ''}</p><span className="pro-x1-contra">vs @{x.outro}</span></div>
@@ -103,6 +110,7 @@ function CartaoX1({ x, rpc }: { x: X1; rpc: (nome: string, args: Record<string, 
           </div>)}
       {x.status === 'lancado' && <>
         {placar}
+        {idade && <p className="pro-x1-idade">{idade}</p>}
         {x.lancei
           ? <p className="pro-sub pro-sem-margem pro-centro">Esperando @{x.outro} confirmar os tempos.</p>
           : <><p className="pro-sem-margem pro-centro">@{x.outro} lançou esses tempos. Está certo?</p>
@@ -111,6 +119,7 @@ function CartaoX1({ x, rpc }: { x: X1; rpc: (nome: string, args: Record<string, 
       {x.status === 'confirmado' && <>
         <p className="pro-x1-res">{venci ? '🏆 Você venceu o X1!' : empate ? 'Empate!' : `@${x.outro} venceu. Revanche?`}</p>
         {placar}
+        {idade && <p className="pro-x1-idade">{idade}</p>}
         {card ? <CardX1 x={x} fechar={() => setCard(false)} /> : <button className="btn outline pro-btn" onClick={() => setCard(true)}>Card pro story</button>}
       </>}
     </section>
@@ -162,6 +171,12 @@ async function desenhar(c: HTMLCanvasElement, x: X1, fundo: string, fotos: Map<s
   ctx.fillStyle = '#3a2600'; fonte(ctx, 900, 52, true); ctx.fillText('VS', W / 2, y + 48);
   ctx.shadowBlur = 14; ctx.fillStyle = '#fff'; fonte(ctx, 600, 34, false);
   ctx.fillText(empate ? 'Ninguém cedeu. Revanche?' : `Diferença: ${relogio(Math.abs(pTempo - vTempo))}`, W / 2, y + 340);
+  const [vNota, pNota] = venci || empate ? [x.minha_nota, x.nota_outro] : [x.nota_outro, x.minha_nota];
+  if (vNota != null && pNota != null) {
+    fonte(ctx, 500, 26, false); ctx.globalAlpha = .75;
+    ctx.fillText(`Nota por idade: ${pct(vNota)}% x ${pct(pNota)}%${vNota === pNota ? '' : ` (${vNota > pNota ? '@' + vNome : '@' + pNome} na frente)`} · não conta`, W / 2, y + 392);
+    ctx.globalAlpha = 1;
+  }
   ctx.textAlign = 'left'; fonte(ctx, 900, 40, true); ctx.fillText('Chame um amigo pro X1 no Radar Pro', X, H - 140);
   fonte(ctx, 600, 30, false); ctx.globalAlpha = .9; ctx.fillText('radarcorridasma.com.br/pro', X, H - 92); ctx.globalAlpha = 1;
   ctx.shadowBlur = 0;

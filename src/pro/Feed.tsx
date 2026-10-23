@@ -1,5 +1,6 @@
 // Feed "Aconteceu no Radar": provas verificadas, Rei/Rainha da prova e duelos, com a foto de cada atleta.
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
+import { linhaIdade } from './X1';
 import { useEffect, useMemo, useState } from 'react';
 import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil } from './sb';
@@ -8,7 +9,7 @@ import { medalhaSVG } from './medalhas';
 
 export type Evento = {
   quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1'; alvo: string; apelido: string; foto: string | null; cidade: string;
-  dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string; perdedor?: string; foto_perdedor?: string | null; local?: string | null; tempo_v?: number; tempo_p?: number; empate?: boolean };
+  dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string; perdedor?: string; foto_perdedor?: string | null; local?: string | null; tempo_v?: number; tempo_p?: number; empate?: boolean; nota_v?: number | null; nota_p?: number | null };
   reacoes: Reacoes; minha: TipoReacao | null;
 };
 type DadosPost = { id?: string; texto?: string; foto?: string | null; meu?: boolean };
@@ -113,6 +114,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
             <em>vs</em>
             <span className={d.empate ? 'v' : 'p'}><Avatar foto={d.foto_perdedor ?? null} apelido={d.perdedor!} tam={34} /><b>{relogio(Number(d.tempo_p))}</b><small>{d.empate ? 'empatou' : 'foi derrotado'}</small></span>
           </div>
+          {(() => { const l = linhaIdade(`@${e.apelido}`, d.nota_v, `@${d.perdedor}`, d.nota_p); return l ? <p className="pro-x1-idade">{l}</p> : null; })()}
         </div>
       )}
       <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{post && ((meu || post.meu) ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label="Apagar post"><Trash2 size={15} aria-hidden="true" /></button> : post.id ? <Sinalizar postId={post.id} /> : null)}</footer>
