@@ -122,6 +122,35 @@ function Sinalizar({ postId }: { postId: string }) {
   return feito ? <small className="pro-feed-sinal">Sinalizado. Valeu.</small> : <button className="btn text pro-feed-apagar" onClick={enviar} aria-label="Sinalizar post" title="Sinalizar"><Flag size={14} aria-hidden="true" /></button>;
 }
 
+/* ───────── Aniversariantes do mês: a galera reage com 👏 🔥 😮 (o aniversariante recebe no sininho) ───────── */
+type Aniver = { apelido: string; foto: string | null; cidade: string; dia: number; hoje: boolean; alvo: string; reacoes: Reacoes; minha: TipoReacao | null; eu: boolean };
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+function Aniversariantes() {
+  const [lista, setLista] = useState<Aniver[] | null>(null);
+  const [todos, setTodos] = useState(false);
+  useEffect(() => { sb.rpc('radar_aniversariantes').then(({ data }) => setLista((data ?? []) as Aniver[])); }, []);
+  if (!lista?.length) return null;
+  const mes = MESES[new Date(Date.now() - 3 * 3600_000).getUTCMonth()];
+  const vis = todos ? lista : lista.slice(0, 5);
+  return (
+    <section className="pro-card pro-aniver">
+      <p className="pro-aniver-tit">🎂 Aniversariantes de {mes} <small>{lista.length}</small></p>
+      <ul>
+        {vis.map(a => (
+          <li key={a.apelido} className={a.hoje ? 'hoje' : ''}>
+            <a href={`/?atleta=${encodeURIComponent(a.apelido)}`} className="pro-aniver-quem">
+              <Avatar foto={a.foto} apelido={a.apelido} tam={40} />
+              <span className="pro-aniver-txt"><b>{a.eu ? 'Você' : `@${a.apelido}`}</b><small>{a.hoje ? 'Hoje! 🎉' : `Dia ${a.dia}`} · {a.cidade}</small></span>
+            </a>
+            {!a.eu && <Aplauso alvo={a.alvo} reacoes={a.reacoes} minha={a.minha} />}
+          </li>
+        ))}
+      </ul>
+      {lista.length > 5 && <button className="btn text pro-btn-p" onClick={() => setTodos(!todos)}>{todos ? 'Ver menos' : `Ver todos (${lista.length})`}</button>}
+    </section>
+  );
+}
+
 export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?: boolean; assinar?: () => void }) {
   const [soSigo, setSoSigo] = useState(false);
   const [lista, setLista] = useState<Evento[] | null>(null);
@@ -136,6 +165,7 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
         <button className="chip" aria-pressed={!soSigo} onClick={() => setSoSigo(false)}>Todo mundo</button>
         <button className="chip" aria-pressed={soSigo} onClick={() => setSoSigo(true)}>Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
       </div>
+      <Aniversariantes />
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} />
       {lista === null && <p className="fine">Carregando…</p>}
       {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova verificada aparece aqui.'}</p>}
