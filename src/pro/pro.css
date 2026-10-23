@@ -773,3 +773,7 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro .pro-camp-card.com-foto .pro-sub{text-shadow:0 2px 8px rgba(0,0,0,.4)}
 .pro .pro-camp-topo{cursor:default;min-height:260px}
 .pro-comun-criador{margin-top:6px!important;padding:0 16px}
+.pro-comun-ideias{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px -2px 2px;padding:2px}
+.pro-comun-ideias::-webkit-scrollbar{display:none}
+.pro-comun-ideias small{flex:none;font-size:.72rem;font-weight:700;color:var(--muted)}
+.pro-comun-ideias button{flex:none;font-size:.74rem;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--cobalt-tint,#e9eefc);color:var(--cobalt);border:0;cursor:pointer;white-space:nowrap}

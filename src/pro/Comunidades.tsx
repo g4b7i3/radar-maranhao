@@ -14,6 +14,7 @@ type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 
 export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfil: Perfil; pro: boolean; assinar: () => void; admin?: boolean }) {
   const [criando, setCriando] = useState(false);
   const [busca, setBusca] = useState('');
+  const [ideia, setIdeia] = useState<Ideia | null>(null);
   const [lista, setLista] = useState<Comunidade[] | null>(null);
   const [aberta, setAberta] = useState<Comunidade | null>(null);
   useVoltar(!!aberta, () => setAberta(null), aberta?.id);
@@ -56,8 +57,14 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
   return (
     <div className="pro-cont">
       {criando
-        ? <FormComunidade admin={admin} fechar={() => setCriando(false)} salvou={() => { setCriando(false); carregar(); }} />
-        : <button className="btn outline pro-comun-nova" onClick={() => setCriando(true)}><Plus size={16} aria-hidden="true" />Criar uma comunidade</button>}
+        ? <FormComunidade admin={admin} ideia={ideia} fechar={() => { setCriando(false); setIdeia(null); }} salvou={() => { setCriando(false); setIdeia(null); carregar(); }} />
+        : <>
+          <button className="btn outline pro-comun-nova" onClick={() => { setIdeia(null); setCriando(true); }}><Plus size={16} aria-hidden="true" />Criar uma comunidade</button>
+          <div className="pro-comun-ideias" aria-label="Ideias de comunidade">
+            <small>Ideias:</small>
+            {IDEIAS.map(i => <button key={i.rotulo} onClick={() => { setIdeia(i); setCriando(true); }}>{i.emoji} {i.rotulo}</button>)}
+          </div>
+        </>}
       {(lista?.length ?? 0) > 4 && <label className="pro-busca"><Search size={18} aria-hidden="true" /><input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Pesquisar comunidade" aria-label="Pesquisar comunidade" /></label>}
       {lista === null && <p className="fine">Carregando…</p>}
       {lista && q && !filtradas.length && <p className="fine">Nenhuma comunidade com “{busca.trim()}”. Que tal criar?</p>}
@@ -100,10 +107,21 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair, admin, mudou: m
   );
 }
 
+type Ideia = { emoji: string; rotulo: string; desc: string };
+/** Sugestões que aparecem pequenas no topo: tocar já abre o formulário com emoji e descrição de exemplo. */
+const IDEIAS: Ideia[] = [
+  { emoji: '🏪', rotulo: 'Seu negócio', desc: 'Clientes da loja, clínica, academia ou estúdio: novidades, descontos e treinos juntos.' },
+  { emoji: '🏃', rotulo: 'Assessoria', desc: 'Os alunos da assessoria: planilha, treino coletivo e provas do mês.' },
+  { emoji: '👟', rotulo: 'Grupo de treino', desc: 'Quem treina junto: horário, ponto de encontro e o longão do fim de semana.' },
+  { emoji: '🏘️', rotulo: 'Seu bairro', desc: 'Corredores do bairro: percursos, horários e companhia pra treinar.' },
+  { emoji: '🏁', rotulo: 'Uma prova', desc: 'Quem vai correr essa prova: kit, carona, estratégia e fotos depois.' },
+  { emoji: '👨‍👩‍👧', rotulo: 'Família e amigos', desc: 'A turma que corre junto: combina prova, treino e comemoração.' },
+];
+
 const CORES = ['#dbe8ff', '#ffe1ec', '#dff5e6', '#fff1cc', '#ece3ff', '#ffe4d1'];
 /** Admin: cria ou edita uma comunidade (o servidor confere se é o admin). */
-function FormComunidade({ c, fechar, salvou, admin = false }: { c?: Comunidade; admin?: boolean; fechar: () => void; salvou: (d?: { nome: string; descricao: string; emoji: string; cor: string; foto: string | null } | null) => void }) {
-  const [f, setF] = useState({ nome: c?.nome ?? '', descricao: c?.descricao ?? '', emoji: c?.emoji ?? '👥', cor: c?.cor ?? CORES[0], avisar: admin, foto: c?.foto ?? '' });
+function FormComunidade({ c, fechar, salvou, admin = false, ideia }: { c?: Comunidade; admin?: boolean; ideia?: Ideia | null; fechar: () => void; salvou: (d?: { nome: string; descricao: string; emoji: string; cor: string; foto: string | null } | null) => void }) {
+  const [f, setF] = useState({ nome: c?.nome ?? '', descricao: c?.descricao ?? ideia?.desc ?? '', emoji: c?.emoji ?? ideia?.emoji ?? '👥', cor: c?.cor ?? CORES[0], avisar: admin, foto: c?.foto ?? '' });
   const [subindo, setSubindo] = useState(false);
   const entrada = useRef<HTMLInputElement>(null);
   const escolherFoto = async (arq?: File) => {
