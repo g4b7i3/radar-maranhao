@@ -204,11 +204,11 @@ Deno.serve(async req => {
   // 2) Status e alarmes contra fraude
   let status = oficial ? 'verificado' : link && !gratis ? 'em_analise' : 'declarado';
   let motivo: string | null = oficial ? null : gratis ? 'Verificar com o resultado oficial é do Radar Pro. Assine para validar esta prova.' : link ? (linkLido ? 'O Radar leu o resultado, mas não achou o seu nome/peito: conferir.' : 'Comprovante enviado: aguardando aprovação.') : null;
-  if (!oficial && !gratis && n > 80) { status = 'em_analise'; motivo = 'Nota por idade acima de 80%: precisa do resultado oficial.'; }
+  if (!oficial && !gratis && n > 90) { status = 'em_analise'; motivo = 'Nota por idade acima de 90%: precisa do resultado oficial.'; }
   if (!oficial && !gratis && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
   if (viaIA) {
     motivo = `Verificado por leitura automática do link (${viaIA.fonte}).`;
-    if (n > 80) { status = 'em_analise'; motivo = 'Leitura automática com nota acima de 80%: o Radar confere.'; }
+    if (n > 90) { status = 'em_analise'; motivo = 'Leitura automática com nota acima de 90%: o Radar confere.'; }
     else if (melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Leitura automática com melhora de mais de 8%: o Radar confere.'; }
   }
 
