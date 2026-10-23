@@ -108,17 +108,11 @@ const ZAP_ANUNCIO = '5598991379476';
 function Anuncie() {
   const msg = 'Olá! Vi o espaço de anúncio no Radar Corridas Maranhão e quero colocar meu negócio na frente dos corredores. Como funciona?';
   return (
-    <aside className="anuncie" aria-labelledby="anuncie-tit">
+    <aside className="anuncie" aria-label="Espaço para anunciantes">
       <div className="anuncie-pista" aria-hidden="true" />
-      <p className="anuncie-k">Espaço para anunciantes</p>
-      <h2 id="anuncie-tit">Todo corredor do Maranhão passa por aqui <em>antes de largar.</em></h2>
-      <p className="anuncie-txt">Coloque sua marca no caminho de quem treina, se cuida e compra.</p>
-      <ul className="anuncie-quem" aria-label="Pra quem é">
-        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia', 'Fotógrafo', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
-      </ul>
       <div className="anuncie-pe">
         <a className="anuncie-btn" href={`https://wa.me/${ZAP_ANUNCIO}?text=${encodeURIComponent(msg)}`} target="_blank" rel="noopener" data-umami-event="Anuncie: WhatsApp">Quero anunciar aqui<span aria-hidden="true">→</span></a>
-        <span className="anuncie-slot" aria-hidden="true"><b>SUA</b><b>MARCA</b><small>no nosso site</small></span>
+        <span className="anuncie-slot" aria-hidden="true"><b>SUA</b><b>MARCA</b><small>em nosso site</small></span>
       </div>
       <p className="anuncie-fine">≈ 2 mil visualizações por dia</p>
     </aside>

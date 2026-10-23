@@ -970,7 +970,7 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 @media (max-width: 760px) { .chamada-pro { margin: 6px 0 8px; width: calc(100vw - 2 * var(--gutter, 16px)); max-width: 520px; gap: 10px; padding-right: 14px; font-size: .95rem; } .chamada-pro-selo { padding: 5px 9px; font-size: .78rem; } .chamada-pro-txt { flex: 1; white-space: normal; } }
 
 /* ───────── Anuncie aqui (espaço de publicidade na agenda) ───────── */
-.anuncie { position: relative; overflow: hidden; margin: 4px 0 16px; padding: 18px 18px 14px; border-radius: 18px; background: #10131f; color: #f4efe6; isolation: isolate; }
+.anuncie { position: relative; overflow: hidden; margin: 4px 0 14px; padding: 12px 12px 10px; border-radius: 18px; background: #10131f; color: #f4efe6; isolation: isolate; }
 .anuncie-pista { position: absolute; inset: 0; z-index: -1; background:
   repeating-linear-gradient(115deg, transparent 0 46px, rgb(255 255 255 / .035) 46px 50px),
   radial-gradient(120% 90% at 100% 0%, rgb(244 196 106 / .16), transparent 55%); }
@@ -981,7 +981,7 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .anuncie-txt { margin: 8px 0 0; font-size: .86rem; line-height: 1.4; color: rgb(244 239 230 / .78); max-width: 46ch; }
 .anuncie-quem { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
 .anuncie-quem li { font-size: .7rem; font-weight: 600; padding: 3px 8px; border-radius: 999px; border: 1px solid rgb(244 239 230 / .22); color: rgb(244 239 230 / .9); }
-.anuncie-pe { margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+.anuncie-pe { margin-top: 0; display: flex; align-items: center; gap: 12px; }
 .anuncie-btn { flex: 1; min-width: 0; white-space: nowrap; display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; padding: 0 16px; border-radius: 12px; background: #f4c46a; color: #1a1306; font-weight: 800; font-size: .92rem; text-decoration: none; transition: transform .15s ease, background .2s ease; }
 .anuncie-btn span { font-size: 1.3rem; transition: transform .2s ease; }
 .anuncie-btn:hover { background: #ffd27d; }
@@ -990,5 +990,5 @@ html:has(.install) .fabs { bottom: calc(28px + var(--install-h, 0px) + env(safe-
 .anuncie-slot { flex: none; width: 58px; height: 58px; border: 1.5px dashed rgb(244 239 230 / .45); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; transform: rotate(-4deg); }
 .anuncie-slot b { font-size: .7rem; font-weight: 800; font-stretch: 72%; letter-spacing: .06em; }
 .anuncie-slot small { margin-top: 3px; font-size: .46rem; color: #f4c46a; letter-spacing: .08em; text-transform: uppercase; text-align: center; line-height: 1.15; max-width: 60px; }
-.anuncie-fine { margin: 8px 0 4px; font-size: .66rem; color: rgb(244 239 230 / .4); text-align: right; }
+.anuncie-fine { margin: 6px 2px 2px; font-size: .66rem; color: rgb(244 239 230 / .4); text-align: right; }
 @media (prefers-reduced-motion: reduce) { .anuncie-btn, .anuncie-btn span { transition: none; } }
