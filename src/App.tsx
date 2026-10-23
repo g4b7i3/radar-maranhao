@@ -110,6 +110,9 @@ function Anuncie() {
   return (
     <aside className="anuncie" aria-label="Espaço para anunciantes">
       <div className="anuncie-pista" aria-hidden="true" />
+      <ul className="anuncie-quem" aria-label="Pra quem é">
+        {['Loja de esporte', 'Clínica e fisio', 'Nutrição', 'Academia', 'Fotógrafo', 'Negócio online'].map(x => <li key={x}>{x}</li>)}
+      </ul>
       <div className="anuncie-pe">
         <a className="anuncie-btn" href={`https://wa.me/${ZAP_ANUNCIO}?text=${encodeURIComponent(msg)}`} target="_blank" rel="noopener" data-umami-event="Anuncie: WhatsApp">Quero anunciar aqui<span aria-hidden="true">→</span></a>
         <span className="anuncie-slot" aria-hidden="true"><b>SUA</b><b>MARCA</b><small>em nosso site</small></span>
