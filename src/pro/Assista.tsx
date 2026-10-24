@@ -1,88 +1,81 @@
-// "Assista agora": desenhos e filmes em cards, como uma TV. Só fontes legais:
-//  - YouTube: vídeos dos canais OFICIAIS (Galinha Pintadinha, Mundo Bita, Peppa Pig BR, Show da Luna, Masha e o Urso, Turma da Mônica).
-//  - Internet Archive: desenhos e filmes antigos em domínio público.
-// O vídeo toca no player do próprio YouTube/Archive (nada passa pelo servidor do Radar) e só carrega quando a pessoa toca.
+// "Assista agora": filmes e documentários de corrida em cards, como uma TV, e um card "Infantil".
+// Só vídeos publicados no YouTube por quem tem os direitos (marcas, provas, federações, produtoras, canais oficiais infantis).
+// O vídeo toca no player do próprio YouTube (nada passa pelo servidor do Radar) e só carrega quando a pessoa toca.
 import { useState } from 'react';
 import { ExternalLink, Play, Tv, X } from 'lucide-react';
 import { useVoltar } from './voltar';
 
-type Fonte = 'yt' | 'ia';
-type Item = { f: Fonte; id: string; t: string; d?: string; canal?: string; aoVivo?: boolean };
+type Fonte = 'yt';
+type Item = { f: Fonte; id: string; t: string; d?: string; canal?: string; aoVivo?: boolean; en?: boolean };
 type Secao = { id: string; nome: string; sub?: string; itens: Item[] };
 
-const yt = (id: string, t: string, canal: string, d?: string, aoVivo = false): Item => ({ f: 'yt', id, t, canal, d, aoVivo });
-const ia = (id: string, t: string, d?: string): Item => ({ f: 'ia', id, t, d });
+const yt = (id: string, t: string, canal: string, d?: string, o: { aoVivo?: boolean; en?: boolean } = {}): Item => ({ f: 'yt', id, t, canal, d, ...o });
+const EN = { en: true };
 
+// Sala principal: filmes e documentários de corrida, só dos canais de quem fez (marcas, provas, federações, produtoras).
+const PT_HERO = yt('5oDtotEdHEc', 'MENTAL: a escola queniana de corrida', 'Olympikus', '36 min');
 const SECOES: Secao[] = [
-  { id: 'aovivo', nome: 'Ao vivo agora', sub: 'Canal 24 horas', itens: [
-    yt('OxvEX_G9LEI', 'Masha e o Urso · todos os melhores episódios', 'Masha e o Urso', '24 horas no ar', true),
+  { id: 'pt', nome: 'Corrida em português', itens: [
+    PT_HERO,
+    yt('gdSbHVcD4Mw', 'Brutal: UTMB CCC 2024', 'Olympikus', '24 min'),
+    yt('WEcErdCit14', 'A vida é uma maratona: os novos limites da longevidade', 'Drauzio Varella', '1 h 54'),
+    yt('INiR6aXJwyg', '240 km na Brazil 135: minha primeira prova de três dígitos', 'Daniel Canny', '23 min'),
+    yt('eyU1S5VT3Jo', 'Do zero à minha primeira maratona', 'Bruna Ianhez', '32 min'),
   ] },
-  { id: 'corrida', nome: 'Corrida em desenho', sub: 'Para correr junto com os pequenos', itens: [
+  { id: 'ultra', nome: 'Ultramaratona e trail', sub: 'Filmes completos', itens: [
+    yt('zy1as6CTYXI', 'Unbreakable: The Western States 100', 'Journeyfilm', '1 h 46', EN),
+    yt('MbXwKTZoLQ4', 'Walmsley: o filme', 'Wahoo Fitness', '1 h 34', EN),
+    yt('herA1iwUW8k', 'Conquistando o Mont-Blanc: o caminho até o UTMB', 'HOKA UTMB Mont-Blanc', '52 min', EN),
+    yt('JOhQGe-tRPA', 'The Mirage: a corrida de Timothy Olson contra o tempo', 'National Geographic', '1 h', EN),
+    yt('k0HkYULFVvA', 'The Chase: Cocodona 250', 'Aravaipa Running', '1 h 51', EN),
+    yt('5ciEqPZsOCs', 'Transamericana: 6.000 km correndo pelos EUA', 'Salomon TV', '1 h 15', EN),
+    yt('a5LJ36lFJuw', 'Running Out: 231 km na trilha Larapinta', 'Salomon TV', '43 min', EN),
+    yt('yqOIPKt4m2Q', 'Courtney Dauwalter e François D’haene no Hardrock', 'Salomon TV', '52 min', EN),
+    yt('r6O5vI0cmAI', 'François D’haene no Tor des Géants', 'Salomon TV', '29 min', EN),
+    yt('PgTEsybXw-4', 'The Finisher: Jasmin Paris e a Barkley Marathons', 'Singletrack', '47 min', EN),
+    yt('XOmCLl1z7c0', 'Kilian Jornet: desenhando o futuro', 'NNormal', '45 min', EN),
+  ] },
+  { id: 'maratona', nome: 'Maratona e pista', itens: [
+    yt('k-XgKRJUEgQ', 'INEOS 1:59: Kipchoge abaixo de 2 horas (corrida completa)', 'INEOS 1:59 Challenge', '3 h 32', EN),
+    yt('6rMjOzO5td0', 'O caminho até Viena: documentário do 1:59', 'INEOS 1:59 Challenge', '18 min', EN),
+    yt('CGnL0c-g2rI', 'O homem mais rápido do mundo: Usain Bolt', 'Olympic Games', '18 min', EN),
+    yt('ZhVl_gqnjxs', 'Ferro afia ferro: os bastidores de um grupo de treino', 'World Athletics', '45 min', EN),
+    yt('tPM6UJFGkTs', 'Feito para a velocidade: a história de Letsile Tebogo', 'World Athletics', '18 min', EN),
+  ] },
+];
+
+// Infantil: só abre pelo card "Infantil" (canais oficiais em português)
+const INFANTIL: Secao[] = [
+  { id: 'aovivo', nome: 'Ao vivo agora', sub: 'Canal 24 horas', itens: [
+    yt('OxvEX_G9LEI', 'Masha e o Urso · todos os melhores episódios', 'Masha e o Urso', '24 horas no ar', { aoVivo: true }),
+  ] },
+  { id: 'corrida-kids', nome: 'Corrida em desenho', itens: [
     yt('fW_6ls9Rpqw', 'Papai Pig corre a Maratona de Londres', 'Peppa Pig Brasil', '2 h'),
     yt('j_7Kb6-govA', 'Treinando para a maratona', 'Peppa Pig Brasil', '2 h'),
     yt('_Whe25hRPI0', 'Peppa corre contra Rebecca: mini maratona', 'Peppa Pig Brasil', '2 h'),
   ] },
-  { id: 'desenhos', nome: 'Desenhos', sub: 'Canais oficiais', itens: [
+  { id: 'desenhos', nome: 'Desenhos', itens: [
     yt('optbgi5LAB0', 'Galinha Pintadinha Mini · Episódio 1', 'Galinha Pintadinha', '12 min'),
     yt('3QLmXNSbA08', 'Galinha Pintadinha Mini · Episódio 2', 'Galinha Pintadinha', '12 min'),
     yt('JLfghDvWgTE', 'Galinha Pintadinha Mini · Episódio 3', 'Galinha Pintadinha', '12 min'),
     yt('dnOUR9ItBXo', 'Masha e o Urso · 1 hora de desenhos', 'Masha e o Urso', '1 h'),
-    yt('-enPKaQPML4', 'Masha e o Urso · Curtir ou não curtir?', 'Masha e o Urso', '30 min'),
     yt('Nh_G9ZxGuQg', 'O Show da Luna · Maratona Sentimentos e Emoções', 'O Show da Luna!'),
     yt('nBTMLY0rABg', 'O Show da Luna · Maratona Chove Chuva', 'O Show da Luna!'),
-    yt('EB2JdutJPvE', 'O Show da Luna · Maratona Forças Invisíveis', 'O Show da Luna!'),
     yt('YBxdLSwPmEM', 'Peppa Pig · A fábrica de donuts', 'Peppa Pig Brasil', '2 h'),
-    yt('jJyIGdoqT1Q', 'Peppa Pig · Férias num navio de cruzeiro', 'Peppa Pig Brasil', '2 h'),
-    yt('T6WGzj4rFU0', 'Turma da Mônica · WebTira Denise, cap. 35', 'Turma da Mônica'),
+    yt('T6WGzj4rFU0', 'Turma da Mônica · WebTira Denise', 'Turma da Mônica'),
   ] },
-  { id: 'musica', nome: 'Música para os pequenos', itens: [
+  { id: 'musica', nome: 'Música', itens: [
     yt('8b8MX2TpCaQ', 'Bita e os Animais · álbum completo', 'Mundo Bita', '27 min'),
     yt('DqLrNhru-qE', 'Bita e as Brincadeiras · álbum completo', 'Mundo Bita', '31 min'),
     yt('kMyFG81dF70', 'Bita e o Corpo Humano · álbum completo', 'Mundo Bita', '33 min'),
     yt('l_F72X5FjBw', 'Bita e a Natureza · álbum completo', 'Mundo Bita', '34 min'),
-    yt('uF9Qd34zZK8', 'Bita e os Sentimentos · álbum completo', 'Mundo Bita', '22 min'),
-  ] },
-  { id: 'classicos', nome: 'Desenhos clássicos', sub: 'Domínio público', itens: [
-    ia('superman_the_mechanical_monsters', 'Superman: Os Monstros Mecânicos', '1941 · 9 min'),
-    ia('superman_electric_earthquake', 'Superman: Terremoto Elétrico', '1942 · 9 min'),
-    ia('superman_eleventh_hour', 'Superman: A Décima Primeira Hora', '1942 · 8 min'),
-    ia('popeye_patriotic_popeye', 'Popeye patriota', '1957 · 6 min'),
-    ia('popeye_big_bad_sinbad', 'Popeye contra Simbad', '1952 · 6 min'),
-    ia('popeye_taxi-turvey', 'Popeye taxista', '1954 · 6 min'),
-    ia('noveltoon_casper_tfg_theres_good_boos_tonight', 'Gasparzinho, o fantasminha camarada', '1948 · 8 min'),
-    ia('woody_woodpecker_pantry_panic', 'Pica-Pau: Pânico na despensa', '1941 · 7 min'),
-    ia('felix_the_cat_the_goos_that_laid_the_golden_egg', 'Gato Félix: A gansa dos ovos de ouro', '1936 · 7 min'),
-    ia('mighty_mouse_wolf_wolf', 'Super Mouse: Lobo! Lobo!', '7 min'),
-    ia('little_lulu_bargain_counter_attack', 'Luluzinha na liquidação', '1946 · 8 min'),
-    ia('Betty_Boop_for_President_1932', 'Betty Boop para presidente', '1932 · 6 min'),
-    ia('RudolphTheRed-nosedReindeer1948', 'Rudolph, a rena do nariz vermelho', '1948 · 8 min'),
-    ia('gullivers_travels1939', 'As Viagens de Gulliver (filme)', '1939 · 1 h 12'),
-  ] },
-  { id: 'filmes', nome: 'Filmes clássicos', sub: 'Domínio público', itens: [
-    ia('CC_1917_06_17_TheImmigrant', 'Chaplin: O Imigrante', '1917'),
-    ia('CC_1916_10_02_ThePawnshop', 'Chaplin: O Prestamista', '1916'),
-    ia('CC_1916_12_04_TheRink', 'Chaplin: O Patinador', '1916'),
-    ia('CC_1917_04_16_TheCure', 'Chaplin: A Cura', '1917'),
-    ia('The_General_Buster_Keaton', 'Buster Keaton: A General', '1926'),
-    ia('steamboat_bill_ipod', 'Buster Keaton: Marinheiro de Encomenda', '1928'),
-    ia('Cops1922', 'Buster Keaton: Polícias', '1922'),
-    ia('OneWeek', 'Buster Keaton: Uma Semana', '1920'),
-    ia('Levoyagedanslalune', 'Viagem à Lua (Méliès)', '1902'),
-    ia('markofzorro-1920', 'A Marca do Zorro', '1920'),
-    ia('FairbanksRobinHood1922', 'Robin Hood', '1922'),
-    ia('ThiefOfBagdad1924', 'O Ladrão de Bagdá', '1924'),
-    ia('JungleBook', 'Mogli, o Menino Lobo', '1942'),
-    ia('little_princess', 'A Princesinha (Shirley Temple)', '1939'),
-    ia('20000LeaguesUndertheSea', '20.000 Léguas Submarinas', '1916'),
   ] },
 ];
 
-const capa = (x: Item) => x.f === 'yt' ? `https://i.ytimg.com/vi/${x.id}/hqdefault.jpg` : `https://archive.org/services/img/${encodeURIComponent(x.id)}`;
-const player = (x: Item) => x.f === 'yt'
-  ? `https://www.youtube-nocookie.com/embed/${x.id}?autoplay=1&playsinline=1&rel=0&modestbranding=1`
-  : `https://archive.org/embed/${encodeURIComponent(x.id)}?autoplay=1`;
-const fora = (x: Item) => x.f === 'yt' ? `https://www.youtube.com/watch?v=${x.id}` : `https://archive.org/details/${encodeURIComponent(x.id)}`;
-const fonteTxt = (x: Item) => x.f === 'yt' ? `Canal oficial ${x.canal} · YouTube` : 'Domínio público · Internet Archive';
+const capa = (x: Item) => `https://i.ytimg.com/vi/${x.id}/hqdefault.jpg`;
+const player = (x: Item) => `https://www.youtube-nocookie.com/embed/${x.id}?autoplay=1&playsinline=1&rel=0&modestbranding=1${x.en ? '&cc_load_policy=1&cc_lang_pref=pt&hl=pt' : ''}`;
+const fora = (x: Item) => `https://www.youtube.com/watch?v=${x.id}`;
+const fonteTxt = (x: Item) => `Canal ${x.canal} · YouTube${x.en ? ' · em inglês (ative a legenda em ⚙ no player)' : ''}`;
 
 /** Faixa que fica no topo do feed e abre a sala. */
 export function FaixaAssista() {
@@ -91,8 +84,8 @@ export function FaixaAssista() {
     <>
       <button className="pro-assista-faixa" onClick={() => setAberto(true)}>
         <span className="pro-assista-faixa-ic"><Tv size={22} aria-hidden="true" /></span>
-        <span><b>Assista agora</b><small>Desenhos, canal ao vivo e filmes clássicos</small></span>
-        <span className="pro-assista-vivo"><i />AO VIVO</span>
+        <span><b>Assista agora</b><small>Filmes e documentários de corrida · Infantil</small></span>
+        <span className="pro-assista-vivo novo">NOVO</span>
       </button>
       {aberto && <SalaAssista fechar={() => setAberto(false)} />}
     </>
@@ -100,34 +93,48 @@ export function FaixaAssista() {
 }
 
 function SalaAssista({ fechar }: { fechar: () => void }) {
+  return <Sala titulo="Assista agora" caminho="assista" secoes={SECOES} hero={PT_HERO} infantil fechar={fechar} />;
+}
+
+function Sala({ titulo, caminho, secoes, hero, infantil = false, fechar }: { titulo: string; caminho: string; secoes: Secao[]; hero: Item; infantil?: boolean; fechar: () => void }) {
   const [tocando, setTocando] = useState<{ item: Item; secao: Secao } | null>(null);
-  useVoltar(true, fechar, 'assista');
+  const [kids, setKids] = useState(false);
+  useVoltar(true, fechar, caminho);
+  const secaoHero = secoes.find(s => s.itens.includes(hero)) ?? secoes[0];
   return (
-    <div className="pro-sobre pro-assista" role="dialog" aria-label="Assista agora">
+    <div className="pro-sobre pro-assista" role="dialog" aria-label={titulo}>
       <div className="pro-assista-topo">
         <button className="btn text" onClick={fechar} aria-label="Voltar"><X size={22} aria-hidden="true" /></button>
-        <b><Tv size={20} aria-hidden="true" /> Assista agora</b>
+        <b><Tv size={20} aria-hidden="true" /> {titulo}</b>
       </div>
-      <div className="pro-assista-hero" onClick={() => setTocando({ item: SECOES[0].itens[0], secao: SECOES[0] })} role="button" tabIndex={0}>
-        <img src={capa(SECOES[0].itens[0])} alt="" />
-        <div><span className="pro-assista-vivo"><i />AO VIVO</span><h2>{SECOES[0].itens[0].t}</h2><p>{SECOES[0].itens[0].canal} · 24 horas</p><span className="pro-assista-play"><Play size={18} aria-hidden="true" /> Assistir</span></div>
+      <div className="pro-assista-hero" onClick={() => setTocando({ item: hero, secao: secaoHero })} role="button" tabIndex={0}>
+        <img src={capa(hero)} alt="" />
+        <div>{hero.aoVivo ? <span className="pro-assista-vivo"><i />AO VIVO</span> : <span className="pro-assista-vivo novo">EM DESTAQUE</span>}<h2>{hero.t}</h2><p>{hero.canal}{hero.d ? ` · ${hero.d}` : ''}</p><span className="pro-assista-play"><Play size={18} aria-hidden="true" /> Assistir</span></div>
       </div>
-      {SECOES.slice(1).map(s => (
+      {infantil && (
+        <button className="pro-assista-kids" onClick={() => setKids(true)}>
+          <img src={capa(INFANTIL[0].itens[0])} alt="" loading="lazy" />
+          <span><b>Infantil</b><small>Desenhos e músicas em português · canal ao vivo</small></span>
+          <Play size={20} aria-hidden="true" />
+        </button>
+      )}
+      {secoes.map(s => (
         <section key={s.id} className="pro-assista-secao">
           <h3>{s.nome}{s.sub && <small>{s.sub}</small>}</h3>
           <div className="pro-assista-trilho">
             {s.itens.map(x => (
               <button key={x.id} className="pro-assista-card" onClick={() => setTocando({ item: x, secao: s })}>
-                <span className="pro-assista-capa"><img src={capa(x)} alt="" loading="lazy" /><i><Play size={16} aria-hidden="true" /></i>{x.d && <em>{x.d}</em>}</span>
+                <span className="pro-assista-capa"><img src={capa(x)} alt="" loading="lazy" /><i><Play size={16} aria-hidden="true" /></i>{x.d && <em>{x.d}</em>}{x.en && <u>EN</u>}</span>
                 <b>{x.t}</b>
-                <small>{x.f === 'yt' ? x.canal : 'Domínio público'}</small>
+                <small>{x.canal}</small>
               </button>
             ))}
           </div>
         </section>
       ))}
-      <p className="fine pro-centro pro-assista-nota">Vídeos dos canais oficiais no YouTube e obras em domínio público do Internet Archive. Os anúncios, quando aparecem, são do YouTube.</p>
+      <p className="fine pro-centro pro-assista-nota">Vídeos publicados no YouTube pelos próprios canais (marcas, provas, federações e produtoras). Os anúncios, quando aparecem, são do YouTube.</p>
       {tocando && <Player item={tocando.item} secao={tocando.secao} trocar={item => setTocando(t => t && { ...t, item })} fechar={() => setTocando(null)} />}
+      {kids && <Sala titulo="Infantil" caminho="assista/infantil" secoes={INFANTIL} hero={INFANTIL[0].itens[0]} fechar={() => setKids(false)} />}
     </div>
   );
 }
@@ -148,7 +155,7 @@ function Player({ item, secao, trocar, fechar }: { item: Item; secao: Secao; tro
         {item.aoVivo && <span className="pro-assista-vivo"><i />AO VIVO</span>}
         <h2>{item.t}</h2>
         <p>{fonteTxt(item)}{item.d ? ` · ${item.d}` : ''}</p>
-        <a className="btn outline" href={fora(item)} target="_blank" rel="noopener noreferrer"><ExternalLink size={15} aria-hidden="true" /> Não carregou? Abrir {item.f === 'yt' ? 'no YouTube' : 'no Archive'}</a>
+        <a className="btn outline" href={fora(item)} target="_blank" rel="noopener noreferrer"><ExternalLink size={15} aria-hidden="true" /> Não carregou? Abrir no YouTube</a>
       </div>
       {outros.length > 0 && <>
         <h3 className="pro-assista-mais">Mais em {secao.nome}</h3>
@@ -156,7 +163,7 @@ function Player({ item, secao, trocar, fechar }: { item: Item; secao: Secao; tro
           {outros.map(x => (
             <button key={x.id} onClick={() => trocar(x)}>
               <span className="pro-assista-capa"><img src={capa(x)} alt="" loading="lazy" />{x.d && <em>{x.d}</em>}</span>
-              <span><b>{x.t}</b><small>{x.f === 'yt' ? x.canal : 'Domínio público'}</small></span>
+              <span><b>{x.t}</b><small>{x.canal}{x.en ? ' · EN' : ''}</small></span>
             </button>
           ))}
         </div>
