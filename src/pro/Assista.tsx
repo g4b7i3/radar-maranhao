@@ -22,6 +22,15 @@ const SECOES: Secao[] = [
     yt('INiR6aXJwyg', '240 km na Brazil 135: minha primeira prova de três dígitos', 'Daniel Canny', '23 min'),
     yt('eyU1S5VT3Jo', 'Do zero à minha primeira maratona', 'Bruna Ianhez', '32 min'),
   ] },
+  { id: 'filmes', nome: 'Filmes de corrida', sub: 'Filmes completos e gratuitos', itens: [
+    yt('W6XqqFbVL9Q', 'Rumo à Vitória', 'NetMovies Família', '1 h 39 · dublado'),
+    yt('6JL6SYxlaJk', 'Freerunner: Corra por Sua Vida', 'Swen Action', '1 h 27'),
+    yt('nv97RBG9LJc', 'The Perfect Race', 'Christian Movies', '1 h 37', EN),
+    yt('zH0EGqlb7eg', 'Remember the Goal', 'Christian Movies', '1 h 28', EN),
+    yt('F2nO-6mzCF8', 'Run for the Dream: a história de Gail Devers', 'FilmRise Movies', '1 h 40', EN),
+    yt('CMK7e7uP-TY', 'Run for Your Life: a criação da Maratona de Nova York', 'Popcornflix', '1 h 35', EN),
+    yt('cVdhRdehw9M', 'The Long Green Line: cross-country', 'Indie Rights Movies', '1 h 30', EN),
+  ] },
   { id: 'ultra', nome: 'Ultramaratona e trail', sub: 'Filmes completos', itens: [
     yt('zy1as6CTYXI', 'Unbreakable: The Western States 100', 'Journeyfilm', '1 h 46', EN),
     yt('MbXwKTZoLQ4', 'Walmsley: o filme', 'Wahoo Fitness', '1 h 34', EN),
@@ -132,7 +141,7 @@ function Sala({ titulo, caminho, secoes, hero, infantil = false, fechar }: { tit
           </div>
         </section>
       ))}
-      <p className="fine pro-centro pro-assista-nota">Vídeos publicados no YouTube pelos próprios canais (marcas, provas, federações e produtoras). Os anúncios, quando aparecem, são do YouTube.</p>
+      <p className="fine pro-centro pro-assista-nota">Vídeos publicados no YouTube pelos próprios donos: marcas, provas, federações, produtoras e distribuidoras de filmes gratuitos. Os anúncios, quando aparecem, são do YouTube.</p>
       {tocando && <Player item={tocando.item} secao={tocando.secao} trocar={item => setTocando(t => t && { ...t, item })} fechar={() => setTocando(null)} />}
       {kids && <Sala titulo="Infantil" caminho="assista/infantil" secoes={INFANTIL} hero={INFANTIL[0].itens[0]} fechar={() => setKids(false)} />}
     </div>
