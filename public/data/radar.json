@@ -3252,7 +3252,7 @@
       "sourceName": "Runtra",
       "publishedAt": null,
       "confidence": "Fonte única: plataforma de inscrição (Runtra)",
-      "notes": "Corrida do Grupo Movimente-se, tema \"Energia que conecta e transforma!\". Largada às 6h na Praia do Caju. 3 km (corrida e caminhada), 5 km e 10 km. Kit com camisa, medalha, número de peito e brindes. Inscrições limitadas, pela Runtra (lote de abertura). A página fala em premiação para os melhores colocados, sem detalhar. Organização: Guilherme Junqueira. Retirada de kit a confirmar.",
+      "notes": "Corrida do Grupo Movimente-se, tema \"Energia que conecta e transforma!\". Largada às 6h na Praia do Caju. 3 km (corrida e caminhada), 5 km e 10 km. Kit com camisa, medalha, número de peito e brindes. Inscrições limitadas, pela Runtra (lote de abertura). A página fala em premiação para os melhores colocados, sem detalhar. Organização: Guilherme Junqueira. Retirada de kit a confirmar. Regulamento: troféu e premiação em dinheiro para os 3 primeiros no geral dos 5 e 10 km (valores não divulgados); troféus por faixa etária e só troféu nos 3 km.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3260,12 +3260,12 @@
         "text": "R$ 65,89 (lote de abertura)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-23T13:19:43.298Z",
+      "verifiedAt": "2026-10-24T10:57:39.899Z",
       "firstSeenAt": "2026-10-23T13:19:43.298Z"
     },
     {
       "id": "corrida-solidaria-2026-sao-luis",
-      "name": "CORRIDA SOLIDÁRIA 2026",
+      "name": "Corrida Solidária 2026",
       "edition": "2026",
       "city": "São Luís",
       "state": "MA",
@@ -3276,31 +3276,43 @@
         10
       ],
       "location": "Praça Dos Pescadores, Avenida Litorânea",
-      "registrationOpen": null,
-      "registrationClose": null,
+      "registrationOpen": "2026-10-23",
+      "registrationClose": "2026-12-15",
       "status": "Abertas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026",
       "sourceName": "Crono Esportes",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h. Encontrada automaticamente na Crono Esportes; detalhes na página da plataforma.",
-      "prize": null,
+      "notes": "7ª edição, da Ação Solidária da IASD Cohab com Educação Adventista, ADRA e Crono Esportes; a renda vira alimentos para famílias carentes no Natal. Regulamento: largada às 6h na Praça dos Pescadores (Av. Litorânea), concentração às 5h; Kids às 7h30 (200, 400 e 700 m). Corrida de 5 e 10 km, caminhada de 5 km e 5 km PCD. Inscrições de 23/10 até 15/12/2026 (podem encerrar antes se as vagas acabarem). Kit: sacola, camisa, medalha, chip e número de peito. Valores da inscrição e local da entrega de kits não aparecem no texto coletado.",
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus aos 3 primeiros no geral dos 5 e 10 km (masc. e fem.) e medalhas aos 3 primeiros por faixa etária; sem premiação em dinheiro."
+      },
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-23T15:21:48.557Z",
+      "start": "06:00",
+      "verifiedAt": "2026-10-24T10:57:39.899Z",
       "firstSeenAt": "2026-10-23T15:21:48.557Z"
     }
   ],
   "changes": [
+    {
+      "id": "2dc7d3e2-7082-4368-a3b7-3a35a68e5851",
+      "eventId": "corrida-solidaria-2026-sao-luis",
+      "version": "[\"2026-12-20\",[5,10],\"Praça Dos Pescadores, Avenida Litorânea\",\"2026-10-23\",\"2026-12-15\",\"Abertas\",\"https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T10:57:39.899Z",
+      "notifiedAt": "2026-10-24T10:58:18.441Z"
+    },
     {
       "id": "c8b96f8d-2af2-44b3-ac23-b11660b05704",
       "eventId": "corrida-combate-ao-feminicidio-2026-2026-sao-luis",
       "version": "[\"2026-11-14\",[5,10],\"São Luís (local de largada a confirmar)\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/corridacombateaofeminicidioslz2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-23T15:21:48.557Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-24T10:58:18.441Z"
     },
     {
       "id": "a9538a90-e11a-4bb5-b21f-89b189cc907d",
@@ -3308,7 +3320,7 @@
       "version": "[\"2026-12-20\",[5,10],\"Praça Dos Pescadores, Avenida Litorânea\",null,null,\"Abertas\",\"https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026\"]",
       "kind": "Nova prova",
       "at": "2026-10-23T15:21:48.557Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-24T10:58:18.441Z"
     },
     {
       "id": "d463c4c7-d643-4426-b9ea-20da20eb2530",
@@ -4871,7 +4883,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-23T15:21:48.557Z",
+  "lastChecked": "2026-10-24T10:57:39.899Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
