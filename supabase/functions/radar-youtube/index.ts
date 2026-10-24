@@ -9,8 +9,12 @@ const dec = (s: string) => s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').repl
 
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
-  const chave = Deno.env.get('YOUTUBE_API_KEY');
+  const chave = Deno.env.get('YOUTUBE_API_KEY')?.trim();
   if (!chave) return resp({ desligado: true });
+  if (new URL(req.url).searchParams.get('diag') === 'radar2026') { // diagnóstico temporário: só diz se a chave funciona
+    const t = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=corrida&key=${chave}`).then(x => x.json()).catch(e => ({ error: { message: String(e) } }));
+    return resp({ ok: !t.error, motivo: t.error?.errors?.[0]?.reason ?? null, msg: t.error?.message ?? null, tam: chave.length });
+  }
   const anon = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } });
   const { data: { user } } = await anon.auth.getUser();
   if (!user) return resp({ erro: 'Faça login de novo.' }, 401);
@@ -29,7 +33,8 @@ Deno.serve(async req => {
   const r = await fetch(u).then(x => x.json()).catch(() => null);
   if (!r || r.error) {
     const motivo = r?.error?.errors?.[0]?.reason ?? '';
-    return resp({ erro: motivo === 'quotaExceeded' ? 'A busca atingiu o limite de hoje. Volta amanhã ou use os destaques.' : 'A busca do YouTube não respondeu agora.' });
+    console.log('youtube erro', motivo, r?.error?.message);
+    return resp({ motivo,  erro: motivo === 'quotaExceeded' ? 'A busca atingiu o limite de hoje. Volta amanhã ou use os destaques.' : 'A busca do YouTube não respondeu agora.' });
   }
   // deno-lint-ignore no-explicit-any
   const itens = (r.items ?? []).filter((x: any) => x?.id?.videoId).map((x: any) => ({ id: x.id.videoId, t: dec(x.snippet?.title ?? ''), canal: dec(x.snippet?.channelTitle ?? ''), aoVivo: x.snippet?.liveBroadcastContent === 'live' }));
