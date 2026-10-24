@@ -229,7 +229,34 @@ function TextoComLinks({ texto }: { texto: string }) {
     i = ini + bruto.length;
   }
   partes.push(texto.slice(i));
-  return <>{partes.map((x, k) => typeof x === 'string' ? x : <a key={k} className="pro-feed-link" href={x.href} target="_blank" rel="noopener noreferrer nofollow ugc">{x.txt}</a>)}</>;
+  // @menções viram link para o perfil (abre dentro do app)
+  const comMencoes = (t: string, k: number) => t.split(/(@[A-Za-z0-9._]{3,30})/g).map((p, j) => /^@[A-Za-z0-9._]{3,30}$/.test(p)
+    ? <a key={`${k}-${j}`} className="pro-mencao" href={linkPerfil(p.slice(1).replace(/\.+$/, '').toLowerCase())}>{p}</a> : p);
+  return <>{partes.map((x, k) => typeof x === 'string' ? comMencoes(x, k) : <a key={k} className="pro-feed-link" href={x.href} target="_blank" rel="noopener noreferrer nofollow ugc">{x.txt}</a>)}</>;
+}
+
+/* ───────── @menção: enquanto a pessoa digita "@jo", aparecem os atletas; tocar completa o @ ───────── */
+type SugM = { apelido: string; nome: string; foto: string | null; cidade: string };
+export function SugestaoMencao({ texto, mudar, cima = false }: { texto: string; mudar: (t: string) => void; cima?: boolean }) {
+  const m = texto.match(/(?:^|\s)@([A-Za-z0-9._]{1,30})$/);
+  const termo = m?.[1] ?? '';
+  const [lista, setLista] = useState<SugM[]>([]);
+  useEffect(() => {
+    if (!termo) { setLista([]); return; }
+    let vivo = true;
+    const id = setTimeout(() => sb.rpc('radar_atletas_sugerir', { p_txt: termo }).then(({ data }) => { if (vivo) setLista((data ?? []) as SugM[]); }), 160);
+    return () => { vivo = false; clearTimeout(id); };
+  }, [termo]);
+  if (!termo || !lista.length) return null;
+  return (
+    <ul className={'pro-mencao-lista' + (cima ? ' cima' : '')} role="listbox">
+      {lista.map(u => (
+        <li key={u.apelido}><button type="button" onMouseDown={e => e.preventDefault()} onClick={() => mudar(texto.replace(/@([A-Za-z0-9._]{1,30})$/, `@${u.apelido} `))}>
+          <Avatar foto={u.foto} apelido={u.apelido} tam={30} /><span><b>@{u.apelido}</b><small>{u.nome}{u.cidade ? ` · ${u.cidade}` : ''}</small></span>
+        </button></li>
+      ))}
+    </ul>
+  );
 }
 
 /* ───────── Publicar: texto até 1000 caracteres (10 por dia) e foto a cada 2 dias, reduzida no celular. Só no Pro. ───────── */
@@ -266,6 +293,7 @@ export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: {
     <section className="pro-card pro-publicar">
       <div className="pro-linha"><p className="pro-k cinza">{comunidade ? `Publicar em ${comunidade.nome}` : 'Publicar no feed'}</p><button className="btn text" onClick={limpar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
       <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, max))} rows={4} placeholder={comunidade ? `Só quem está em ${comunidade.nome} vê. Treino, prova, dica, pergunta…` : 'Como foi? Treino, prova, cidade, o que você quiser contar pra galera.'} autoFocus />
+      <SugestaoMencao texto={texto} mudar={t => setTexto(t.slice(0, max))} />
       {foto && <div className="pro-publicar-previa"><img src={foto.url} alt="" /><button className="btn solid" onClick={() => { URL.revokeObjectURL(foto.url); setFoto(null); }} aria-label="Tirar foto"><X size={16} aria-hidden="true" /></button></div>}
       <div className="pro-linha">
         {!pro ? <button className="btn text pro-btn-p" onClick={assinar} title="Foto é do Radar Pro"><ImagemIc size={16} aria-hidden="true" />🔒 Foto</button> : fotoLiberada
@@ -315,7 +343,8 @@ function Comentarios({ alvo, mudou }: { alvo: string; mudou: (n: number) => void
               {c.pode_apagar && <button className="btn text pro-coment-x" onClick={() => apagar(c.id)} aria-label="Apagar comentário"><Trash2 size={14} aria-hidden="true" /></button>}
             </li>))}</ul>}
       <div className="pro-coment-novo">
-        <input value={txt} maxLength={100} onChange={ev => setTxt(ev.target.value.slice(0, 100))} onKeyDown={ev => { if (ev.key === 'Enter') enviar(); }} placeholder="Comente…" aria-label="Escrever comentário" />
+        <SugestaoMencao texto={txt} mudar={t => setTxt(t.slice(0, 100))} cima />
+        <input value={txt} maxLength={100} onChange={ev => setTxt(ev.target.value.slice(0, 100))} onKeyDown={ev => { if (ev.key === 'Enter') enviar(); }} placeholder="Comente… use @ para mencionar" aria-label="Escrever comentário" />
         <small>{100 - txt.length}</small>
         <button className="btn solid" onClick={enviar} disabled={!txt.trim() || indo} aria-label="Enviar comentário"><Send size={16} aria-hidden="true" /></button>
       </div>

@@ -897,3 +897,12 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-coment-novo input{flex:1;min-width:0;padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:inherit;font:inherit;font-size:15px}
 .pro-coment-novo small{font-size:11px;opacity:.6;min-width:22px;text-align:right}
 .pro-coment-novo .btn{padding:9px 12px;min-height:40px;border-radius:999px}
+/* @menções */
+.pro-mencao{color:#1d3fbf;font-weight:700;text-decoration:none}
+.pro-card.azul .pro-mencao{color:#ffd166}
+.pro-coment-novo{position:relative}
+.pro-mencao-lista{list-style:none;margin:6px 0 0;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px -12px rgba(10,20,60,.35);z-index:20}
+.pro-mencao-lista.cima{position:absolute;left:0;right:0;bottom:calc(100% + 6px);margin:0}
+.pro-mencao-lista button{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;border:0;background:none;border-radius:10px;text-align:left;color:inherit;font:inherit;cursor:pointer}
+.pro-mencao-lista button:hover{background:rgba(29,63,191,.08)}
+.pro-mencao-lista span{display:flex;flex-direction:column;min-width:0}.pro-mencao-lista b{font-size:14px}.pro-mencao-lista small{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
