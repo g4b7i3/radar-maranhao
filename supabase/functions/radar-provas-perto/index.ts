@@ -66,7 +66,7 @@ Deno.serve(async req => {
     }
     // a mesma prova só entra uma vez no aviso do dia (o momento mais urgente)
     const vistos = new Set<string>();
-    const unicos = itens.sort((a, b) => ORDEM[a.momento] - ORDEM[b.momento] || a.dist - b.dist).filter(i => !vistos.has(i.ev.id) && vistos.add(i.ev.id));
+    const unicos = itens.sort((a, b) => ORDEM[a.momento] - ORDEM[b.momento] || a.ev.date.localeCompare(b.ev.date) || a.dist - b.dist).filter(i => !vistos.has(i.ev.id) && vistos.add(i.ev.id));
     if (unicos.length) plano.push({ user_id: p.user_id, cidade: p.cidade.trim(), itens: unicos });
   }
 
