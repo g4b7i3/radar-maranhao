@@ -955,3 +955,15 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-assista-aba{background:#070b1f;color:#fff;border-radius:24px;overflow:hidden;padding-bottom:6px}
 .pro-assista-aba .pro-assista-topo{position:static}
 .pro-assista-aba .pro-assista-topo{padding:14px 16px}
+.pro-assista-busca{margin:0 14px 18px;display:flex;flex-direction:column;gap:10px}
+.pro-assista-busca form{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:5px 5px 5px 14px}
+.pro-assista-busca input{flex:1;min-width:0;background:none;border:0;color:#fff;font:inherit;font-size:15px;outline:none;padding:8px 0}
+.pro-assista-busca input::placeholder{color:rgba(255,255,255,.55)}
+.pro-assista-busca form .btn{border-radius:999px;padding:8px 14px;min-height:38px}
+.pro-assista-filtro{display:flex;gap:8px}
+.pro-assista-filtro button{border:1px solid rgba(255,255,255,.22);background:none;color:#fff;font:inherit;font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+.pro-assista-filtro button.on{background:#fff;color:#0a1240}
+.pro-assista-aviso{margin:0;font-size:14px;color:rgba(255,255,255,.75)}
+.pro-assista-busca .pro-assista-secao{margin:6px 0 0}.pro-assista-busca .pro-assista-secao h3{margin:0 0 10px}
+.pro-assista-grade{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px}
+.pro-assista-grade .pro-assista-card{width:auto}

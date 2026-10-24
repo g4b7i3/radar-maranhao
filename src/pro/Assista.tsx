@@ -2,8 +2,9 @@
 // Só vídeos publicados no YouTube por quem tem os direitos (marcas, provas, federações, produtoras, canais oficiais infantis).
 // O vídeo toca no player do próprio YouTube (nada passa pelo servidor do Radar) e só carrega quando a pessoa toca.
 import { useState } from 'react';
-import { ExternalLink, Play, Tv, X } from 'lucide-react';
+import { ExternalLink, Play, Search, Tv, X } from 'lucide-react';
 import { useVoltar } from './voltar';
+import { chamar } from './sb';
 
 type Fonte = 'yt';
 type Item = { f: Fonte; id: string; t: string; d?: string; canal?: string; aoVivo?: boolean; en?: boolean };
@@ -161,7 +162,7 @@ const INFANTIL: Secao[] = [
 const capa = (x: Item) => `https://i.ytimg.com/vi/${x.id}/hqdefault.jpg`;
 const player = (x: Item) => `https://www.youtube-nocookie.com/embed/${x.id}?autoplay=1&playsinline=1&rel=0&modestbranding=1${x.en ? '&cc_load_policy=1&cc_lang_pref=pt&hl=pt' : ''}`;
 const fora = (x: Item) => `https://www.youtube.com/watch?v=${x.id}`;
-const fonteTxt = (x: Item) => `Canal ${x.canal} · YouTube${x.en ? ' · em inglês (ative a legenda em ⚙ no player)' : ''}`;
+const fonteTxt = (x: Item) => `${x.canal} · YouTube${x.en ? ' · em inglês (ative a legenda em ⚙ no player)' : ''}`;
 
 /** Aba "Assista" do menu de baixo. */
 export function TelaAssista() {
@@ -183,6 +184,7 @@ function Sala({ titulo, caminho, secoes, hero, infantil = false, aba = false, fe
         <img src={capa(hero)} alt="" />
         <div>{hero.aoVivo ? <span className="pro-assista-vivo"><i />AO VIVO</span> : <span className="pro-assista-vivo novo">EM DESTAQUE</span>}<h2>{hero.t}</h2><p>{hero.canal}{hero.d ? ` · ${hero.d}` : ''}</p><span className="pro-assista-play"><Play size={18} aria-hidden="true" /> Assistir</span></div>
       </div>
+      {infantil && <BuscaYT tocar={(item, secao) => setTocando({ item, secao })} />}
       {infantil && (
         <button className="pro-assista-kids" onClick={() => setKids(true)}>
           <img src={capa(INFANTIL[0].itens[0])} alt="" loading="lazy" />
@@ -207,6 +209,52 @@ function Sala({ titulo, caminho, secoes, hero, infantil = false, aba = false, fe
       <p className="fine pro-centro pro-assista-nota">Vídeos publicados no YouTube pelos próprios donos: marcas, provas, federações, produtoras e distribuidoras de filmes gratuitos. Os anúncios, quando aparecem, são do YouTube.</p>
       {tocando && <Player item={tocando.item} secao={tocando.secao} trocar={item => setTocando(t => t && { ...t, item })} fechar={() => setTocando(null)} />}
       {kids && <Sala titulo="Infantil" caminho="assista/infantil" secoes={INFANTIL} hero={INFANTIL[0].itens[0]} fechar={() => setKids(false)} />}
+    </div>
+  );
+}
+
+/** Busca do YouTube: a pessoa pesquisa e assiste aqui mesmo (só vídeos que o dono deixa tocar fora do YouTube). */
+function BuscaYT({ tocar }: { tocar: (x: Item, s: Secao) => void }) {
+  const [q, setQ] = useState('');
+  const [longo, setLongo] = useState(true);
+  const [r, setR] = useState<{ itens?: Item[]; erro?: string; desligado?: boolean } | null>(null);
+  const [indo, setIndo] = useState(false);
+  const buscar = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const t = q.trim(); if (t.length < 2 || indo) return;
+    setIndo(true);
+    const res = await chamar<{ itens?: { id: string; t: string; canal: string; aoVivo?: boolean }[]; desligado?: boolean }>('radar-youtube', { q: t, longo });
+    setIndo(false);
+    setR({ itens: (res.itens ?? []).map(x => ({ f: 'yt' as const, id: x.id, t: x.t, canal: x.canal, aoVivo: x.aoVivo })), erro: res.erro, desligado: res.desligado });
+  };
+  const secao: Secao = { id: 'busca', nome: 'Resultados da busca', itens: r?.itens ?? [] };
+  return (
+    <div className="pro-assista-busca">
+      <form onSubmit={buscar}>
+        <Search size={18} aria-hidden="true" />
+        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar filme ou vídeo no YouTube" aria-label="Buscar no YouTube" enterKeyHint="search" />
+        <button className="btn solid" disabled={q.trim().length < 2 || indo}>{indo ? '…' : 'Buscar'}</button>
+      </form>
+      <div className="pro-assista-filtro" role="group" aria-label="Tipo">
+        <button className={longo ? 'on' : ''} onClick={() => setLongo(true)}>Filmes (longos)</button>
+        <button className={!longo ? 'on' : ''} onClick={() => setLongo(false)}>Tudo</button>
+      </div>
+      {r?.desligado && <p className="pro-assista-aviso">A busca ainda está sendo ativada. Volte daqui a pouco.</p>}
+      {r?.erro && <p className="pro-assista-aviso">{r.erro}</p>}
+      {r?.itens && !r.itens.length && !r.erro && !r.desligado && <p className="pro-assista-aviso">Nada encontrado. Tente outro nome.</p>}
+      {!!r?.itens?.length && (
+        <section className="pro-assista-secao">
+          <h3>Resultados<small>{r.itens.length} vídeos</small></h3>
+          <div className="pro-assista-grade">
+            {r.itens.map(x => (
+              <button key={x.id} className="pro-assista-card" onClick={() => tocar(x, secao)}>
+                <span className="pro-assista-capa"><img src={capa(x)} alt="" loading="lazy" /><i><Play size={16} aria-hidden="true" /></i>{x.aoVivo && <em>AO VIVO</em>}</span>
+                <b>{x.t}</b><small>{x.canal}</small>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
