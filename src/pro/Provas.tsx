@@ -5,6 +5,7 @@ import { status, norm, load, store, icsFor, type Race } from '../lib';
 import { Sheet } from '../App';
 import { useClimas } from '../Clima';
 import { useVoltar, telaInicial } from './voltar';
+import { QuemVai } from './Social';
 
 type Filtro = 'proximas' | 'abertas' | 'mes' | 'trail' | 'passadas';
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00-03:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).replace('.', '');
@@ -69,7 +70,7 @@ export function TelaProvas() {
         </section>
       ))}
       <p className="fine pro-centro">É a mesma agenda do Radar: {lista?.length ?? '…'} provas do Maranhão, conferidas todo dia. Toque numa prova pra ver kit, largada, percurso e clima.</p>
-      {aberta && <Sheet race={aberta} clima={previsoes[aberta.id]} saved={salvas.includes(aberta.id)} onClose={() => setAberta(null)} onSave={() => salvar(aberta)} onCalendar={() => icsFor([aberta])} seta />}
+      {aberta && <Sheet race={aberta} clima={previsoes[aberta.id]} saved={salvas.includes(aberta.id)} onClose={() => setAberta(null)} onSave={() => salvar(aberta)} onCalendar={() => icsFor([aberta])} seta extra={aberta.date && aberta.date >= hoje ? <QuemVai prova={aberta} /> : null} />}
     </div>
   );
 }

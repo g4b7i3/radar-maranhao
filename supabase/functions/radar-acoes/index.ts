@@ -118,6 +118,8 @@ Deno.serve(async req => {
       dados.duelos = (await db.from('radar_duelos').select('*').or(`desafiante.eq.${user.id},desafiado.eq.${user.id}`)).data;
       dados.provas_pedidas = (await db.from('radar_sugestoes_provas').select('*').eq('user_id', user.id)).data;
       dados.contestacoes_feitas = (await db.from('radar_contestacoes').select('*').eq('autor_id', user.id)).data;
+      dados.comentarios = (await db.from('radar_comentarios').select('alvo, texto, criado_em, apagado_em').eq('user_id', user.id)).data;
+      dados.provas_que_vou = (await db.from('radar_vou').select('prova_id, prova_data, criado_em').eq('user_id', user.id)).data;
       return resp(dados);
     }
     // ───────── LGPD: apagar minha conta (tudo some junto, em cascata)

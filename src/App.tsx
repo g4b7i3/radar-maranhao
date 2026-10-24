@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown, ArrowLeft } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
@@ -614,7 +614,7 @@ export default function App() {
 /** Mesmo formato de endereço das páginas geradas em scripts/paginas-cidades.mjs */
 const slugCidade = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar, seta }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void; seta?: boolean }) {
+export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSave, onCalendar, seta, extra }: { race: Race; clima?: Clima; startCard?: boolean; saved: boolean; onClose: () => void; onSave: () => void; onCalendar: () => void; seta?: boolean; extra?: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [card, setCard] = useState(startCard);
   useEffect(() => {
@@ -646,6 +646,7 @@ export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSav
           {cd && n != null && n >= 0 && <div className="sheet-clock"><b>{cd.n}</b>{cd.unit && <small>{cd.unit}</small>}</div>}
         </div>
         <div className="sheet-dists">{e.distances.length ? e.distances.map(d => <span key={d}>{d} km</span>) : <span>Distâncias a confirmar</span>}</div>
+        {extra}
         <ClimaLargada e={e} c={clima} />
         <Altimetria e={e} />
         {n != null && n >= 0 && <RitmoProva e={e} />}

@@ -1,16 +1,18 @@
 // Feed "Aconteceu no Radar": provas verificadas, Rei/Rainha da prova e duelos, com a foto de cada atleta.
-// Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
+// Reações (👏 🔥 😮), comentários com @menções e filtro "Quem eu sigo".
 import { linhaIdade } from './X1';
 import { useEffect, useMemo, useState } from 'react';
 import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil, souAdmin } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
+import { TextoRico, CampoTexto, BotaoComentar, Comentarios, SugestoesSeguir, pegarItemPedido } from './Social';
+import { useVoltar, telaInicial } from './voltar';
 
 export type Evento = {
   quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1'; alvo: string; apelido: string; foto: string | null; cidade: string;
   dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string; perdedor?: string; foto_perdedor?: string | null; local?: string | null; tempo_v?: number; tempo_p?: number; empate?: boolean; nota_v?: number | null; nota_p?: number | null };
-  reacoes: Reacoes; minha: TipoReacao | null;
+  reacoes: Reacoes; minha: TipoReacao | null; comentarios?: number;
 };
 type DadosPost = { id?: string; texto?: string; foto?: string | null; meu?: boolean };
 
@@ -77,7 +79,7 @@ function Meds({ ids }: { ids: string[] }) {
   );
 }
 
-export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void; apagou?: () => void }) {
+export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou, comentariosAbertos = false }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void; apagou?: () => void; comentariosAbertos?: boolean }) {
   const d = e.dados, meu = e.apelido === eu;
   const post = e.tipo === 'post' ? (e.dados as unknown as DadosPost) : null;
   const adm = souAdmin.v;
@@ -85,6 +87,9 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
   const participa = e.tipo === 'duelo' ? (e.apelido === eu || d.adversario === eu) : e.tipo === 'x1' ? (e.apelido === eu || d.perdedor === eu) : false;
   const podeApagar = (post && (meu || post.meu || adm)) || ((e.tipo === 'duelo' || e.tipo === 'x1') && (participa || adm));
   const [sumiu, setSumiu] = useState(false);
+  const [verComent, setVerComent] = useState(comentariosAbertos);
+  const [nComent, setNComent] = useState(e.comentarios ?? 0);
+  useEffect(() => setNComent(e.comentarios ?? 0), [e.comentarios]);
   const apagar = async () => {
     if (!confirm(post ? 'Apagar este post?' : 'Tirar do feed?')) return;
     const { data } = await sb.rpc('radar_feed_ocultar', { p_alvo: post?.id ? `post:${post.id}` : e.alvo });
@@ -112,7 +117,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
         <p className="pro-feed-txt"><Crown size={16} aria-hidden="true" /> É {d.sexo === 'F' ? <b>Rainha</b> : <b>Rei</b>} da prova nos {kmTxt(Number(d.km))} da <b>{d.prova}</b>: melhor nota por idade entre {d.atletas ? `${d.atletas} atletas` : 'todos'} ({pct(d.nota)}%, {relogio(Number(d.tempo))}).</p>
       )}
       {post && <>
-        {post.texto && <p className="pro-feed-post"><TextoComLinks texto={post.texto} /></p>}
+        {post.texto && <p className="pro-feed-post"><TextoRico texto={post.texto} /></p>}
         {post.foto && <img className="pro-feed-foto" src={post.foto} alt="" loading="lazy" />}
       </>}
       {e.tipo === 'duelo' && (
@@ -129,7 +134,8 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
           {(() => { const l = linhaIdade(`@${e.apelido}`, d.nota_v, `@${d.perdedor}`, d.nota_p); return l ? <p className="pro-x1-idade">{l}</p> : null; })()}
         </div>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{podeApagar ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label={post ? 'Apagar post' : 'Tirar do feed'} title={post ? 'Apagar post' : 'Tirar do feed'}><Trash2 size={15} aria-hidden="true" /></button> : post?.id ? <Sinalizar postId={post.id} /> : null}</footer>
+      <footer className="pro-feed-pe"><span className="pro-feed-acoes"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} /><BotaoComentar n={nComent} aberto={verComent} onClick={() => setVerComent(v => !v)} /></span>{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{podeApagar ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label={post ? 'Apagar post' : 'Tirar do feed'} title={post ? 'Apagar post' : 'Tirar do feed'}><Trash2 size={15} aria-hidden="true" /></button> : post?.id ? <Sinalizar postId={post.id} /> : null}</footer>
+      {verComent && <Comentarios alvo={e.alvo} mudouTotal={setNComent} />}
     </article>
   );
 }
@@ -192,41 +198,42 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
   const carregar = () => sb.rpc('radar_feed', { p_so_sigo: soSigo }).then(({ data }) => setLista((data as Evento[]) ?? []));
   useEffect(() => { setLista(null); carregar(); }, [soSigo]); // eslint-disable-line react-hooks/exhaustive-deps
   const mudou = (ap: string) => (s: boolean) => setSigo(prev => { const n = new Set(prev); if (s) n.add(ap); else n.delete(ap); return n; });
+  // item aberto pelo aviso de comentário/menção (#feed/ver/<alvo>)
+  const [ver, setVer] = useState<string | null>(() => { const t = telaInicial('feed'); return t?.startsWith('ver/') ? t.slice(4) : pegarItemPedido(); });
+  useEffect(() => { const f = (ev: Event) => { pegarItemPedido(); setVer((ev as CustomEvent<string>).detail); }; window.addEventListener('radar-ver-item', f); return () => window.removeEventListener('radar-ver-item', f); }, []);
   return (
     <div className="pro-cont">
+      {ver && <ItemAberto alvo={ver} eu={perfil.apelido} fechar={() => setVer(null)} />}
       <div className="chips" role="group" aria-label="Filtro do feed">
         <button className="chip" aria-pressed={!soSigo} onClick={() => setSoSigo(false)}>Todo mundo</button>
         <button className="chip" aria-pressed={soSigo} onClick={() => setSoSigo(true)}>Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
       </div>
       <Aniversariantes />
+      <SugestoesSeguir mudouSigo={(ap, v) => mudou(ap)(v)} />
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} />
       {lista === null && <p className="fine">Carregando…</p>}
       {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova verificada aparece aqui.'}</p>}
       {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} pro={pro} assinar={assinar} apagou={carregar} />)}
-      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que a galera publica e o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só reações.</p>}
+      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que a galera publica e o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Reaja, comente e cite os amigos com @.</p>}
     </div>
   );
 }
 
-/* ───────── Links no texto do post: viram clicáveis (só http/https; abre em outra aba) ───────── */
-const RE_LINK = /((?:https?:\/\/|www\.)[^\s<>"']+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|com\.br|br|net|org|app|io|me|info|blog|link|site|store|run)(?:\/[^\s<>"']*)?)/gi;
-function TextoComLinks({ texto }: { texto: string }) {
-  const partes: (string | { href: string; txt: string })[] = [];
-  let i = 0;
-  for (const m of texto.matchAll(RE_LINK)) {
-    let bruto = m[0]; const ini = m.index ?? 0;
-    const sobra = bruto.match(/[.,;:!?)\]]+$/)?.[0] ?? ''; // pontuação no fim da frase não faz parte do link
-    if (sobra) bruto = bruto.slice(0, -sobra.length);
-    if (ini > 0 && texto[ini - 1] === '@') continue; // e-mail ou @menção
-    let href = /^https?:\/\//i.test(bruto) ? bruto : 'https://' + bruto;
-    try { const u = new URL(href); if (!/^https?:$/.test(u.protocol)) continue; href = u.href; } catch { continue; }
-    partes.push(texto.slice(i, ini));
-    const curto = bruto.replace(/^https?:\/\//i, '').replace(/^www\./i, '');
-    partes.push({ href, txt: curto.length > 40 ? curto.slice(0, 38) + '…' : curto });
-    i = ini + bruto.length;
-  }
-  partes.push(texto.slice(i));
-  return <>{partes.map((x, k) => typeof x === 'string' ? x : <a key={k} className="pro-feed-link" href={x.href} target="_blank" rel="noopener noreferrer nofollow ugc">{x.txt}</a>)}</>;
+/* ───────── Um item só, por cima do feed (aviso de comentário ou menção), já com os comentários abertos ───────── */
+function ItemAberto({ alvo, eu, fechar }: { alvo: string; eu: string; fechar: () => void }) {
+  const [e, setE] = useState<Evento | null | undefined>(undefined);
+  useVoltar(true, fechar, `ver/${alvo}`);
+  useEffect(() => { setE(undefined); sb.rpc('radar_item', { p_alvo: alvo }).then(({ data, error }) => setE(error ? null : (data as Evento | null))); }, [alvo]);
+  return (
+    <div className="pro-notif-fundo pro-item-fundo" onClick={fechar}>
+      <section className="pro-item-aberto" onClick={ev => ev.stopPropagation()} role="dialog" aria-label="Publicação">
+        <div className="pro-linha"><p className="pro-k cinza">Publicação</p><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
+        {e === undefined && <p className="fine">Carregando…</p>}
+        {e === null && <p className="fine">Essa publicação foi apagada ou não está mais disponível.</p>}
+        {e && <ItemFeed e={e} eu={eu} comentariosAbertos apagou={fechar} />}
+      </section>
+    </div>
+  );
 }
 
 /* ───────── Publicar: texto até 1000 caracteres (10 por dia) e foto a cada 2 dias, reduzida no celular. Só no Pro. ───────── */
@@ -262,7 +269,7 @@ export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: {
   return (
     <section className="pro-card pro-publicar">
       <div className="pro-linha"><p className="pro-k cinza">{comunidade ? `Publicar em ${comunidade.nome}` : 'Publicar no feed'}</p><button className="btn text" onClick={limpar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
-      <textarea value={texto} onChange={e => setTexto(e.target.value.slice(0, max))} rows={4} placeholder={comunidade ? `Só quem está em ${comunidade.nome} vê. Treino, prova, dica, pergunta…` : 'Como foi? Treino, prova, cidade, o que você quiser contar pra galera.'} autoFocus />
+      <CampoTexto valor={texto} mudou={setTexto} max={max} rows={4} placeholder={comunidade ? `Só quem está em ${comunidade.nome} vê. Treino, prova, dica, pergunta… Use @ para citar alguém.` : 'Como foi? Treino, prova, cidade… Use @ para citar alguém.'} autoFocus rotulo="Texto do post" />
       {foto && <div className="pro-publicar-previa"><img src={foto.url} alt="" /><button className="btn solid" onClick={() => { URL.revokeObjectURL(foto.url); setFoto(null); }} aria-label="Tirar foto"><X size={16} aria-hidden="true" /></button></div>}
       <div className="pro-linha">
         {!pro ? <button className="btn text pro-btn-p" onClick={assinar} title="Foto é do Radar Pro"><ImagemIc size={16} aria-hidden="true" />🔒 Foto</button> : fotoLiberada
@@ -272,7 +279,7 @@ export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: {
         <button className="btn solid pro-btn-p" disabled={indo || (!texto.trim() && !foto)} onClick={enviar}><Send size={16} aria-hidden="true" />{indo ? 'Publicando…' : 'Publicar'}</button>
       </div>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-sem-margem">{pro ? 'Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir.' : 'Modo grátis: texto até 600 caracteres, 10 posts por dia. Foto (uma a cada 2 dias) é do Radar Pro.'} Pode colar links: eles ficam clicáveis no post. Sem comentários: a galera reage com 👏 🔥 😮 e você recebe no sininho.</p>
+      <p className="fine pro-sem-margem">{pro ? 'Texto até 1000 caracteres, 10 posts por dia. Foto: uma a cada 2 dias, reduzida pra 800 px antes de subir.' : 'Modo grátis: texto até 600 caracteres, 10 posts por dia. Foto (uma a cada 2 dias) é do Radar Pro.'} Pode colar links: eles ficam clicáveis. Escreva @apelido para citar alguém: a pessoa recebe no sininho. A galera reage com 👏 🔥 😮 e comenta.</p>
     </section>
   );
 }
