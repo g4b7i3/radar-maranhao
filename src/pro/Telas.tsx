@@ -241,7 +241,7 @@ function notaIdade(sexo: 'F' | 'M', km: number, idade: number, seg: number) {
 }
 const real = (k: number) => (Math.abs(k - 21) < 0.2 ? 21.0975 : Math.abs(k - 42) < 0.3 ? 42.195 : k);
 const idadeEm = (nasc: string, dia: string) => { const n = new Date(nasc + 'T12:00:00Z'), d = new Date(dia + 'T12:00:00Z'); let a = d.getUTCFullYear() - n.getUTCFullYear(); if (d.getUTCMonth() < n.getUTCMonth() || (d.getUTCMonth() === n.getUTCMonth() && d.getUTCDate() < n.getUTCDate())) a--; return a; };
-const PONTOS_TXT: Record<string, string> = { concluir: 'por concluir', dez_km: 'do 10 km', meia: 'da meia', maratona: 'da maratona', ultra: 'da ultra', ultra_100: 'da ultra de 100 km+', recorde_pessoal: 'do recorde', cidade_nova: 'da cidade nova', podio: 'do pódio' };
+const PONTOS_TXT: Record<string, string> = { concluir: 'por concluir', dez_km: 'do 10 km', meia: 'da meia', maratona: 'da maratona', ultra: 'da ultra', ultra_100: 'da ultra de 100 km+', recorde_pessoal: 'do recorde', cidade_nova: 'da cidade nova', noturna: 'da prova à noite', podio: 'do pódio' };
 
 type Resposta = { nota: number; pontos: number; detalhes: Record<string, number>; status: Resultado['status']; motivo: string | null; medalhas_novas: string[]; liga: Liga | null; subiu_de_liga: boolean; oficial: boolean; link_lido?: boolean; resultado: Resultado };
 
@@ -532,7 +532,7 @@ export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { pe
         <p className="pro-k cinza"><Trophy size={14} aria-hidden="true" /> Como se ganha ponto em cada prova</p>
         <ul>
           <li><b>10</b> por concluir</li><li><b>+5</b> se for 10 km ou mais</li><li><b>+10</b> se for meia</li><li><b>+20</b> se for maratona</li><li><b>+30</b> se for ultra</li><li><b>+50</b> se for ultra de 100 km ou mais</li>
-          <li><b>+10</b> pódio (geral ou faixa)</li><li><b>+5</b> recorde pessoal</li><li><b>+3</b> cidade nova na temporada</li>
+          <li><b>+10</b> pódio (geral ou faixa)</li><li><b>+5</b> recorde pessoal</li><li><b>+3</b> cidade nova na temporada</li><li><b>+10</b> prova à noite (largada a partir das 17h)</li>
         </ul>
         <p className="fine pro-sem-margem">Só esses itens dão ponto. Medalha não dá ponto: é coleção (o pódio e o recorde dão ponto e também medalha, mas são coisas separadas). A nota por idade também não entra aqui: ela vale na Eficiência e na Liga Maranhense.</p>
       </section>}

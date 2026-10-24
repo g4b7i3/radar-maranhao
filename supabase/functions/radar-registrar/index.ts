@@ -218,6 +218,8 @@ Deno.serve(async req => {
   if (km >= 99.5) d.ultra_100 = 50; else if (km > 42.5) d.ultra = 30; else if (km >= 42) d.maratona = 20; else if (km >= 21) d.meia = 10; else if (km >= 10) d.dez_km = 5;
   if (melhorAntes && tempo < melhorAntes) d.recorde_pessoal = 5;
   if (!(hist ?? []).some(h => Number(String(h.prova_data).slice(0, 4)) === temporada && norm(h.cidade) === norm(prova.city))) d.cidade_nova = 3;
+  const hLarg = /^\d{1,2}:\d{2}/.test(prova.start ?? '') ? Number(prova.start!.split(':')[0]) : -1;
+  if (hLarg >= 17) d.noturna = 10; // prova à noite (largada a partir das 17h)
   const podio = status === 'verificado' && !!oficial && ((oficial.colocacao_geral ?? 99) <= 3 || (oficial.colocacao_faixa ?? 99) <= 3);
   if (podio) d.podio = 10;
   const pontos = Object.values(d).reduce((a, x) => a + x, 0);
