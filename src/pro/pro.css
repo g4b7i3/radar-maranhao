@@ -967,3 +967,8 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-assista-busca .pro-assista-secao{margin:6px 0 0}.pro-assista-busca .pro-assista-secao h3{margin:0 0 10px}
 .pro-assista-grade{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px}
 .pro-assista-grade .pro-assista-card{width:auto}
+.pro-assista-generos{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -14px;padding:0 14px}
+.pro-assista-generos::-webkit-scrollbar{display:none}
+.pro-assista-generos button{flex:none;border:0;background:linear-gradient(135deg,#2449D6,#6d28d9);color:#fff;font:inherit;font-size:14px;font-weight:800;padding:9px 16px;border-radius:999px;cursor:pointer}
+.pro-assista-generos button.on{background:#ffd34d;color:#2a1a00}
+.pro-assista-generos button:disabled{opacity:.6}

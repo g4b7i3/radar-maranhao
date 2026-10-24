@@ -213,20 +213,28 @@ function Sala({ titulo, caminho, secoes, hero, infantil = false, aba = false, fe
   );
 }
 
+const GENEROS = [
+  ['Comédia', 'filme de comédia completo dublado'], ['Terror', 'filme de terror completo dublado'], ['Romance', 'filme de romance completo dublado'],
+  ['Drama', 'filme de drama completo dublado'], ['Ação', 'filme de ação completo dublado'], ['Suspense', 'filme de suspense completo dublado'],
+  ['Animação', 'filme de animação completo dublado'], ['Corrida', 'filme de corrida a pé completo'], ['Nacional', 'filme brasileiro completo'],
+] as const;
+
 /** Busca do YouTube: a pessoa pesquisa e assiste aqui mesmo (só vídeos que o dono deixa tocar fora do YouTube). */
 function BuscaYT({ tocar }: { tocar: (x: Item, s: Secao) => void }) {
   const [q, setQ] = useState('');
   const [longo, setLongo] = useState(true);
   const [r, setR] = useState<{ itens?: Item[]; erro?: string; desligado?: boolean } | null>(null);
   const [indo, setIndo] = useState(false);
-  const buscar = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    const t = q.trim(); if (t.length < 2 || indo) return;
+  const [genero, setGenero] = useState<string | null>(null);
+  const rodar = async (termo: string, lg: boolean) => {
+    if (termo.trim().length < 2 || indo) return;
     setIndo(true);
-    const res = await chamar<{ itens?: { id: string; t: string; canal: string; aoVivo?: boolean }[]; desligado?: boolean }>('radar-youtube', { q: t, longo });
+    const res = await chamar<{ itens?: { id: string; t: string; canal: string; aoVivo?: boolean }[]; desligado?: boolean }>('radar-youtube', { q: termo.trim(), longo: lg });
     setIndo(false);
     setR({ itens: (res.itens ?? []).map(x => ({ f: 'yt' as const, id: x.id, t: x.t, canal: x.canal, aoVivo: x.aoVivo })), erro: res.erro, desligado: res.desligado });
   };
+  const buscar = (e?: React.FormEvent) => { e?.preventDefault(); setGenero(null); rodar(q, longo); };
+  const porGenero = (g: typeof GENEROS[number]) => { setGenero(g[0]); setQ(''); setLongo(true); rodar(g[1], true); };
   const secao: Secao = { id: 'busca', nome: 'Resultados da busca', itens: r?.itens ?? [] };
   return (
     <div className="pro-assista-busca">
@@ -235,6 +243,9 @@ function BuscaYT({ tocar }: { tocar: (x: Item, s: Secao) => void }) {
         <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar filme ou vídeo" aria-label="Buscar filme ou vídeo" enterKeyHint="search" />
         <button className="btn solid" disabled={q.trim().length < 2 || indo}>{indo ? '…' : 'Buscar'}</button>
       </form>
+      <div className="pro-assista-generos" role="group" aria-label="Gêneros">
+        {GENEROS.map(g => <button key={g[0]} className={genero === g[0] ? 'on' : ''} onClick={() => porGenero(g)} disabled={indo}>{g[0]}</button>)}
+      </div>
       <div className="pro-assista-filtro" role="group" aria-label="Tipo">
         <button className={longo ? 'on' : ''} onClick={() => setLongo(true)}>Filmes (longos)</button>
         <button className={!longo ? 'on' : ''} onClick={() => setLongo(false)}>Tudo</button>
@@ -244,7 +255,7 @@ function BuscaYT({ tocar }: { tocar: (x: Item, s: Secao) => void }) {
       {r?.itens && !r.itens.length && !r.erro && !r.desligado && <p className="pro-assista-aviso">Nada encontrado. Tente outro nome.</p>}
       {!!r?.itens?.length && (
         <section className="pro-assista-secao">
-          <h3>Resultados<small>{r.itens.length} vídeos</small></h3>
+          <h3>{genero ?? 'Resultados'}<small>{r.itens.length} vídeos</small></h3>
           <div className="pro-assista-grade">
             {r.itens.map(x => (
               <button key={x.id} className="pro-assista-card" onClick={() => tocar(x, secao)}>
