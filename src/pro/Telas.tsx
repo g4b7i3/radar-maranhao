@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, type LucideIcon } from 'lucide-react';
+import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, MapPin, type LucideIcon } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -749,6 +749,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
         {renovar && <Assinar perfil={perfil} pronto={() => { setRenovar(false); pronto(); }} />}
       </section>}
       <PushConta userId={perfil.user_id} />
+      <AvisosPerto perfil={perfil} pronto={pronto} />
       <StravaConta />
       <MeuGrupo perfil={perfil} pronto={pronto} />
       <Indicacao perfil={perfil} />
@@ -899,6 +900,25 @@ function BioConta({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
       <div className="pro-linha"><small className={texto.length > 140 ? 'pro-vermelho-txt' : 'fine'}>{texto.length}/150</small><span className="pro-linha"><button className="btn text pro-btn-p" disabled={salvando} onClick={() => { setEditando(false); setErro(null); }}>Cancelar</button><button className="btn solid pro-btn-p" disabled={salvando} onClick={salvar}>{salvando ? 'Salvando…' : 'Salvar'}</button></span></div>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
     </div>
+  );
+}
+
+/** Avisos de provas na cidade da pessoa e nas vizinhas (até 40 km). */
+function AvisosPerto({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
+  const [on, setOn] = useState(perfil.avisos_perto !== false);
+  const [salvando, setSalvando] = useState(false);
+  useEffect(() => setOn(perfil.avisos_perto !== false), [perfil.avisos_perto]);
+  const trocar = async () => {
+    setSalvando(true); const novo = !on;
+    const { error } = await sb.rpc('radar_avisos_perto', { p_ativo: novo });
+    setSalvando(false); if (!error) { setOn(novo); pronto(); }
+  };
+  return (
+    <section className="pro-card">
+      <div className="pro-linha"><p className="pro-k cinza"><MapPin size={14} aria-hidden="true" /> Provas perto de você</p>
+        <button className={`pro-pub-chave${on ? ' on' : ''}`} role="switch" aria-checked={on} disabled={salvando} onClick={trocar}><span className="pro-pub-trilho" aria-hidden="true"><span /></span><small>{on ? 'Ligado' : 'Desligado'}</small></button></div>
+      <p className="fine pro-sem-margem">Avisamos no sininho e no celular quando sai prova nova em {perfil.cidade.trim()} ou nas cidades vizinhas (até 40 km), quando as inscrições estão perto de fechar e na véspera da prova. No máximo um aviso por dia. Pra mudar a cidade, edite o perfil.</p>
+    </section>
   );
 }
 

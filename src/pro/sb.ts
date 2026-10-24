@@ -27,7 +27,7 @@ export async function chamar<T = any>(fn: string, corpo?: unknown): Promise<T & 
   }
 }
 
-export type Perfil = { user_id: string; apelido: string; foto_url?: string | null; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null; publico?: boolean; bio?: string | null; edicoes_mes?: string | null; edicoes_qtd?: number };
+export type Perfil = { user_id: string; apelido: string; foto_url?: string | null; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null; publico?: boolean; bio?: string | null; edicoes_mes?: string | null; edicoes_qtd?: number; avisos_perto?: boolean };
 export type Resultado = {
   id: string; user_id: string; colocacao_geral?: number | null; colocacao_faixa?: number | null; total_dist?: number | null; prova_id: string; prova_nome: string; prova_data: string; cidade: string; uf?: string; largada: string | null; distancia_km: number;
   tempo_s: number; idade: number; nota: number; status: 'verificado' | 'aprovado' | 'declarado' | 'em_analise' | 'recusado';
