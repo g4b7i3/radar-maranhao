@@ -390,13 +390,13 @@
       "location": "Beira Rio (Concha Acústica)",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/corrida-sest-senat-2026",
       "sourceUrl": "https://topchip.com.br/corrida-sest-senat-2026",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30 na Beira Rio, na Concha Acústica. Distâncias de 3, 5 e 10 km, mais kids (cerca de 500 m); categorias PcD e trabalhadores do transporte. Inscrições pelo Inscrição Fácil (inscricaofacil.com/sestsenat2026); o regulamento cita lote único de 26/08 a 20/09 (datas sujeitas a alteração): R$ 70 público geral, R$ 35 dependentes, crianças e idosos, gratuito para titulares do transporte e PcD. Regulamento: percurso será divulgado pela organização.",
+      "notes": "Largada às 6h30 na Beira Rio, na Concha Acústica. Distâncias de 3, 5 e 10 km, mais kids (cerca de 500 m); categorias PcD e trabalhadores do transporte. Inscrições abertas (confirmado em 24/10) pelo Inscrição Fácil (inscricaofacil.com/sestsenat2026); o regulamento cita lote único de 26/08 a 20/09 (datas sujeitas a alteração): R$ 70 público geral, R$ 35 dependentes, crianças e idosos, gratuito para titulares do transporte e PcD. Regulamento: percurso será divulgado pela organização.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -408,7 +408,7 @@
         "text": "R$ 70 (idosos e crianças R$ 35; transporte/PcD grátis)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:21:13.475Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3299,6 +3299,14 @@
   ],
   "changes": [
     {
+      "id": "ff35420e-03b2-48d3-bfd6-5f05858cbe03",
+      "eventId": "sest-senat-2026-imperatriz",
+      "version": "[\"2026-10-25\",[3,5,10],\"Beira Rio (Concha Acústica)\",null,null,\"Abertas\",\"https://topchip.com.br/corrida-sest-senat-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:21:13.475Z",
+      "notifiedAt": null
+    },
+    {
       "id": "2dc7d3e2-7082-4368-a3b7-3a35a68e5851",
       "eventId": "corrida-solidaria-2026-sao-luis",
       "version": "[\"2026-12-20\",[5,10],\"Praça Dos Pescadores, Avenida Litorânea\",\"2026-10-23\",\"2026-12-15\",\"Abertas\",\"https://www.cronoesportes.com.br/evento/7738/corrida-solidaria-2026\"]",
@@ -4883,7 +4891,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-24T10:57:39.899Z",
+  "lastChecked": "2026-10-24T18:21:13.475Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
