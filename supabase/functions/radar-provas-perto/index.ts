@@ -1,5 +1,6 @@
 // Radar Pro · avisos de provas perto de cada atleta (cidade do perfil + vizinhas até 40 km).
-// Roda 1x por dia (pg_cron, ~8h de São Luís). Momentos: prova nova publicada, inscrições fechando em até 3 dias, prova amanhã.
+// Roda 1x por dia (pg_cron, ~8h de São Luís). Momentos: prova nova publicada, inscrições fechando em até 3 dias, prova amanhã
+// e, toda segunda, o resumo das provas das próximas 2 semanas.
 // No máximo UM aviso por pessoa por dia (junta tudo). Quem desligou em Conta (avisos_perto = false) não recebe.
 // O envio do push é feito pelo radar-avisar (pega os avisos com enviado_em nulo).
 // Body opcional: { "teste": true } só mostra o que seria enviado, sem gravar nada.
@@ -19,12 +20,13 @@ const dataBR = (d: string) => d.split('-').reverse().slice(0, 2).join('/');
 const dists = (a: number[]) => (a ?? []).length ? ' · ' + a.map(x => `${String(x).replace('.', ',')} km`).join(', ') : '';
 
 type Ev = { id: string; name: string; city: string; state: string; date: string; start?: string | null; location?: string | null; status: string; registrationClose?: string | null; publishedAt?: string | null; firstSeenAt?: string | null; distances?: number[] };
-type Item = { ev: Ev; momento: 'amanha' | 'fecha' | 'nova'; dist: number };
+type Item = { ev: Ev; momento: 'amanha' | 'fecha' | 'nova' | 'semana'; dist: number };
 
 Deno.serve(async req => {
   const interno = req.headers.get('x-radar-interno') ?? '';
   if (!interno || (interno !== Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') && interno !== Deno.env.get('RADAR_INTERNO'))) return resp({ erro: 'Sem permissão.' }, 403);
-  const teste = await req.json().then(b => !!b?.teste).catch(() => false);
+  const corpoReq = await req.json().catch(() => ({}));
+  const teste = !!corpoReq?.teste;
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
   const [radar, geoBruto] = await Promise.all([
@@ -33,7 +35,8 @@ Deno.serve(async req => {
   ]).catch(e => { throw new Error('Falha ao baixar dados do site: ' + e); });
   const geo = new Map<string, number[]>(Object.entries(geoBruto as Record<string, number[]>).map(([k, v]) => [norm(k), v]));
 
-  const hoje = diaSP(), amanha = diaSP(1), em3 = diaSP(3), anteontem = diaSP(-2);
+  const hoje = diaSP(), amanha = diaSP(1), em3 = diaSP(3), em14 = diaSP(14), anteontem = diaSP(-2);
+  const segunda = corpoReq?.semana === true || new Date(hoje + 'T12:00:00Z').getUTCDay() === 1;
   const momentos: { ev: Ev; momento: Item['momento'] }[] = [];
   for (const ev of (radar.events ?? []) as Ev[]) {
     if (ev.state !== 'MA' || !ev.date || ev.date < hoje || ['Cancelada', 'Adiada', 'Encerradas'].includes(ev.status) && ev.date !== amanha) continue;
@@ -42,6 +45,7 @@ Deno.serve(async req => {
     else if (ev.status === 'Abertas' && ev.registrationClose && ev.registrationClose >= hoje && ev.registrationClose <= em3) momentos.push({ ev, momento: 'fecha' });
     const pub = (ev.publishedAt ?? ev.firstSeenAt ?? '').slice(0, 10);
     if (pub && pub >= anteontem && ev.date > amanha) momentos.push({ ev, momento: 'nova' });
+    if (segunda && ev.date > amanha && ev.date <= em14 && !['Cancelada', 'Adiada', 'Encerradas', 'Esgotadas'].includes(ev.status)) momentos.push({ ev, momento: 'semana' });
   }
   if (!momentos.length) return resp({ ok: true, momentos: 0, avisos: 0 });
 
@@ -49,14 +53,14 @@ Deno.serve(async req => {
   const { data: log } = await db.from('radar_perto_log').select('user_id, evento, momento');
   const ja = new Set((log ?? []).map(l => `${l.user_id}|${l.evento}|${l.momento}`));
 
-  const ORDEM = { amanha: 0, fecha: 1, nova: 2 };
+  const ORDEM = { amanha: 0, fecha: 1, nova: 2, semana: 3 };
   const plano: { user_id: string; cidade: string; itens: Item[] }[] = [];
   for (const p of perfis ?? []) {
     const c = geo.get(norm(p.cidade));
     if (!c) continue;
     const itens: Item[] = [];
     for (const m of momentos) {
-      if (ja.has(`${p.user_id}|${m.ev.id}|${m.momento}`)) continue;
+      if (ja.has(`${p.user_id}|${m.ev.id}|${m.momento === 'semana' ? 'semana:' + hoje : m.momento}`)) continue;
       const d = km(c, geo.get(norm(m.ev.city))!);
       if (d <= RAIO_KM) itens.push({ ...m, dist: d });
     }
@@ -70,16 +74,19 @@ Deno.serve(async req => {
     const onde = norm(i.ev.city) === '' ? '' : ` em ${i.ev.city}`;
     if (i.momento === 'amanha') return `Amanhã: ${i.ev.name}${onde}${i.ev.start ? ` às ${i.ev.start}` : ''}${i.ev.location ? `, ${i.ev.location}` : ''}`;
     if (i.momento === 'fecha') return `Inscrições fecham ${i.ev.registrationClose === hoje ? 'hoje' : `dia ${dataBR(i.ev.registrationClose!)}`}: ${i.ev.name}${onde}`;
+    if (i.momento === 'semana') return `${dataBR(i.ev.date)} ${i.ev.name}${onde}`;
     return `Prova nova: ${i.ev.name}${onde}, ${dataBR(i.ev.date)}${dists(i.ev.distances ?? [])}`;
   };
   const avisos = plano.map(({ user_id, cidade, itens }) => {
     const p = itens[0];
-    const titulo = itens.length > 1 ? `${itens.length} novidades de provas perto de você`
+    const resumo = itens.some(i => i.momento === 'semana');
+    const titulo = resumo ? 'Provas das próximas 2 semanas perto de você' : itens.length > 1 ? `${itens.length} novidades de provas perto de você`
       : p.momento === 'amanha' ? `É amanhã: ${p.ev.name}` : p.momento === 'fecha' ? `Inscrições fechando: ${p.ev.name}` : `Prova nova perto de você: ${p.ev.name}`;
-    const corpo = itens.slice(0, 3).map(linha).join(' · ') + (itens.length > 3 ? ` · e mais ${itens.length - 3}` : '');
+    const max = resumo ? 8 : 3;
+    const corpo = itens.slice(0, max).map(linha).join(' · ') + (itens.length > max ? ` · e mais ${itens.length - max}` : '');
     return {
-      user_id, tipo: 'provas_perto', titulo: titulo.slice(0, 120), corpo: corpo.slice(0, 400),
-      url: itens.length === 1 ? `${SITE}/?prova=${encodeURIComponent(p.ev.id)}` : `${SITE}/corridas/`,
+      user_id, tipo: 'provas_perto', titulo: titulo.slice(0, 120), corpo: corpo.slice(0, 600),
+      url: itens.length === 1 && !resumo ? `${SITE}/?prova=${encodeURIComponent(p.ev.id)}` : `${SITE}/corridas/`,
       chave: `perto:${hoje}:${user_id}`, cidade, itens: itens.map(i => `${i.momento}:${i.ev.id}`),
     };
   });
@@ -91,7 +98,7 @@ Deno.serve(async req => {
     const { error } = await db.from('radar_avisos').insert(linhaAviso);
     if (error) continue; // já recebeu o aviso de hoje (chave única)
     gravados++;
-    await db.from('radar_perto_log').upsert(itens.map(x => { const [momento, ...ev] = x.split(':'); return { user_id: a.user_id, evento: ev.join(':'), momento }; }), { ignoreDuplicates: true });
+    await db.from('radar_perto_log').upsert(itens.map(x => { const [momento, ...ev] = x.split(':'); return { user_id: a.user_id, evento: ev.join(':'), momento: momento === 'semana' ? 'semana:' + hoje : momento }; }), { ignoreDuplicates: true });
   }
   // dispara o envio na hora (não espera o próximo ciclo do radar-avisar)
   if (gravados) await fetch(Deno.env.get('SUPABASE_URL') + '/functions/v1/radar-avisar', { method: 'POST', headers: { 'x-radar-interno': interno, 'Content-Type': 'application/json' }, body: '{}' }).catch(() => null);

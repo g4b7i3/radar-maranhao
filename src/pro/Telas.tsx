@@ -917,7 +917,7 @@ function AvisosPerto({ perfil, pronto }: { perfil: Perfil; pronto: () => void })
     <section className="pro-card">
       <div className="pro-linha"><p className="pro-k cinza"><MapPin size={14} aria-hidden="true" /> Provas perto de você</p>
         <button className={`pro-pub-chave${on ? ' on' : ''}`} role="switch" aria-checked={on} disabled={salvando} onClick={trocar}><span className="pro-pub-trilho" aria-hidden="true"><span /></span><small>{on ? 'Ligado' : 'Desligado'}</small></button></div>
-      <p className="fine pro-sem-margem">Avisamos no sininho e no celular quando sai prova nova em {perfil.cidade.trim()} ou nas cidades vizinhas (até 40 km), quando as inscrições estão perto de fechar e na véspera da prova. No máximo um aviso por dia. Pra mudar a cidade, edite o perfil.</p>
+      <p className="fine pro-sem-margem">Avisamos no sininho e no celular quando sai prova nova em {perfil.cidade.trim()} ou nas cidades vizinhas (até 40 km), quando as inscrições estão perto de fechar e na véspera da prova. Toda segunda, um resumo das provas das próximas 2 semanas. No máximo um aviso por dia. Pra mudar a cidade, edite o perfil.</p>
     </section>
   );
 }
