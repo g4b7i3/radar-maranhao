@@ -232,7 +232,7 @@ function BuscaYT({ tocar }: { tocar: (x: Item, s: Secao) => void }) {
     <div className="pro-assista-busca">
       <form onSubmit={buscar}>
         <Search size={18} aria-hidden="true" />
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar filme ou vídeo no YouTube" aria-label="Buscar no YouTube" enterKeyHint="search" />
+        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar filme ou vídeo" aria-label="Buscar filme ou vídeo" enterKeyHint="search" />
         <button className="btn solid" disabled={q.trim().length < 2 || indo}>{indo ? '…' : 'Buscar'}</button>
       </form>
       <div className="pro-assista-filtro" role="group" aria-label="Tipo">
