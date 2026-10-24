@@ -86,34 +86,20 @@ const player = (x: Item) => `https://www.youtube-nocookie.com/embed/${x.id}?auto
 const fora = (x: Item) => `https://www.youtube.com/watch?v=${x.id}`;
 const fonteTxt = (x: Item) => `Canal ${x.canal} · YouTube${x.en ? ' · em inglês (ative a legenda em ⚙ no player)' : ''}`;
 
-/** Faixa que fica no topo do feed e abre a sala. */
-export function FaixaAssista() {
-  const [aberto, setAberto] = useState(false);
-  return (
-    <>
-      <button className="pro-assista-faixa" onClick={() => setAberto(true)}>
-        <span className="pro-assista-faixa-ic"><Tv size={22} aria-hidden="true" /></span>
-        <span><b>Assista agora</b><small>Filmes e documentários de corrida · Infantil</small></span>
-        <span className="pro-assista-vivo novo">NOVO</span>
-      </button>
-      {aberto && <SalaAssista fechar={() => setAberto(false)} />}
-    </>
-  );
+/** Aba "Assista" do menu de baixo. */
+export function TelaAssista() {
+  return <Sala titulo="Assista agora" caminho="assista" secoes={SECOES} hero={PT_HERO} infantil aba />;
 }
 
-function SalaAssista({ fechar }: { fechar: () => void }) {
-  return <Sala titulo="Assista agora" caminho="assista" secoes={SECOES} hero={PT_HERO} infantil fechar={fechar} />;
-}
-
-function Sala({ titulo, caminho, secoes, hero, infantil = false, fechar }: { titulo: string; caminho: string; secoes: Secao[]; hero: Item; infantil?: boolean; fechar: () => void }) {
+function Sala({ titulo, caminho, secoes, hero, infantil = false, aba = false, fechar }: { titulo: string; caminho: string; secoes: Secao[]; hero: Item; infantil?: boolean; aba?: boolean; fechar?: () => void }) {
   const [tocando, setTocando] = useState<{ item: Item; secao: Secao } | null>(null);
   const [kids, setKids] = useState(false);
-  useVoltar(true, fechar, caminho);
+  useVoltar(!aba, () => fechar?.(), caminho);
   const secaoHero = secoes.find(s => s.itens.includes(hero)) ?? secoes[0];
   return (
-    <div className="pro-sobre pro-assista" role="dialog" aria-label={titulo}>
+    <div className={aba ? 'pro-assista pro-assista-aba' : 'pro-sobre pro-assista'} role={aba ? undefined : 'dialog'} aria-label={titulo}>
       <div className="pro-assista-topo">
-        <button className="btn text" onClick={fechar} aria-label="Voltar"><X size={22} aria-hidden="true" /></button>
+        {!aba && <button className="btn text" onClick={fechar} aria-label="Voltar"><X size={22} aria-hidden="true" /></button>}
         <b><Tv size={20} aria-hidden="true" /> {titulo}</b>
       </div>
       <div className="pro-assista-hero" onClick={() => setTocando({ item: hero, secao: secaoHero })} role="button" tabIndex={0}>

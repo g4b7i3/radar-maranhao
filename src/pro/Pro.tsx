@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -13,6 +13,7 @@ import { FotoConta } from './Foto';
 import { TelaFeed } from './Feed';
 import { TelaCampeonatos } from './Campeonatos';
 import { TelaComunidades } from './Comunidades';
+import { TelaAssista } from './Assista';
 import { iniciarPresenca } from './online';
 import { MEDALHAS as LISTA_MEDALHAS, medalhaSVG } from './medalhas';
 import { TelaProvas } from './Provas';
@@ -25,9 +26,9 @@ import PerfilPublico from './PerfilPublico';
 import AssessoriaPublica from './Assessoria';
 import './pro.css';
 
-const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
+const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'assista', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
 const abaDoEndereco = (): Aba | null => { const h = lerEndereco().aba; return (ABAS_VALIDAS as readonly string[]).includes(h) ? h as Aba : null; };
-type Aba = 'temporada' | 'campeonatos' | 'feed' | 'comunidades' | 'provas' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
+type Aba = 'temporada' | 'campeonatos' | 'feed' | 'comunidades' | 'assista' | 'provas' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
 const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
 // Link de cortesia (/?pro=cortesia&k=código): libera o Radar Pro sem pagar, até o Vinik revogar
@@ -234,7 +235,7 @@ function ProTelas() {
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
-    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'provas', nome: 'Provas', Icone: CalendarDays }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'provas', nome: 'Provas', Icone: CalendarDays }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
     { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: UserRound },
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
@@ -264,6 +265,7 @@ function ProTelas() {
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pro={pro} assinar={irAssinar} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
+      {aba === 'assista' && <TelaAssista />}
       {aba === 'provas' && <TelaProvas />}
       {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
