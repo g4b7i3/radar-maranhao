@@ -1,5 +1,6 @@
 // Aplica a coleta automática (coleta/*.json) à agenda, sem precisar do Claude.
-// Roda no GitHub Actions logo depois da coleta, de 2 em 2 horas. Fontes: Crono Esportes, SA Crono, Central da Corrida, Topchip e GuardaLugar.
+// Roda no GitHub Actions logo depois da coleta, de 2 em 2 horas. Fontes: Crono Esportes, SA Crono, Central da Corrida, Topchip
+// (calendário e páginas das provas, cujas inscrições são pelo Inscrição Fácil) e GuardaLugar.
 // - Prova já existente: atualiza só o status de inscrição (e data/horário se a plataforma mudou).
 // - Prova nova do Maranhão: entra com os dados da plataforma.
 // Só grava o radar.json se algo mudou de verdade (assim o Netlify só republica quando precisa).
@@ -26,7 +27,9 @@ const hoje = new Date().toISOString().slice(0, 10);
 // encontra a prova já cadastrada: mesmo link, ou mesma cidade + data + alguma palavra do nome em comum
 function achar(c) {
   const ev = estado.events;
-  if (c.url) { const porLink = ev.find(e => e.officialUrl && e.officialUrl.replace(/\/$/, '') === c.url.replace(/\/$/, '')); if (porLink) return porLink; }
+  const link = u => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '').toLowerCase();
+  if (c.url) { const porLink = ev.find(e => e.officialUrl && link(e.officialUrl) === link(c.url)); if (porLink) return porLink; }
+  if (c.soStatus) return null; // página de prova: só atualiza a prova do mesmo link, nunca cria nem casa por nome
   const t = tokens(c.nome);
   return ev.find(e => slug(e.city) === slug(c.cidade) && e.date === c.data && ([...tokens(e.name)].some(x => t.has(x)) || slug(e.name) === slug(c.nome)))
       || ev.find(e => slug(e.name) === slug(c.nome) && slug(e.city) === slug(c.cidade));
@@ -86,6 +89,31 @@ for (const [arq, fonte] of [['coleta/cronoesportes.json', 'Crono Esportes'], ['c
   }
 }
 
+// Topchip: página de cada prova (coletada em oficiais.json e topchip.json). As inscrições são pelo Inscrição Fácil,
+// sistema da própria Topchip, e o botão da página mostra o status: "Inscreva-se agora", "Inscrição em breve" ou
+// "Inscrição encerrada". Só atualiza o status da prova que já tem esse link; prova nova continua vindo do calendário.
+{
+  const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  const vistos = new Set();
+  for (const arq of ['coleta/oficiais.json', 'coleta/topchip.json']) {
+    for (const p of ler(arq)?.provas || []) {
+      if (!p.texto || !/topchip\.com\.br\/./.test(p.url)) continue;
+      const k = p.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''); if (vistos.has(k)) continue; vistos.add(k);
+      const t = '\n' + p.texto + '\n';
+      const m = /\n(\d{1,2}) de ([A-Za-zç]+) de (\d{4}) às (\d{2}:\d{2}) \| ([^\n]+?) - MA\n/.exec(t);
+      if (!m) continue;
+      const mes = MESES.indexOf(m[2].toLowerCase()); if (mes < 0) continue;
+      const status = /\nInscri[çc][ãa]o encerrada\n/i.test(t) || /\nInscri[çc][õo]es encerradas\n/i.test(t) ? 'Encerradas'
+        : /\n(Vagas|Inscri[çc][õo]es) esgotadas\n/i.test(t) ? 'Esgotadas'
+        : /\nInscri[çc][ãa]o em breve\n/i.test(t) ? 'Em breve'
+        : /\nInscreva-se agora\n/i.test(t) ? 'Abertas' : null;
+      if (!status) continue;
+      candidatos.push({ fonte: 'Topchip', url: p.url, nome: titulo(t.split('\n').find(l => l.trim() && !/^(Ir para o conteúdo|Início|Calendário|Resultados|Fotos|Contato|Home)$/.test(l.trim())) || ''),
+        data: `${m[3]}-${String(mes + 1).padStart(2, '0')}-${m[1].padStart(2, '0')}`, cidade: cidadeBonita(m[5]), status, soStatus: true, completo: false });
+    }
+  }
+}
+
 // GuardaLugar: lista pública da API (o site é um app Flutter, sem texto na página)
 {
   const d = ler('coleta/guardalugar.json');
@@ -122,6 +150,7 @@ for (const c of candidatos) {
     if (mudou) { entrada.push(x); mudadas.push(`${x.name} (${x.city}, ${x.date}): ${x.status}`); }
     continue;
   }
+  if (c.soStatus) continue;
   // prova nova
   const link = c.url || (c.fonte === 'Topchip' ? 'https://topchip.com.br/calendario' : 'https://centraldacorrida.com.br/');
   const id = `${slug(c.nome.replace(new RegExp(`\\b${c.data.slice(0, 4)}\\b`), '')).slice(0, 60)}-${c.data.slice(0, 4)}-${slug(c.cidade)}`.replace(/-+/g, '-');

@@ -574,7 +574,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/ii-corrida-outubro-rosa-sao-rafael",
       "sourceUrl": "https://topchip.com.br/ii-corrida-outubro-rosa-sao-rafael",
       "sourceName": "Topchip",
@@ -589,7 +589,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -607,7 +607,7 @@
       "location": "Campus I da UEMASUL, Rua Godofredo Viana, 1300, Centro",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/iii-corrida-uema-sul",
       "sourceUrl": "https://topchip.com.br/iii-corrida-uema-sul",
       "sourceName": "Topchip",
@@ -625,7 +625,7 @@
         "text": "R$ 80 (servidores e alunos UEMASUL: doação)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -723,7 +723,7 @@
       "location": "Praça São Pedro, Avenida Tancredo Neves, Centro",
       "registrationOpen": "2026-09-10",
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/ii-corrida-sao-pedro-da-agua-branca",
       "sourceUrl": "https://running.life/en/event/corrida-sao-pedro-da-agua-branca",
       "sourceName": "running.life",
@@ -741,7 +741,7 @@
         "text": "R$ 100"
       },
       "start": "18:00",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -787,7 +787,7 @@
       "location": "Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto",
       "registrationOpen": null,
       "registrationClose": "2026-10-30",
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/acailandiasicoob",
       "sourceUrl": "https://topchip.com.br/acailandiasicoob",
       "sourceName": "Topchip",
@@ -805,7 +805,7 @@
         "text": "R$ 98 + 1 kg de alimento (cooperados: 40% off)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -822,7 +822,7 @@
       "location": "Praça da Família",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/ii-corrida-bora-correr-porto-franco",
       "sourceUrl": "https://running.life/en/event/corrida-bora-correr-porto-franco",
       "sourceName": "running.life",
@@ -840,7 +840,7 @@
         "text": "R$ 90"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -859,7 +859,7 @@
       "location": "Imperatriz Medical Center, Av. Bernardo Sayão, 3650, Maranhão Novo",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/bari-run-2026",
       "sourceUrl": "https://www.tfsports.com.br/tf-experience/experience-254/",
       "sourceName": "TFSports (Track&Field Experience)",
@@ -870,7 +870,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -887,7 +887,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://www.topchip.com.br/adventista130anos",
       "sourceUrl": "https://www.topchip.com.br/adventista130anos",
       "sourceName": "Topchip",
@@ -905,7 +905,7 @@
         "text": "R$ 90 + taxa"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1165,7 +1165,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": "2026-11-15",
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceName": "Topchip",
@@ -1183,7 +1183,7 @@
         "text": "R$ 100"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1446,7 +1446,7 @@
       "location": "Local a confirmar",
       "registrationOpen": "2026-07-02",
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/aniversario-bora-correr-imperatriz",
       "sourceUrl": "https://topchip.com.br/aniversario-bora-correr-imperatriz",
       "sourceName": "Topchip",
@@ -1464,7 +1464,7 @@
         "text": "R$ 100"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-23T13:38:20.653Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -1540,7 +1540,7 @@
       "location": "Em frente ao 50º BIS, Avenida Bernardo Sayão",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/i-corrida-cruz-vermelha-imperatriz",
       "sourceUrl": "https://topchip.com.br/i-corrida-cruz-vermelha-imperatriz",
       "sourceName": "Topchip",
@@ -1555,7 +1555,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -1570,7 +1570,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/ii-corrida-da-sobra",
       "sourceUrl": "https://topchip.com.br/ii-corrida-da-sobra",
       "sourceName": "Topchip",
@@ -1578,9 +1578,10 @@
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h30. Página com inscrição disponível; distâncias no regulamento.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -2706,7 +2707,7 @@
       "location": "Espaço Cultural José Carlos Brandão, Parque Planalto",
       "registrationOpen": "2026-10-15",
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Encerradas",
       "officialUrl": "https://topchip.com.br/professoresacailandia",
       "sourceUrl": "https://topchip.com.br/professoresacailandia",
       "sourceName": "Topchip",
@@ -2724,7 +2725,7 @@
         "text": "Solidária: itens de higiene"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-14T20:44:16.663Z"
     },
     {
@@ -3216,7 +3217,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/drogasmontesaltos",
       "sourceUrl": "https://topchip.com.br/calendario",
       "sourceName": "Topchip",
@@ -3227,7 +3228,7 @@
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-22T10:56:46.652Z",
+      "verifiedAt": "2026-10-24T18:57:04.540Z",
       "firstSeenAt": "2026-10-21T20:24:12.739Z"
     },
     {
@@ -3298,6 +3299,110 @@
     }
   ],
   "changes": [
+    {
+      "id": "514190ab-5e54-4be2-92ca-2473cf2af40a",
+      "eventId": "sobra-2027-imperatriz",
+      "version": "[\"2027-01-10\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/ii-corrida-da-sobra\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "762f29e0-fe4c-4e8a-a622-5ff1b7d6c3bf",
+      "eventId": "cruz-vermelha-2026-imperatriz",
+      "version": "[\"2026-12-20\",[3,5],\"Em frente ao 50º BIS, Avenida Bernardo Sayão\",null,null,\"Abertas\",\"https://topchip.com.br/i-corrida-cruz-vermelha-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "d5b8bbfd-34cd-415d-bf3e-078c5174ac12",
+      "eventId": "corrida-contra-as-drigas-2026-montes-altos",
+      "version": "[\"2026-11-22\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/drogasmontesaltos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "6dc9df88-fdaa-4a7d-98bc-a876f60f4406",
+      "eventId": "negro-cosme-2026-imperatriz",
+      "version": "[\"2026-11-20\",[5],\"Local a confirmar\",null,\"2026-11-15\",\"Abertas\",\"https://topchip.com.br/ii-corrida-da-consciencia-negra\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "77251151-5bcc-40c2-83b6-c43b4f190af9",
+      "eventId": "bora-correr-aniversario-2026-imperatriz",
+      "version": "[\"2026-11-15\",[5,10],\"Local a confirmar\",\"2026-07-02\",null,\"Abertas\",\"https://topchip.com.br/aniversario-bora-correr-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "c12b3705-6592-4a94-b8de-cb66b76e8964",
+      "eventId": "adventista-run-2026-imperatriz",
+      "version": "[\"2026-11-08\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.topchip.com.br/adventista130anos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "d01337d7-6fa4-471d-bcad-29d7296ae6c5",
+      "eventId": "bari-run-2026-imperatriz",
+      "version": "[\"2026-11-08\",[3,5,10],\"Imperatriz Medical Center, Av. Bernardo Sayão, 3650, Maranhão Novo\",null,null,\"Abertas\",\"https://topchip.com.br/bari-run-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "24d51b3c-6c07-402f-a276-8920ddc99739",
+      "eventId": "bora-correr-2026-porto-franco",
+      "version": "[\"2026-11-08\",[5],\"Praça da Família\",null,null,\"Abertas\",\"https://topchip.com.br/ii-corrida-bora-correr-porto-franco\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "cc033f7e-1c0b-48d6-8d41-b76de921f130",
+      "eventId": "sicoob-2026-acailandia",
+      "version": "[\"2026-11-08\",[5],\"Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto\",null,\"2026-10-30\",\"Abertas\",\"https://topchip.com.br/acailandiasicoob\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "56d6c214-ac86-4ecf-b486-0f93ff5af24f",
+      "eventId": "sao-pedro-agua-branca-2026",
+      "version": "[\"2026-11-07\",[5],\"Praça São Pedro, Avenida Tancredo Neves, Centro\",\"2026-09-10\",null,\"Abertas\",\"https://topchip.com.br/ii-corrida-sao-pedro-da-agua-branca\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "8e9870d2-f30b-4172-b293-02411a283da2",
+      "eventId": "uemasul-2026-imperatriz",
+      "version": "[\"2026-11-01\",[3,5],\"Campus I da UEMASUL, Rua Godofredo Viana, 1300, Centro\",null,null,\"Abertas\",\"https://topchip.com.br/iii-corrida-uema-sul\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "852abf91-4098-471b-aa5c-6146239d8f29",
+      "eventId": "outubro-rosa-sao-rafael-2026-imperatriz",
+      "version": "[\"2026-11-01\",[3,5,10],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/ii-corrida-outubro-rosa-sao-rafael\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "050494d0-3ca9-41fe-b19e-fad3cb58405c",
+      "eventId": "corrida-dos-professores-2026-acailandia",
+      "version": "[\"2026-10-24\",[3,5],\"Espaço Cultural José Carlos Brandão, Parque Planalto\",\"2026-10-15\",null,\"Encerradas\",\"https://topchip.com.br/professoresacailandia\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-24T18:57:04.540Z",
+      "notifiedAt": null
+    },
     {
       "id": "ff35420e-03b2-48d3-bfd6-5f05858cbe03",
       "eventId": "sest-senat-2026-imperatriz",
@@ -4891,7 +4996,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-24T18:21:13.475Z",
+  "lastChecked": "2026-10-24T18:57:04.540Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }

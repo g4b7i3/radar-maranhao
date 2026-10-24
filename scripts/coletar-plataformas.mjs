@@ -32,7 +32,7 @@ const FONTES = [
   // Páginas oficiais de TODAS as provas futuras da agenda (Topchip, SA Crono, Central da Corrida, Crono Esportes, Ticket Sports,
   // Sympla, Doity, Night Run, sites próprios…), que a sessão do Claude não consegue abrir. Servem para conferir status, premiação
   // e percurso: guarda os links (regulamento, GPX, Strava, mapas), lê os PDFs de regulamento (inclusive do Google Drive) e segue
-  // os links de inscrição (Running Land, TF Sports, Ticket Sports…) em "subpaginas".
+  // os links de inscrição (Running Land, TF Sports, Ticket Sports, Inscrição Fácil da Topchip…) em "subpaginas".
   { id: 'oficiais', intervaloHoras: 6, guardarLinks: true, semApi: true, max: 130, limiteTexto: 20_000, lerPdfs: true, seguirInscricao: true, rolagemCurta: true,
     lista: [], extra: provasOficiais(), prova: /^$/ },
 ];
@@ -121,7 +121,7 @@ async function textoPdf(ctx, url) {
 }
 const ehPdf = u => /\.pdf($|[?#_])/i.test(u) || /\/regulamento\//i.test(u) || /drive\.google\.com\/(file\/d\/|open\?id=|uc\?)/.test(u);
 // Links de inscrição para seguir a partir da página oficial (é lá que costumam estar lotes, premiação e regulamento).
-const INSCRICAO = /runningland\.com\.br\/(?!$|\?|politica|faq|customer|redirect|login|cadastro)[a-z0-9-]{6,}|tfsports\.com\.br\/(events|tf-experience)\/|ticketsports\.com\.br\/e\/|sympla\.com\.br\/evento\/|doity\.com\.br\/[a-z0-9-]{6,}|uticket\.com\.br\/evento|minhasinscricoes\.com\.br\/evento|souatleta\.com\/[a-z0-9-]{6,}|brasilquecorre\.com\/|zeroumeventos|ativo\.com\/|centraldacorrida\.com\.br\/evento\/|sacrono\.com\.br\/evento\/|cronoesportes\.com\.br\/evento\/|topchip\.com\.br\/[a-z0-9-]{6,}|guardalugar\.com\/evento\//i;
+const INSCRICAO = /runningland\.com\.br\/(?!$|\?|politica|faq|customer|redirect|login|cadastro)[a-z0-9-]{6,}|tfsports\.com\.br\/(events|tf-experience)\/|ticketsports\.com\.br\/e\/|sympla\.com\.br\/evento\/|doity\.com\.br\/[a-z0-9-]{6,}|uticket\.com\.br\/evento|minhasinscricoes\.com\.br\/evento|souatleta\.com\/[a-z0-9-]{6,}|brasilquecorre\.com\/|zeroumeventos|ativo\.com\/|centraldacorrida\.com\.br\/evento\/|sacrono\.com\.br\/evento\/|cronoesportes\.com\.br\/evento\/|topchip\.com\.br\/[a-z0-9-]{6,}|inscricaofacil\.com\/(?!evento\/\d+\/comprovante)[a-z0-9-]{4,}|guardalugar\.com\/evento\//i;
 async function lerPdfs(ctx, page) {
   const pdfs = [...new Set(await page.$$eval('a[href], iframe[src], embed[src]', as => as.map(a => a.href || a.src)))].filter(ehPdf).slice(0, 3);
   const out = [];
