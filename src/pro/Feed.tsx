@@ -1,6 +1,7 @@
 // Feed "Aconteceu no Radar": provas verificadas, Rei/Rainha da prova e duelos, com a foto de cada atleta.
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
 import { linhaIdade } from './X1';
+import { FaixaAssista } from './Assista';
 import { useEffect, useMemo, useState } from 'react';
 import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown, MessageCircle } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil, souAdmin } from './sb';
@@ -197,6 +198,7 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
   const mudou = (ap: string) => (s: boolean) => setSigo(prev => { const n = new Set(prev); if (s) n.add(ap); else n.delete(ap); return n; });
   return (
     <div className="pro-cont">
+      <FaixaAssista />
       <div className="chips" role="group" aria-label="Filtro do feed">
         <button className="chip" aria-pressed={!soSigo} onClick={() => setSoSigo(false)}>Todo mundo</button>
         <button className="chip" aria-pressed={soSigo} onClick={() => setSoSigo(true)}>Quem eu sigo{sigo.size ? ` (${sigo.size})` : ''}</button>
