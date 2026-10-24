@@ -407,7 +407,7 @@ function Convite() {
               <p className="pro-oferta-preco"><small>Só</small> <b>R$ 10</b><small>/mês</small></p>
               <p className="pro-oferta-sub">Menos que uma inscrição de 5 km. <b>Sem fidelidade.</b></p>
               <p className="pro-oferta-sub2">⏱️ As provas desde 15/10 já contam pra você</p>
-              <p className="pro-oferta-sub2">Anual R$ 96 (2 meses grátis) · Assessoria R$ 150 para até 20 alunos</p>
+              <p className="pro-oferta-sub2">Diária R$ 4,50 (24 horas) · Anual R$ 96 (2 meses grátis) · Assessoria R$ 150 para até 20 alunos</p>
             </div>
           </div>}
       {!comunidade && !cortesia && <ChamadaFundador />}
