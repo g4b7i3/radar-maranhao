@@ -2,7 +2,7 @@
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
 import { linhaIdade } from './X1';
 import { useEffect, useMemo, useState } from 'react';
-import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown } from 'lucide-react';
+import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown, MessageCircle } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil, souAdmin } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
@@ -10,7 +10,7 @@ import { medalhaSVG } from './medalhas';
 export type Evento = {
   quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1'; alvo: string; apelido: string; foto: string | null; cidade: string;
   dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string; perdedor?: string; foto_perdedor?: string | null; local?: string | null; tempo_v?: number; tempo_p?: number; empate?: boolean; nota_v?: number | null; nota_p?: number | null };
-  reacoes: Reacoes; minha: TipoReacao | null;
+  reacoes: Reacoes; minha: TipoReacao | null; comentarios?: number;
 };
 type DadosPost = { id?: string; texto?: string; foto?: string | null; meu?: boolean };
 
@@ -85,6 +85,8 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
   const participa = e.tipo === 'duelo' ? (e.apelido === eu || d.adversario === eu) : e.tipo === 'x1' ? (e.apelido === eu || d.perdedor === eu) : false;
   const podeApagar = (post && (meu || post.meu || adm)) || ((e.tipo === 'duelo' || e.tipo === 'x1') && (participa || adm));
   const [sumiu, setSumiu] = useState(false);
+  const [abertoC, setAbertoC] = useState(false);
+  const [nComent, setNComent] = useState(e.comentarios ?? 0);
   const apagar = async () => {
     if (!confirm(post ? 'Apagar este post?' : 'Tirar do feed?')) return;
     const { data } = await sb.rpc('radar_feed_ocultar', { p_alvo: post?.id ? `post:${post.id}` : e.alvo });
@@ -129,7 +131,8 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
           {(() => { const l = linhaIdade(`@${e.apelido}`, d.nota_v, `@${d.perdedor}`, d.nota_p); return l ? <p className="pro-x1-idade">{l}</p> : null; })()}
         </div>
       )}
-      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} />{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{podeApagar ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label={post ? 'Apagar post' : 'Tirar do feed'} title={post ? 'Apagar post' : 'Tirar do feed'}><Trash2 size={15} aria-hidden="true" /></button> : post?.id ? <Sinalizar postId={post.id} /> : null}</footer>
+      <footer className="pro-feed-pe"><Aplauso alvo={e.alvo} reacoes={e.reacoes} minha={e.minha} /><button className={'btn text pro-coment-btn' + (abertoC ? ' on' : '')} onClick={() => setAbertoC(v => !v)} aria-expanded={abertoC} aria-label="Comentários"><MessageCircle size={17} aria-hidden="true" /><b>{nComent}</b></button>{e.tipo === 'prova' && d.pontos ? <small><Medal size={13} aria-hidden="true" /> +{d.pontos} pts</small> : null}{podeApagar ? <button className="btn text pro-feed-apagar" onClick={apagar} aria-label={post ? 'Apagar post' : 'Tirar do feed'} title={post ? 'Apagar post' : 'Tirar do feed'}><Trash2 size={15} aria-hidden="true" /></button> : post?.id ? <Sinalizar postId={post.id} /> : null}</footer>
+      {abertoC && <Comentarios alvo={e.alvo} mudou={setNComent} />}
     </article>
   );
 }
@@ -277,3 +280,46 @@ export function Publicar({ perfil, pro, assinar, publicou, comunidade, dica }: {
   );
 }
 
+
+/* ───────── Comentários (até 100 caracteres). Abre ao tocar no balão; quem comentou, o dono do post e o admin apagam. ───────── */
+type Coment = { id: string; apelido: string; foto: string | null; texto: string; quando: string; meu: boolean; pode_apagar: boolean };
+function Comentarios({ alvo, mudou }: { alvo: string; mudou: (n: number) => void }) {
+  const [lista, setLista] = useState<Coment[] | null>(null);
+  const [txt, setTxt] = useState('');
+  const [indo, setIndo] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const carregar = () => sb.rpc('radar_comentarios_lista', { p_alvo: alvo }).then(({ data }) => { const l = (data ?? []) as Coment[]; setLista(l); mudou(l.length); });
+  useEffect(() => { carregar(); }, [alvo]);
+  const enviar = async () => {
+    const t = txt.trim(); if (!t || indo) return;
+    setIndo(true); setErro(null);
+    const { data, error } = await sb.rpc('radar_comentar', { p_alvo: alvo, p_texto: t });
+    setIndo(false);
+    const r = (data ?? {}) as { erro?: string };
+    if (error || r.erro) return setErro(r.erro ?? 'Não deu agora. Tente de novo.');
+    setTxt(''); carregar();
+  };
+  const apagar = async (id: string) => {
+    if (!confirm('Apagar este comentário?')) return;
+    const { data } = await sb.rpc('radar_comentario_apagar', { p_id: id });
+    if (data) carregar();
+  };
+  return (
+    <div className="pro-coment">
+      {lista === null ? <p className="pro-sub pro-sem-margem">Carregando…</p>
+        : !lista.length ? <p className="pro-sub pro-sem-margem">Seja o primeiro a comentar.</p>
+        : <ul>{lista.map(c => (
+            <li key={c.id}>
+              <a href={linkPerfil(c.apelido)}><Avatar foto={c.foto} apelido={c.apelido} tam={30} /></a>
+              <div><p><a href={linkPerfil(c.apelido)}><b>@{c.apelido}</b></a> <TextoComLinks texto={c.texto} /></p><small>{quandoTxt(c.quando)}</small></div>
+              {c.pode_apagar && <button className="btn text pro-coment-x" onClick={() => apagar(c.id)} aria-label="Apagar comentário"><Trash2 size={14} aria-hidden="true" /></button>}
+            </li>))}</ul>}
+      <div className="pro-coment-novo">
+        <input value={txt} maxLength={100} onChange={ev => setTxt(ev.target.value.slice(0, 100))} onKeyDown={ev => { if (ev.key === 'Enter') enviar(); }} placeholder="Comente…" aria-label="Escrever comentário" />
+        <small>{100 - txt.length}</small>
+        <button className="btn solid" onClick={enviar} disabled={!txt.trim() || indo} aria-label="Enviar comentário"><Send size={16} aria-hidden="true" /></button>
+      </div>
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+    </div>
+  );
+}

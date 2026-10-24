@@ -882,3 +882,18 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-pub-topo .pro-segue-lista .pro-sub{opacity:.75}
 .pro-pub-topo .pro-pub-ass{text-decoration:underline;text-underline-offset:3px;font-weight:inherit}
 .pro-pub-topo .pro-segue-lista .pro-segue-mais{color:var(--azul,#1d3fbf);font-weight:700;font-size:14px;text-decoration:none;margin-top:4px}
+/* comentários */
+.pro-coment-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;border:1.5px solid var(--line);font-weight:800;color:inherit;min-height:36px}
+.pro-coment-btn.on{background:rgba(29,63,191,.08);border-color:#1d3fbf}
+.pro-coment{border-top:1px solid var(--line);margin-top:4px;padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.pro-coment ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.pro-coment li{display:flex;gap:9px;align-items:flex-start}
+.pro-coment li>div{flex:1;min-width:0;background:rgba(127,127,127,.08);border-radius:14px;padding:8px 11px}
+.pro-coment li p{margin:0;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.pro-coment li p a{color:inherit;text-decoration:none}
+.pro-coment li small{font-size:11.5px;opacity:.65}
+.pro-coment-x{padding:6px;min-height:0;opacity:.6}
+.pro-coment-novo{display:flex;gap:8px;align-items:center}
+.pro-coment-novo input{flex:1;min-width:0;padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:inherit;font:inherit;font-size:15px}
+.pro-coment-novo small{font-size:11px;opacity:.6;min-width:22px;text-align:right}
+.pro-coment-novo .btn{padding:9px 12px;min-height:40px;border-radius:999px}
