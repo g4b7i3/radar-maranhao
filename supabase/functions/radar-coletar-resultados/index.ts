@@ -48,7 +48,24 @@ Deno.serve(async req => {
 
   const eventos = await listarEventos();
   const feitos: unknown[] = [];
+  // links que atletas colaram como comprovante: se o Radar sabe ler (cronometragem conhecida), vira o resultado oficial da prova
+  const { data: colados } = await db.from('radar_resultados').select('prova_id, link_resultado').in('prova_id', provas.slice(0, 40).map(p => p.id)).not('link_resultado', 'is', null);
   for (const p of provas.slice(0, 40)) {
+    const links = [...new Set((colados ?? []).filter((c: { prova_id: string }) => c.prova_id === p.id).map((c: { link_resultado: string }) => c.link_resultado))];
+    let ok = false;
+    for (const l of links) {
+      try {
+        const lido = await lerLink(l);
+        if (!lido?.linhas.length) continue;
+        if (lido.data && dias(lido.data, p.data) > 1) continue;
+        if (!lido.data && parecenca(lido.evento, p.nome) < 0.5) continue;
+        const n = await gravarOficiais(db, p.id, l, lido.linhas);
+        const reis = await calcularReis(db, p.id).catch(() => 0);
+        feitos.push({ prova: p.id, evento: lido.evento, url: l, origem: 'link do atleta', linhas: n, reis, ...(await conferirRegistros(db, p.id)) });
+        ok = true; break;
+      } catch (err) { feitos.push({ prova: p.id, url: l, erro: String((err as Error).message).slice(0, 120) }); }
+    }
+    if (ok) continue;
     const cands = eventos.map(e => ({ e, s: parecenca(p.nome, e.nome) })).filter(x => dias(x.e.data, p.data) <= 1 && x.s >= 0.5).sort((a, b) => b.s - a.s);
     // empate entre eventos diferentes (ex.: duas etapas no mesmo fim de semana): não arrisca, fica para o link do atleta
     if (cands.length > 1 && cands[0].s === cands[1].s && cands[0].e.nome !== cands[1].e.nome) { feitos.push({ prova: p.id, empate: cands.slice(0, 2).map(c => c.e.nome) }); continue; }
