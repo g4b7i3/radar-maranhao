@@ -108,7 +108,7 @@ async function wiclax(url: string): Promise<Lido | null> {
 }
 
 /** Sites de cronometragem que o Radar sabe ler. */
-export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info'];
+export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info', 'resultadosbrasil.com.br'];
 /** Lê um link de resultado. Devolve null se o formato não é conhecido. */
 export async function lerLink(url: string): Promise<Lido | null> {
   let u: URL; try { u = new URL(url.trim()); } catch { return null; }
