@@ -3,7 +3,7 @@
 // senão fica "declarado" (só conta para a temporada pessoal) ou "em análise" (com comprovante).
 // Calcula aqui no servidor a nota por idade, os pontos e as medalhas, para ninguém mexer pelo navegador.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
-import { acharNoOficial, gravarOficiais, lerLink, lerOficiais, parecenca, semelhante, conferirRegistros, norm as normNome, type Lido } from '../_comum/resultados.ts';
+import { acharNoOficial, gravarOficiais, lerLink, lerOficiais, listarEventos, parecenca, semelhante, conferirRegistros, norm as normNome, type Lido } from '../_comum/resultados.ts';
 import { lerComIA, type LeituraIA } from '../_comum/ia.ts';
 const UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO','EX'];
 
@@ -173,6 +173,25 @@ Deno.serve(async req => {
   }
   if (avisoLink) return resp({ erro: avisoLink + ' Cole o link do resultado desta prova.' }, 400);
 
+  // 1a) Só o número de peito (sem link e sem tempo): o Radar procura o resultado nas cronometragens que sabe ler, na hora.
+  const soPeito = !gratis && !link && !(Number(b.tempo_s) > 0);
+  if (soPeito && peito && !ofs?.length) {
+    try {
+      const dataP = prova.date.slice(0, 10);
+      const perto = (d: string) => Math.abs(new Date(d.slice(0, 10)).getTime() - new Date(dataP).getTime()) <= 86400_000;
+      const cands = (await listarEventos()).filter(e => perto(e.data) && parecenca(e.nome, prova!.name) >= 0.5)
+        .sort((x, y) => parecenca(y.nome, prova!.name) - parecenca(x.nome, prova!.name)).slice(0, 4);
+      for (const c of cands) {
+        const lido = await lerLink(c.url).catch(() => null);
+        if (!lido?.linhas.length || (lido.data && !perto(lido.data))) continue;
+        await gravarOficiais(db, prova.id, c.url, lido.linhas);
+        ofs = await lerOficiais(db, prova.id); linkLido = true;
+        await conferirRegistros(db, prova.id).catch(() => null);
+        break;
+      }
+    } catch { /* cronometragens fora do ar: pede o link */ }
+  }
+
   let oficial: { tempo_s: number; colocacao_geral: number | null; colocacao_faixa: number | null; nome: string } | null = null;
   if (ofs?.length) {
     const achado = acharNoOficial(ofs, km, { peito, nomePerfil: perfil.nome_completo, nomeBusca: nomeIns || perfil.nome_completo, tempo: Number(b.tempo_s) || null });
@@ -186,6 +205,8 @@ Deno.serve(async req => {
     if (viaIA) oficial = { tempo_s: viaIA.tempo_s, colocacao_geral: null, colocacao_faixa: null, nome: viaIA.nome }; // pódio só com cronometragem conhecida
   }
 
+  // não achou só com o peito: a tela mostra o campo do link (nada é salvo)
+  if (soPeito && !oficial) return resp({ precisa_link: true, achou_resultado: !!ofs?.length, motivo: ofs?.length ? `Achamos o resultado da prova, mas não o peito ${peito ?? ''} em ${String(Math.round(km * 10) / 10).replace('.', ',')} km com o seu nome. Confira o número ou cole o link do seu resultado aqui.` : 'Não achamos o resultado desta prova. Cole aqui o link do resultado (da cronometragem).' });
   const tempo = oficial ? oficial.tempo_s : Math.round(Number(b.tempo_s));
   if (!(tempo > 0)) return resp({ erro: ofs?.length ? 'Não achamos você no resultado oficial. Confira o nome da inscrição e o número de peito, ou informe o tempo.' : 'Informe o tempo líquido (do chip).' }, 400);
   const pace = tempo / km;

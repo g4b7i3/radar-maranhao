@@ -305,6 +305,8 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
   const [outroNome, setOutroNome] = useState('');
   const [link, setLink] = useState('');
   const [mais, setMais] = useState(false);
+  const [semResultado, setSemResultado] = useState<string | null>(null); // não achou só com o peito: mostra o link
+  const [darTempo, setDarTempo] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [feito, setFeito] = useState<Resposta | null>(null);
@@ -322,7 +324,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
   const visiveis = sugs.filter(x => x.status === 'pendente' || (x.status === 'aprovada' && x.prova_id && !jaFeitas.has(x.prova_id)) || (x.status === 'recusada' && Date.now() - new Date(x.criado_em).getTime() < 15 * 86400_000));
   const registrarSug = (x: Sugestao) => {
     const p = provas?.find(y => y.id === x.prova_id) ?? { id: x.prova_id!, nome: x.nome, data: x.data, cidade: x.cidade, distancias: [Number(x.distancia_km)], largada: null };
-    setProva(p); setKm(Number(x.distancia_km)); if (x.link) setLink(x.link); setPedir(false); window.scrollTo({ top: 0, behavior: 'smooth' });
+    setProva(p); setKm(Number(x.distancia_km)); if (x.link) { setLink(x.link); setSemResultado(''); } setPedir(false); window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const lista = useMemo(() => (provas ?? []).filter(p => !busca || norm(`${p.nome} ${p.cidade}`).includes(norm(busca))).slice(0, 30), [provas, busca]);
@@ -332,9 +334,10 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
   const enviar = async () => {
     if (!prova || !km) return;
     setErro(null); setEnviando(true);
-    const r = await chamar<Resposta>('radar-registrar', { prova_id: prova.id, distancia_km: km, tempo_s: seg ?? undefined, peito: peito || undefined, nome_inscricao: outroNome || undefined, link_resultado: link || undefined });
+    const r = await chamar<Resposta & { precisa_link?: boolean }>('radar-registrar', { prova_id: prova.id, distancia_km: km, tempo_s: seg ?? undefined, peito: peito || undefined, nome_inscricao: outroNome || undefined, link_resultado: link || undefined });
     setEnviando(false);
     if (r.erro) return setErro(r.erro);
+    if (r.precisa_link) return setSemResultado(r.motivo ?? 'Não achamos o seu resultado. Cole o link aqui.');
     setFeito(r); pronto(); carregarSugs();
   };
 
@@ -351,7 +354,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
         <section className="pro-card">
           <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
           <p className="fine pro-sem-margem">{kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · {STATUS[r.status].dica}</p>
-          {feito.oficial && feito.link_lido && <p className="fine pro-sem-margem">O Radar leu o link e achou você no resultado oficial.</p>}
+          {feito.oficial && feito.link_lido && <p className="fine pro-sem-margem">O Radar leu o resultado oficial e achou você.</p>}
           {feito.motivo && <p className="fine pro-sem-margem">{feito.motivo}</p>}
           {!pro && assinar && <button className="btn solid pro-btn-p" onClick={assinar}>Assinar o Radar Pro · R$ 10</button>}
         </section>
@@ -361,7 +364,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
         <CardResultado r={r} apelido={perfil.apelido} fechar={() => { /* fica aberto */ }} />
         <CorreramComigo provaId={r.prova_id} />
         <button className="btn solid pro-btn" onClick={irTemporada}>Ver minha temporada</button>
-        <button className="btn outline pro-btn" onClick={() => { setFeito(null); setProva(null); setKm(null); setTempo(''); setPeito(''); setLink(''); setOutroNome(''); }}>Registrar outra prova</button>
+        <button className="btn outline pro-btn" onClick={() => { setFeito(null); setProva(null); setKm(null); setTempo(''); setPeito(''); setLink(''); setOutroNome(''); setSemResultado(null); setDarTempo(false); }}>Registrar outra prova</button>
       </div>
     );
   }
@@ -370,7 +373,7 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
     <div className="pro-cont">
       <p className="euvou-pergunta">1. Qual prova?</p>
       {prova ? (
-        <div className="pro-card pro-escolhida"><div><b>{prova.nome}</b><p className="fine pro-sem-margem">{dataBR(prova.data)} · {prova.cidade}</p></div><button className="btn text" onClick={() => { setProva(null); setKm(null); }}>Trocar</button></div>
+        <div className="pro-card pro-escolhida"><div><b>{prova.nome}</b><p className="fine pro-sem-margem">{dataBR(prova.data)} · {prova.cidade}</p></div><button className="btn text" onClick={() => { setProva(null); setKm(null); setSemResultado(null); setLink(''); setDarTempo(false); }}>Trocar</button></div>
       ) : (
         <>
           <label className="pro-busca"><Search size={18} aria-hidden="true" /><input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Nome da prova ou cidade" aria-label="Buscar prova" /></label>
@@ -403,16 +406,22 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
 
       {prova && <>
         <p className="euvou-pergunta">2. Distância</p>
-        <div className="chips" role="group" aria-label="Distância">{prova.distancias.map(d => <button key={d} className="chip" aria-pressed={km === Number(d)} onClick={() => setKm(Number(d))}>{kmTxt(real(Number(d)))}</button>)}</div>
-        <label className="ct-cidade">3. Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={link} onChange={e => setLink(e.target.value.trim())} placeholder="cole aqui o link do resultado" /><small>{pro ? 'O Radar lê na hora e pega o seu tempo oficial. Vale o link de qualquer cronometragem: página, PDF ou foto do resultado.' : 'No modo grátis a prova fica como declarada. Verificar com o resultado oficial (e pontuar) é do Radar Pro.'}</small></label>
-        <label className="ct-cidade">Número de peito <small>(ajuda a achar você no resultado)</small><input inputMode="numeric" value={peito} onChange={e => setPeito(e.target.value.replace(/\D/g, '').slice(0, 8))} placeholder="Ex.: 1234" /></label>
-        <label className="ct-cidade">Tempo líquido (do chip) <small>{link ? '(opcional com o link)' : ''}</small><input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" /><small>Se o resultado oficial já saiu, usamos o tempo de lá.</small></label>
-        <button className="btn text pro-esq" aria-expanded={mais} onClick={() => setMais(!mais)}>{mais ? 'Menos opções' : 'Inscrito com outro nome?'}</button>
-        {mais && <label className="ct-cidade">Nome usado na inscrição<input value={outroNome} onChange={e => setOutroNome(e.target.value)} placeholder={perfil.nome_completo} /><small>Pode ser diferente (apelido, nome abreviado), mas precisa ter pelo menos um nome do seu nome completo.</small></label>}
+        <div className="chips" role="group" aria-label="Distância">{prova.distancias.map(d => <button key={d} className="chip" aria-pressed={km === Number(d)} onClick={() => { setKm(Number(d)); setSemResultado(null); }}>{kmTxt(real(Number(d)))}</button>)}</div>
+        <label className="ct-cidade">3. Número de peito<input inputMode="numeric" value={peito} onChange={e => { setPeito(e.target.value.replace(/\D/g, '').slice(0, 8)); setSemResultado(null); }} placeholder="Ex.: 1234" />{pro && <small>Só isso: o Radar procura o resultado oficial na hora e pega o seu tempo.</small>}</label>
+        {!pro && <label className="ct-cidade">4. Tempo líquido (do chip)<input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" /><small>No modo grátis a prova fica como declarada. Achar o resultado oficial pelo peito (e pontuar no ranking) é do Radar Pro.</small></label>}
+        {pro && semResultado !== null && <>
+          {semResultado && <p className="pro-aviso" role="status">{semResultado}</p>}
+          <label className="ct-cidade">Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={link} onChange={e => setLink(e.target.value.trim())} placeholder="cole aqui o link do resultado" autoFocus /><small>Vale página, PDF ou foto do resultado. O Radar lê na hora.</small></label>
+          <button className="btn text pro-esq" aria-expanded={mais} onClick={() => setMais(!mais)}>{mais ? 'Menos opções' : 'Inscrito com outro nome?'}</button>
+          {mais && <label className="ct-cidade">Nome usado na inscrição<input value={outroNome} onChange={e => setOutroNome(e.target.value)} placeholder={perfil.nome_completo} /><small>Pode ser diferente (apelido, nome abreviado), mas precisa ter pelo menos um nome do seu nome completo.</small></label>}
+          {!darTempo
+            ? <button className="btn text pro-esq" onClick={() => setDarTempo(true)}>O resultado ainda não saiu?</button>
+            : <label className="ct-cidade">Tempo líquido (do chip)<input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" /><small>Fica como declarada. Quando a cronometragem publicar, o Radar confere pelo seu peito e muda para “Verificado”.</small></label>}
+        </>}
         {previa && <section className="pro-card azul pro-centro"><p className="pro-k">Prévia da nota por idade</p><p className="pro-big">{pct(previa)}%</p></section>}
         {erro && <p className="ct-erro" role="alert">{erro}</p>}
-        <button className="btn solid pro-btn" disabled={!km || enviando} onClick={enviar}>{enviando ? (link ? 'Lendo o resultado…' : 'Conferindo no resultado oficial…') : 'Salvar na minha temporada'}</button>
-        <p className="fine pro-sem-margem">Para valer no ranking, o tempo precisa estar no resultado oficial (o Radar confere sozinho) ou você envia o comprovante.</p>
+        <button className="btn solid pro-btn" disabled={!km || enviando || (pro ? !peito && !link && !seg : !seg)} onClick={enviar}>{enviando ? (link ? 'Lendo o resultado…' : 'Procurando o seu resultado…') : pro && semResultado === null ? 'Buscar meu resultado' : 'Salvar na minha temporada'}</button>
+        <p className="fine pro-sem-margem">Para valer no ranking, o tempo precisa estar no resultado oficial: o Radar acha pelo seu número de peito e confere com o nome do seu perfil.</p>
       </>}
     </div>
   );
