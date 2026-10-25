@@ -206,7 +206,11 @@ Deno.serve(async req => {
   }
 
   // não achou só com o peito: a tela mostra o campo do link (nada é salvo)
-  if (soPeito && !oficial) return resp({ precisa_link: true, achou_resultado: !!ofs?.length, motivo: ofs?.length ? `Achamos o resultado da prova, mas não o peito ${peito ?? ''} em ${String(Math.round(km * 10) / 10).replace('.', ',')} km com o seu nome. Confira o número ou cole o link do seu resultado aqui.` : 'Não achamos o resultado desta prova. Cole aqui o link do resultado (da cronometragem).' });
+  if (soPeito && !oficial) {
+    // avisa o administrador na hora: ele pode procurar o resultado e carregar
+    await db.rpc('radar_admin_avisar_busca', { p_user: user.id, p_prova_id: prova.id, p_prova_nome: prova.name, p_data: prova.date.slice(0, 10), p_km: km, p_peito: peito, p_achou_resultado: !!ofs?.length }).then(() => null, () => null);
+    return resp({ precisa_link: true, achou_resultado: !!ofs?.length, motivo: ofs?.length ? `Achamos o resultado da prova, mas não o peito ${peito ?? ''} em ${String(Math.round(km * 10) / 10).replace('.', ',')} km com o seu nome. Confira o número ou cole o link do seu resultado aqui.` : 'Não achamos o resultado desta prova. Cole aqui o link do resultado (da cronometragem).' });
+  }
   const tempo = oficial ? oficial.tempo_s : Math.round(Number(b.tempo_s));
   if (!(tempo > 0)) return resp({ erro: ofs?.length ? 'Não achamos você no resultado oficial. Confira o nome da inscrição e o número de peito, ou informe o tempo.' : 'Informe o tempo líquido (do chip).' }, 400);
   const pace = tempo / km;
