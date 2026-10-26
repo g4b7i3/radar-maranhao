@@ -1,0 +1,52 @@
+# Temporário: narração em português (voz neural Piper) para os Reels do Radar Pro.
+name: Narrar reel
+on:
+  workflow_dispatch:
+    inputs:
+      falas:
+        description: "Falas: nome|texto;nome|texto;..."
+        required: true
+      voz:
+        description: "Voz (pt_BR/faber/medium, pt_BR/cadu/medium, pt_BR/jeff/medium, pt_BR/edresson/low)"
+        required: false
+        default: "pt_BR/faber/medium"
+permissions:
+  contents: write
+concurrency:
+  group: coleta
+  cancel-in-progress: false
+jobs:
+  narrar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Gerar
+        env:
+          FALAS: ${{ github.event.inputs.falas }}
+          VOZ: ${{ github.event.inputs.voz }}
+        run: |
+          pip install -q piper-tts
+          f=$(echo "$VOZ" | tr '/' '-')
+          mkdir -p vozes coleta/narracao
+          curl -sfL "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/$VOZ/$f.onnx" -o vozes/$f.onnx
+          curl -sfL "https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/$VOZ/$f.onnx.json" -o vozes/$f.onnx.json
+          python - <<'PY'
+          import os, subprocess
+          voz = os.environ['VOZ'].replace('/', '-')
+          for item in os.environ['FALAS'].split(';'):
+              if '|' not in item: continue
+              nome, texto = item.split('|', 1)
+              subprocess.run(['python', '-m', 'piper', '-m', f'vozes/{voz}.onnx', '--length-scale', '0.97', '--sentence-silence', '0.25', '-f', f'coleta/narracao/{nome.strip()}.wav'], input=texto.strip().encode(), check=True)
+          PY
+          ls -la coleta/narracao
+      - name: Salvar
+        run: |
+          git config user.name "radar-coleta[bot]"
+          git config user.email "radar-coleta@users.noreply.github.com"
+          git add coleta/narracao
+          git commit -m "Narração do reel (temporário)" || exit 0
+          git pull --rebase && git push
