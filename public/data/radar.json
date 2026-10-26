@@ -641,8 +641,8 @@
       ],
       "location": "Rua Afonso Bacelar",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Esgotadas",
+      "registrationClose": "2026-10-25",
+      "status": "Encerradas",
       "officialUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio",
       "sourceUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio",
       "sourceName": "SA Crono",
@@ -653,7 +653,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-10-26T17:08:09.888Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3340,6 +3340,14 @@
   ],
   "changes": [
     {
+      "id": "5abcfcd9-43c8-4615-80a2-3eab4ab60588",
+      "eventId": "jm-run-2026-coelho-neto",
+      "version": "[\"2026-11-01\",[5],\"Rua Afonso Bacelar\",null,\"2026-10-25\",\"Encerradas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-26T17:08:09.888Z",
+      "notifiedAt": null
+    },
+    {
       "id": "d460c462-4255-4ab2-be1a-684856df2609",
       "eventId": "pinheiro-corre-para-cristo-2026",
       "version": "[\"2026-11-15\",[2.5,5],\"Local a confirmar\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/pinheiro-corre-para-cristo\"]",
@@ -5060,7 +5068,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-26T10:51:03.440Z",
+  "lastChecked": "2026-10-26T17:08:09.888Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
