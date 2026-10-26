@@ -3257,14 +3257,18 @@
       "publishedAt": null,
       "confidence": "Fonte única: plataforma de inscrição (Runtra)",
       "notes": "Corrida do Grupo Movimente-se, tema \"Energia que conecta e transforma!\". Largada às 6h na Praia do Caju. 3 km (corrida e caminhada), 5 km e 10 km. Kit com camisa, medalha, número de peito e brindes. Inscrições limitadas, pela Runtra (lote de abertura). A página fala em premiação para os melhores colocados, sem detalhar. Organização: Guilherme Junqueira. Retirada de kit a confirmar. Regulamento: troféu e premiação em dinheiro para os 3 primeiros no geral dos 5 e 10 km (valores não divulgados); troféus por faixa etária e só troféu nos 3 km.",
-      "prize": null,
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "Regulamento: troféu + dinheiro para os 3 primeiros gerais (M/F) nos 5 e 10 km: R$ 500, R$ 400 e R$ 300 numa distância e R$ 400, R$ 300 e R$ 200 na outra; 3 km só troféu."
+      },
       "elevation": null,
       "price": {
         "min": 65.89,
         "text": "R$ 65,89 (lote de abertura)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-24T10:57:39.899Z",
+      "verifiedAt": "2026-10-26T23:22:45.880Z",
       "firstSeenAt": "2026-10-23T13:19:43.298Z"
     },
     {
@@ -3336,16 +3340,50 @@
       "start": "06:00",
       "verifiedAt": "2026-10-25T10:57:23.351Z",
       "firstSeenAt": "2026-10-25T10:57:23.351Z"
+    },
+    {
+      "id": "corridao-bombeiro-extremo-2027-sao-luis",
+      "name": "Corridão Bombeiro Extremo",
+      "edition": "2027",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-01-17",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://giroingressos.com.br/e/3-corridao-bombeiro-extremo",
+      "sourceUrl": "https://running.life/en/event/corridao-bombeiro-extremo",
+      "sourceName": "running.life",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Visto só no running.life (domingo, 17/01/2027, São Luís), com link de inscrição na Giro Ingressos, que não pôde ser aberto nesta pesquisa. Faltam confirmar distâncias, local de largada, horário, preço e status das inscrições, e se é corrida de rua ou prova com obstáculos.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-26T23:22:45.880Z",
+      "firstSeenAt": "2026-10-26T23:22:45.880Z"
     }
   ],
   "changes": [
+    {
+      "id": "b680cd5c-f5ae-46ef-b612-923bf522a830",
+      "eventId": "corridao-bombeiro-extremo-2027-sao-luis",
+      "version": "[\"2027-01-17\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://giroingressos.com.br/e/3-corridao-bombeiro-extremo\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-26T23:22:45.880Z",
+      "notifiedAt": "2026-10-26T23:23:22.703Z"
+    },
     {
       "id": "5abcfcd9-43c8-4615-80a2-3eab4ab60588",
       "eventId": "jm-run-2026-coelho-neto",
       "version": "[\"2026-11-01\",[5],\"Rua Afonso Bacelar\",null,\"2026-10-25\",\"Encerradas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/jm-run-2-edio\"]",
       "kind": "Alteração importante",
       "at": "2026-10-26T17:08:09.888Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-26T23:23:22.703Z"
     },
     {
       "id": "d460c462-4255-4ab2-be1a-684856df2609",
@@ -5068,7 +5106,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-26T17:08:09.888Z",
+  "lastChecked": "2026-10-26T23:22:45.880Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
