@@ -3345,7 +3345,7 @@
       "version": "[\"2026-11-15\",[2.5,5],\"Local a confirmar\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/pinheiro-corre-para-cristo\"]",
       "kind": "Alteração importante",
       "at": "2026-10-25T14:51:43.008Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-26T10:51:32.963Z"
     },
     {
       "id": "9dc8d6cc-e2de-4514-a60a-625035fd14e3",
@@ -5060,7 +5060,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-25T14:51:43.008Z",
+  "lastChecked": "2026-10-26T10:51:03.440Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
