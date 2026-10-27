@@ -989,9 +989,10 @@
       "confidence": "Plataforma de inscrição (Central da Corrida)",
       "notes": "Prova num sábado, às 17h, em voltas de 3,2 km. Categorias 60+.",
       "prize": null,
+      "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "start": "17:00",
+      "verifiedAt": "2026-10-27T15:49:41.447Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -5114,7 +5115,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-27T11:35:11.932Z",
+  "lastChecked": "2026-10-27T15:49:41.447Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
