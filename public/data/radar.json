@@ -2830,7 +2830,7 @@
       "location": "Praça dos Pescadores, Avenida Litorânea",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridapge2026",
       "sourceUrl": "https://jornalpequeno.com.br/2026/10/19/pge-ma-abre-inscricoes-para-corrida-na-avenida-litoranea/",
       "sourceName": "Jornal Pequeno",
@@ -2844,7 +2844,7 @@
         "text": "R$ 60 + taxa (60+: R$ 30; PCD grátis)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-25T10:57:23.351Z",
+      "verifiedAt": "2026-10-27T17:54:51.873Z",
       "firstSeenAt": "2026-10-16T22:16:48.414Z"
     },
     {
@@ -3370,6 +3370,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "d1b6988d-3857-4381-a713-62f0be9a0c24",
+      "eventId": "corrida-pge-2026-2026-sao-luis",
+      "version": "[\"2026-11-08\",[5,10],\"Praça dos Pescadores, Avenida Litorânea\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-27T17:54:51.873Z",
+      "notifiedAt": null
+    },
     {
       "id": "b88ced64-91fe-4fd4-a65e-418895c53d4a",
       "eventId": "pib-run-2026-rosario",
@@ -5115,7 +5123,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-27T15:49:41.447Z",
+  "lastChecked": "2026-10-27T17:54:51.873Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
