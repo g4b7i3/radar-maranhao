@@ -3367,9 +3367,43 @@
       "start": null,
       "verifiedAt": "2026-10-26T23:22:45.880Z",
       "firstSeenAt": "2026-10-26T23:22:45.880Z"
+    },
+    {
+      "id": "corrida-do-empreendedor-2026-sao-luis",
+      "name": "Corrida do Empreendedor 2026",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-13",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Em breve",
+      "officialUrl": "https://centraldacorrida.com.br/",
+      "sourceUrl": "https://centraldacorrida.com.br/",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": "05:30",
+      "verifiedAt": "2026-10-27T20:28:42.930Z",
+      "firstSeenAt": "2026-10-27T20:28:42.930Z"
     }
   ],
   "changes": [
+    {
+      "id": "4a372402-6799-4a27-8ab6-29e69d42cdca",
+      "eventId": "corrida-do-empreendedor-2026-sao-luis",
+      "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-27T20:28:42.930Z",
+      "notifiedAt": null
+    },
     {
       "id": "d1b6988d-3857-4381-a713-62f0be9a0c24",
       "eventId": "corrida-pge-2026-2026-sao-luis",
@@ -5123,7 +5157,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-27T17:54:51.873Z",
+  "lastChecked": "2026-10-27T20:28:42.930Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
