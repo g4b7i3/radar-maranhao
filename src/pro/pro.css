@@ -972,3 +972,7 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-assista-generos button{flex:none;border:0;background:linear-gradient(135deg,#2449D6,#6d28d9);color:#fff;font:inherit;font-size:14px;font-weight:800;padding:9px 16px;border-radius:999px;cursor:pointer}
 .pro-assista-generos button.on{background:#ffd34d;color:#2a1a00}
 .pro-assista-generos button:disabled{opacity:.6}
+
+/* chip PCD: combina com Feminino/Masculino */
+.pro-chip-pcd{display:inline-flex;align-items:center;gap:6px}
+.pro-chip-pcd.on{background:#1d3fbf;border-color:#1d3fbf;color:#fff}

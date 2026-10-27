@@ -1,7 +1,7 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, MessageCircle, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, MapPin, type LucideIcon } from 'lucide-react';
-import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga } from './sb';
+import { Plus, Search, MessageCircle, Accessibility, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, MapPin, type LucideIcon } from 'lucide-react';
+import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga , GENEROS} from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
 import TAB from '../idade-tabela.json';
@@ -488,7 +488,7 @@ export function CorreramComigo({ provaId, titulo = 'Quem mais correu essa prova'
 }
 
 /* ───────── Ranking do Maranhão ───────── */
-type Linha = { posicao: number; apelido: string; cidade?: string; liga?: Liga; faixa?: string; pontos?: number; provas?: number; indice?: number; eu?: boolean; assessoria?: string; atletas?: number; tamanho?: number; estados?: number; ufs?: string };
+type Linha = { posicao: number; apelido: string; pcd?: boolean; cidade?: string; liga?: Liga; faixa?: string; pontos?: number; provas?: number; indice?: number; eu?: boolean; assessoria?: string; atletas?: number; tamanho?: number; estados?: number; ufs?: string };
 const FAIXAS = ['até 19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60+'];
 type Rec = 'geral' | 'eficiencia' | 'assessorias' | 'pelotao' | 'reis' | 'viajantes';
 
@@ -497,6 +497,7 @@ export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { pe
   const [sexo, setSexo] = useState<'' | 'F' | 'M'>('');
   const [cidade, setCidade] = useState('');
   const [faixa, setFaixa] = useState('');
+  const [pcd, setPcd] = useState(false);
   const [pelotaoCidade, setPelotaoCidade] = useState(false);
   const [pelotaoTodos, setPelotaoTodos] = useState(false); // só o admin: todos os assinantes do Pro
   const [linhas, setLinhas] = useState<Linha[] | null>(null);
@@ -505,13 +506,13 @@ export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { pe
   useEffect(() => {
     setLinhas(null); setAberto(null);
     if (rec === 'reis') return;
-    const q = rec === 'geral' ? sb.rpc('radar_ranking', { temporada: ANO, recorte_sexo: sexo || null, recorte_cidade: cidade || null, recorte_faixa: faixa || null })
+    const q = rec === 'geral' ? sb.rpc('radar_ranking_v2', { temporada: ANO, recorte_sexo: sexo || null, recorte_cidade: cidade || null, recorte_faixa: faixa || null, recorte_pcd: pcd ? true : null })
       : rec === 'eficiencia' ? sb.rpc('radar_ranking_eficiencia', { temporada: ANO })
       : rec === 'assessorias' ? sb.rpc('radar_ranking_assessorias', { temporada: ANO })
       : rec === 'viajantes' ? sb.rpc('radar_ranking_viajantes', { temporada: ANO })
       : sb.rpc(pelotaoTodos ? 'radar_admin_pelotao_todos' : pelotaoCidade ? 'radar_pelotao_cidade' : 'radar_pelotao', {});
     q.then(({ data }) => setLinhas((data ?? []) as Linha[]));
-  }, [rec, sexo, cidade, faixa, pelotaoCidade, pelotaoTodos]);
+  }, [rec, sexo, cidade, faixa, pcd, pelotaoCidade, pelotaoTodos]);
 
   const eu = linhas?.find(l => l.eu);
   const fotos = useFotos((linhas ?? []).map(l => l.apelido).filter(Boolean));
@@ -534,6 +535,7 @@ export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { pe
           <button className="chip" aria-pressed={!sexo} onClick={() => setSexo('')}>Todos</button>
           <button className="chip" aria-pressed={sexo === 'F'} onClick={() => setSexo('F')}>Feminino</button>
           <button className="chip" aria-pressed={sexo === 'M'} onClick={() => setSexo('M')}>Masculino</button>
+          <button className={'chip pro-chip-pcd' + (pcd ? ' on' : '')} aria-pressed={pcd} onClick={() => setPcd(v => !v)} title="Só atletas PCD (combina com Feminino e Masculino)"><Accessibility size={14} aria-hidden="true" /> PCD</button>
         </div>
         <label className="ct-cidade pro-sel">Faixa etária<select value={faixa} onChange={e => setFaixa(e.target.value)}><option value="">Todas</option>{FAIXAS.map(f => <option key={f} value={f}>{f} anos</option>)}</select></label>
       </>}
@@ -588,7 +590,7 @@ export function TelaRanking({ perfil, pro = true, assinar, admin = false }: { pe
                 <button className={rec !== 'assessorias' ? 'com-foto' : undefined} disabled={rec === 'assessorias'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={rec !== 'assessorias' ? aberto === l.apelido : undefined}>
                   <b className="pro-rank-pos">{l.posicao}</b>
                   {rec !== 'assessorias' && <Avatar foto={fotos.get(l.apelido)} apelido={l.apelido} tam={40} />}
-                  <span className="pro-rank-nome">{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a><small>{l.atletas} atletas</small></> : <><span>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>}</span><small>{rec === 'viajantes' ? `${l.ufs} · ${l.provas} ${l.provas === 1 ? 'prova' : 'provas'}` : l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}</small></>}</span>
+                  <span className="pro-rank-nome">{rec === 'assessorias' ? <><a href={linkAssessoria(l.assessoria ?? '')} target="_blank" rel="noopener">{l.assessoria}</a><small>{l.atletas} atletas</small></> : <><span>{l.eu ? <b>Você</b> : `@${l.apelido}`}{rec === 'pelotao' && l.posicao <= 3 && Number(l.pontos) > 0 && <span className="pro-coroa-mini" title="Top 3 do pelotão no mês"> 👑</span>}</span><small>{rec === 'viajantes' ? `${l.ufs} · ${l.provas} ${l.provas === 1 ? 'prova' : 'provas'}` : l.cidade}{l.faixa ? ` · ${l.faixa}` : ''}{l.pcd ? ' · PCD' : ''}</small></>}</span>
                   <span className="pro-rank-valor"><b>{rec === 'assessorias' ? Math.round(Number(l.pontos ?? 0)) : txtValor(l)}</b><small>{rec === 'assessorias' ? 'pts' : un(l)}</small></span>
                 </button>
                 {aberto === l.apelido && rec !== 'assessorias' && <ProvasDe apelido={l.apelido} meu={!!l.eu} sigo={sigo.has(l.apelido)} mudouSigo={mudouSigo(l.apelido)} />}
@@ -841,7 +843,7 @@ function Equipe({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
 
 function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () => void; pronto: () => void }) {
   const dataBRp = (iso: string) => iso.split('-').reverse().join('/');
-  const [f, setF] = useState({ apelido: perfil.apelido, nome_completo: perfil.nome_completo, cidade: perfil.cidade, sexo: perfil.sexo, nascimento: dataBRp(perfil.nascimento), assessoria: perfil.assessoria ?? '' });
+  const [f, setF] = useState({ apelido: perfil.apelido, nome_completo: perfil.nome_completo, cidade: perfil.cidade, sexo: perfil.sexo, nascimento: dataBRp(perfil.nascimento), pcd: !!perfil.pcd, genero: perfil.genero ?? '', assessoria: perfil.assessoria ?? '' });
   const [erro, setErro] = useState<string | null>(null);
   const [salvando, setSalvando] = useState(false);
   const muda = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
@@ -856,8 +858,8 @@ function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () =
     const nasc = f.nascimento.split('/').reverse().join('-');
     const idade = (Date.now() - Date.parse(nasc)) / (365.25 * 86400_000);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(nasc) || !(idade >= 10 && idade <= 100)) return setErro('Confira a data de nascimento (dd/mm/aaaa).');
-    const novo = { apelido: ap, nome_completo: nome, cidade: f.cidade.trim() || perfil.cidade, sexo: f.sexo, nascimento: nasc, assessoria: f.assessoria.trim() || null };
-    const igual = (Object.keys(novo) as (keyof typeof novo)[]).every(k => (novo[k] ?? null) === (perfil[k] ?? null));
+    const novo = { apelido: ap, nome_completo: nome, cidade: f.cidade.trim() || perfil.cidade, sexo: f.sexo, nascimento: nasc, assessoria: f.assessoria.trim() || null, pcd: f.pcd, genero: f.genero || null };
+    const igual = (Object.keys(novo) as (keyof typeof novo)[]).every(k => (novo[k] ?? null) === ((perfil as Record<string, unknown>)[k] ?? (k === 'pcd' ? false : null)));
     if (igual) return fechar();
     setSalvando(true);
     const { error } = await sb.from('radar_perfis').update(novo).eq('user_id', perfil.user_id);
@@ -873,7 +875,9 @@ function EditarPerfil({ perfil, fechar, pronto }: { perfil: Perfil; fechar: () =
       <label className="ct-cidade">Nome completo (como na inscrição)<input value={f.nome_completo} onChange={muda('nome_completo')} autoComplete="name" /><small>É por ele que o Radar acha você no resultado oficial. Provas já verificadas não mudam.</small></label>
       <label className="ct-cidade">Cidade<input list="pro-cidades-ed" value={f.cidade} onChange={muda('cidade')} /><datalist id="pro-cidades-ed">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
       <p className="euvou-pergunta">Categoria</p>
-      <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button></div>
+      <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button><button type="button" className={'chip pro-chip-pcd' + (f.pcd ? ' on' : '')} aria-pressed={f.pcd} onClick={() => setF({ ...f, pcd: !f.pcd })}><Accessibility size={14} aria-hidden="true" /> PCD</button></div>
+      <p className="fine pro-sem-margem">Categoria é a da inscrição nas provas (é por ela que a nota por idade e o ranking são calculados). PCD entra no ranking geral e também no recorte PCD.</p>
+      <label className="ct-cidade">Gênero <small>(opcional, como você se identifica)</small><select value={f.genero} onChange={e => setF({ ...f, genero: e.target.value })}><option value="">Não informar</option>{GENEROS.map(([v, t]) => <option key={v} value={v}>{t}</option>)}</select></label>
       <label className="ct-cidade">Data de nascimento<input inputMode="numeric" value={f.nascimento} onChange={e => setF({ ...f, nascimento: masc(e.target.value) })} placeholder="dd/mm/aaaa" /></label>
       <CampoAssessoria value={f.assessoria} onChange={v => setF({ ...f, assessoria: v })} id="pro-assessorias-ed" />
       {erro && <p className="ct-erro" role="alert">{erro}</p>}

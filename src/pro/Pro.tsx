@@ -2,8 +2,8 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, type LucideIcon } from 'lucide-react';
-import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada } from './sb';
+import { ArrowLeft, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, type LucideIcon } from 'lucide-react';
+import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
 import CardDuelo, { tituloDuelo, type FimDuelo } from './CardDuelo';
@@ -445,7 +445,7 @@ export const CampoAssessoria = ({ value, onChange, id = 'pro-assessorias' }: { v
   return <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input list={id} value={value} onChange={e => onChange(e.target.value)} placeholder="Escolha ou escreva a sua" autoComplete="off" /><datalist id={id}>{lista.map(n => <option key={n} value={n} />)}</datalist><small>Escreva igual ao nome da sua equipe para somar pontos com ela.</small></label>;
 };
 function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto: () => void }) {
-  const [f, setF] = useState({ apelido: email.split('@')[0].toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20), nome_completo: '', cidade: 'São Luís', sexo: '' as '' | 'F' | 'M', nascimento: '', assessoria: '', whatsapp: '' });
+  const [f, setF] = useState({ apelido: email.split('@')[0].toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20), nome_completo: '', cidade: 'São Luís', sexo: '' as '' | 'F' | 'M', pcd: false, genero: '', nascimento: '', assessoria: '', whatsapp: '' });
   const [erro, setErro] = useState<string | null>(null);
   const [salvando, setSalvando] = useState(false);
   const muda = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
@@ -461,7 +461,7 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
     const zap = zapLimpo(f.whatsapp);
     if (!zap) return setErro(f.whatsapp.trim() ? 'Confira o WhatsApp: DDD + número, ex.: (98) 98765-4321.' : 'Informe o seu WhatsApp.');
     setSalvando(true);
-    const { error } = await sb.from('radar_perfis').insert({ user_id: uid, apelido: ap, nome_completo: f.nome_completo.trim().replace(/\s+/g, ' '), cidade: f.cidade, sexo: f.sexo, nascimento: nasc, assessoria: f.assessoria.trim() || null, whatsapp: zap });
+    const { error } = await sb.from('radar_perfis').insert({ user_id: uid, apelido: ap, nome_completo: f.nome_completo.trim().replace(/\s+/g, ' '), cidade: f.cidade, sexo: f.sexo, pcd: f.pcd, genero: f.genero || null, nascimento: nasc, assessoria: f.assessoria.trim() || null, whatsapp: zap });
     setSalvando(false);
     if (error) return setErro(error.code === '23505' ? 'Esse apelido já existe. Escolha outro.' : 'Não deu para salvar. Tente de novo.');
     try { const ref = localStorage.getItem('radar-ref'); if (ref) { await sb.rpc('radar_indicar', { p_apelido: ref }); localStorage.removeItem('radar-ref'); } } catch { /* */ }
@@ -475,7 +475,9 @@ function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto
       <label className="ct-cidade">Nome completo (como na inscrição)<input value={f.nome_completo} onChange={muda('nome_completo')} autoComplete="name" /></label>
       <label className="ct-cidade">Cidade<input list="pro-cidades" value={f.cidade} onChange={muda('cidade')} /><datalist id="pro-cidades">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>
       <p className="euvou-pergunta">Categoria</p>
-      <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button></div>
+      <div className="chips" role="group" aria-label="Categoria"><button type="button" className="chip" aria-pressed={f.sexo === 'F'} onClick={() => setF({ ...f, sexo: 'F' })}>Feminino</button><button type="button" className="chip" aria-pressed={f.sexo === 'M'} onClick={() => setF({ ...f, sexo: 'M' })}>Masculino</button><button type="button" className={'chip pro-chip-pcd' + (f.pcd ? ' on' : '')} aria-pressed={f.pcd} onClick={() => setF({ ...f, pcd: !f.pcd })}><Accessibility size={14} aria-hidden="true" /> PCD</button></div>
+      <p className="fine pro-sem-margem">Categoria é a da inscrição nas provas. Marque PCD se você corre na categoria PCD: você entra no ranking geral e também no recorte PCD.</p>
+      <label className="ct-cidade">Gênero <small>(opcional, como você se identifica)</small><select value={f.genero} onChange={e => setF({ ...f, genero: e.target.value })}><option value="">Não informar</option>{GENEROS.map(([v, t]) => <option key={v} value={v}>{t}</option>)}</select></label>
       <label className="ct-cidade">Data de nascimento<input inputMode="numeric" value={f.nascimento} onChange={e => setF({ ...f, nascimento: masc(e.target.value) })} placeholder="dd/mm/aaaa" /><small>Usada só para a nota por idade e a faixa etária.</small></label>
       <CampoAssessoria value={f.assessoria} onChange={v => setF({ ...f, assessoria: v })} />
       <label className="ct-cidade">WhatsApp<input type="tel" required inputMode="tel" autoComplete="tel" value={f.whatsapp} onChange={e => setF({ ...f, whatsapp: zapMascara(e.target.value) })} placeholder="(98) 98765-4321" /><small>Para o Radar falar com você sobre os seus resultados e provas. Não aparece para ninguém.</small></label>
