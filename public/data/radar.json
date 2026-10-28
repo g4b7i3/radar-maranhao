@@ -14,7 +14,7 @@
       "location": "Complexo do Porto do Itaqui",
       "registrationOpen": "2026-10-13T12:00:00-03:00",
       "registrationClose": null,
-      "status": "Encerradas",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/evento/4acorridaportoitaqui",
       "sourceUrl": "https://www.portodoitaqui.com.br/imprensa/noticia/inscricoes-para-4-corrida-do-porto-do-itaqui-abrem-no-dia-13-de-outubro",
       "sourceName": "EMAP · Porto do Itaqui",
@@ -28,7 +28,7 @@
         "text": "R$ 70"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-20T16:18:41.197Z",
+      "verifiedAt": "2026-10-28T22:02:56.310Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -2863,7 +2863,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/evento/16acorridaviradaslz",
       "sourceUrl": "https://centraldacorrida.com.br/evento/16acorridaviradaslz",
       "sourceName": "Central da Corrida",
@@ -2874,7 +2874,7 @@
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-18T11:00:21.790Z",
+      "verifiedAt": "2026-10-28T22:02:56.310Z",
       "firstSeenAt": "2026-10-17T23:41:12.413Z"
     },
     {
@@ -3421,9 +3421,51 @@
       "start": null,
       "verifiedAt": "2026-10-28T17:34:49.143Z",
       "firstSeenAt": "2026-10-28T17:34:49.143Z"
+    },
+    {
+      "id": "1-corrida-da-galera-do-poste-2026-sao-luis",
+      "name": "1ªcorrida da Galera do Poste",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-18",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Em breve",
+      "officialUrl": "https://centraldacorrida.com.br/",
+      "sourceUrl": "https://centraldacorrida.com.br/",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 19h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": "19:00",
+      "verifiedAt": "2026-10-28T22:02:56.310Z",
+      "firstSeenAt": "2026-10-28T22:02:56.310Z"
     }
   ],
   "changes": [
+    {
+      "id": "4afdafa9-730a-4565-91f2-6c0db0bb73fe",
+      "eventId": "16-corrida-da-virada-2026-sao-luis",
+      "version": "[\"2026-12-31\",[5,10,15],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/16acorridaviradaslz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-28T22:02:56.310Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "1ed510ba-be0a-479c-a913-c3a24ce15010",
+      "eventId": "1-corrida-da-galera-do-poste-2026-sao-luis",
+      "version": "[\"2026-12-18\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-28T22:02:56.310Z",
+      "notifiedAt": null
+    },
     {
       "id": "7c2f33ac-cff7-462a-ad4b-54fa2308d6f3",
       "eventId": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
@@ -5201,7 +5243,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-28T17:34:49.143Z",
+  "lastChecked": "2026-10-28T22:02:56.310Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
