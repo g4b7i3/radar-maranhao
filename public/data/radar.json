@@ -612,8 +612,8 @@
       "sourceUrl": "https://topchip.com.br/iii-corrida-uema-sul",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Regulamento: R$ 80 para o público geral (550 vagas, desde 01/09); 300 vagas gratuitas para servidores e acadêmicos da UEMASUL mediante doação de um pacote de fraldas geriátricas.",
+      "confidence": "Página de inscrição oficial · data em conflito (Topchip mostra 20/11), confirmar no organizador",
+      "notes": "Largada às 6h30. Regulamento: R$ 80 para o público geral (550 vagas, desde 01/09); 300 vagas gratuitas para servidores e acadêmicos da UEMASUL mediante doação de um pacote de fraldas geriátricas. Atenção (28/10): desde 27/10 o cabeçalho da página da Topchip mostra 20/11/2026 às 6h30, mas a descrição da mesma página, o regulamento e a página do Inscrição Fácil continuam com 01/11/2026. Data mantida em 01/11 até o organizador confirmar.",
       "prize": {
         "kind": "dinheiro",
         "top": 300,
@@ -625,7 +625,7 @@
         "text": "R$ 80 (servidores e alunos UEMASUL: doação)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-10-28T10:57:51.550Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -892,8 +892,8 @@
       "sourceUrl": "https://www.topchip.com.br/adventista130anos",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto.",
+      "confidence": "Página de inscrição oficial · data em conflito (Topchip mostra 20/11), confirmar no organizador",
+      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto. Atenção (28/10): desde 27/10 o cabeçalho da página da Topchip mostra 20/11/2026 às 6h30, mas o regulamento continua com 08/11/2026 (kit em 05/11). Data mantida em 08/11 até o organizador confirmar.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -905,7 +905,7 @@
         "text": "R$ 90 + taxa"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-10-28T10:57:51.550Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3402,7 +3402,7 @@
       "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
       "kind": "Alteração importante",
       "at": "2026-10-28T01:04:59.827Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-28T10:58:25.225Z"
     },
     {
       "id": "4a372402-6799-4a27-8ab6-29e69d42cdca",
@@ -3410,7 +3410,7 @@
       "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/\"]",
       "kind": "Nova prova",
       "at": "2026-10-27T20:28:42.930Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-28T10:58:25.225Z"
     },
     {
       "id": "d1b6988d-3857-4381-a713-62f0be9a0c24",
@@ -3418,7 +3418,7 @@
       "version": "[\"2026-11-08\",[5,10],\"Praça dos Pescadores, Avenida Litorânea\",null,null,\"Esgotadas\",\"https://centraldacorrida.com.br/evento/corridapge2026\"]",
       "kind": "Alteração importante",
       "at": "2026-10-27T17:54:51.873Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-10-28T10:58:25.225Z"
     },
     {
       "id": "b88ced64-91fe-4fd4-a65e-418895c53d4a",
@@ -5165,7 +5165,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-28T01:04:59.827Z",
+  "lastChecked": "2026-10-28T10:57:51.550Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
