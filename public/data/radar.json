@@ -3380,7 +3380,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
@@ -3391,11 +3391,19 @@
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-27T20:28:42.930Z",
+      "verifiedAt": "2026-10-28T01:04:59.827Z",
       "firstSeenAt": "2026-10-27T20:28:42.930Z"
     }
   ],
   "changes": [
+    {
+      "id": "738dceb5-c356-4187-9cf0-3c6395fd2217",
+      "eventId": "corrida-do-empreendedor-2026-sao-luis",
+      "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-28T01:04:59.827Z",
+      "notifiedAt": null
+    },
     {
       "id": "4a372402-6799-4a27-8ab6-29e69d42cdca",
       "eventId": "corrida-do-empreendedor-2026-sao-luis",
@@ -5157,7 +5165,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-27T20:28:42.930Z",
+  "lastChecked": "2026-10-28T01:04:59.827Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
