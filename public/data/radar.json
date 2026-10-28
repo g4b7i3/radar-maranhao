@@ -3393,9 +3393,45 @@
       "start": "05:30",
       "verifiedAt": "2026-10-28T01:04:59.827Z",
       "firstSeenAt": "2026-10-27T20:28:42.930Z"
+    },
+    {
+      "id": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
+      "name": "ALTO ALEGRE DO PINDARÉ RUN 2026",
+      "edition": "2026",
+      "city": "Alto Alegre do Pindaré",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-07",
+      "distances": [
+        5
+      ],
+      "location": "Praça Padre André",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026",
+      "sourceUrl": "https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026",
+      "sourceName": "SA Crono",
+      "publishedAt": null,
+      "confidence": "Página de inscrição oficial",
+      "notes": "Largada às 4h45. Encontrada automaticamente na SA Crono; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-28T17:34:49.143Z",
+      "firstSeenAt": "2026-10-28T17:34:49.143Z"
     }
   ],
   "changes": [
+    {
+      "id": "7c2f33ac-cff7-462a-ad4b-54fa2308d6f3",
+      "eventId": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
+      "version": "[\"2026-11-07\",[5],\"Praça Padre André\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-28T17:34:49.143Z",
+      "notifiedAt": null
+    },
     {
       "id": "738dceb5-c356-4187-9cf0-3c6395fd2217",
       "eventId": "corrida-do-empreendedor-2026-sao-luis",
@@ -5165,7 +5201,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-28T10:57:51.550Z",
+  "lastChecked": "2026-10-28T17:34:49.143Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
