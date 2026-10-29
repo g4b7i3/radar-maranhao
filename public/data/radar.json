@@ -2251,7 +2251,7 @@
       "location": "UEMA, Campus Paulo VI",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceName": "Crono Esportes",
@@ -2269,7 +2269,7 @@
         "text": "R$ 60 a R$ 90 + 1 kg de alimento"
       },
       "start": "05:45",
-      "verifiedAt": "2026-10-23T15:21:48.557Z",
+      "verifiedAt": "2026-10-29T04:08:31.034Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3408,7 +3408,7 @@
       "location": "Praça Padre André",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026",
       "sourceUrl": "https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026",
       "sourceName": "SA Crono",
@@ -3419,7 +3419,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-28T17:34:49.143Z",
+      "verifiedAt": "2026-10-29T04:08:31.034Z",
       "firstSeenAt": "2026-10-28T17:34:49.143Z"
     },
     {
@@ -3450,6 +3450,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "0bc24409-df9f-453e-be07-51bf68ba614f",
+      "eventId": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
+      "version": "[\"2026-11-07\",[5],\"Praça Padre André\",null,null,\"Esgotadas\",\"https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-29T04:08:31.034Z",
+      "notifiedAt": null
+    },
     {
       "id": "4afdafa9-730a-4565-91f2-6c0db0bb73fe",
       "eventId": "16-corrida-da-virada-2026-sao-luis",
@@ -5243,7 +5251,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-28T22:02:56.310Z",
+  "lastChecked": "2026-10-29T04:08:31.034Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
