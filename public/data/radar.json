@@ -599,7 +599,7 @@
       "city": "Imperatriz",
       "state": "MA",
       "modality": "Rua",
-      "date": "2026-11-01",
+      "date": "2026-11-20",
       "distances": [
         3,
         5
@@ -612,8 +612,8 @@
       "sourceUrl": "https://topchip.com.br/iii-corrida-uema-sul",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial · data em conflito (Topchip mostra 20/11), confirmar no organizador",
-      "notes": "Largada às 6h30. Regulamento: R$ 80 para o público geral (550 vagas, desde 01/09); 300 vagas gratuitas para servidores e acadêmicos da UEMASUL mediante doação de um pacote de fraldas geriátricas. Atenção (28/10): desde 27/10 o cabeçalho da página da Topchip mostra 20/11/2026 às 6h30, mas a descrição da mesma página, o regulamento e a página do Inscrição Fácil continuam com 01/11/2026. Data mantida em 01/11 até o organizador confirmar.",
+      "confidence": "Página de inscrição oficial e regulamento atualizado",
+      "notes": "Sexta-feira, 20/11 (feriado da Consciência Negra), largada às 6h30 em frente ao Campus I da UEMASUL. A data mudou de 01/11 para 20/11: confirmada pelo regulamento atualizado (arquivo \"Regulamento_corrida_UEMASUL_2026_-_atualizado\") e pelo cabeçalho da página da Topchip. O regulamento atualizado cita só o percurso de 5 km; a página da Topchip ainda lista 5 km e 3 km. Público geral: R$ 80 na Topchip (550 vagas, desde 01/09, até esgotar). Servidores e acadêmicos da UEMASUL: 300 vagas gratuitas com doação de um pacote de fraldas geriátricas, inscrição presencial na PROEXAE até 16/11. Kits em 18 e 19/11 na loja Topsort (Av. Dorgival Pinheiro de Sousa).",
       "prize": {
         "kind": "dinheiro",
         "top": 300,
@@ -625,7 +625,7 @@
         "text": "R$ 80 (servidores e alunos UEMASUL: doação)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-28T10:57:51.550Z",
+      "verifiedAt": "2026-10-29T10:53:43.607Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -884,7 +884,7 @@
       "distances": [
         5
       ],
-      "location": "Local a confirmar",
+      "location": "Colégio Adventista de Imperatriz",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
@@ -893,7 +893,7 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial · data em conflito (Topchip mostra 20/11), confirmar no organizador",
-      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto. Atenção (28/10): desde 27/10 o cabeçalho da página da Topchip mostra 20/11/2026 às 6h30, mas o regulamento continua com 08/11/2026 (kit em 05/11). Data mantida em 08/11 até o organizador confirmar.",
+      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto. Atenção (28/10): desde 27/10 o cabeçalho da página da Topchip mostra 20/11/2026 às 6h30, mas o regulamento continua com 08/11/2026 (kit em 05/11). Data mantida em 08/11 até o organizador confirmar. Local (regulamento): Colégio Adventista de Imperatriz, concentração às 5h30.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -905,7 +905,7 @@
         "text": "R$ 90 + taxa"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-28T10:57:51.550Z",
+      "verifiedAt": "2026-10-29T10:53:43.607Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -2869,12 +2869,12 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Quinta-feira, 31/12, largada às 5h30. Percursos de 5, 10 e 15 km (mais categorias 60+ e PCD 5 km) na página da Central da Corrida, organizada pela EuCorro Eventos Esportivos; inscrições ainda \"Em breve\". Local de largada, preço e prazo a confirmar.",
+      "notes": "Quinta-feira, 31/12, largada às 5h30. Inscrições abertas na Central da Corrida (vistas abertas a partir de 28/10; organização EuCorro Eventos Esportivos). Percursos de 5, 10 e 15 km, mais categorias 60+ e PCD 5 km. Cupom VIRADA15 dá desconto no kit básico até 59 anos; 60+ e PCD têm desconto automático. Kits: local e data divulgados até uma semana antes. Local de largada, preço e prazo a confirmar.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-28T22:02:56.310Z",
+      "verifiedAt": "2026-10-29T10:54:38.671Z",
       "firstSeenAt": "2026-10-17T23:41:12.413Z"
     },
     {
@@ -3396,7 +3396,7 @@
     },
     {
       "id": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
-      "name": "ALTO ALEGRE DO PINDARÉ RUN 2026",
+      "name": "Alto Alegre do Pindaré Run 2026",
       "edition": "2026",
       "city": "Alto Alegre do Pindaré",
       "state": "MA",
@@ -3414,17 +3414,17 @@
       "sourceName": "SA Crono",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 4h45. Encontrada automaticamente na SA Crono; detalhes na página da plataforma.",
+      "notes": "Sábado, 07/11, largada às 4h45 na Praça Padre André, em comemoração ao aniversário da cidade. Só 5 km na SA Crono. Vagas esgotadas (\"limite técnico atingido\") desde 29/10. Preço e premiação não aparecem na página.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-29T04:08:31.034Z",
+      "start": "04:45",
+      "verifiedAt": "2026-10-29T10:53:43.607Z",
       "firstSeenAt": "2026-10-28T17:34:49.143Z"
     },
     {
       "id": "1-corrida-da-galera-do-poste-2026-sao-luis",
-      "name": "1ªcorrida da Galera do Poste",
+      "name": "1ª Corrida da Galera do Poste",
       "edition": "2026",
       "city": "São Luís",
       "state": "MA",
@@ -3439,17 +3439,33 @@
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
-      "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 19h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "confidence": "Fonte única (lista da Central da Corrida) · confirmar no organizador",
+      "notes": "Sexta-feira, 18/12, às 19h, em São Luís. Aparece só na lista do Maranhão da Central da Corrida, como \"Em breve\", ainda sem página própria: distâncias, local, preço e abertura das inscrições a confirmar.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "19:00",
-      "verifiedAt": "2026-10-28T22:02:56.310Z",
+      "verifiedAt": "2026-10-29T10:53:43.607Z",
       "firstSeenAt": "2026-10-28T22:02:56.310Z"
     }
   ],
   "changes": [
+    {
+      "id": "f1da2da5-83a0-425d-af40-9954530693d9",
+      "eventId": "adventista-run-2026-imperatriz",
+      "version": "[\"2026-11-08\",[5],\"Colégio Adventista de Imperatriz\",null,null,\"Abertas\",\"https://www.topchip.com.br/adventista130anos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-29T10:53:43.607Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "cadf459a-78fb-4c46-aaa9-884fd1333add",
+      "eventId": "uemasul-2026-imperatriz",
+      "version": "[\"2026-11-20\",[3,5],\"Campus I da UEMASUL, Rua Godofredo Viana, 1300, Centro\",null,null,\"Abertas\",\"https://topchip.com.br/iii-corrida-uema-sul\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-29T10:53:43.607Z",
+      "notifiedAt": null
+    },
     {
       "id": "0bc24409-df9f-453e-be07-51bf68ba614f",
       "eventId": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
@@ -5251,7 +5267,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-29T04:08:31.034Z",
+  "lastChecked": "2026-10-29T10:54:38.671Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
