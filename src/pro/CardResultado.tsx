@@ -148,10 +148,94 @@ export async function desenharResultado(c: HTMLCanvasElement, r: Resultado, apel
   ctx.globalAlpha = 1; ctx.shadowBlur = 0;
 }
 
+/** Estilo "cartão": fundo claro com faixa dourada e um cartão escuro com a foto do atleta, a prova e três números. */
+export async function desenharCartao(c: HTMLCanvasElement, r: Resultado, apelido: string, meds: Medalha[], rei: Rei, foto: HTMLCanvasElement | null, avatar: HTMLImageElement | null) {
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d') as Ctx;
+  await document.fonts?.ready;
+  // fundo claro com riscos finos e a faixa dourada atravessando
+  ctx.fillStyle = '#efeae2'; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.strokeStyle = 'rgba(20,30,70,.06)'; ctx.lineWidth = 3;
+  for (let k = -H; k < W + H; k += 120) { ctx.beginPath(); ctx.moveTo(k, 0); ctx.lineTo(k - H * .5, H); ctx.stroke(); }
+  ctx.restore();
+  ctx.save(); ctx.translate(W / 2, 1080); ctx.rotate(-0.12); ctx.fillStyle = '#ffd34d'; ctx.fillRect(-W, -95, W * 2, 190); ctx.restore();
+
+  // topo: marca
+  const X = 84;
+  ctx.save(); ctx.translate(X, 96);
+  ctx.fillStyle = '#0d1840'; ctx.beginPath(); ctx.roundRect(0, 0, 76, 76, 18); ctx.fill();
+  ctx.translate(6, 6); ctx.scale(2, 2); ctx.strokeStyle = '#ffd34d'; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  SIMBOLO.forEach(p => ctx.stroke(new Path2D(p))); ctx.restore();
+  ctx.fillStyle = '#0d1840'; ctx.textAlign = 'left';
+  fonte(ctx, 900, 38, true); ctx.fillText('RADAR PRO', X + 98, 132);
+  fonte(ctx, 600, 26, false); ctx.globalAlpha = .75; ctx.fillText('A rede social do corredor maranhense', X + 98, 166); ctx.globalAlpha = 1;
+
+  // cartão escuro
+  const cx = 110, cy = 270, cw = W - 220, ch = 1370;
+  ctx.save(); ctx.shadowColor = 'rgba(10,15,40,.45)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 30;
+  ctx.fillStyle = '#161b2e'; ctx.beginPath(); ctx.roundRect(cx, cy, cw, ch, 56); ctx.fill(); ctx.restore();
+  const ix = cx + 44, iw = cw - 88;
+  // rótulo e selo
+  const oficial = r.status === 'verificado' || r.status === 'aprovado';
+  const rot = rei ? (rei.sexo === 'F' ? 'RAINHA DA PROVA' : 'REI DA PROVA') : oficial ? 'RESULTADO OFICIAL' : 'TEMPO DECLARADO';
+  ctx.fillStyle = '#ffd34d'; fonte(ctx, 900, 30, false); try { ctx.letterSpacing = '5px'; } catch { /* */ }
+  ctx.fillText(rot, ix, cy + 78); try { ctx.letterSpacing = '0px'; } catch { /* */ }
+  const chip = kmTxt(Number(r.distancia_km)).toUpperCase();
+  fonte(ctx, 900, 26, false); const chw = ctx.measureText(chip).width + 62;
+  ctx.fillStyle = '#ffd34d'; ctx.beginPath(); ctx.roundRect(ix + iw - chw, cy + 44, chw, 48, 24); ctx.fill();
+  ctx.fillStyle = '#161b2e'; ctx.beginPath(); ctx.arc(ix + iw - chw + 24, cy + 68, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.textAlign = 'left'; ctx.fillText(chip, ix + iw - chw + 40, cy + 78);
+  // foto
+  const py = cy + 120, ph = 700;
+  ctx.save(); ctx.beginPath(); ctx.roundRect(ix, py, iw, ph, 36); ctx.clip();
+  const img: CanvasImageSource | null = foto ?? avatar ?? await carregar('/img/ma/calhau.jpg').catch(() => null);
+  if (img) {
+    const w = (img as HTMLImageElement).naturalWidth || (img as HTMLCanvasElement).width, h = (img as HTMLImageElement).naturalHeight || (img as HTMLCanvasElement).height;
+    const k = Math.max(iw / w, ph / h); ctx.drawImage(img, ix + (iw - w * k) / 2, py + (ph - h * k) / 2, w * k, h * k);
+  } else { ctx.fillStyle = '#26304f'; ctx.fillRect(ix, py, iw, ph); }
+  ctx.restore();
+  // medalha principal no canto da foto, numa plaquinha branca
+  if (meds[0]) {
+    const im = await svgImg(meds[0]).catch(() => null);
+    if (im) {
+      const bw = 200, bh = 190, bx = ix + iw - bw - 26, by = py + ph - bh - 26;
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 20; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 18); ctx.fill(); ctx.restore();
+      ctx.drawImage(im, bx + (bw - 140) / 2, by + 12, 140, 140 * 1.12 > bh - 24 ? bh - 24 : 140 * 1.12);
+    }
+  }
+  // nome e prova
+  ctx.textAlign = 'left'; ctx.fillStyle = '#fff';
+  const nm = caber(ctx, '@' + apelido, 900, 74, 46, iw, 1, true); ctx.fillText(nm.linhas[0], ix, py + ph + 104);
+  const mes = new Date(r.prova_data.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'short', year: '2-digit', timeZone: 'UTC' }).replace('. de ', '/').replace('.', '').replace(' de ', '/');
+  ctx.fillStyle = '#ffd34d'; ctx.beginPath(); ctx.arc(ix + 10, py + ph + 152, 9, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  const lp = caber(ctx, `${r.prova_nome} · ${mes}`, 600, 34, 24, iw - 34, 1, false); ctx.fillText(lp.linhas[0], ix + 34, py + ph + 164);
+  // três números
+  const ly = py + ph + 210;
+  ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(ix, ly, iw, 2); ctx.fillRect(ix, ly + 190, iw, 2);
+  const terceiro: [string, string] = r.colocacao_faixa ? [`${r.colocacao_faixa}º`, 'na faixa'] : r.colocacao_geral ? [`${r.colocacao_geral}º`, 'no geral'] : [`+${r.pontos}`, 'pontos'];
+  const nums: [string, string][] = [[relogio(r.tempo_s), 'tempo'], [`${String(Number(r.nota).toFixed(1)).replace('.', ',')}%`, 'nota por idade'], terceiro];
+  const colW = iw / 3;
+  ctx.textAlign = 'center';
+  nums.forEach(([v, t], i) => {
+    const x = ix + colW * i + colW / 2;
+    ctx.fillStyle = '#ffd34d'; const f = caber(ctx, v, 900, 76, 44, colW - 20, 1, true); ctx.fillText(f.linhas[0], x, ly + 100);
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; fonte(ctx, 600, 28, false); ctx.fillText(t, x, ly + 150);
+  });
+  // rodapé do cartão
+  ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(255,255,255,.7)'; fonte(ctx, 600, 30, false);
+  ctx.fillText(`${r.cidade} · MA`, ix, ly + 262);
+  ctx.textAlign = 'right'; ctx.fillText(oficial ? '✓ verificado' : 'declarado', ix + iw, ly + 262);
+  // rodapé da imagem
+  ctx.textAlign = 'center'; ctx.fillStyle = '#0d1840'; fonte(ctx, 800, 32, false);
+  ctx.fillText(`radarcorridasma.com.br/?atleta=${apelido}`, W / 2, H - 120);
+}
+
 export default function CardResultado({ r, apelido, fechar }: { r: Resultado; apelido: string; fechar: () => void }) {
   const [meds, setMeds] = useState<Medalha[] | null>(null);
   const [rei, setRei] = useState<Rei>(null);
   const [fundo, setFundo] = useState<Fundo>('calhau');
+  const [estilo, setEstilo] = useState<'poster' | 'cartao'>('poster');
   const [foto, setFoto] = useState<HTMLCanvasElement | null>(null);
   const [avatar, setAvatar] = useState<HTMLImageElement | null | undefined>(undefined);
   useEffect(() => { fotoPerfil([apelido]).then(m => setAvatar(m.get(apelido) ?? null)).catch(() => setAvatar(null)); }, [apelido]);
@@ -176,12 +260,12 @@ export default function CardResultado({ r, apelido, fechar }: { r: Resultado; ap
     if (!meds || avatar === undefined) return;
     let ativo = true;
     const c = document.createElement('canvas');
-    desenharResultado(c, r, apelido, meds, rei, fundo, foto, avatar).then(() => c.toBlob(b => {
+    (estilo === 'cartao' ? desenharCartao(c, r, apelido, meds, rei, foto, avatar ?? null) : desenharResultado(c, r, apelido, meds, rei, fundo, foto, avatar)).then(() => c.toBlob(b => {
       if (!ativo || !b) return;
       blob.current = b; setUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); });
     }, 'image/jpeg', 0.92)).catch(() => setAviso('Não consegui montar o card. Tente outro fundo.'));
     return () => { ativo = false; };
-  }, [meds, rei, fundo, foto, r, apelido, avatar]);
+  }, [meds, rei, fundo, foto, r, apelido, avatar, estilo]);
 
   async function escolherFoto(file: File | undefined) {
     if (!file) return;
@@ -209,12 +293,17 @@ export default function CardResultado({ r, apelido, fechar }: { r: Resultado; ap
 
   return (
     <div className="pro-card pro-cardres">
-      <div className="pro-linha"><p className="pro-k cinza">Card do resultado</p><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
+      <div className="pro-linha"><p className="pro-k cinza">Card pro story <span className="pro-opcional">opcional</span></p><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
       <div className="pro-cardres-previa">{url ? <img src={url} alt={`Card do resultado: ${r.prova_nome}`} /> : <span>Montando o card…</span>}</div>
+      <div className="chips" role="group" aria-label="Estilo do card">
+        <button className="chip" aria-pressed={estilo === 'poster'} onClick={() => setEstilo('poster')}>Pôster</button>
+        <button className="chip" aria-pressed={estilo === 'cartao'} onClick={() => setEstilo('cartao')}>Cartão com foto</button>
+      </div>
+      {estilo === 'cartao' && <p className="fine pro-sem-margem">Usa a sua foto de perfil. Quer outra? Toque em <b>Minha foto</b>.</p>}
       <div className="chips pro-cardres-fundos" role="group" aria-label="Fundo">
-        {FUNDOS.map(f => <button key={f.id} className="chip" aria-pressed={fundo === f.id} onClick={() => setFundo(f.id)}>{f.nome}</button>)}
-        <button className="chip" aria-pressed={fundo === 'azul'} onClick={() => setFundo('azul')}>Azul</button>
-        <button className="chip" aria-pressed={fundo === 'minha'} onClick={() => entrada.current?.click()}><Camera size={14} aria-hidden="true" /> Minha foto</button>
+        {estilo === 'poster' && FUNDOS.map(f => <button key={f.id} className="chip" aria-pressed={fundo === f.id} onClick={() => setFundo(f.id)}>{f.nome}</button>)}
+        {estilo === 'poster' && <button className="chip" aria-pressed={fundo === 'azul'} onClick={() => setFundo('azul')}>Azul</button>}
+        <button className="chip" aria-pressed={fundo === 'minha' || (estilo === 'cartao' && !!foto)} onClick={() => entrada.current?.click()}><Camera size={14} aria-hidden="true" /> Minha foto</button>
         <input ref={entrada} type="file" accept="image/*" hidden onChange={e => escolherFoto(e.target.files?.[0])} />
       </div>
       <div className="pro-linha pro-quebra">

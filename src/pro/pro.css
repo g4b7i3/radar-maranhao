@@ -978,3 +978,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-chip-pcd.on{background:#1d3fbf;border-color:#1d3fbf;color:#fff}
 
 .pro-entrar-gratis { display: inline-block; margin: 12px 0 0; padding: 6px 12px; border-radius: 999px; background: rgba(255,211,77,.18); color: #ffd34d; font-weight: 800; font-size: .9rem; }
+.pro-opcional { margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--cobalt-tint); color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: none; }
