@@ -1009,8 +1009,8 @@
       ],
       "location": "Igreja Nossa Senhora das Graças",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Esgotadas",
+      "registrationClose": "2026-10-29",
+      "status": "Encerradas",
       "officialUrl": "https://sacrono.com.br/evento/2026/corrida-de-rua/iii-corrida-da-graca",
       "sourceUrl": "https://sacrono.com.br/evento/2026/corrida-de-rua/iii-corrida-da-graca",
       "sourceName": "SA Crono",
@@ -1022,9 +1022,10 @@
         "top": 500,
         "summary": "6 km geral masc. e fem.: R$ 500, R$ 300 e R$ 200 + troféu aos 3 primeiros; troféus por faixa etária. Os 3 km são recreativos (só medalha)."
       },
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "verifiedAt": "2026-10-30T17:30:54.763Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3437,7 +3438,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
@@ -3448,7 +3449,7 @@
       "elevation": null,
       "price": null,
       "start": "19:00",
-      "verifiedAt": "2026-10-29T10:53:43.607Z",
+      "verifiedAt": "2026-10-30T17:30:54.763Z",
       "firstSeenAt": "2026-10-28T22:02:56.310Z"
     },
     {
@@ -3511,6 +3512,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "399d5f34-6650-4cdd-9ee8-dad2391a08ff",
+      "eventId": "1-corrida-da-galera-do-poste-2026-sao-luis",
+      "version": "[\"2026-12-18\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-30T17:30:54.763Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "df10c76c-9aa1-4d76-8800-b01f97f7a83a",
+      "eventId": "graca-2026-caxias",
+      "version": "[\"2026-11-15\",[3,6],\"Igreja Nossa Senhora das Graças\",null,\"2026-10-29\",\"Encerradas\",\"https://sacrono.com.br/evento/2026/corrida-de-rua/iii-corrida-da-graca\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-30T17:30:54.763Z",
+      "notifiedAt": null
+    },
     {
       "id": "2d1b60fc-2789-4309-a2a1-04663ce97788",
       "eventId": "tocauto-running-2026-imperatriz",
@@ -5360,7 +5377,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-30T10:57:10.638Z",
+  "lastChecked": "2026-10-30T17:30:54.763Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
