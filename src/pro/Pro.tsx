@@ -408,9 +408,8 @@ function Convite() {
       </ol>
       {cortesia && <div className="pro-card pro-cortesia"><b>🎁 Acesso cortesia</b><span>Entre com o Google e o Radar Pro já vem liberado, sem pagar.</span></div>}
       {modo === 'botoes' && <>
-        <button className="btn solid pro-btn pro-cta" onClick={google}>{GOOGLE_IC}Entrar grátis com Google</button>
         <p className="fine pro-centro pro-aviso-google">A tela do Google mostra o endereço <b>xsijphfxcorjsuxiewch.supabase.co</b>: é o servidor do Radar, pode seguir. O Google só passa seu nome, foto e e-mail.</p>
-        {!cortesia && <button className="btn text pro-btn" onClick={() => setModo('email')}><Mail size={16} aria-hidden="true" />Prefiro entrar com e-mail</button>}
+        <button className="btn solid pro-btn pro-cta" onClick={google}>{GOOGLE_IC}Entrar grátis com Google</button>
       </>}
       {modo === 'email' && (
         <form className="pro-form" onSubmit={enviar}>
