@@ -8,6 +8,7 @@ import TAB from '../idade-tabela.json';
 import { Assinar, NOMES_CIDADES, CampoAssessoria } from './Pro';
 import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
+import { MeusDescontos, AdminDescontos } from './Descontos';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
@@ -171,6 +172,7 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
       <button className="btn solid pro-btn" onClick={irCorri}><Plus size={18} aria-hidden="true" />Eu corri uma prova</button>
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
+      <MeusDescontos perfil={perfil} />
 
       {evolucao.length >= 2 && (
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
@@ -1033,6 +1035,7 @@ export function TelaAdmin() {
   );
   return (
     <div className="pro-cont">
+      <AdminDescontos />
       {msg && <p className="pro-aviso" role="status">{msg}</p>}
       <AdminPainel />
       <AdminUsuarios aviso={setMsg} />
