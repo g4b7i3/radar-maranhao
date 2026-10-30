@@ -149,7 +149,7 @@ export async function desenharResultado(c: HTMLCanvasElement, r: Resultado, apel
 }
 
 /** Estilo "cartão": fundo claro com faixa dourada e um cartão escuro com a foto do atleta, a prova e três números. */
-export async function desenharCartao(c: HTMLCanvasElement, r: Resultado, apelido: string, meds: Medalha[], rei: Rei, foto: HTMLCanvasElement | null, avatar: HTMLImageElement | null) {
+export async function desenharCartao(c: HTMLCanvasElement, r: Resultado, apelido: string, rei: Rei, foto: HTMLCanvasElement | null, avatar: HTMLImageElement | null) {
   c.width = W; c.height = H;
   const ctx = c.getContext('2d') as Ctx;
   await document.fonts?.ready;
@@ -194,15 +194,6 @@ export async function desenharCartao(c: HTMLCanvasElement, r: Resultado, apelido
     const k = Math.max(iw / w, ph / h); ctx.drawImage(img, ix + (iw - w * k) / 2, py + (ph - h * k) / 2, w * k, h * k);
   } else { ctx.fillStyle = '#26304f'; ctx.fillRect(ix, py, iw, ph); }
   ctx.restore();
-  // medalha principal no canto da foto, numa plaquinha branca
-  if (meds[0]) {
-    const im = await svgImg(meds[0]).catch(() => null);
-    if (im) {
-      const bw = 200, bh = 190, bx = ix + iw - bw - 26, by = py + ph - bh - 26;
-      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 20; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 18); ctx.fill(); ctx.restore();
-      ctx.drawImage(im, bx + (bw - 140) / 2, by + 12, 140, 140 * 1.12 > bh - 24 ? bh - 24 : 140 * 1.12);
-    }
-  }
   // nome e prova
   ctx.textAlign = 'left'; ctx.fillStyle = '#fff';
   const nm = caber(ctx, '@' + apelido, 900, 74, 46, iw, 1, true); ctx.fillText(nm.linhas[0], ix, py + ph + 104);
@@ -260,7 +251,7 @@ export default function CardResultado({ r, apelido, fechar }: { r: Resultado; ap
     if (!meds || avatar === undefined) return;
     let ativo = true;
     const c = document.createElement('canvas');
-    (estilo === 'cartao' ? desenharCartao(c, r, apelido, meds, rei, foto, avatar ?? null) : desenharResultado(c, r, apelido, meds, rei, fundo, foto, avatar)).then(() => c.toBlob(b => {
+    (estilo === 'cartao' ? desenharCartao(c, r, apelido, rei, foto, avatar ?? null) : desenharResultado(c, r, apelido, meds, rei, fundo, foto, avatar)).then(() => c.toBlob(b => {
       if (!ativo || !b) return;
       blob.current = b; setUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); });
     }, 'image/jpeg', 0.92)).catch(() => setAviso('Não consegui montar o card. Tente outro fundo.'));
