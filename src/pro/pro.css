@@ -1052,3 +1052,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-desc-onde { display: flex; align-items: flex-start; gap: 6px; margin: 0; padding: 10px 12px; border-radius: 12px; background: #fff4d1; color: #4d3a00; font-size: .88rem; font-weight: 700; line-height: 1.3; }
 .pro-desc-onde svg { flex: none; margin-top: 1px; }
 .pro-cupom-lojas { opacity: .85; font-size: .8rem; }
+.pro-desc-parceria { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--line); font-size: .86rem; color: var(--muted); }
+.pro-desc-parceria b { color: inherit; }
+.pro-desc-parceria .btn { font-size: .86rem; }

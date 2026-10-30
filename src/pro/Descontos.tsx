@@ -1,7 +1,8 @@
 // Meus descontos: cupons das empresas parceiras do Radar Pro. Cada nível libera com o Pro + um número de provas oficiais.
 // Pra usar: mostra o cupom ao vivo no caixa e o caixa confirma digitando a senha da loja (guardada só criptografada no servidor).
 import { useEffect, useRef, useState } from 'react';
-import { BadgePercent, Check, KeyRound, Lock, MapPin, Store, X } from 'lucide-react';
+import { BadgePercent, Check, KeyRound, Lock, MapPin, MessageCircle, Store, X } from 'lucide-react';
+import { whatsappLink } from '../lib';
 import { sb, type Perfil } from './sb';
 
 type Nivel = { pct: number; provas: number; onde: string; liberado: boolean; gratis?: boolean };
@@ -35,6 +36,10 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
       <Cupons key={p.id} p={p} d={d} regra={regra} usar={n => setUsando({ p, n })} />
       <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : (p.niveis.some(n => n.gratis) ? <>Com a conta grátis o primeiro já está liberado; assinando o Pro em <b>Conta</b>, os outros liberam. </> : <>Os descontos do {p.nome} são de quem assina o Pro: assine em <b>Conta</b>. </>)}Não acumulativos: um desconto por compra.</p>
       {p.usos.length > 0 && <p className="fine pro-sem-margem">Seus últimos usos no {p.nome}: {p.usos.map(u => `${u.pct}% em ${dataBR(u.quando)}`).join(' · ')}</p>}
+      <div className="pro-desc-parceria">
+        <span><b>Tem uma empresa?</b> Seja parceiro do Radar.</span>
+        <a className="btn text pro-btn-p" href={whatsappLink('Olá! Tenho uma empresa e quero ser parceiro do Radar Pro, oferecendo desconto pros corredores.')} target="_blank" rel="noopener"><MessageCircle size={15} aria-hidden="true" />Entrar em contato</a>
+      </div>
       {usando && <UsarCupom p={usando.p} n={usando.n} perfil={perfil} fechar={() => setUsando(null)} feito={() => { setUsando(null); carregar(); }} />}
     </section>
   );
