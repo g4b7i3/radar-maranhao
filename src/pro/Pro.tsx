@@ -20,6 +20,7 @@ import { TelaProvas } from './Provas';
 import { PushConvite } from './Push';
 import { terminarConexaoStrava } from './Strava';
 import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
+import { provaPedida } from './Provas';
 import { useVoltar, iniciarHistorico, irParaAba, abaDepoisDoVoltar, lerEndereco, telaInicialGeral } from './voltar';
 import { TopoVoltar } from './Topo';
 import PerfilPublico from './PerfilPublico';
@@ -84,7 +85,7 @@ function ProTelas() {
   const [perfil, setPerfil] = useState<Perfil | null | undefined>(undefined);
   const [temp, setTemp] = useState<Temporada | null>(null);
   // aba vem do endereço (#feed, #comunidades/feminina…): atualizar mantém a tela; o voltar leva à Temporada e depois sai
-  const [aba, setAbaEstado] = useState<Aba>(() => { const a = abaDoEndereco() ?? (conviteComunidade() ? 'comunidades' : 'temporada'); iniciarHistorico(a); return a; });
+  const [aba, setAbaEstado] = useState<Aba>(() => { const a = provaPedida() ? 'provas' : abaDoEndereco() ?? (conviteComunidade() ? 'comunidades' : 'temporada'); iniciarHistorico(a); return a; });
   const abaRef = useRef(aba); abaRef.current = aba;
   const fecharCamadas = useRef<() => boolean>(() => false); // fecha perfil/assessoria/notificações abertos por cima
   const setAba = useCallback((a: Aba) => {
@@ -209,7 +210,7 @@ function ProTelas() {
 
   if (sessao === undefined || (sessao && perfil === undefined)) return <main className="pro">{telaAbertura}<p className="pro-carregando">Carregando…</p></main>;
 
-  if (!sessao) return <main className="pro">{telaAbertura}<a className="story-voltar" href="/"><ArrowLeft size={18} aria-hidden="true" />Voltar para o Radar</a><ConviteDuelo /><Convite /></main>;
+  if (!sessao) return <main className="pro">{telaAbertura}<ConviteDuelo /><Convite /></main>;
 
   if (!perfil) return <main className="pro">{telaAbertura}{topo('Seu perfil de atleta')}<ConviteDuelo /><FormPerfil uid={sessao.user.id} email={sessao.user.email ?? ''} pronto={recarregar} /></main>;
 
@@ -235,7 +236,7 @@ function ProTelas() {
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
-    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'provas', nome: 'Provas', Icone: CalendarDays }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
     { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: UserRound },
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
@@ -248,7 +249,7 @@ function ProTelas() {
       <MenuAbas abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <PushConvite userId={perfil.user_id} />
-      {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
+      {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê a agenda de provas, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
       {bemVindo && <BemVindoPro fechar={() => { setBemVindo(false); setAba('temporada'); window.scrollTo(0, 0); }} />}
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
@@ -392,12 +393,14 @@ function Convite() {
         <h1>Sua corrida<br />vira <span>temporada.</span></h1>
         <p>Cada prova soma pontos, medalhas e te leva para a liga do seu nível.</p>
       </section>
+      {provaPedida() && <div className="pro-card pro-cortesia"><b>📍 Falta só entrar</b><span>A agenda agora fica dentro do Radar Pro, de graça. Entre com o Google e a prova que você abriu já aparece.</span></div>}
       <Vitrine />
       <ol className="pro-lista">
-        <li><i>1</i><span><b>Seu nível e sua liga</b><small>Bronze, Prata, Ouro ou Elite, pela nota por idade.</small></span></li>
-        <li><i>2</i><span><b>Medalhas e pontos</b><small>Toda prova que você corre entra na sua estante.</small></span></li>
-        <li><i>3</i><span><b>Ranking do Maranhão</b><small>Por cidade, sexo, faixa etária, eficiência e assessoria.</small></span></li>
-        <li><i>4</i><span><b>Duelo e pelotão</b><small>Desafie amigos e dispute com até 25 atletas do seu nível.</small></span></li>
+        <li><i>1</i><span><b>Agenda de corridas do Maranhão, grátis</b><small>Todas as provas de rua e trail, com inscrição, kit, largada e clima.</small></span></li>
+        <li><i>2</i><span><b>Seu nível e sua liga</b><small>Bronze, Prata, Ouro ou Elite, pela nota por idade.</small></span></li>
+        <li><i>3</i><span><b>Medalhas e pontos</b><small>Toda prova que você corre entra na sua estante.</small></span></li>
+        <li><i>4</i><span><b>Ranking do Maranhão</b><small>Por cidade, sexo, faixa etária, eficiência e assessoria.</small></span></li>
+        <li><i>5</i><span><b>Duelo e pelotão</b><small>Desafie amigos e dispute com até 25 atletas do seu nível.</small></span></li>
       </ol>
       {comunidade ? null : cortesia
         ? <div className="pro-card pro-cortesia"><b>🎁 Acesso cortesia</b><span>Entre com o Google e o Radar Pro já vem liberado, sem pagar.</span></div>
@@ -427,7 +430,7 @@ function Convite() {
       )}
       {modo === 'enviado' && <p className="pro-ok">Pronto! Abra o e-mail que mandamos para <b>{email}</b> e toque no link para entrar. Olhe também a caixa de spam.</p>}
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-centro">A agenda de provas continua grátis para todo mundo. Ao entrar, você aceita os <a href="/termos.html">termos de uso e a política de privacidade</a>.</p>
+      <p className="fine pro-centro">A agenda de provas é grátis: é só entrar. Ao entrar, você aceita os <a href="/termos.html">termos de uso e a política de privacidade</a>.</p>
     </>
   );
 }

@@ -1,15 +1,15 @@
 {
-  "name": "Radar Corridas Maranhão",
-  "short_name": "Corridas MA",
-  "description": "Agenda de corridas de rua e trail em São Luís e no Maranhão, com prazos de inscrição e contagem regressiva.",
+  "name": "Radar Pro · Corridas MA",
+  "short_name": "Radar Pro",
+  "description": "A rede social do corredor maranhense: agenda grátis das corridas do Maranhão, resultado oficial, ranking, ligas e medalhas.",
   "id": "/",
   "start_url": "/?origem=app",
   "scope": "/",
   "display": "standalone",
   "lang": "pt-BR",
   "dir": "ltr",
-  "background_color": "#f3f5f9",
-  "theme_color": "#ffffff",
+  "background_color": "#0d1840",
+  "theme_color": "#0d1840",
   "categories": [
     "sports",
     "lifestyle",
@@ -17,25 +17,25 @@
   ],
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/icons/pro-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/icons/pro-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/maskable-192.png",
+      "src": "/icons/pro-maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/maskable-512.png",
+      "src": "/icons/pro-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -43,23 +43,23 @@
   ],
   "shortcuts": [
     {
-      "name": "Minha agenda",
-      "short_name": "Minha agenda",
-      "url": "/?aba=salvas&origem=app",
+      "name": "Agenda",
+      "short_name": "Agenda",
+      "url": "/?origem=app#provas",
       "icons": [
         {
-          "src": "/icons/icon-192.png",
+          "src": "/icons/pro-192.png",
           "sizes": "192x192"
         }
       ]
     },
     {
-      "name": "Novidades",
-      "short_name": "Novidades",
-      "url": "/?aba=novidades&origem=app",
+      "name": "Minha agenda",
+      "short_name": "Minha agenda",
+      "url": "/?aba=salvas&origem=app",
       "icons": [
         {
-          "src": "/icons/icon-192.png",
+          "src": "/icons/pro-192.png",
           "sizes": "192x192"
         }
       ]

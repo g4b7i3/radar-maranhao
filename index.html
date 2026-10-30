@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Radar Corridas Maranhão — corridas de rua e trail</title>
-    <meta name="description" content="Agenda de corridas de rua e trail em São Luís e no Maranhão, com prazos de inscrição e fontes conferidas. E o Radar Pro: sua temporada com resultado oficial, nota por idade, ranking, medalhas e Rei da prova." />
+    <title>Radar Pro · a rede social do corredor maranhense</title>
+    <meta name="description" content="A rede social do corredor maranhense: agenda grátis de todas as corridas de rua e trail do Maranhão, resultado oficial pelo número de peito, ranking, ligas, medalhas e duelos." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Radar Corridas Maranhão" />
@@ -35,8 +35,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <script>
       // Radar Pro (/?pro): é instalado como outro app, com a logo dourada e nome próprio
-      if (/[?&](pro|atleta)\b/.test(location.search) || /^\/pro\b/.test(location.pathname) || /access_token=|error_description=/.test(location.hash)) {
-        document.querySelector('link[rel="manifest"]').href = '/pro.webmanifest';
+      // Radar e Radar Pro são um app só: quem instalou pelo /pro continua com o manifesto de lá
+      if (/[?&](pro|atleta)\b/.test(location.search) || /^\/pro\b/.test(location.pathname)) document.querySelector('link[rel="manifest"]').href = '/pro.webmanifest';
+      if (!/[?&](story|card|nota|calc)=/.test(location.search)) {
         document.querySelector('link[rel="apple-touch-icon"]').href = '/icons/pro-apple-touch-icon.png';
         document.querySelector('meta[name="apple-mobile-web-app-title"]').content = 'Radar Pro';
         document.querySelector('meta[name="application-name"]').content = 'Radar Pro';
@@ -55,7 +56,7 @@
     </div></div>
     <script>
       // sem tela branca: mostra a abertura do Radar Pro e, se a internet estiver lenta, uma dica
-      if (/[?&](pro|atleta)\b/.test(location.search) || /^\/pro\b/.test(location.pathname)) { var ab = document.querySelector('#abertura b'); if (ab) ab.textContent = 'Radar Pro'; var a0 = document.getElementById('abertura'); if (a0) { a0.style.background = '#0A1240'; a0.style.color = '#fff'; } }
+      if (!/[?&](story|card|nota|calc)=/.test(location.search)) { var ab = document.querySelector('#abertura b'); if (ab) ab.textContent = 'Radar Pro'; var a0 = document.getElementById('abertura'); if (a0) { a0.style.background = '#0A1240'; a0.style.color = '#fff'; } }
       setTimeout(function () { var d = document.getElementById('abertura-dica'); if (d) d.style.display = 'block'; }, 8000);
     </script>
     <script type="module" src="/src/main.tsx"></script>
