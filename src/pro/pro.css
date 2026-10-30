@@ -998,7 +998,8 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-desc-cab img, .pro-desc-semlogo { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex: none; }
 .pro-desc-semlogo { display: grid; place-items: center; background: var(--cobalt-tint); color: var(--cobalt); font-weight: 900; font-size: 1.3rem; }
 .pro-desc-cab b { display: block; font-size: 1.05rem; } .pro-desc-cab small { color: var(--muted); }
-.pro-desc-niveis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pro-desc-niveis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 380px) { .pro-desc-niveis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .pro-desc-nivel { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 8px; border-radius: 14px; border: 1.5px dashed var(--line); text-align: center; opacity: .75; }
 .pro-desc-nivel.on { border: 1.5px solid #f2b705; background: linear-gradient(160deg, #fff7d6, #ffe9a3); opacity: 1; color: #2a1a00; }
 .pro-desc-nivel b { font-size: 1.6rem; font-weight: 900; line-height: 1; }

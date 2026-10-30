@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { BadgePercent, Check, KeyRound, Lock, X } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 
-type Nivel = { pct: number; provas: number; onde: string; liberado: boolean };
+type Nivel = { pct: number; provas: number; onde: string; liberado: boolean; gratis?: boolean };
 type Parceiro = { id: string; nome: string; logo: string | null; descricao: string | null; endereco: string | null; niveis: Nivel[]; usos: { pct: number; quando: string }[] };
 type Dados = { pro: boolean; provas: number; parceiros: Parceiro[] };
 
@@ -19,7 +19,7 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
   return (
     <section className="pro-card pro-desc">
       <p className="pro-k cinza"><BadgePercent size={14} aria-hidden="true" /> Meus descontos</p>
-      {!d.pro && <p className="fine pro-sem-margem">Os descontos são de quem assina o Radar Pro. Assine em <b>Conta</b> e o primeiro já libera na hora.</p>}
+      {!d.pro && <p className="fine pro-sem-margem">Com a conta grátis você já tem o primeiro desconto. Assinando o Radar Pro em <b>Conta</b>, os outros liberam.</p>}
       {d.parceiros.map(p => (
         <div key={p.id} className="pro-desc-parc">
           <div className="pro-desc-cab">
@@ -32,6 +32,7 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
               return (
                 <div key={n.pct} className={'pro-desc-nivel' + (n.liberado ? ' on' : '')}>
                   <b>{n.pct}%</b>
+                  <small>{n.gratis ? 'conta grátis' : n.provas ? `Pro + ${n.provas} provas` : 'assinante Pro'}</small>
                   <small>{n.onde}</small>
                   {n.liberado
                     ? <button className="btn solid pro-btn-p" onClick={() => setUsando({ p, n })}>Usar</button>
@@ -41,7 +42,7 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
               );
             })}
           </div>
-          <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : null}10% com o Pro · 15% com 5 provas oficiais · 20% com 10 provas oficiais.</p>
+          <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : null}5% com a conta grátis · 10% com o Pro · 15% com 5 provas oficiais · 20% com 10 provas oficiais. Não acumulativos: um por compra.</p>
           {p.usos.length > 0 && <p className="fine pro-sem-margem">Últimos usos: {p.usos.map(u => `${u.pct}% em ${dataBR(u.quando)}`).join(' · ')}</p>}
         </div>
       ))}
