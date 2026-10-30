@@ -3321,51 +3321,54 @@
       "location": "Praça Maria Aragão, Avenida Beira-Mar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://eventos.saoluis.ma.gov.br/corrida/",
       "sourceUrl": "https://oimparcial.com.br/noticias/2026/10/prefeitura-de-sao-luis-abre-inscricoes-para-a-corrida-do-servidor-2026/",
       "sourceName": "O Imparcial",
       "publishedAt": "2026-10-22",
-      "confidence": "Fonte única (notícia de O Imparcial, 22/10/2026) · confirmar na página da Prefeitura",
-      "notes": "Exclusiva para servidores da Prefeitura de São Luís (exige secretaria de vínculo e matrícula funcional), 900 vagas. Inscrição gratuita até o preenchimento das vagas, na página da Prefeitura (que não abriu na pesquisa de 25/10). Concentração às 5h, largada às 6h. Distâncias de 3, 5 e 10 km (masc. e fem.) e 5 km PCD (cadeirante e andante). Kit em 06/11, das 8h às 18h, no Parque do Bom Menino, com doação de 2 kg de alimento não perecível. Organização: Semdel, com Eucorro Eventos Esportivos e ABDESP.",
+      "confidence": "Página oficial da Prefeitura de São Luís e regulamento",
+      "notes": "Exclusiva para servidores da Prefeitura de São Luís (exige secretaria de vínculo e matrícula funcional). Em 30/10 a página oficial mostra \"Inscrições encerradas: as 900 vagas foram preenchidas\". Concentração às 5h, largada às 6h na Praça Maria Aragão. Distâncias de 3, 5 e 10 km (masc. e fem.) e 5 km PCD (cadeirante e andante); percursos pela Avenida Beira-Mar, Ponte José Sarney, Avenida Camboa e Avenida Quarto Centenário (regulamento). Kit em 06/11, das 8h às 18h, no Parque do Bom Menino, com doação de 2 kg de alimento não perecível. Organização: Semdel, com Eucorro Eventos Esportivos.",
       "prize": {
         "kind": "trofeu",
         "top": null,
-        "summary": "Troféus para os 3 primeiros de cada categoria; medalha para quem concluir (segundo O Imparcial)."
+        "summary": "Regulamento: troféus para os 3 primeiros nos 3, 5 e 10 km e no 5 km PCD, masc. e fem.; medalha para quem concluir."
       },
       "elevation": null,
       "price": {
         "min": 0,
-        "text": "Gratuita (só servidores municipais)"
+        "text": "Solidária: 2 kg de alimento (só servidores)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-25T10:57:23.351Z",
+      "verifiedAt": "2026-10-30T10:57:10.638Z",
       "firstSeenAt": "2026-10-25T10:57:23.351Z"
     },
     {
       "id": "corridao-bombeiro-extremo-2027-sao-luis",
-      "name": "Corridão Bombeiro Extremo",
+      "name": "3º Corridão Bombeiro Extremo",
       "edition": "2027",
       "city": "São Luís",
       "state": "MA",
       "modality": "Rua",
       "date": "2027-01-17",
       "distances": [],
-      "location": "Local a confirmar",
+      "location": "Praça dos Pescadores, Avenida Litorânea",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://giroingressos.com.br/e/3-corridao-bombeiro-extremo",
       "sourceUrl": "https://running.life/en/event/corridao-bombeiro-extremo",
       "sourceName": "running.life",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Visto só no running.life (domingo, 17/01/2027, São Luís), com link de inscrição na Giro Ingressos, que não pôde ser aberto nesta pesquisa. Faltam confirmar distâncias, local de largada, horário, preço e status das inscrições, e se é corrida de rua ou prova com obstáculos.",
+      "confidence": "Plataforma de inscrição oficial (Giro Ingressos)",
+      "notes": "Página da Giro Ingressos (lida em 30/10): domingo, 17/01/2027, às 6h, Av. Litorânea - Praça dos Pescadores; categoria Geral masculino e feminino a R$ 150, inscrições abertas; kit com camisa, medalha e garrafa. Organizador: @rogemilar.santos. Faltam confirmar distâncias, prazo de inscrição e se é corrida de rua ou prova com obstáculos.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-26T23:22:45.880Z",
+      "price": {
+        "min": 150,
+        "text": "R$ 150 (geral, masc. e fem.)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-10-30T10:57:10.638Z",
       "firstSeenAt": "2026-10-26T23:22:45.880Z"
     },
     {
@@ -3447,9 +3450,99 @@
       "start": "19:00",
       "verifiedAt": "2026-10-29T10:53:43.607Z",
       "firstSeenAt": "2026-10-28T22:02:56.310Z"
+    },
+    {
+      "id": "js-fitness-run-2026-imperatriz",
+      "name": "JS Fitness Run",
+      "edition": "2026",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-08",
+      "distances": [
+        4,
+        8
+      ],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.metasportoficial.com.br/eventos/js-fitness-run",
+      "sourceUrl": "https://roadrunners.run/evento/2026-js-fitness-run/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Visto só no Road Runners (08/11/2026, Imperatriz, 4 e 8 km, organizador informado: Meta Sport), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam confirmar horário, local de largada, preço e status das inscrições.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-30T10:57:10.638Z",
+      "firstSeenAt": "2026-10-30T10:57:10.638Z"
+    },
+    {
+      "id": "tocauto-running-2026-imperatriz",
+      "name": "Tocauto Running 2026",
+      "edition": "2026",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-29",
+      "distances": [
+        5,
+        10
+      ],
+      "location": "Tocauto Volkswagen, BR-010, km 1350, Maranhão Novo",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
+      "sourceUrl": "https://roadrunners.run/evento/2026-tocauto-running-2026/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Visto só no Road Runners (29/11/2026, Imperatriz, 5 e 10 km, local na concessionária Tocauto Volkswagen, organizador informado: Meta Sport), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam confirmar horário, preço e status das inscrições.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-10-30T10:57:10.638Z",
+      "firstSeenAt": "2026-10-30T10:57:10.638Z"
     }
   ],
   "changes": [
+    {
+      "id": "2d1b60fc-2789-4309-a2a1-04663ce97788",
+      "eventId": "tocauto-running-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Tocauto Volkswagen, BR-010, km 1350, Maranhão Novo\",null,null,\"Consultar\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-30T10:57:10.638Z",
+      "notifiedAt": "2026-10-30T10:57:33.762Z"
+    },
+    {
+      "id": "13dee3ba-3661-48ec-8e3f-e448da2ce8a9",
+      "eventId": "js-fitness-run-2026-imperatriz",
+      "version": "[\"2026-11-08\",[4,8],\"Local a confirmar\",null,null,\"Consultar\",\"https://www.metasportoficial.com.br/eventos/js-fitness-run\"]",
+      "kind": "Nova prova",
+      "at": "2026-10-30T10:57:10.638Z",
+      "notifiedAt": "2026-10-30T10:57:33.762Z"
+    },
+    {
+      "id": "150bc032-7e2b-42eb-bd15-2138067b6048",
+      "eventId": "corridao-bombeiro-extremo-2027-sao-luis",
+      "version": "[\"2027-01-17\",[],\"Praça dos Pescadores, Avenida Litorânea\",null,null,\"Abertas\",\"https://giroingressos.com.br/e/3-corridao-bombeiro-extremo\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-30T10:57:10.638Z",
+      "notifiedAt": "2026-10-30T10:57:33.762Z"
+    },
+    {
+      "id": "4e03a078-276b-4f89-a825-f8fd677824b0",
+      "eventId": "servidor-2026-sao-luis",
+      "version": "[\"2026-11-08\",[3,5,10],\"Praça Maria Aragão, Avenida Beira-Mar\",null,null,\"Esgotadas\",\"https://eventos.saoluis.ma.gov.br/corrida/\"]",
+      "kind": "Alteração importante",
+      "at": "2026-10-30T10:57:10.638Z",
+      "notifiedAt": "2026-10-30T10:57:33.762Z"
+    },
     {
       "id": "f1da2da5-83a0-425d-af40-9954530693d9",
       "eventId": "adventista-run-2026-imperatriz",
@@ -5267,7 +5360,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-29T10:54:38.671Z",
+  "lastChecked": "2026-10-30T10:57:10.638Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
