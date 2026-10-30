@@ -668,7 +668,7 @@ export function Sheet({ race: e, clima, startCard = false, saved, onClose, onSav
           {e.officialUrl
             ? <a className="btn solid" href={e.officialUrl} target="_blank" rel="noopener noreferrer" data-umami-event="Página oficial (inscrição)" data-umami-event-prova={e.name}>Abrir página oficial<ExternalLink size={15} aria-hidden="true" /></a>
             : <p className="fine">Ainda sem link oficial confirmado.</p>}
-          <button className="btn outline" onClick={onSave} aria-pressed={saved} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva' : 'Salvar'}</button>
+          <button className="btn outline" onClick={onSave} aria-pressed={saved} data-umami-event={saved ? 'Remover prova salva' : 'Salvar prova'} data-umami-event-prova={e.name}><Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Salva na minha agenda' : 'Salvar na minha agenda'}</button>
           {n != null && n >= 0 && !card && <button className="btn outline euvou-btn" onClick={() => setCard(true)} data-umami-event="Card Eu vou: abriu" data-umami-event-prova={e.name}><PartyPopper size={16} aria-hidden="true" />Eu vou! Card pro story</button>}
           {e.date && (n != null && n >= -45
             ? <a className="btn outline" href={linkProva(e)} data-umami-event="Adicionar ao calendário" data-umami-event-prova={e.name}><CalendarPlus size={16} aria-hidden="true" />Adicionar ao calendário e alarme</a>
