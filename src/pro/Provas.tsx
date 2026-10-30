@@ -5,6 +5,7 @@ import { status, norm, load, store, icsFor, type Race } from '../lib';
 import { Sheet } from '../App';
 import { useClimas } from '../Clima';
 import { useVoltar, telaInicial } from './voltar';
+import { PertoDeVoce, distancia, kmTexto, type Perto } from '../PertoFds';
 
 type Filtro = 'proximas' | 'abertas' | 'mes' | 'trail' | 'salvas' | 'passadas';
 /** Prova (ou filtro, com ":") pedida num link antigo do Radar, guardada até a pessoa entrar. */
@@ -20,6 +21,9 @@ export function TelaProvas() {
   useEffect(() => { try { localStorage.removeItem('radar-abrir-prova'); } catch { /* */ } }, []);
   const [filtro, setFiltro] = useState<Filtro>(() => (pedidaLink.current?.startsWith(':') ? pedidaLink.current.slice(1) as Filtro : 'proximas'));
   const [busca, setBusca] = useState('');
+  // Perto de você: localização do celular (ou cidade escolhida) e raio; só a cidade fica guardada no aparelho, igual à agenda antiga
+  const [perto, setPertoEstado] = useState<Perto | null>(() => load('radar-perto', null));
+  const setPerto = (p: Perto | null) => { setPertoEstado(p); store('radar-perto', p); };
   const [aberta, setAberta] = useState<Race | null>(null);
   useVoltar(!!aberta, () => setAberta(null), aberta?.id);
   const pedida = useRef(telaInicial('provas') ?? (pedidaLink.current && !pedidaLink.current.startsWith(':') ? pedidaLink.current : null));
@@ -39,9 +43,10 @@ export function TelaProvas() {
       if (filtro === 'mes') return (e.date ?? '').startsWith(mes);
       if (filtro === 'trail') return e.modality === 'Trail';
       return true;
-    }).filter(e => !q || norm(`${e.name} ${e.city} ${e.location}`).includes(q));
+    }).filter(e => !q || norm(`${e.name} ${e.city} ${e.location}`).includes(q))
+      .filter(e => { if (!perto || filtro === 'salvas') return true; const d = distancia(perto, e.city); return d != null && d <= perto.raio; });
     return base.sort((a, b) => (filtro === 'passadas' ? b.date!.localeCompare(a.date!) : a.date!.localeCompare(b.date!)));
-  }, [lista, filtro, busca, hoje, mes, salvas]);
+  }, [lista, filtro, busca, hoje, mes, salvas, perto]);
   const previsoes = useClimas(useMemo(() => (lista ?? []).filter(e => e.date && e.date >= hoje), [lista, hoje]));
   const grupos = useMemo(() => { const g = new Map<string, Race[]>(); for (const e of vis) { const k = e.date!.slice(0, 7); if (!g.has(k)) g.set(k, []); g.get(k)!.push(e); } return [...g.entries()]; }, [vis]);
   const nomeMes = (k: string) => new Date(k + '-15T12:00:00-03:00').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
@@ -51,6 +56,7 @@ export function TelaProvas() {
       <div className="chips" role="group" aria-label="Filtro">
         {([['proximas', 'Próximas'], ['abertas', 'Inscrições abertas'], ['mes', 'Este mês'], ['trail', 'Trail'], ['salvas', `Minha agenda${salvas.length ? ' · ' + salvas.length : ''}`], ['passadas', 'Já aconteceram']] as [Filtro, string][]).map(([k, n]) => <button key={k} className="chip" aria-pressed={filtro === k} onClick={() => setFiltro(k)}>{n}</button>)}
       </div>
+      {filtro !== 'salvas' && <PertoDeVoce perto={perto} mudar={setPerto} total={vis.length} />}
       {erro && <p className="ct-erro" role="alert">Não consegui carregar a agenda. Confira a internet e tente de novo.</p>}
       {lista === null && !erro && <p className="fine">Carregando a agenda…</p>}
       {lista && vis.length === 0 && <p className="fine">{filtro === 'salvas' && !busca ? 'Sua agenda está vazia. Abra uma prova e toque em Salvar pra ela aparecer aqui.' : `Nenhuma prova aqui${busca ? ' com essa busca' : ''}.`}</p>}
@@ -63,7 +69,7 @@ export function TelaProvas() {
                 <div className="pro-prova-data"><b>{e.date!.slice(8, 10)}</b><small>{dataLonga(e.date!).split(' ')[0]}</small></div>
                 <div className="pro-prova-info">
                   <b>{e.name}</b>
-                  <small><MapPin size={12} aria-hidden="true" /> {e.city}{e.modality === 'Trail' ? ' · Trail' : ''}{e.start ? ` · ${e.start}` : ''}</small>
+                  <small><MapPin size={12} aria-hidden="true" /> {e.city}{perto && (() => { const d = distancia(perto, e.city); return d != null ? ` · ${kmTexto(d)}` : ''; })()}{e.modality === 'Trail' ? ' · Trail' : ''}{e.start ? ` · ${e.start}` : ''}</small>
                   <small>{e.distances.map(d => `${d} km`).join(' · ')}{e.price?.text ? ` · ${e.price.text}` : ''}</small>
                   <span className={`tag ${tom(st)}`}>{rotulo(st)}</span>
                 </div>
