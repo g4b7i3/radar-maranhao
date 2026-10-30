@@ -75,6 +75,8 @@ function ConviteDuelo() {
   );
 }
 
+const GOOGLE_IC = <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" /><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" /><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" /></svg>;
+
 /** Radar Pro com o convite para instalar o app (igual ao do Radar, mas com a logo dourada). */
 export default function Pro() {
   return <><ProTelas /><InstallPrompt blocked={false} onInstalled={() => { /* */ }} app="o Radar Pro" icone="/icons/pro-192.png" oQueMostra="a sua temporada" /></>;
@@ -389,10 +391,12 @@ function Convite() {
         <p className="pro-convite-com-gratis"><b>É grátis.</b> Entre com o Google, crie seu perfil de atleta e você já cai dentro da comunidade para ler e publicar.</p>
       </section>}
       <section className="pro-card azul pro-hero">
-        <p className="pro-k">Radar Pro</p>
+        <p className="pro-k">Radar Pro · a rede social do corredor maranhense</p>
         <h1>Sua corrida<br />vira <span>temporada.</span></h1>
-        <p>Cada prova soma pontos, medalhas e te leva para a liga do seu nível.</p>
+        <p>Agenda de todas as provas do Maranhão, resultado oficial pelo número de peito, ranking, medalhas e a galera que corre com você.</p>
+        <p className="pro-entrar-gratis">✓ Entrar é grátis · leva 10 segundos</p>
       </section>
+      {modo === 'botoes' && <button className="btn solid pro-btn pro-cta" onClick={google}>{GOOGLE_IC}Entrar grátis com Google</button>}
       {provaPedida() && <div className="pro-card pro-cortesia"><b>📍 Falta só entrar</b><span>A agenda agora fica dentro do Radar Pro, de graça. Entre com o Google e a prova que você abriu já aparece.</span></div>}
       <Vitrine />
       <ol className="pro-lista">
@@ -402,20 +406,9 @@ function Convite() {
         <li><i>4</i><span><b>Ranking do Maranhão</b><small>Por cidade, sexo, faixa etária, eficiência e assessoria.</small></span></li>
         <li><i>5</i><span><b>Duelo e pelotão</b><small>Desafie amigos e dispute com até 25 atletas do seu nível.</small></span></li>
       </ol>
-      {comunidade ? null : cortesia
-        ? <div className="pro-card pro-cortesia"><b>🎁 Acesso cortesia</b><span>Entre com o Google e o Radar Pro já vem liberado, sem pagar.</span></div>
-        : <div className="pro-oferta">
-            <div className="pro-oferta-in">
-              <span className="pro-oferta-chip"><i aria-hidden="true" />Pré-temporada valendo</span>
-              <p className="pro-oferta-preco"><small>Só</small> <b>R$ 10</b><small>/mês</small></p>
-              <p className="pro-oferta-sub">Menos que uma inscrição de 5 km. <b>Sem fidelidade.</b></p>
-              <p className="pro-oferta-sub2">⏱️ As provas desde 15/10 já contam pra você</p>
-              <p className="pro-oferta-sub2">Diária R$ 4,50 (24 horas) · Anual R$ 96 (2 meses grátis) · Assessoria R$ 150 para até 20 alunos</p>
-            </div>
-          </div>}
-      {!comunidade && !cortesia && <ChamadaFundador />}
+      {cortesia && <div className="pro-card pro-cortesia"><b>🎁 Acesso cortesia</b><span>Entre com o Google e o Radar Pro já vem liberado, sem pagar.</span></div>}
       {modo === 'botoes' && <>
-        <button className="btn solid pro-btn pro-cta" onClick={google}><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" /><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" /><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" /></svg>Entrar com Google</button>
+        <button className="btn solid pro-btn pro-cta" onClick={google}>{GOOGLE_IC}Entrar grátis com Google</button>
         <p className="fine pro-centro pro-aviso-google">A tela do Google mostra o endereço <b>xsijphfxcorjsuxiewch.supabase.co</b>: é o servidor do Radar, pode seguir. O Google só passa seu nome, foto e e-mail.</p>
         {!cortesia && <button className="btn text pro-btn" onClick={() => setModo('email')}><Mail size={16} aria-hidden="true" />Prefiro entrar com e-mail</button>}
       </>}
@@ -430,7 +423,7 @@ function Convite() {
       )}
       {modo === 'enviado' && <p className="pro-ok">Pronto! Abra o e-mail que mandamos para <b>{email}</b> e toque no link para entrar. Olhe também a caixa de spam.</p>}
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
-      <p className="fine pro-centro">A agenda de provas é grátis: é só entrar. Ao entrar, você aceita os <a href="/termos.html">termos de uso e a política de privacidade</a>.</p>
+      <p className="fine pro-centro">Entrar é grátis e a agenda é de todo mundo. Ao entrar, você aceita os <a href="/termos.html">termos de uso e a política de privacidade</a>.</p>
     </>
   );
 }
