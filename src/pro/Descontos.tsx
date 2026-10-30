@@ -1,7 +1,7 @@
 // Meus descontos: cupons das empresas parceiras do Radar Pro. Cada nível libera com o Pro + um número de provas oficiais.
 // Pra usar: mostra o cupom ao vivo no caixa e o caixa confirma digitando a senha da loja (guardada só criptografada no servidor).
 import { useEffect, useRef, useState } from 'react';
-import { BadgePercent, Check, KeyRound, Lock, Store, X } from 'lucide-react';
+import { BadgePercent, Check, KeyRound, Lock, MapPin, Store, X } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 
 type Nivel = { pct: number; provas: number; onde: string; liberado: boolean; gratis?: boolean };
@@ -31,6 +31,7 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
         ))}
         <div className="pro-desc-marca breve" aria-label="Novas marcas em breve"><Store size={22} aria-hidden="true" /><b>Novas marcas</b><small>em breve</small></div>
       </div>
+      {p.endereco && <p className="pro-desc-onde"><MapPin size={15} aria-hidden="true" /><span>{p.endereco}</span></p>}
       <Cupons key={p.id} p={p} d={d} regra={regra} usar={n => setUsando({ p, n })} />
       <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : (p.niveis.some(n => n.gratis) ? <>Com a conta grátis o primeiro já está liberado; assinando o Pro em <b>Conta</b>, os outros liberam. </> : <>Os descontos do {p.nome} são de quem assina o Pro: assine em <b>Conta</b>. </>)}Não acumulativos: um desconto por compra.</p>
       {p.usos.length > 0 && <p className="fine pro-sem-margem">Seus últimos usos no {p.nome}: {p.usos.map(u => `${u.pct}% em ${dataBR(u.quando)}`).join(' · ')}</p>}
@@ -108,6 +109,7 @@ function UsarCupom({ p, n, perfil, fechar, feito }: { p: Parceiro; n: Nivel; per
           <span className="pro-cupom-vivo"><i aria-hidden="true" />{ok ? 'Desconto confirmado' : 'Cupom ao vivo'} · {hora}</span>
           <b>{n.pct}% OFF</b>
           <span>{n.onde} · {p.nome}</span>
+          {p.endereco && <small className="pro-cupom-lojas">{p.endereco}</small>}
           <span className="pro-cupom-quem">@{perfil.apelido} · <em>PRO</em></span>
         </div>
         {ok ? <>
