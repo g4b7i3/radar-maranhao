@@ -1,53 +1,82 @@
 // Meus descontos: cupons das empresas parceiras do Radar Pro. Cada nível libera com o Pro + um número de provas oficiais.
 // Pra usar: mostra o cupom ao vivo no caixa e o caixa confirma digitando a senha da loja (guardada só criptografada no servidor).
-import { useEffect, useState } from 'react';
-import { BadgePercent, Check, KeyRound, Lock, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { BadgePercent, Check, KeyRound, Lock, Store, X } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 
 type Nivel = { pct: number; provas: number; onde: string; liberado: boolean; gratis?: boolean };
-type Parceiro = { id: string; nome: string; logo: string | null; descricao: string | null; endereco: string | null; niveis: Nivel[]; usos: { pct: number; quando: string }[] };
+type Parceiro = { id: string; nome: string; logo: string | null; cor?: string | null; descricao: string | null; endereco: string | null; niveis: Nivel[]; usos: { pct: number; quando: string }[] };
 type Dados = { pro: boolean; provas: number; parceiros: Parceiro[] };
 
 const dataBR = (iso: string) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
 
 export function MeusDescontos({ perfil }: { perfil: Perfil }) {
   const [d, setD] = useState<Dados | null>(null);
+  const [sel, setSel] = useState(0);
   const [usando, setUsando] = useState<{ p: Parceiro; n: Nivel } | null>(null);
   const carregar = () => sb.rpc('radar_meus_descontos').then(({ data }) => setD((data as Dados) ?? null));
   useEffect(() => { carregar(); }, []);
   if (!d || !d.parceiros.length) return null;
+  const p = d.parceiros[Math.min(sel, d.parceiros.length - 1)];
+  const regra = (n: Nivel) => (n.gratis ? 'conta grátis' : n.provas ? `Pro + ${n.provas} provas oficiais` : 'assinante Pro');
   return (
     <section className="pro-card pro-desc">
-      <p className="pro-k cinza"><BadgePercent size={14} aria-hidden="true" /> Meus descontos</p>
-      {!d.pro && <p className="fine pro-sem-margem">Com a conta grátis você já tem o primeiro desconto. Assinando o Radar Pro em <b>Conta</b>, os outros liberam.</p>}
-      {d.parceiros.map(p => (
-        <div key={p.id} className="pro-desc-parc">
-          <div className="pro-desc-cab">
-            {p.logo ? <img src={p.logo} alt="" /> : <span className="pro-desc-semlogo" aria-hidden="true">{p.nome[0]}</span>}
-            <div><b>{p.nome}</b>{p.endereco && <small>{p.endereco}</small>}</div>
-          </div>
-          <div className="pro-desc-niveis">
-            {p.niveis.map(n => {
-              const falta = Math.max(0, n.provas - d.provas);
-              return (
-                <div key={n.pct} className={'pro-desc-nivel' + (n.liberado ? ' on' : '')}>
-                  <b>{n.pct}%</b>
-                  <small>{n.gratis ? 'conta grátis' : n.provas ? `Pro + ${n.provas} provas` : 'assinante Pro'}</small>
-                  <small>{n.onde}</small>
-                  {n.liberado
-                    ? <button className="btn solid pro-btn-p" onClick={() => setUsando({ p, n })}>Usar</button>
-                    : <span className="pro-desc-trava"><Lock size={12} aria-hidden="true" />{!d.pro ? 'Só no Pro' : `faltam ${falta} prova${falta === 1 ? '' : 's'}`}</span>}
-                  {!n.liberado && d.pro && n.provas > 0 && <span className="pro-desc-barra" aria-hidden="true"><i style={{ width: `${Math.min(100, (d.provas / n.provas) * 100)}%` }} /></span>}
-                </div>
-              );
-            })}
-          </div>
-          <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : null}5% com a conta grátis · 10% com o Pro · 15% com 5 provas oficiais · 20% com 10 provas oficiais. Não acumulativos: um por compra.</p>
-          {p.usos.length > 0 && <p className="fine pro-sem-margem">Últimos usos: {p.usos.map(u => `${u.pct}% em ${dataBR(u.quando)}`).join(' · ')}</p>}
-        </div>
-      ))}
+      <div className="pro-linha"><p className="pro-k cinza"><BadgePercent size={14} aria-hidden="true" /> Meus descontos</p><small className="fine">{d.parceiros.length} {d.parceiros.length === 1 ? 'marca parceira' : 'marcas parceiras'}</small></div>
+      <div className="pro-desc-marcas" role="tablist" aria-label="Marcas parceiras">
+        {d.parceiros.map((x, k) => (
+          <button key={x.id} role="tab" aria-selected={k === sel} className={'pro-desc-marca' + (k === sel ? ' on' : '')} style={{ '--cor': x.cor ?? '#1d3fbf' } as React.CSSProperties} onClick={() => setSel(k)}>
+            {x.logo ? <img src={x.logo} alt={x.nome} /> : <b>{x.nome}</b>}
+            <small>até {Math.max(...x.niveis.map(n => n.pct))}% OFF</small>
+          </button>
+        ))}
+        <div className="pro-desc-marca breve" aria-label="Novas marcas em breve"><Store size={22} aria-hidden="true" /><b>Novas marcas</b><small>em breve</small></div>
+      </div>
+      <Cupons key={p.id} p={p} d={d} regra={regra} usar={n => setUsando({ p, n })} />
+      <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : <>Com a conta grátis o primeiro já está liberado; assinando o Pro em <b>Conta</b>, os outros liberam. </>}Não acumulativos: um desconto por compra.</p>
+      {p.usos.length > 0 && <p className="fine pro-sem-margem">Seus últimos usos no {p.nome}: {p.usos.map(u => `${u.pct}% em ${dataBR(u.quando)}`).join(' · ')}</p>}
       {usando && <UsarCupom p={usando.p} n={usando.n} perfil={perfil} fechar={() => setUsando(null)} feito={() => { setUsando(null); carregar(); }} />}
     </section>
+  );
+}
+
+/** Cupons da marca deslizando sozinhos (param quando a pessoa toca). */
+function Cupons({ p, d, regra, usar }: { p: Parceiro; d: Dados; regra: (n: Nivel) => string; usar: (n: Nivel) => void }) {
+  const trilho = useRef<HTMLDivElement>(null);
+  const [ativo, setAtivo] = useState(0);
+  const parado = useRef(false);
+  useEffect(() => {
+    const el = trilho.current; if (!el) return;
+    const t = setInterval(() => {
+      if (parado.current || !el.children.length) return;
+      const prox = (ativo + 1) % el.children.length;
+      el.scrollTo({ left: (el.children[prox] as HTMLElement).offsetLeft - el.offsetLeft, behavior: 'smooth' });
+    }, 3200);
+    return () => clearInterval(t);
+  }, [ativo]);
+  const aoRolar = () => { const el = trilho.current; if (!el) return; const w = (el.children[0] as HTMLElement)?.offsetWidth ?? 1; setAtivo(Math.round(el.scrollLeft / (w + 12))); };
+  const parar = () => { parado.current = true; };
+  return (
+    <>
+      <div className="pro-desc-trilho" ref={trilho} onScroll={aoRolar} onPointerDown={parar} onTouchStart={parar} style={{ '--cor': p.cor ?? '#1d3fbf' } as React.CSSProperties}>
+        {p.niveis.map(n => {
+          const falta = Math.max(0, n.provas - d.provas);
+          return (
+            <div key={n.pct} className={'pro-cupom-card' + (n.liberado ? ' on' : '')}>
+              <div className="pro-cupom-topo">{p.logo ? <img src={p.logo} alt="" /> : <b>{p.nome}</b>}<span>{n.liberado ? 'Liberado' : 'Bloqueado'}</span></div>
+              <b className="pro-cupom-pct">{n.pct}<small>% OFF</small></b>
+              <span className="pro-cupom-onde">{n.onde}</span>
+              <i className="pro-cupom-corte" aria-hidden="true" />
+              <span className="pro-cupom-regra">{regra(n)}</span>
+              {n.liberado
+                ? <button className="btn solid pro-btn-p" onClick={() => usar(n)}>Usar cupom</button>
+                : <span className="pro-desc-trava"><Lock size={12} aria-hidden="true" />{!d.pro ? 'Assine o Pro pra liberar' : `faltam ${falta} prova${falta === 1 ? '' : 's'}`}</span>}
+              {!n.liberado && d.pro && n.provas > 0 && <span className="pro-desc-barra" aria-hidden="true"><i style={{ width: `${Math.min(100, (d.provas / n.provas) * 100)}%` }} /></span>}
+            </div>
+          );
+        })}
+      </div>
+      <div className="pro-desc-pontos" aria-hidden="true">{p.niveis.map((n, k) => <i key={n.pct} className={k === ativo ? 'on' : ''} />)}</div>
+    </>
   );
 }
 
