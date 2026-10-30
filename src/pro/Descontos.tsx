@@ -1,9 +1,8 @@
 // Meus descontos: cupons das empresas parceiras do Radar Pro. Cada nível libera com o Pro + um número de provas oficiais.
-// Pra usar: mostra o cupom ao vivo no caixa e registra a compra com uma foto (sacola da loja ou selfie com a dona).
-import { useEffect, useRef, useState } from 'react';
-import { BadgePercent, Camera, Check, Lock, X } from 'lucide-react';
+// Pra usar: mostra o cupom ao vivo no caixa e o caixa confirma digitando a senha da loja (guardada só criptografada no servidor).
+import { useEffect, useState } from 'react';
+import { BadgePercent, Check, KeyRound, Lock, X } from 'lucide-react';
 import { sb, type Perfil } from './sb';
-import { reduzirFoto } from './Foto';
 
 type Nivel = { pct: number; provas: number; onde: string; liberado: boolean };
 type Parceiro = { id: string; nome: string; logo: string | null; descricao: string | null; endereco: string | null; niveis: Nivel[]; usos: { pct: number; quando: string }[] };
@@ -51,55 +50,52 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
   );
 }
 
-/** Cupom ao vivo (relógio correndo, pra não valer print) + registro da compra com foto. */
+/** Cupom ao vivo (relógio correndo, pra não valer print). Quem confirma é o caixa, digitando a senha da loja no celular do atleta. */
 function UsarCupom({ p, n, perfil, fechar, feito }: { p: Parceiro; n: Nivel; perfil: Perfil; fechar: () => void; feito: () => void }) {
   const [agora, setAgora] = useState(new Date());
-  const [foto, setFoto] = useState<{ blob: Blob; url: string } | null>(null);
+  const [senha, setSenha] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
-  const [ok, setOk] = useState(false);
-  const entrada = useRef<HTMLInputElement>(null);
+  const [ok, setOk] = useState<string | null>(null);
   useEffect(() => { const t = setInterval(() => setAgora(new Date()), 1000); return () => clearInterval(t); }, []);
   useEffect(() => { const o = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = o; }; }, []);
-  async function escolher(f?: File) {
-    if (!f) return; setErro(null);
-    try { const blob = await reduzirFoto(f, 1200, .82); setFoto(old => { if (old) URL.revokeObjectURL(old.url); return { blob, url: URL.createObjectURL(blob) }; }); }
-    catch { setErro('Não consegui abrir essa foto. Tente outra.'); }
-    finally { if (entrada.current) entrada.current.value = ''; }
-  }
-  async function registrar() {
-    if (!foto) return; setEnviando(true); setErro(null);
-    const caminho = `${perfil.user_id}/${p.id}-${Date.now()}.jpg`;
-    const up = await sb.storage.from('descontos').upload(caminho, foto.blob, { contentType: 'image/jpeg', upsert: false });
-    if (up.error) { setEnviando(false); return setErro('Não consegui enviar a foto. Confira a internet e tente de novo.'); }
-    const { error } = await sb.rpc('radar_usar_desconto', { p_parceiro: p.id, p_pct: n.pct, p_foto: caminho });
-    setEnviando(false);
+  async function confirmar(e: React.FormEvent) {
+    e.preventDefault(); if (!senha.trim()) return;
+    setEnviando(true); setErro(null);
+    const { data, error } = await sb.rpc('radar_usar_desconto_v2', { p_parceiro: p.id, p_pct: n.pct, p_senha: senha.trim() });
+    setEnviando(false); setSenha('');
     if (error) return setErro(error.message.replace(/^.*?: /, ''));
-    setOk(true); setTimeout(feito, 1800);
+    const r = data as { ok: boolean; erro?: string } | null;
+    if (!r?.ok) return setErro(r?.erro ?? 'Não deu certo. Tente de novo.');
+    setOk(new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }));
   }
   const hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   return (
     <div className="pro-cupom-fundo" role="dialog" aria-modal="true" aria-label={`Cupom de ${n.pct}% no ${p.nome}`}>
       <div className="pro-cupom">
-        <button className="pro-cupom-x" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button>
-        <div className="pro-cupom-vale">
-          <span className="pro-cupom-vivo"><i aria-hidden="true" />Cupom ao vivo · {hora}</span>
+        <button className="pro-cupom-x" onClick={ok ? feito : fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button>
+        <div className={'pro-cupom-vale' + (ok ? ' ok' : '')}>
+          <span className="pro-cupom-vivo"><i aria-hidden="true" />{ok ? 'Desconto confirmado' : 'Cupom ao vivo'} · {hora}</span>
           <b>{n.pct}% OFF</b>
           <span>{n.onde} · {p.nome}</span>
           <span className="pro-cupom-quem">@{perfil.apelido} · <em>PRO</em></span>
         </div>
-        {ok ? <p className="pro-ok"><Check size={18} aria-hidden="true" /> Compra registrada. Bom proveito!</p> : <>
+        {ok ? <>
+          <p className="pro-ok pro-centro"><Check size={20} aria-hidden="true" /> Confirmado pelo caixa em {ok}. Pode aplicar os {n.pct}%.</p>
+          <button className="btn solid pro-btn" onClick={feito}>Pronto</button>
+        </> : <>
           <ol className="pro-cupom-passos">
             <li>Mostre esta tela no caixa do {p.nome}.</li>
-            <li>Depois da compra, tire uma foto com a <b>sacola do {p.nome}</b> ou uma <b>selfie com a dona</b>.</li>
-            <li>Envie a foto aqui pra registrar o uso.</li>
+            <li>Entregue o celular: <b>o caixa digita a senha da loja</b> pra confirmar.</li>
           </ol>
-          {foto && <img className="pro-cupom-foto" src={foto.url} alt="Foto da compra" />}
-          <input ref={entrada} type="file" accept="image/*" capture="environment" hidden onChange={e => escolher(e.target.files?.[0])} />
-          <button className={foto ? 'btn outline pro-btn' : 'btn solid pro-btn'} onClick={() => entrada.current?.click()}><Camera size={18} aria-hidden="true" />{foto ? 'Trocar a foto' : 'Tirar a foto da compra'}</button>
-          {foto && <button className="btn solid pro-btn" onClick={registrar} disabled={enviando}>{enviando ? 'Registrando…' : 'Registrar o uso do desconto'}</button>}
+          <form className="pro-form" onSubmit={confirmar}>
+            <label className="ct-cidade">Senha do caixa <small>(quem digita é a loja)</small>
+              <input type="password" value={senha} onChange={e => setSenha(e.target.value)} autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} inputMode="text" maxLength={60} placeholder="••••••••" />
+            </label>
+            <button className="btn solid pro-btn" type="submit" disabled={enviando || !senha.trim()}><KeyRound size={18} aria-hidden="true" />{enviando ? 'Conferindo…' : 'Confirmar desconto'}</button>
+          </form>
           {erro && <p className="ct-erro" role="alert">{erro}</p>}
-          <p className="fine pro-centro pro-sem-margem">A foto fica guardada só pra conferência do Radar e do parceiro.</p>
+          <p className="fine pro-centro pro-sem-margem">Cada uso fica registrado com data e hora.</p>
         </>}
       </div>
     </div>
@@ -112,7 +108,8 @@ export function AdminDescontos() {
   useEffect(() => {
     sb.rpc('radar_admin_descontos').then(async ({ data }) => {
       const l = (data ?? []) as { id: string; apelido: string; parceiro: string; pct: number; foto: string; quando: string; url?: string }[];
-      if (l.length) { const { data: s } = await sb.storage.from('descontos').createSignedUrls(l.map(x => x.foto), 3600); (s ?? []).forEach((x, i) => { if (x.signedUrl) l[i].url = x.signedUrl; }); }
+      const comFoto = l.filter(x => x.foto);
+      if (comFoto.length) { const { data: s } = await sb.storage.from('descontos').createSignedUrls(comFoto.map(x => x.foto), 3600); (s ?? []).forEach((x, i) => { if (x.signedUrl) comFoto[i].url = x.signedUrl; }); }
       setLista(l);
     });
   }, []);
@@ -120,12 +117,27 @@ export function AdminDescontos() {
     <section className="pro-card">
       <p className="pro-k cinza"><BadgePercent size={14} aria-hidden="true" /> Descontos usados</p>
       {lista === null ? <p className="fine">Carregando…</p> : !lista.length ? <p className="fine pro-sem-margem">Ninguém usou desconto ainda.</p> :
-        <div className="pro-desc-adm">{lista.map(u => (
-          <a key={u.id} href={u.url} target="_blank" rel="noopener" className="pro-desc-adm-item">
-            {u.url ? <img src={u.url} alt={`Foto de @${u.apelido}`} /> : <span />}
-            <small><b>@{u.apelido}</b> · {u.pct}% · {u.parceiro}<br />{new Date(u.quando).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</small>
-          </a>
-        ))}</div>}
+        <ul className="pro-desc-adm">{lista.map(u => (
+          <li key={u.id}><b>@{u.apelido}</b> · {u.pct}% · {u.parceiro} · {new Date(u.quando).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}{u.url && <> · <a href={u.url} target="_blank" rel="noopener">foto</a></>}</li>
+        ))}</ul>}
+      <TrocarSenha />
     </section>
+  );
+}
+
+function TrocarSenha() {
+  const [nova, setNova] = useState('');
+  const [msg, setMsg] = useState<string | null>(null);
+  async function salvar(e: React.FormEvent) {
+    e.preventDefault();
+    const { error } = await sb.rpc('radar_admin_senha_parceiro', { p_parceiro: 'emporio-doll', p_senha: nova.trim() });
+    setMsg(error ? error.message.replace(/^.*?: /, '') : 'Senha do caixa trocada. A antiga deixou de valer.'); if (!error) setNova('');
+  }
+  return (
+    <form className="pro-linha pro-quebra" onSubmit={salvar}>
+      <input type="password" value={nova} onChange={e => setNova(e.target.value)} placeholder="Nova senha do caixa (Empório Doll)" autoComplete="new-password" aria-label="Nova senha do caixa" />
+      <button className="btn outline pro-btn-p" type="submit" disabled={nova.trim().length < 6}>Trocar senha</button>
+      {msg && <small className="fine">{msg}</small>}
+    </form>
   );
 }
