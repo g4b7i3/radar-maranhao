@@ -32,7 +32,7 @@ export function MeusDescontos({ perfil }: { perfil: Perfil }) {
         <div className="pro-desc-marca breve" aria-label="Novas marcas em breve"><Store size={22} aria-hidden="true" /><b>Novas marcas</b><small>em breve</small></div>
       </div>
       <Cupons key={p.id} p={p} d={d} regra={regra} usar={n => setUsando({ p, n })} />
-      <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : <>Com a conta grátis o primeiro já está liberado; assinando o Pro em <b>Conta</b>, os outros liberam. </>}Não acumulativos: um desconto por compra.</p>
+      <p className="fine pro-sem-margem">{d.pro ? <>Você tem <b>{d.provas}</b> {d.provas === 1 ? 'prova oficial' : 'provas oficiais'}. </> : (p.niveis.some(n => n.gratis) ? <>Com a conta grátis o primeiro já está liberado; assinando o Pro em <b>Conta</b>, os outros liberam. </> : <>Os descontos do {p.nome} são de quem assina o Pro: assine em <b>Conta</b>. </>)}Não acumulativos: um desconto por compra.</p>
       {p.usos.length > 0 && <p className="fine pro-sem-margem">Seus últimos usos no {p.nome}: {p.usos.map(u => `${u.pct}% em ${dataBR(u.quando)}`).join(' · ')}</p>}
       {usando && <UsarCupom p={usando.p} n={usando.n} perfil={perfil} fechar={() => setUsando(null)} feito={() => { setUsando(null); carregar(); }} />}
     </section>
@@ -157,16 +157,24 @@ export function AdminDescontos() {
 
 function TrocarSenha() {
   const [nova, setNova] = useState('');
+  const [parc, setParc] = useState<{ id: string; nome: string }[]>([]);
+  const [qual, setQual] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
+  useEffect(() => { sb.from('radar_parceiros').select('id, nome').order('criado_em').then(({ data }) => { const l = (data ?? []) as { id: string; nome: string }[]; setParc(l); setQual(q => q || l[0]?.id || ''); }); }, []);
   async function salvar(e: React.FormEvent) {
     e.preventDefault();
-    const { error } = await sb.rpc('radar_admin_senha_parceiro', { p_parceiro: 'emporio-doll', p_senha: nova.trim() });
-    setMsg(error ? error.message.replace(/^.*?: /, '') : 'Senha do caixa trocada. A antiga deixou de valer.'); if (!error) setNova('');
+    const { error } = await sb.rpc('radar_admin_senha_parceiro', { p_parceiro: qual, p_senha: nova.trim() });
+    const nome = parc.find(x => x.id === qual)?.nome ?? qual;
+    setMsg(error ? error.message.replace(/^.*?: /, '') : `Senha do caixa do ${nome} salva. A anterior deixou de valer.`); if (!error) setNova('');
   }
   return (
-    <form className="pro-linha pro-quebra" onSubmit={salvar}>
-      <input type="password" value={nova} onChange={e => setNova(e.target.value)} placeholder="Nova senha do caixa (Empório Doll)" autoComplete="new-password" aria-label="Nova senha do caixa" />
-      <button className="btn outline pro-btn-p" type="submit" disabled={nova.trim().length < 6}>Trocar senha</button>
+    <form className="pro-form" onSubmit={salvar}>
+      <p className="pro-k cinza">Senha do caixa</p>
+      <select value={qual} onChange={e => setQual(e.target.value)} aria-label="Marca parceira">{parc.map(x => <option key={x.id} value={x.id}>{x.nome}</option>)}</select>
+      <div className="pro-linha pro-quebra">
+        <input type="password" value={nova} onChange={e => setNova(e.target.value)} placeholder="Nova senha do caixa" autoComplete="new-password" aria-label="Nova senha do caixa" />
+        <button className="btn outline pro-btn-p" type="submit" disabled={nova.trim().length < 6 || !qual}>Salvar senha</button>
+      </div>
       {msg && <small className="fine">{msg}</small>}
     </form>
   );
