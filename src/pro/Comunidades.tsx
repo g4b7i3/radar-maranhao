@@ -1,7 +1,7 @@
 // Comunidades: menu estilo WhatsApp. Cada uma é um feed fechado: só quem está dentro lê e publica.
 // "Elas correm" e "Eles correm" entram pelo sexo do perfil (sem pedido, sem lista de membros). As outras, qualquer um entra e sai.
 import { useEffect, useRef, useState } from 'react';
-import { Check, ChevronDown, ImagePlus, Lock, LogOut, Pencil, Plus, Search, UsersRound } from 'lucide-react';
+import { Check, ChevronDown, ImagePlus, Link2, Lock, LogOut, Pencil, Plus, Search, Share2, UsersRound } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { conviteComunidade } from './Pro';
@@ -96,6 +96,7 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair, admin, mudou: m
         {c.criador && <p className="fine pro-sem-margem pro-comun-criador">Criada por @{c.criador}</p>}
         {(admin || c.minha) && !editando && <button className="btn text pro-btn-p" onClick={() => setEditando(true)}><Pencil size={14} aria-hidden="true" />Editar comunidade</button>}
       </section>
+      <ConvidarComunidade c={c} />
       <Membros c={c} />
       {(admin || c.minha) && editando && <FormComunidade admin={admin} c={c} fechar={() => setEditando(false)} salvou={d => { setEditando(false); mudouCom(d ? { ...c, ...d } : null); }} />}
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} comunidade={{ id: c.id, nome: c.nome }} dica={`Publicar em ${c.nome}…`} />
@@ -211,6 +212,32 @@ function FormComunidade({ c, fechar, salvou, admin = false, ideia }: { c?: Comun
         <button className="btn solid" disabled={indo} onClick={salvar}>{indo ? 'Salvando…' : c ? 'Salvar' : 'Criar comunidade'}</button>
         <button className="btn text" disabled={indo} onClick={fechar}>Cancelar</button>
         {c && c.tipo === 'aberta' && <button className="btn outline pro-vermelho-txt" disabled={indo} onClick={apagar}>Tirar do ar</button>}
+      </div>
+    </section>
+  );
+}
+
+/** Convite: gera o link da comunidade pra mandar no WhatsApp, Instagram ou onde quiser. Quem abre entra com o Google e já cai dentro. */
+function ConvidarComunidade({ c }: { c: Comunidade }) {
+  const [copiado, setCopiado] = useState(false);
+  const link = `https://radarcorridasma.com.br/?comunidade=${encodeURIComponent(c.id)}`;
+  const texto = `Entra na comunidade ${c.nome} no Radar Pro, a rede social do corredor maranhense! É grátis: ${link}`;
+  async function compartilhar() {
+    if (navigator.share) { try { await navigator.share({ title: c.nome, text: texto, url: link }); return; } catch (e) { if ((e as Error).name === 'AbortError') return; } }
+    copiar();
+  }
+  async function copiar() {
+    try { await navigator.clipboard.writeText(link); setCopiado(true); setTimeout(() => setCopiado(false), 2500); }
+    catch { window.prompt('Copie o link da comunidade:', link); }
+  }
+  return (
+    <section className="pro-card pro-convidar-com">
+      <p className="pro-k cinza"><Share2 size={14} aria-hidden="true" /> Convidar pra comunidade</p>
+      <p className="fine pro-sem-margem">{c.tipo === 'sexo' ? 'Manda o link pra galera: quem abrir entra grátis no Radar Pro e já vê a comunidade.' : 'Manda o link pra galera: quem abrir entra grátis com o Google e já cai dentro da comunidade.'}</p>
+      <div className="pro-linha pro-quebra">
+        <button className="btn solid pro-btn-p" onClick={compartilhar}><Share2 size={16} aria-hidden="true" />Compartilhar link</button>
+        <a className="btn whats pro-btn-p" href={`https://wa.me/?text=${encodeURIComponent(texto)}`} target="_blank" rel="noopener">WhatsApp</a>
+        <button className="btn outline pro-btn-p" onClick={copiar}><Link2 size={16} aria-hidden="true" />{copiado ? 'Link copiado' : 'Copiar link'}</button>
       </div>
     </section>
   );
