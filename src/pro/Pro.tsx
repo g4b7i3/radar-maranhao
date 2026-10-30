@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -437,7 +437,25 @@ export function useAssessorias() {
 }
 export const CampoAssessoria = ({ value, onChange, id = 'pro-assessorias' }: { value: string; onChange: (v: string) => void; id?: string }) => {
   const lista = useAssessorias();
-  return <label className="ct-cidade">Assessoria ou grupo <small>(opcional)</small><input list={id} value={value} onChange={e => onChange(e.target.value)} placeholder="Escolha ou escreva a sua" autoComplete="off" /><datalist id={id}>{lista.map(n => <option key={n} value={n} />)}</datalist><small>Escreva igual ao nome da sua equipe para somar pontos com ela.</small></label>;
+  const [aberto, setAberto] = useState(false);
+  const q = value.trim().toLowerCase();
+  const vis = aberto ? lista.filter(n => !q || n.toLowerCase().includes(q) || n.toLowerCase() === q) : [];
+  const escolhida = lista.find(n => n.toLowerCase() === q);
+  return (
+    <div className="ct-cidade pro-campo-asse">
+      <label htmlFor={id + '-in'}>Assessoria ou grupo <small>(opcional)</small></label>
+      <input id={id + '-in'} list={id} value={value} onChange={e => onChange(e.target.value)} placeholder="Escreva a sua ou escolha abaixo" autoComplete="off" />
+      <datalist id={id}>{lista.map(n => <option key={n} value={n} />)}</datalist>
+      {lista.length > 0 && <button type="button" className="btn outline pro-btn-p pro-asse-btn" aria-expanded={aberto} onClick={() => setAberto(!aberto)}>
+        <Users size={16} aria-hidden="true" />{aberto ? 'Fechar a lista' : `Selecionar assessorias disponíveis (${lista.length})`}
+      </button>}
+      {aberto && <div className="pro-asse-lista" role="group" aria-label="Assessorias disponíveis">
+        {(vis.length ? vis : lista).map(n => <button type="button" key={n} className={'chip' + (escolhida === n ? ' on' : '')} aria-pressed={escolhida === n} onClick={() => { onChange(n); setAberto(false); }}>{escolhida === n && <Check size={14} aria-hidden="true" />}{n}</button>)}
+        {q && !vis.length && <p className="fine pro-sem-margem">Nenhuma com “{value.trim()}”. Pode deixar escrito: ela entra como nova.</p>}
+      </div>}
+      {escolhida ? <small>✓ Você vai somar pontos com <b>{escolhida}</b>.</small> : <small>Escolha da lista ou escreva igual ao nome da sua equipe para somar pontos com ela.</small>}
+    </div>
+  );
 };
 function FormPerfil({ uid, email, pronto }: { uid: string; email: string; pronto: () => void }) {
   const [f, setF] = useState({ apelido: email.split('@')[0].toLowerCase().replace(/[^a-z0-9_.]/g, '').slice(0, 20), nome_completo: '', cidade: 'São Luís', sexo: '' as '' | 'F' | 'M', pcd: false, genero: '', nascimento: '', assessoria: '', whatsapp: '' });
