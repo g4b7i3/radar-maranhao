@@ -58,3 +58,33 @@ export function PainelNotificacoes({ lista, fechar, recarregar, irPara }: { list
     </div>
   );
 }
+
+/** Bannerzinho pra quem não ativou a notificação no celular: ao abrir o app, avisa que tem notificação nova. "OK" some até chegar outra. */
+export function BannerAviso({ lista, abrir }: { lista: Notif[]; abrir: () => void }) {
+  const [pushAtivo, setPushAtivo] = useState<boolean | null>(null);
+  const [visto, setVisto] = useState<string>(() => { try { return localStorage.getItem('radar-banner-visto') ?? ''; } catch { return ''; } });
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!('Notification' in window) || Notification.permission !== 'granted' || !('serviceWorker' in navigator)) return setPushAtivo(false);
+        const reg = await navigator.serviceWorker.getRegistration();
+        setPushAtivo(!!(await reg?.pushManager.getSubscription()));
+      } catch { setPushAtivo(false); }
+    })();
+  }, []);
+  const novas = lista.filter(n => !n.lido && n.quando > visto);
+  if (pushAtivo !== false || !novas.length) return null;
+  const ultima = novas.reduce((a, b) => (a.quando > b.quando ? a : b));
+  const fechar = () => { try { localStorage.setItem('radar-banner-visto', ultima.quando); } catch { /* */ } setVisto(ultima.quando); };
+  return (
+    <div className="pro-banner-aviso" role="status">
+      <span className="pro-banner-ic" aria-hidden="true"><Bell size={20} /></span>
+      <div className="pro-banner-tx">
+        <b>{novas.length === 1 ? 'Você tem uma notificação' : `Você tem ${novas.length} notificações`}</b>
+        <small>{ultima.titulo}</small>
+      </div>
+      <button className="btn text pro-btn-p" onClick={() => { fechar(); abrir(); }}>Ver</button>
+      <button className="btn solid pro-btn-p" onClick={fechar}>OK</button>
+    </div>
+  );
+}

@@ -984,3 +984,11 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-asse-lista { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; background: var(--cobalt-tint); max-height: 260px; overflow-y: auto; }
 .pro-asse-lista .chip { display: inline-flex; align-items: center; gap: 4px; }
 .pro-asse-lista .chip.on { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+.pro-banner-aviso { position: sticky; top: 8px; z-index: 40; display: flex; align-items: center; gap: 10px; margin: 8px 12px; padding: 12px 12px 12px 14px; border-radius: 16px; background: #0a1240; color: #fff; box-shadow: 0 14px 30px -10px rgba(10,18,64,.55); animation: pro-banner-in .35s ease-out; }
+.pro-banner-ic { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; background: #ffd34d; color: #2a1a00; }
+.pro-banner-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pro-banner-tx b { font-size: .98rem; }
+.pro-banner-tx small { opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pro-banner-aviso .btn.text { color: #ffd34d; }
+.pro-banner-aviso .btn.solid { background: #ffd34d; color: #2a1a00; border-color: #ffd34d; }
+@keyframes pro-banner-in { from { transform: translateY(-14px); opacity: 0; } to { transform: none; opacity: 1; } }

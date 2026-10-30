@@ -19,7 +19,7 @@ import { MEDALHAS as LISTA_MEDALHAS, medalhaSVG } from './medalhas';
 import { TelaProvas } from './Provas';
 import { PushConvite } from './Push';
 import { terminarConexaoStrava } from './Strava';
-import { Sino, PainelNotificacoes, useNotificacoes } from './Notificacoes';
+import { Sino, PainelNotificacoes, BannerAviso, useNotificacoes } from './Notificacoes';
 import { provaPedida } from './Provas';
 import { useVoltar, iniciarHistorico, irParaAba, abaDepoisDoVoltar, lerEndereco, telaInicialGeral } from './voltar';
 import { TopoVoltar } from './Topo';
@@ -250,6 +250,7 @@ function ProTelas() {
       {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
       <MenuAbas abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
+      <BannerAviso lista={notif.lista} abrir={() => setNotifAberto(true)} />
       <PushConvite userId={perfil.user_id} />
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê a agenda de provas, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
