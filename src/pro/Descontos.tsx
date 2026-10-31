@@ -1,5 +1,5 @@
 // Meus descontos: cupons das empresas parceiras do Radar Pro. Cada nível libera com o Pro + um número de provas oficiais.
-// Pra usar: mostra o cupom ao vivo no caixa e o caixa confirma digitando a senha da loja (guardada só criptografada no servidor).
+// Pra usar: mostra o cupom ao vivo pro atendente da loja, que confirma digitando a senha da loja (guardada só criptografada no servidor).
 import { useEffect, useRef, useState } from 'react';
 import { BadgePercent, Check, KeyRound, Lock, MapPin, MessageCircle, Store, X } from 'lucide-react';
 import { whatsappLink } from '../lib';
@@ -86,7 +86,7 @@ function Cupons({ p, d, regra, usar }: { p: Parceiro; d: Dados; regra: (n: Nivel
   );
 }
 
-/** Cupom ao vivo (relógio correndo, pra não valer print). Quem confirma é o caixa, digitando a senha da loja no celular do atleta. */
+/** Cupom ao vivo (relógio correndo, pra não valer print). Quem confirma é o atendente, digitando a senha da loja no celular do atleta. */
 function UsarCupom({ p, n, perfil, fechar, feito }: { p: Parceiro; n: Nivel; perfil: Perfil; fechar: () => void; feito: () => void }) {
   const [agora, setAgora] = useState(new Date());
   const [senha, setSenha] = useState('');
@@ -118,15 +118,15 @@ function UsarCupom({ p, n, perfil, fechar, feito }: { p: Parceiro; n: Nivel; per
           <span className="pro-cupom-quem">@{perfil.apelido} · <em>PRO</em></span>
         </div>
         {ok ? <>
-          <p className="pro-ok pro-centro"><Check size={20} aria-hidden="true" /> Confirmado pelo caixa em {ok}. Pode aplicar os {n.pct}%.</p>
+          <p className="pro-ok pro-centro"><Check size={20} aria-hidden="true" /> Confirmado pelo atendente em {ok}. Pode aplicar os {n.pct}%.</p>
           <button className="btn solid pro-btn" onClick={feito}>Pronto</button>
         </> : <>
           <ol className="pro-cupom-passos">
-            <li>Mostre esta tela no caixa do {p.nome}.</li>
-            <li>Entregue o celular: <b>o caixa digita a senha da loja</b> pra confirmar.</li>
+            <li>Mostre esta tela pra quem está te atendendo no {p.nome}.</li>
+            <li>Entregue o celular: <b>o atendente digita a senha da loja</b> pra confirmar.</li>
           </ol>
           <form className="pro-form" onSubmit={confirmar}>
-            <label className="ct-cidade">Senha do caixa <small>(quem digita é a loja)</small>
+            <label className="ct-cidade">Senha da loja <small>(quem digita é o atendente)</small>
               <input type="password" value={senha} onChange={e => setSenha(e.target.value)} autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} inputMode="text" maxLength={60} placeholder="••••••••" />
             </label>
             <button className="btn solid pro-btn" type="submit" disabled={enviando || !senha.trim()}><KeyRound size={18} aria-hidden="true" />{enviando ? 'Conferindo…' : 'Confirmar desconto'}</button>
@@ -172,14 +172,14 @@ function TrocarSenha() {
     e.preventDefault();
     const { error } = await sb.rpc('radar_admin_senha_parceiro', { p_parceiro: qual, p_senha: nova.trim() });
     const nome = parc.find(x => x.id === qual)?.nome ?? qual;
-    setMsg(error ? error.message.replace(/^.*?: /, '') : `Senha do caixa do ${nome} salva. A anterior deixou de valer.`); if (!error) setNova('');
+    setMsg(error ? error.message.replace(/^.*?: /, '') : `Senha da loja ${nome} salva. A anterior deixou de valer.`); if (!error) setNova('');
   }
   return (
     <form className="pro-form" onSubmit={salvar}>
-      <p className="pro-k cinza">Senha do caixa</p>
+      <p className="pro-k cinza">Senha da loja (o atendente digita)</p>
       <select value={qual} onChange={e => setQual(e.target.value)} aria-label="Marca parceira">{parc.map(x => <option key={x.id} value={x.id}>{x.nome}</option>)}</select>
       <div className="pro-linha pro-quebra">
-        <input type="password" value={nova} onChange={e => setNova(e.target.value)} placeholder="Nova senha do caixa" autoComplete="new-password" aria-label="Nova senha do caixa" />
+        <input type="password" value={nova} onChange={e => setNova(e.target.value)} placeholder="Nova senha da loja" autoComplete="new-password" aria-label="Nova senha da loja" />
         <button className="btn outline pro-btn-p" type="submit" disabled={nova.trim().length < 6 || !qual}>Salvar senha</button>
       </div>
       {msg && <small className="fine">{msg}</small>}
