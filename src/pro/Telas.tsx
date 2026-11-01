@@ -9,6 +9,7 @@ import { Assinar, NOMES_CIDADES, CampoAssessoria } from './Pro';
 import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
 import { MeusDescontos, AdminDescontos } from './Descontos';
+import { AdminBuscas } from './AdminBuscas';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
@@ -1035,6 +1036,7 @@ export function TelaAdmin() {
   );
   return (
     <div className="pro-cont">
+      <AdminBuscas />
       <AdminDescontos />
       {msg && <p className="pro-aviso" role="status">{msg}</p>}
       <AdminPainel />

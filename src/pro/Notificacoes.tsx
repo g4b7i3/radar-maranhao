@@ -1,4 +1,5 @@
 // Sininho de notificações: avisos (resultado verificado, duelo, renovação) e convites de grupo (com aceitar/recusar).
+import { focoAdmin } from './AdminBuscas';
 import { useEffect, useState } from 'react';
 import { Bell, X, Check, Trophy, Swords, Users, CreditCard, Sparkles, Heart } from 'lucide-react';
 import { sb } from './sb';
@@ -31,8 +32,11 @@ export function PainelNotificacoes({ lista, fechar, recarregar, irPara }: { list
     recarregar();
   };
   const abrir = (n: Notif) => {
-    const h = (n.url ?? '').split('#')[1];
-    if (h && ['temporada', 'feed', 'corri', 'ranking', 'duelos', 'conta'].includes(h)) { irPara(h); fechar(); }
+    const [aba, ...resto] = ((n.url ?? '').split('#')[1] ?? '').split('/');
+    const sub = resto.join('/');
+    if (aba === 'admin') focoAdmin.v = sub || null;
+    if (aba === 'provas' && sub) { try { localStorage.setItem('radar-abrir-prova', sub); } catch { /* */ } }
+    if (aba && ['temporada', 'feed', 'corri', 'ranking', 'duelos', 'conta', 'admin', 'provas', 'comunidades', 'campeonatos'].includes(aba)) { irPara(aba); fechar(); if (aba === 'admin' && sub) setTimeout(() => document.getElementById('adm-' + sub)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 700); }
   };
   return (
     <div className="pro-notif-fundo" onClick={fechar}>

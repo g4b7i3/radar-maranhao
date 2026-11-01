@@ -1055,3 +1055,13 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-desc-parceria { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--line); font-size: .86rem; color: var(--muted); }
 .pro-desc-parceria b { color: inherit; }
 .pro-desc-parceria .btn { font-size: .86rem; }
+
+/* Admin · resultados não achados */
+.pro-buscas{border:2px solid #ffd34d;scroll-margin-top:80px}
+.pro-buscas-cands{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.pro-buscas-cands li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(127,140,170,.1)}
+.pro-buscas-cands li span{min-width:0;display:flex;flex-direction:column;gap:2px}
+.pro-buscas-cands li b{font-size:14px;line-height:1.25}
+.pro-buscas-cands li small{font-size:12px;opacity:.75}
+.pro-buscas-cands li .btn{flex-shrink:0}
+.pro-buscas-aviso{width:100%;min-height:72px;resize:vertical;font:inherit;margin:4px 0 8px}
