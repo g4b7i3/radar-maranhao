@@ -3464,21 +3464,21 @@
         4,
         8
       ],
-      "location": "Local a confirmar",
+      "location": "Avenida Metropolitana (Academia JS Fitness Ritmo e Saúde)",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-11-04",
+      "status": "Esgotadas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/js-fitness-run",
-      "sourceUrl": "https://roadrunners.run/evento/2026-js-fitness-run/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.metasportoficial.com.br/eventos/js-fitness-run",
+      "sourceName": "Meta Sport",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Visto só no Road Runners (08/11/2026, Imperatriz, 4 e 8 km, organizador informado: Meta Sport), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam confirmar horário, local de largada, preço e status das inscrições.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "Página da Meta Sport (organizadora): 08/11/2026, Imperatriz, 4 e 8 km em asfalto, cronometragem eletrônica. Largadas: 8 km às 6h15 e 4 km às 6h30 (o texto também fala em \"evento noturno\"; vale o horário das largadas). Local: Avenida Metropolitana / Academia JS Fitness Ritmo e Saúde (R. Ceará, 1569). Inscrições esgotadas (prazo era 04/11/2026 ou até esgotar). Premiação em dinheiro para os melhores do geral e troféus por faixa etária, valores não divulgados. Regulamento e retirada do kit ainda não publicados.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-30T10:57:10.638Z",
+      "start": "06:15",
+      "verifiedAt": "2026-11-01T10:52:14.093Z",
       "firstSeenAt": "2026-10-30T10:57:10.638Z"
     },
     {
@@ -3541,6 +3541,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "ed59565e-266f-4197-96ad-a4125f0e8a91",
+      "eventId": "js-fitness-run-2026-imperatriz",
+      "version": "[\"2026-11-08\",[4,8],\"Avenida Metropolitana (Academia JS Fitness Ritmo e Saúde)\",null,\"2026-11-04\",\"Esgotadas\",\"https://www.metasportoficial.com.br/eventos/js-fitness-run\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-01T10:52:14.093Z",
+      "notifiedAt": "2026-11-01T10:52:44.650Z"
+    },
     {
       "id": "f2cddd8f-c384-4a07-a02f-cf2095e7939e",
       "eventId": "aumigos-2026-sao-joao-do-paraiso",
@@ -5414,7 +5422,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-10-31T10:57:27.170Z",
+  "lastChecked": "2026-11-01T10:52:14.093Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
