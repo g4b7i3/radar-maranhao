@@ -3385,7 +3385,7 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/corridadoempreendedoracm2026",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
@@ -3395,7 +3395,7 @@
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-28T01:04:59.827Z",
+      "verifiedAt": "2026-11-01T17:33:41.969Z",
       "firstSeenAt": "2026-10-27T20:28:42.930Z"
     },
     {
@@ -3439,7 +3439,7 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
-      "officialUrl": "https://centraldacorrida.com.br/",
+      "officialUrl": "https://centraldacorrida.com.br/evento/1corrida-da-galera-do-poste",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
@@ -3449,7 +3449,7 @@
       "elevation": null,
       "price": null,
       "start": "19:00",
-      "verifiedAt": "2026-10-31T10:57:27.170Z",
+      "verifiedAt": "2026-11-01T17:33:41.969Z",
       "firstSeenAt": "2026-10-28T22:02:56.310Z"
     },
     {
@@ -3538,9 +3538,61 @@
       "start": null,
       "verifiedAt": "2026-10-31T10:57:27.170Z",
       "firstSeenAt": "2026-10-31T10:57:27.170Z"
+    },
+    {
+      "id": "iii-corrida-da-amizade-2026-duque-bacelar",
+      "name": "III CORRIDA DA AMIZADE",
+      "edition": "2026",
+      "city": "Duque Bacelar",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-27",
+      "distances": [
+        5
+      ],
+      "location": "Igreja matriz de São José",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026",
+      "sourceUrl": "https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026",
+      "sourceName": "SA Crono",
+      "publishedAt": null,
+      "confidence": "Página de inscrição oficial",
+      "notes": "Largada às 17h. Encontrada automaticamente na SA Crono; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-01T17:33:41.969Z",
+      "firstSeenAt": "2026-11-01T17:33:41.969Z"
     }
   ],
   "changes": [
+    {
+      "id": "9404d9da-ad0f-4d2d-9572-0e4f68c7db20",
+      "eventId": "1-corrida-da-galera-do-poste-2026-sao-luis",
+      "version": "[\"2026-12-18\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/1corrida-da-galera-do-poste\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-01T17:33:41.969Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "1351a77b-a553-4bb3-b178-9d7184040952",
+      "eventId": "corrida-do-empreendedor-2026-sao-luis",
+      "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridadoempreendedoracm2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-01T17:33:41.969Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "73d16784-dd8d-4436-9e5e-ae018a2d91c4",
+      "eventId": "iii-corrida-da-amizade-2026-duque-bacelar",
+      "version": "[\"2026-12-27\",[5],\"Igreja matriz de São José\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-01T17:33:41.969Z",
+      "notifiedAt": null
+    },
     {
       "id": "ed59565e-266f-4197-96ad-a4125f0e8a91",
       "eventId": "js-fitness-run-2026-imperatriz",
@@ -5422,7 +5474,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-01T10:52:14.093Z",
+  "lastChecked": "2026-11-01T17:33:41.969Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
