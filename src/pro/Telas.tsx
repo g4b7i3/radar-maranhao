@@ -337,10 +337,10 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
   const enviar = async () => {
     if (!prova || !km) return;
     setErro(null); setEnviando(true);
-    const r = await chamar<Resposta & { precisa_link?: boolean }>('radar-registrar', { prova_id: prova.id, distancia_km: km, tempo_s: seg ?? undefined, peito: peito || undefined, nome_inscricao: outroNome || undefined, link_resultado: link || undefined });
+    const r = await chamar<Resposta & { precisa_link?: boolean; achou_resultado?: boolean }>('radar-registrar', { prova_id: prova.id, distancia_km: km, tempo_s: seg ?? undefined, peito: peito || undefined, nome_inscricao: outroNome || undefined, link_resultado: link || undefined });
     setEnviando(false);
     if (r.erro) return setErro(r.erro);
-    if (r.precisa_link) return setSemResultado(r.motivo ?? 'Não achamos o seu resultado. Cole o link aqui.');
+    if (r.precisa_link) return setSemResultado(r.achou_resultado ? (r.motivo ?? 'Não achamos o seu resultado. Cole o link aqui.') : 'Ainda não achamos o resultado desta prova. Cole aqui o link do resultado (da cronometragem) que o Radar confere na hora. Se você não colar o link, tudo bem: a gente vai procurar a sua prova, só que pode demorar um pouco mais. Quando achar, você recebe um aviso aqui no app.');
     setFeito(r); pronto(); carregarSugs();
   };
 
