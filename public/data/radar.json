@@ -3380,7 +3380,10 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-13",
-      "distances": [],
+      "distances": [
+        5,
+        10
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -3390,12 +3393,12 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 05h30. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "notes": "Domingo, 13/12/2026, largada às 5h30, em São Luís. Organização: EuCorro Eventos Esportivos. Página da Central da Corrida: 5 km, 10 km e categoria PCD, inscrições abertas. Local, preço, prazo e data da entrega do kit ainda não divulgados.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-11-01T17:33:41.969Z",
+      "verifiedAt": "2026-11-02T10:51:40.113Z",
       "firstSeenAt": "2026-10-27T20:28:42.930Z"
     },
     {
@@ -3434,7 +3437,9 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-18",
-      "distances": [],
+      "distances": [
+        5
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -3443,13 +3448,13 @@
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
-      "confidence": "Fonte única (lista da Central da Corrida) · confirmar no organizador",
-      "notes": "Sexta-feira, 18/12, às 19h, em São Luís. Na lista do Maranhão da Central da Corrida, com o botão \"Inscreva-se\" (inscrições abertas) desde 30/10, mas ainda sem página própria coletada: distâncias, local, preço e prazo a confirmar.",
+      "confidence": "Página de inscrição oficial (Central da Corrida)",
+      "notes": "Sexta-feira, 18/12/2026, às 19h, em São Luís. Promovida pelo professor de Educação Física Cleison Aguiar para o grupo Galera do Poste do Itapiracó. Página da Central da Corrida: corrida de 5 km, inscrições abertas; retirada do kit em 15, 16 e 17/12, das 17h às 20h, na Reserva do Itapiracó, perto do portão principal. Local exato da largada, preço e prazo a confirmar.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "19:00",
-      "verifiedAt": "2026-11-01T17:33:41.969Z",
+      "verifiedAt": "2026-11-02T10:51:40.113Z",
       "firstSeenAt": "2026-10-28T22:02:56.310Z"
     },
     {
@@ -3541,7 +3546,7 @@
     },
     {
       "id": "iii-corrida-da-amizade-2026-duque-bacelar",
-      "name": "III CORRIDA DA AMIZADE",
+      "name": "III Corrida da Amizade",
       "edition": "2026",
       "city": "Duque Bacelar",
       "state": "MA",
@@ -3550,7 +3555,7 @@
       "distances": [
         5
       ],
-      "location": "Igreja matriz de São José",
+      "location": "Igreja Matriz de São José",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
@@ -3558,24 +3563,55 @@
       "sourceUrl": "https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026",
       "sourceName": "SA Crono",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 17h. Encontrada automaticamente na SA Crono; detalhes na página da plataforma.",
-      "prize": null,
+      "confidence": "Página de inscrição oficial e regulamento (SA Crono)",
+      "notes": "Domingo, 27/12/2026, em Duque Bacelar. Regulamento da SA Crono: 5 km, concentração às 16h e largada às 17h30 (a página da plataforma diz 17h), largada e chegada na Igreja Matriz de São José. A partir de 16 anos. Lote promocional R$ 40, inscrições só pela SA Crono até acabarem as vagas. Inscrição após 20/11 recebe camisa tamanho G. Local e data da entrega do kit a divulgar.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 800,
+        "summary": "Regulamento: R$ 800, 600, 400, 300 e 200 + troféu do 1º ao 5º geral nos 5 km, masc. e fem.; troféus por faixa etária e categoria local."
+      },
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-01T17:33:41.969Z",
+      "price": {
+        "min": 40,
+        "text": "R$ 40 + taxa (lote promocional)"
+      },
+      "start": "17:30",
+      "verifiedAt": "2026-11-02T10:52:05.809Z",
       "firstSeenAt": "2026-11-01T17:33:41.969Z"
     }
   ],
   "changes": [
+    {
+      "id": "552bae95-b5e0-4732-8f3e-f9f15f3f0a71",
+      "eventId": "iii-corrida-da-amizade-2026-duque-bacelar",
+      "version": "[\"2026-12-27\",[5],\"Igreja Matriz de São José\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-02T10:52:05.809Z",
+      "notifiedAt": "2026-11-02T10:52:37.264Z"
+    },
+    {
+      "id": "34c23e86-c8cf-4a6a-82c2-20a048a731f4",
+      "eventId": "corrida-do-empreendedor-2026-sao-luis",
+      "version": "[\"2026-12-13\",[5,10],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridadoempreendedoracm2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-02T10:51:40.113Z",
+      "notifiedAt": "2026-11-02T10:52:37.264Z"
+    },
+    {
+      "id": "cc93fbb3-9559-462e-85c5-3b8b4367898c",
+      "eventId": "1-corrida-da-galera-do-poste-2026-sao-luis",
+      "version": "[\"2026-12-18\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/1corrida-da-galera-do-poste\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-02T10:51:40.113Z",
+      "notifiedAt": "2026-11-02T10:52:37.264Z"
+    },
     {
       "id": "9404d9da-ad0f-4d2d-9572-0e4f68c7db20",
       "eventId": "1-corrida-da-galera-do-poste-2026-sao-luis",
       "version": "[\"2026-12-18\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/1corrida-da-galera-do-poste\"]",
       "kind": "Alteração importante",
       "at": "2026-11-01T17:33:41.969Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-02T10:52:37.264Z"
     },
     {
       "id": "1351a77b-a553-4bb3-b178-9d7184040952",
@@ -3583,7 +3619,7 @@
       "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridadoempreendedoracm2026\"]",
       "kind": "Alteração importante",
       "at": "2026-11-01T17:33:41.969Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-02T10:52:37.264Z"
     },
     {
       "id": "73d16784-dd8d-4436-9e5e-ae018a2d91c4",
@@ -3591,7 +3627,7 @@
       "version": "[\"2026-12-27\",[5],\"Igreja matriz de São José\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026\"]",
       "kind": "Nova prova",
       "at": "2026-11-01T17:33:41.969Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-02T10:52:37.264Z"
     },
     {
       "id": "ed59565e-266f-4197-96ad-a4125f0e8a91",
@@ -5474,7 +5510,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-01T17:33:41.969Z",
+  "lastChecked": "2026-11-02T10:52:05.809Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
