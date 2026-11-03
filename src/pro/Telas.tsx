@@ -258,6 +258,8 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
   const [km, setKm] = useState<number | null>(null);
   const [outra, setOutra] = useState('');
   const [peito, setPeito] = useState('');
+  const [tempo, setTempo] = useState('');
+  const seg = lerTempo(tempo);
   const [erro, setErro] = useState<string | null>(null);
   const [indo, setIndo] = useState(false);
   const muda = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
@@ -271,6 +273,7 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
     if (!dist) return setErro('Escolha a distância que você correu.');
     setIndo(true);
     const r = await chamar<Resposta & { pedido?: boolean; motivo?: string }>('radar-registrar', { nova_prova: { nome: f.nome, data: f.data, cidade: f.cidade, obs: f.obs, uf: f.uf }, distancia_km: dist, link_resultado: f.link || undefined, peito: peito || undefined });
+    if (r.pedido && (seg || peito)) await sb.rpc('radar_pedido_completar', { p_tempo: seg, p_peito: peito || null }); // vai junto no pedido: ao aprovar, o Radar já registra
     setIndo(false);
     if (r.erro) return setErro(r.erro);
     enviado(r);
@@ -289,8 +292,9 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
       <p className="ct-cidade pro-sem-margem">Distância que você correu</p>
       <div className="chips" role="group" aria-label="Distância">{[3, 5, 7, 10, 15, 21, 42].map(d => <button key={d} className="chip" aria-pressed={km === d} onClick={() => { setKm(km === d ? null : d); setOutra(''); }}>{d} km</button>)}</div>
       <label className="ct-cidade">Outra distância <small>(em km)</small><input inputMode="decimal" value={outra} onChange={e => { setOutra(e.target.value.replace(/[^\d.,]/g, '').slice(0, 6)); setKm(null); }} placeholder="Ex.: 8" /></label>
-      <label className="ct-cidade">Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={f.link} onChange={e => setF({ ...f, link: e.target.value.trim() })} placeholder="cole aqui o link do resultado" /><small>Funciona na hora com SA Crono, RaceTag, Meta Sport e Crono Esportes.</small></label>
-      {f.link && <label className="ct-cidade">Número de peito <small>(ajuda a achar você)</small><input inputMode="numeric" value={peito} onChange={e => setPeito(e.target.value.replace(/\D/g, '').slice(0, 8))} placeholder="Ex.: 1234" /></label>}
+      <label className="ct-cidade">Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={f.link} onChange={e => setF({ ...f, link: e.target.value.trim() })} placeholder="cole aqui o link do resultado" /><small>Funciona na hora com SA Crono, SF Crono, RaceTag, Meta Sport e Crono Esportes.</small></label>
+      <label className="ct-cidade">Seu tempo líquido <small>(do chip)</small><input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 28:45" /><small>Com o tempo, quando o Radar aprovar a prova ela já entra na sua temporada, sem precisar registrar de novo.</small></label>
+      <label className="ct-cidade">Número de peito <small>(ajuda a achar você)</small><input inputMode="numeric" value={peito} onChange={e => setPeito(e.target.value.replace(/\D/g, '').slice(0, 8))} placeholder="Ex.: 1234" /></label>
       <label className="ct-cidade">Observação <small>(opcional)</small><input value={f.obs} onChange={muda('obs')} placeholder="Ex.: organizada pela assessoria X" maxLength={300} /></label>
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       <button className="btn solid pro-btn" disabled={indo} onClick={enviar}>{indo ? (f.link ? 'Lendo o resultado…' : 'Enviando…') : f.link ? 'Conferir e registrar' : 'Enviar pedido'}</button>
@@ -1099,8 +1103,13 @@ function PedidoAdmin({ x, quem, mesmoDia, feito }: { x: Sugestao; quem: string; 
   const [indo, setIndo] = useState(false);
   const decidir = async (decisao: 'aprovar' | 'recusar', prova_id?: string) => {
     setIndo(true);
+    if (decisao === 'aprovar') { // aprova e já registra o resultado do atleta (link lido ou tempo informado): entra na temporada e no feed
+      const r = await chamar<{ registrou: boolean; motivo?: string; pontos?: number; status?: string }>('radar-admin-buscas', { acao: 'aprovar_pedido', sugestao_id: x.id, prova_id, nome, cidade, distancias: dists, resposta });
+      setIndo(false);
+      return feito(r.erro ?? (r.registrou ? `Prova aprovada e registrada pro atleta (${r.pontos} pts, ${r.status}). Já está no feed e o atleta foi avisado.` : `Prova aprovada. Não deu pra registrar sozinho (${r.motivo}); o atleta foi avisado pra lançar o tempo.`));
+    }
     const r = await chamar('radar-acoes', { acao: 'admin_prova', sugestao_id: x.id, decisao, prova_id, nome, cidade, distancias: dists, resposta });
-    setIndo(false); feito(r.erro ?? (decisao === 'aprovar' ? `Prova aprovada. O atleta já pode registrar.` : 'Pedido recusado.'));
+    setIndo(false); feito(r.erro ?? 'Pedido recusado.');
   };
   return (
     <>

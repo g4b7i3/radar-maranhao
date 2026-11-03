@@ -108,7 +108,7 @@ async function wiclax(url: string): Promise<Lido | null> {
 }
 
 /** Sites de cronometragem que o Radar sabe ler. */
-export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info', 'resultadosbrasil.com.br'];
+export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info', 'resultadosbrasil.com.br', 'sfcrono.com.br'];
 /** Lê um link de resultado. Devolve null se o formato não é conhecido. */
 export async function lerLink(url: string): Promise<Lido | null> {
   let u: URL; try { u = new URL(url.trim()); } catch { return null; }
@@ -123,7 +123,7 @@ export async function lerLink(url: string): Promise<Lido | null> {
 export type EventoRes = { nome: string; data: string; url: string };
 export async function listarEventos(): Promise<EventoRes[]> {
   const out: EventoRes[] = [];
-  const rz = ['https://result.racetag.com.br/sacrono/', 'https://www.sacrono.com.br/resultados/racetag/', 'https://resultados.metasportoficial.com/'];
+  const rz = ['https://result.racetag.com.br/sacrono/', 'https://www.sacrono.com.br/resultados/racetag/', 'https://resultados.metasportoficial.com/', 'https://sfcrono.com.br/resultados/sf/racetag/'];
   await Promise.all(rz.map(async base => {
     try { for (const e of await pegar(base + 'data/events.json')) if (e.link && e.startDate) out.push({ nome: e.name, data: e.startDate, url: `${base}#/${e.link}` }); } catch { /* fonte fora do ar */ }
   }));
