@@ -26,6 +26,7 @@ import { TopoVoltar } from './Topo';
 import PerfilPublico from './PerfilPublico';
 import AssessoriaPublica from './Assessoria';
 import './pro.css';
+import { Arroba } from './Selo';
 
 const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'assista', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
 const abaDoEndereco = (): Aba | null => { const h = lerEndereco().aba; return (ABAS_VALIDAS as readonly string[]).includes(h) ? h as Aba : null; };
@@ -68,7 +69,7 @@ function ConviteDuelo() {
       <span className="pro-convite-duelo-ic"><Espadas size={26} aria-hidden="true" /></span>
       <div>
         <p className="pro-k">Desafio pra você</p>
-        <b>@{d.apelido} te desafiou para um duelo de {km} em {mes}!</b>
+        <b><Arroba a={d.apelido} /> te desafiou para um duelo de {km} em {mes}!</b>
         <p className="pro-sem-margem">{d.aceito ? 'Esse duelo já foi aceito.' : 'Vence quem tiver a maior nota por idade numa prova oficial do mês. Entre no Radar Pro para aceitar.'}</p>
       </div>
     </section>
@@ -258,9 +259,9 @@ function ProTelas() {
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {fimDuelos.map(d => (
         <section key={d.id} className={'pro-card pro-fim-duelo ' + d.resultado}>
-          <div className="pro-linha"><p className="pro-k">Duelo de {new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })} contra @{d.adversario}</p><button className="btn text" onClick={() => setFimDuelos(f => f.filter(x => x.id !== d.id))} aria-label="Fechar">✕</button></div>
+          <div className="pro-linha"><p className="pro-k">Duelo de {new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })} contra <Arroba a={d.adversario} /></p><button className="btn text" onClick={() => setFimDuelos(f => f.filter(x => x.id !== d.id))} aria-label="Fechar">✕</button></div>
           <b className="pro-fim-duelo-tit">{d.resultado === 'venci' ? '🏆 ' : ''}{tituloDuelo(d)}</b>
-          <p className="pro-sem-margem">Você {d.minha_nota != null ? `${String(Number(d.minha_nota).toFixed(1)).replace('.', ',')}%` : 'sem prova'} × @{d.adversario} {d.nota_adv != null ? `${String(Number(d.nota_adv).toFixed(1)).replace('.', ',')}%` : 'sem prova'}</p>
+          <p className="pro-sem-margem">Você {d.minha_nota != null ? `${String(Number(d.minha_nota).toFixed(1)).replace('.', ',')}%` : 'sem prova'} × <Arroba a={d.adversario} /> {d.nota_adv != null ? `${String(Number(d.nota_adv).toFixed(1)).replace('.', ',')}%` : 'sem prova'}</p>
           {cardDuelo === d.id ? <CardDuelo d={d} eu={perfil.apelido} fechar={() => setCardDuelo(null)} /> : <button className="btn outline pro-btn" onClick={() => setCardDuelo(d.id)}>Card pro story</button>}
         </section>
       ))}
@@ -275,7 +276,7 @@ function ProTelas() {
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
       {aberto && <div ref={sobreRef} className="pro-sobre" role="dialog" aria-label={aberto.tipo === 'atleta' ? `Perfil de @${aberto.nome}` : aberto.nome}>
-        <TopoVoltar titulo={aberto.tipo === 'atleta' ? `@${aberto.nome}` : aberto.nome} voltar={() => setAberto(null)} />
+        <TopoVoltar titulo={aberto.tipo === 'atleta' ? <Arroba a={aberto.nome} /> : aberto.nome} voltar={() => setAberto(null)} />
         {aberto.tipo === 'atleta' ? <PerfilPublico key={aberto.nome} apelido={aberto.nome} /> : <AssessoriaPublica key={aberto.nome} nome={aberto.nome} />}
       </div>}
       {aba === 'admin' && admin && <TelaAdmin />}
@@ -314,7 +315,7 @@ export function Travado({ tela, perfil, assinar }: { tela: 'temporada' | 'corri'
         <div className="pro-travado-ex" aria-hidden="true">{T.ex.map(x => <p key={x}>{x}</p>)}</div>
         <div className="pro-travado-capa"><span className="pro-travado-cadeado">🔒</span><b>{T.t}</b><p>{T.d}</p><button className="btn solid pro-btn" onClick={assinar}>Assinar o Radar Pro · R$ 10</button><small>Menos que uma inscrição de 5 km. Sem fidelidade.</small></div>
       </section>
-      <p className="fine pro-centro">Oi, @{perfil.apelido}. No modo grátis você vê tudo, publica, segue e reage. Para competir, é o Pro.</p>
+      <p className="fine pro-centro">Oi, <Arroba a={perfil.apelido} />. No modo grátis você vê tudo, publica, segue e reage. Para competir, é o Pro.</p>
     </div>
   );
 }

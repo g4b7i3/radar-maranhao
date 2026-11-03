@@ -11,6 +11,7 @@ import { MapaCidades } from './Mapa';
 import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
 import { useOnline } from './online';
+import { Arroba } from './Selo';
 // painel do admin: só carrega quando o admin abre (não pesa no perfil público)
 const AreaAdmin = lazy(() => import('./Telas').then(m => ({ default: m.AdminUsuarioArea })));
 
@@ -39,7 +40,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
   if (d === undefined) return <main className="pro pro-publico"><p className="fine pro-centro">Carregando…</p></main>;
   if (d === null) return (
     <main className="pro pro-publico"><div className="pro-cont">
-      <section className="pro-card pro-centro"><p className="pro-medio">@{apelido}</p><p>Esse perfil não existe ou não é público.</p><a className="btn solid pro-btn" href="/pro/">Conhecer o Radar Pro</a></section>
+      <section className="pro-card pro-centro"><p className="pro-medio"><Arroba a={apelido} /></p><p>Esse perfil não existe ou não é público.</p><a className="btn solid pro-btn" href="/pro/">Conhecer o Radar Pro</a></section>
     </div></main>
   );
 
@@ -62,7 +63,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
         <section className="pro-card azul pro-pub-topo">
           <a href="/" className="pro-pub-marca">Radar Corridas MA · <b>PRO</b></a>
           <Avatar foto={d.foto} apelido={d.apelido} tam={112} />
-          <p className="pro-medio">@{d.apelido}</p>
+          <p className="pro-medio"><Arroba a={d.apelido} /></p>
           {d.logado && !d.eu && <p className={'pro-status' + (online ? ' on' : '')}><i aria-hidden="true" />{online ? 'Online agora' : 'Offline'}</p>}
           <p className="pro-sub pro-sem-margem">{d.cidade}{d.faixa ? ` · ${d.faixa} anos` : ''}{d.pcd ? ' · PCD' : ''}{d.genero && d.genero !== 'prefiro_nao_dizer' ? ` · ${generoTxt(d.genero)}` : ''}{d.assessoria ? <> · <button type="button" className={'pro-pub-seg pro-pub-ass' + (lista === 'equipe' ? ' on' : '')} aria-expanded={lista === 'equipe'} onClick={() => setLista(l => l === 'equipe' ? null : 'equipe')}>{d.assessoria}</button></> : ''}</p>
           {d.bio && <p className="pro-pub-bio">{d.bio}</p>}
@@ -156,7 +157,7 @@ function ListaSegue({ apelido, tipo, logado }: { apelido: string; tipo: 'seguido
         : <ul>
             {r.lista.map(i => (
               <li key={i.apelido}>
-                <a href={linkPerfil(i.apelido)}><Avatar foto={i.foto} apelido={i.apelido} tam={40} /><span><b>@{i.apelido}</b><small>{i.cidade}</small></span></a>
+                <a href={linkPerfil(i.apelido)}><Avatar foto={i.foto} apelido={i.apelido} tam={40} /><span><b><Arroba a={i.apelido} /></b><small>{i.cidade}</small></span></a>
                 {logado && !i.eu && <Seguir apelido={i.apelido} sigo={i.sigo} mudou={v => muda(i.apelido, v)} />}
               </li>
             ))}
@@ -177,7 +178,7 @@ function ListaEquipe({ nome }: { nome: string }) {
       {!at ? <p className="pro-sub pro-sem-margem">Carregando…</p>
         : !at.length ? <p className="pro-sub pro-sem-margem">Ninguém com perfil público nessa equipe.</p>
         : <ul>{at.map(a => (
-            <li key={a.apelido}><a href={linkPerfil(a.apelido)}><Avatar foto={a.foto} apelido={a.apelido} tam={40} /><span><b>@{a.apelido}</b><small>{a.cidade}{a.provas ? ` · ${a.provas} ${a.provas === 1 ? 'prova' : 'provas'} · ${a.pontos} pts` : ''}</small></span></a></li>
+            <li key={a.apelido}><a href={linkPerfil(a.apelido)}><Avatar foto={a.foto} apelido={a.apelido} tam={40} /><span><b><Arroba a={a.apelido} /></b><small>{a.cidade}{a.provas ? ` · ${a.provas} ${a.provas === 1 ? 'prova' : 'provas'} · ${a.pontos} pts` : ''}</small></span></a></li>
           ))}</ul>}
       <a className="pro-segue-mais" href={linkAssessoria(nome)}>Ver página da equipe →</a>
     </div>

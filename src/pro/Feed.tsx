@@ -6,6 +6,7 @@ import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil, souAdmin } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
+import { Arroba } from './Selo';
 
 export type Evento = {
   quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1'; alvo: string; apelido: string; foto: string | null; cidade: string;
@@ -93,7 +94,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
     if (data) { setSumiu(true); apagou?.(); } else alert('Não deu para apagar agora.');
   };
   if (sumiu) return null;
-  const nome = meu ? 'Você' : `@${e.apelido}`;
+  const nome = meu ? 'Você' : <Arroba a={e.apelido} />;
   return (
     <article className={'pro-card pro-feed-item ' + e.tipo}>
       <header className="pro-feed-topo">
@@ -118,11 +119,11 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
         {post.foto && <img className="pro-feed-foto" src={post.foto} alt="" loading="lazy" />}
       </>}
       {e.tipo === 'duelo' && (
-        <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}>@{d.adversario}</a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
+        <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> Duelo de <b>{kmTxt(Number(d.km))}</b> aceito contra <a href={linkPerfil(d.adversario!)}><Arroba a={d.adversario} /></a>{d.mes ? ` em ${new Date(d.mes.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' })}` : ''}. Vence a maior nota por idade.</p>
       )}
       {e.tipo === 'x1' && (
         <div className="pro-feed-x1">
-          <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> {d.empate ? 'Empatou o X1' : 'Venceu o X1'} de <b>{kmTxt(Number(d.km))}</b> contra <a href={linkPerfil(d.perdedor!)}>@{d.perdedor}</a>{d.local ? ` · ${d.local}` : ''}{d.data ? ` · ${dataBR(d.data)}` : ''}</p>
+          <p className="pro-feed-txt"><Swords size={16} aria-hidden="true" /> {d.empate ? 'Empatou o X1' : 'Venceu o X1'} de <b>{kmTxt(Number(d.km))}</b> contra <a href={linkPerfil(d.perdedor!)}><Arroba a={d.perdedor} /></a>{d.local ? ` · ${d.local}` : ''}{d.data ? ` · ${dataBR(d.data)}` : ''}</p>
           <div className="pro-feed-x1-placar">
             <span className="v"><Avatar foto={e.foto} apelido={e.apelido} tam={34} /><b>{relogio(Number(d.tempo_v))}</b><small>{d.empate ? 'empatou' : 'venceu'}</small></span>
             <em>vs</em>
@@ -175,7 +176,7 @@ function Aniversariantes() {
           <li key={a.apelido} className={a.hoje ? 'hoje' : ''}>
             <a href={`/?atleta=${encodeURIComponent(a.apelido)}`} className="pro-aniver-quem">
               <Avatar foto={a.foto} apelido={a.apelido} tam={40} />
-              <span className="pro-aniver-txt"><b>{a.eu ? 'Você' : `@${a.apelido}`}</b><small>{a.hoje ? 'Hoje! 🎉' : `Dia ${a.dia}`} · {a.cidade}</small></span>
+              <span className="pro-aniver-txt"><b>{a.eu ? 'Você' : <Arroba a={a.apelido} />}</b><small>{a.hoje ? 'Hoje! 🎉' : `Dia ${a.dia}`} · {a.cidade}</small></span>
             </a>
             {!a.eu && <Aplauso alvo={a.alvo} reacoes={a.reacoes} minha={a.minha} />}
           </li>
@@ -252,7 +253,7 @@ export function SugestaoMencao({ texto, mudar, cima = false }: { texto: string; 
     <ul className={'pro-mencao-lista' + (cima ? ' cima' : '')} role="listbox">
       {lista.map(u => (
         <li key={u.apelido}><button type="button" onMouseDown={e => e.preventDefault()} onClick={() => mudar(texto.replace(/@([A-Za-z0-9._]{1,30})$/, `@${u.apelido} `))}>
-          <Avatar foto={u.foto} apelido={u.apelido} tam={30} /><span><b>@{u.apelido}</b><small>{u.nome}{u.cidade ? ` · ${u.cidade}` : ''}</small></span>
+          <Avatar foto={u.foto} apelido={u.apelido} tam={30} /><span><b><Arroba a={u.apelido} /></b><small>{u.nome}{u.cidade ? ` · ${u.cidade}` : ''}</small></span>
         </button></li>
       ))}
     </ul>
@@ -339,7 +340,7 @@ function Comentarios({ alvo, mudou }: { alvo: string; mudou: (n: number) => void
         : <ul>{lista.map(c => (
             <li key={c.id}>
               <a href={linkPerfil(c.apelido)}><Avatar foto={c.foto} apelido={c.apelido} tam={30} /></a>
-              <div><p><a href={linkPerfil(c.apelido)}><b>@{c.apelido}</b></a> <TextoComLinks texto={c.texto} /></p><small>{quandoTxt(c.quando)}</small></div>
+              <div><p><a href={linkPerfil(c.apelido)}><b><Arroba a={c.apelido} /></b></a> <TextoComLinks texto={c.texto} /></p><small>{quandoTxt(c.quando)}</small></div>
               {c.pode_apagar && <button className="btn text pro-coment-x" onClick={() => apagar(c.id)} aria-label="Apagar comentário"><Trash2 size={14} aria-hidden="true" /></button>}
             </li>))}</ul>}
       <div className="pro-coment-novo">

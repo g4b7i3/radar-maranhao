@@ -8,6 +8,7 @@ import { lerTempo, mascaraTempo } from '../CardTreino';
 import { AZUL, SIMBOLO, fonte, type Ctx } from '../EuVou';
 import { FUNDOS, fotoPerfil, fotoRedonda } from './CardResultado';
 import { salvarImagem } from '../salvar';
+import { Arroba } from './Selo';
 
 type X1 = { id: string; km: number; data: string; local: string | null; status: 'convidado' | 'aceito' | 'lancado' | 'confirmado'; sou_criador: boolean; lancei: boolean; outro: string; foto_outro: string | null; eu_apelido: string; eu_foto: string | null; meu_tempo: number | null; tempo_outro: number | null; minha_nota: number | null; nota_outro: number | null };
 const DISTS = [0.2, 0.4, 1, 3, 5, 10, 21.0975, 42.195, 50, 60, 70, 80, 100];
@@ -68,7 +69,7 @@ function BuscaAtleta({ valor, mudou }: { valor: string; mudou: (v: string) => vo
           {sug.map(u => (
             <li key={u.apelido}><button type="button" onMouseDown={e => e.preventDefault()} onClick={() => { mudou(u.apelido); setAberto(false); setSug([]); }}>
               <Avatar foto={u.foto} apelido={u.apelido} tam={34} />
-              <span><b>@{u.apelido}</b><small>{u.nome}{u.cidade ? ` · ${u.cidade}` : ''}</small></span>
+              <span><b><Arroba a={u.apelido} /></b><small>{u.nome}{u.cidade ? ` · ${u.cidade}` : ''}</small></span>
             </button></li>
           ))}
         </ul>
@@ -117,32 +118,32 @@ function CartaoX1({ x, rpc }: { x: X1; rpc: (nome: string, args: Record<string, 
     <div className="pro-x1-placar">
       <div className={venci ? 'v' : empate ? '' : 'p'}><Avatar foto={x.eu_foto} apelido={x.eu_apelido} tam={48} /><b>Você</b><span>{relogio(x.meu_tempo)}</span></div>
       <em>vs</em>
-      <div className={!venci && !empate ? 'v' : empate ? '' : 'p'}><Avatar foto={x.foto_outro} apelido={x.outro} tam={48} /><b>@{x.outro}</b><span>{relogio(x.tempo_outro)}</span></div>
+      <div className={!venci && !empate ? 'v' : empate ? '' : 'p'}><Avatar foto={x.foto_outro} apelido={x.outro} tam={48} /><b><Arroba a={x.outro} /></b><span>{relogio(x.tempo_outro)}</span></div>
     </div>
   );
   const idade = linhaIdade('você', x.minha_nota, `@${x.outro}`, x.nota_outro);
   return (
     <section className={'pro-card pro-x1' + (x.status === 'confirmado' ? (venci ? ' venci' : empate ? '' : ' perdi') : '')}>
-      <div className="pro-linha"><p className="pro-k cinza">X1 · {kmTxt(Number(x.km))} · {dataBR(x.data)}{x.local ? ` · ${x.local}` : ''}</p><span className="pro-x1-contra">vs @{x.outro}</span></div>
+      <div className="pro-linha"><p className="pro-k cinza">X1 · {kmTxt(Number(x.km))} · {dataBR(x.data)}{x.local ? ` · ${x.local}` : ''}</p><span className="pro-x1-contra">vs <Arroba a={x.outro} /></span></div>
       {x.status === 'convidado' && (x.sou_criador
-        ? <><p className="pro-sub pro-sem-margem">Esperando @{x.outro} aceitar.</p><button className="btn text pro-btn-p" onClick={() => rpc('radar_x1_cancelar', { p_id: x.id }, 'X1 cancelado.')}>Cancelar</button></>
-        : <><p className="pro-sem-margem"><b>@{x.outro}</b> te chamou pro X1.</p><div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => rpc('radar_x1_responder', { p_id: x.id, p_aceitar: true }, 'X1 aceito! Depois da corrida, lancem os tempos.')}>Aceitar</button><button className="btn outline" onClick={() => rpc('radar_x1_responder', { p_id: x.id, p_aceitar: false })}>Recusar</button></div></>)}
+        ? <><p className="pro-sub pro-sem-margem">Esperando <Arroba a={x.outro} /> aceitar.</p><button className="btn text pro-btn-p" onClick={() => rpc('radar_x1_cancelar', { p_id: x.id }, 'X1 cancelado.')}>Cancelar</button></>
+        : <><p className="pro-sem-margem"><b><Arroba a={x.outro} /></b> te chamou pro X1.</p><div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => rpc('radar_x1_responder', { p_id: x.id, p_aceitar: true }, 'X1 aceito! Depois da corrida, lancem os tempos.')}>Aceitar</button><button className="btn outline" onClick={() => rpc('radar_x1_responder', { p_id: x.id, p_aceitar: false })}>Recusar</button></div></>)}
       {x.status === 'aceito' && (x.data > hoje
         ? <p className="pro-sub pro-sem-margem">Marcado para {dataBR(x.data)}. Depois da corrida, qualquer um dos dois lança os tempos.</p>
         : <div className="pro-x1-form">
             <p className="pro-sem-margem">Lance os tempos do relógio{Number(x.km) <= 1 ? ' (em segundos ou min:seg)' : ''}:</p>
             <div className="pro-linha pro-quebra">
               <label className="ct-cidade">Seu tempo<input inputMode="numeric" value={meu} onChange={e => setMeu(mascaraTempo(e.target.value))} placeholder={exemplo(Number(x.km))[0]} /></label>
-              <label className="ct-cidade">Tempo de @{x.outro}<input inputMode="numeric" value={dele} onChange={e => setDele(mascaraTempo(e.target.value))} placeholder={exemplo(Number(x.km))[1]} /></label>
+              <label className="ct-cidade">Tempo de <Arroba a={x.outro} /><input inputMode="numeric" value={dele} onChange={e => setDele(mascaraTempo(e.target.value))} placeholder={exemplo(Number(x.km))[1]} /></label>
             </div>
-            <button className="btn solid pro-btn" disabled={!lerX1(meu, Number(x.km)) || !lerX1(dele, Number(x.km))} onClick={() => rpc('radar_x1_lancar', { p_id: x.id, p_meu: lerX1(meu, Number(x.km)), p_dele: lerX1(dele, Number(x.km)) }, `Tempos enviados. Agora @${x.outro} confirma.`)}>Enviar para @{x.outro} confirmar</button>
+            <button className="btn solid pro-btn" disabled={!lerX1(meu, Number(x.km)) || !lerX1(dele, Number(x.km))} onClick={() => rpc('radar_x1_lancar', { p_id: x.id, p_meu: lerX1(meu, Number(x.km)), p_dele: lerX1(dele, Number(x.km)) }, `Tempos enviados. Agora @${x.outro} confirma.`)}>Enviar para <Arroba a={x.outro} /> confirmar</button>
           </div>)}
       {x.status === 'lancado' && <>
         {placar}
         {idade && <p className="pro-x1-idade">{idade}</p>}
         {x.lancei
-          ? <p className="pro-sub pro-sem-margem pro-centro">Esperando @{x.outro} confirmar os tempos.</p>
-          : <><p className="pro-sem-margem pro-centro">@{x.outro} lançou esses tempos. Está certo?</p>
+          ? <p className="pro-sub pro-sem-margem pro-centro">Esperando <Arroba a={x.outro} /> confirmar os tempos.</p>
+          : <><p className="pro-sem-margem pro-centro"><Arroba a={x.outro} /> lançou esses tempos. Está certo?</p>
             <div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => rpc('radar_x1_confirmar', { p_id: x.id, p_ok: true }, 'Confirmado! O resultado foi pro feed.')}>Confirmar</button><button className="btn outline" onClick={() => rpc('radar_x1_confirmar', { p_id: x.id, p_ok: false }, 'Ok, os tempos voltaram para serem lançados de novo.')}>Não está certo</button></div></>}
       </>}
       {x.status === 'confirmado' && <>

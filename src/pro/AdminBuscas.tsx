@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Search, Check, ExternalLink, Download } from 'lucide-react';
 import { chamar, dataBR, kmTxt, relogio } from './sb';
 import { telaInicial } from './voltar';
+import { Arroba } from './Selo';
 
 type Busca = { id: string; user_id: string; prova_id: string; prova_nome: string; data: string; km: number; peito: string | null; achou_resultado: boolean; criado_em: string; resultado: string | null; apelido: string | null; nome_completo: string | null; cidade: string | null; link_resultado: string | null; oficiais: number };
 type Cand = { nome: string; data: string; url: string; parecenca: number };
@@ -66,7 +67,7 @@ function ItemBusca({ b, feito }: { b: Busca; feito: (m: string) => void }) {
   return (
     <>
       <div className="pro-linha"><b>{b.prova_nome}</b><span className={`pro-st ${b.oficiais ? 'ok' : 'dec'}`}>{b.oficiais ? `${b.oficiais} no resultado` : 'sem resultado'}</span></div>
-      <p className="pro-sem-margem">@{b.apelido ?? '?'}{b.nome_completo ? ` (${b.nome_completo})` : ''} · {dataBR(b.data)}{b.cidade ? ` · ${b.cidade}` : ''} · {kmTxt(Number(b.km))} · peito <b>{b.peito ?? '?'}</b></p>
+      <p className="pro-sem-margem"><Arroba a={b.apelido ?? '?'} />{b.nome_completo ? ` (${b.nome_completo})` : ''} · {dataBR(b.data)}{b.cidade ? ` · ${b.cidade}` : ''} · {kmTxt(Number(b.km))} · peito <b>{b.peito ?? '?'}</b></p>
       <p className="fine pro-sem-margem">{b.achou_resultado ? 'O resultado está no Radar, mas o peito não bateu com o nome.' : 'O Radar não achou o resultado dessa prova.'} · {new Date(b.criado_em).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</p>
       {b.link_resultado && <p className="fine pro-sem-margem"><a href={b.link_resultado} target="_blank" rel="noopener noreferrer"><ExternalLink size={12} aria-hidden="true" /> Resultado carregado</a></p>}
       {b.resultado && !carga && <p className="fine pro-sem-margem">Última carga: {b.resultado}</p>}
@@ -92,7 +93,7 @@ function ItemBusca({ b, feito }: { b: Busca; feito: (m: string) => void }) {
       <label className="fine pro-sem-margem" htmlFor={`av-${b.id}`}>Aviso pro atleta (sininho)</label>
       <textarea id={`av-${b.id}`} className="pro-input pro-buscas-aviso" rows={3} value={aviso} onChange={e => setAviso(e.target.value)} />
       <div className="pro-linha pro-quebra">
-        <button className="btn solid" onClick={() => resolver(true)} disabled={!!ocupado || !aviso.trim()}><Check size={16} aria-hidden="true" />Resolvido e avisar @{b.apelido}</button>
+        <button className="btn solid" onClick={() => resolver(true)} disabled={!!ocupado || !aviso.trim()}><Check size={16} aria-hidden="true" />Resolvido e avisar <Arroba a={b.apelido} /></button>
         <button className="btn text" onClick={() => resolver(false)} disabled={!!ocupado}>Só marcar resolvido</button>
       </div>
     </>

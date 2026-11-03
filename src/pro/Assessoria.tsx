@@ -4,6 +4,7 @@ import { sb, LIGAS, pct, kmTxt, dataBR, linkPerfil, type Liga } from './sb';
 import { Avatar } from './Foto';
 import './pro.css';
 import { DesafioAssessorias } from './Desafio';
+import { Arroba } from './Selo';
 
 // Página pública da assessoria ou grupo: radarcorridasma.com.br/?assessoria=nome
 // Mostra só o que o ranking já mostra (apelido, foto, cidade, liga, pontos). O dono da equipe divulga, o Radar ganha atletas.
@@ -47,7 +48,7 @@ export default function Assessoria({ nome }: { nome: string }) {
         {d.reis.length > 0 && (
           <section className="pro-card">
             <p className="pro-k cinza">Reis e Rainhas da prova</p>
-            {d.reis.map(k => <div key={k.apelido + k.prova + k.km} className="pro-rei"><Avatar foto={k.foto} apelido={k.apelido} tam={40} /><div><b><a href={linkPerfil(k.apelido)}>@{k.apelido}</a> · {k.sexo === 'F' ? 'Rainha' : 'Rei'} da prova</b><small>{k.prova} · {dataBR(k.data)} · {kmTxt(Number(k.km))}</small></div><div className="pro-dir"><b>{pct(k.nota)}%</b></div></div>)}
+            {d.reis.map(k => <div key={k.apelido + k.prova + k.km} className="pro-rei"><Avatar foto={k.foto} apelido={k.apelido} tam={40} /><div><b><a href={linkPerfil(k.apelido)}><Arroba a={k.apelido} /></a> · {k.sexo === 'F' ? 'Rainha' : 'Rei'} da prova</b><small>{k.prova} · {dataBR(k.data)} · {kmTxt(Number(k.km))}</small></div><div className="pro-dir"><b>{pct(k.nota)}%</b></div></div>)}
           </section>
         )}
 
@@ -61,7 +62,7 @@ export default function Assessoria({ nome }: { nome: string }) {
                 <a className="com-foto pro-ass-linha" href={linkPerfil(a.apelido)}>
                   <b>{i + 1}</b>
                   <Avatar foto={a.foto} apelido={a.apelido} tam={36} />
-                  <span>@{a.apelido}{a.conta ? <span className="pro-coroa-mini" title="Entre os 5 que somam para a equipe"> ★</span> : null} <small>· {a.cidade}{a.liga ? ` · Liga ${LIGAS.find(l => l.id === a.liga)?.nome}` : ''}</small></span>
+                  <span><Arroba a={a.apelido} />{a.conta ? <span className="pro-coroa-mini" title="Entre os 5 que somam para a equipe"> ★</span> : null} <small>· {a.cidade}{a.liga ? ` · Liga ${LIGAS.find(l => l.id === a.liga)?.nome}` : ''}</small></span>
                   <b>{Math.round(Number(a.pontos))}</b>
                 </a>
               </li>

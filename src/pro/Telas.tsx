@@ -24,6 +24,7 @@ import { StravaConta } from './Strava';
 import { MapaBrasil } from './MapaBrasil';
 import { linkAssessoria } from './Assessoria';
 import { SecaoX1 } from './X1';
+import { Arroba } from './Selo';
 
 const ANO = new Date().getFullYear();
 const DIST_DUELO = [5, 10, 21.0975, 42.195];
@@ -67,7 +68,7 @@ function Reis() {
               {x.apelido && fotosReis.get(x.apelido) ? <Avatar foto={fotosReis.get(x.apelido)} apelido={x.apelido} tam={40} /> : <span className={'pro-coroa ' + (x.sexo === 'F' ? 'f' : 'm')}><Crown size={18} aria-hidden="true" /></span>}
               <div>
                 <small>{x.sexo === 'F' ? 'Rainha' : 'Rei'} · {kmTxt(Number(x.distancia_km))}{x.atletas ? ` · ${x.atletas} atletas` : ''}</small>
-                <p className="pro-sem-margem"><b>{x.apelido ? <a href={linkPerfil(x.apelido)}>@{x.apelido}</a> : titulo(x.nome)}</b>{x.idade ? `, ${x.idade} anos` : ''}</p>
+                <p className="pro-sem-margem"><b>{x.apelido ? <a href={linkPerfil(x.apelido)}><Arroba a={x.apelido} /></a> : titulo(x.nome)}</b>{x.idade ? `, ${x.idade} anos` : ''}</p>
               </div>
               <div className="pro-dir"><b>{pct(x.nota)}%</b><small>{relogio(x.tempo_s)}</small></div>
             </div>
@@ -460,7 +461,7 @@ export function RivalCard({ perfil }: { perfil: Perfil }) {
       <div className="pro-rival-vs">
         <div><Avatar foto={perfil.foto_url} apelido={perfil.apelido} tam={56} /><b>Você</b><small>índice {pct(r.meu_indice)}</small></div>
         <em>vs</em>
-        <div><a href={linkPerfil(r.apelido)}><Avatar foto={r.foto} apelido={r.apelido} tam={56} /></a><b><a href={linkPerfil(r.apelido)}>@{r.apelido}</a></b><small>índice {pct(r.indice)} · {r.cidade}</small></div>
+        <div><a href={linkPerfil(r.apelido)}><Avatar foto={r.foto} apelido={r.apelido} tam={56} /></a><b><a href={linkPerfil(r.apelido)}><Arroba a={r.apelido} /></a></b><small>índice {pct(r.indice)} · {r.cidade}</small></div>
       </div>
       <p className="pro-sem-margem">Mesma liga {LIGAS.find(l => l.id === r.liga)?.nome}, mesma faixa ({r.faixa} anos){dif != null && r.km ? <>. Nos {kmTxt(Number(r.km))}, {dif > 0 ? <>ele está <b>{relogio(dif)}</b> na sua frente</> : dif < 0 ? <>você está <b>{relogio(-dif)}</b> na frente</> : <>vocês estão <b>empatados</b></>}.</> : '.'}</p>
       {link
@@ -484,7 +485,7 @@ export function CorreramComigo({ provaId, titulo = 'Quem mais correu essa prova'
         {lista.map(c => (
           <li key={c.apelido}>
             <a href={linkPerfil(c.apelido)}><Avatar foto={c.foto} apelido={c.apelido} tam={40} /></a>
-            <div><b><a href={linkPerfil(c.apelido)}>@{c.apelido}</a></b><small>{kmTxt(Number(c.km))} · {relogio(c.tempo)} · nota {pct(c.nota)}%</small></div>
+            <div><b><a href={linkPerfil(c.apelido)}><Arroba a={c.apelido} /></a></b><small>{kmTxt(Number(c.km))} · {relogio(c.tempo)} · nota {pct(c.nota)}%</small></div>
             <Seguir apelido={c.apelido} sigo={c.sigo} mudou={v => setLista(l => (l ?? []).map(x => x.apelido === c.apelido ? { ...x, sigo: v } : x))} />
           </li>
         ))}
@@ -693,7 +694,7 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
         <section key={d.id} className="pro-card azul">
           <div className="pro-linha"><p className="pro-k">Duelo de {mesTxt(d.mes)} · {kmTxt(Number(d.distancia_km))}</p>{d.mes.slice(0, 7) === new Date().toISOString().slice(0, 7) && <span className="pro-liga l-ouro">Faltam {diasFim()} dias</span>}</div>
           {d.adversario ? (
-            <div className="pro-vs"><div><small>Você</small><b>{d.minha_nota != null ? `${pct(d.minha_nota)}%` : '–'}</b><small>{d.minha_tempo ? relogio(d.minha_tempo) : 'sem prova'}</small></div><em>vs</em><div><small>@{d.adversario}</small><b>{d.nota_adv != null ? `${pct(d.nota_adv)}%` : '–'}</b><small>{d.tempo_adv ? relogio(d.tempo_adv) : 'sem prova'}</small></div></div>
+            <div className="pro-vs"><div><small>Você</small><b>{d.minha_nota != null ? `${pct(d.minha_nota)}%` : '–'}</b><small>{d.minha_tempo ? relogio(d.minha_tempo) : 'sem prova'}</small></div><em>vs</em><div><small><Arroba a={d.adversario} /></small><b>{d.nota_adv != null ? `${pct(d.nota_adv)}%` : '–'}</b><small>{d.tempo_adv ? relogio(d.tempo_adv) : 'sem prova'}</small></div></div>
           ) : (
             <p className="pro-sub">Esperando o amigo aceitar. <a href={`https://wa.me/?text=${encodeURIComponent(`Te desafio no Radar Pro! Duelo de ${kmTxt(Number(d.distancia_km))}: https://radarcorridasma.com.br/?pro=duelo&c=${d.convite}`)}`} target="_blank" rel="noopener">Mandar o convite de novo</a></p>
           )}
@@ -752,7 +753,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
     <div className="pro-cont">
       {!temp.assinante && <section className="pro-card pro-assinar-destaque"><p className="pro-k cinza">Assinar o Radar Pro</p><Assinar perfil={perfil} pronto={pronto} /></section>}
       {editando ? <EditarPerfil perfil={perfil} fechar={() => setEditando(false)} pronto={pronto} /> : <>
-        <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio">@{perfil.apelido}</p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? <> · <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">{perfil.assessoria}</a></> : ''}</p>{perfil.assessoria && <p className="fine pro-sem-margem">A página da sua equipe: <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">radarcorridasma.com.br/?assessoria={encodeURIComponent(perfil.assessoria.trim())}</a>. Mande pro grupo.</p>}</section>
+        <section className="pro-card"><p className="pro-k cinza">Perfil público</p><p className="pro-medio"><Arroba a={perfil.apelido} /></p><p className="fine pro-sem-margem">{perfil.cidade}{temp.liga ? ` · Liga ${LIGAS.find(l => l.id === temp.liga)!.nome}` : ''}{perfil.assessoria ? <> · <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">{perfil.assessoria}</a></> : ''}</p>{perfil.assessoria && <p className="fine pro-sem-margem">A página da sua equipe: <a href={linkAssessoria(perfil.assessoria)} target="_blank" rel="noopener">radarcorridasma.com.br/?assessoria={encodeURIComponent(perfil.assessoria.trim())}</a>. Mande pro grupo.</p>}</section>
         <section className="pro-card"><p className="pro-k cinza">Usado só no cálculo (não aparece)</p><p className="pro-sem-margem">{perfil.nome_completo} · {perfil.sexo === 'F' ? 'Feminino' : 'Masculino'} · nascimento {perfil.nascimento.split('-').reverse().join('/')}</p><p className="fine pro-sem-margem">{email}</p></section>
         {edicoesRestantes(perfil) > 0
           ? <button className="btn outline pro-btn" onClick={() => setEditando(true)}><Pencil size={16} aria-hidden="true" />Editar perfil <small>({edicoesRestantes(perfil) === 1 ? 'resta 1 edição' : 'restam 2 edições'} este mês)</small></button>
@@ -805,7 +806,7 @@ function Indicacao({ perfil }: { perfil: Perfil }) {
         <a className="btn whats pro-btn-p" href={`https://wa.me/?text=${encodeURIComponent(texto)}`} target="_blank" rel="noopener"><Share2 size={16} aria-hidden="true" />Mandar no WhatsApp</a>
         <button className="btn outline pro-btn-p" onClick={copiar}><Copy size={16} aria-hidden="true" />{copiado ? 'Copiado!' : 'Copiar link'}</button>
       </div>
-      {d && d.lista.length > 0 && <ul className="pro-companheiros">{d.lista.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b>@{x.apelido}</b></div><span className={'pro-st ' + (x.pagou ? 'ok' : 'ana')}>{x.pagou ? 'Assinou' : 'Entrou, ainda não assinou'}</span></li>)}</ul>}
+      {d && d.lista.length > 0 && <ul className="pro-companheiros">{d.lista.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b><Arroba a={x.apelido} /></b></div><span className={'pro-st ' + (x.pagou ? 'ok' : 'ana')}>{x.pagou ? 'Assinou' : 'Entrou, ainda não assinou'}</span></li>)}</ul>}
     </section>
   );
 }
@@ -838,10 +839,10 @@ function Equipe({ perfil, pronto }: { perfil: Perfil; pronto: () => void }) {
         {pagar && <Assinar perfil={perfil} planoInicial="equipe" fixo pronto={() => { setPagar(false); carregar(); pronto(); }} />}
         <p className="pro-k cinza">Na equipe ({d.membros!.length})</p>
         {d.membros!.length === 0 && <p className="fine pro-sem-margem">Ninguém ainda. Marque os alunos na lista abaixo.</p>}
-        <ul className="pro-companheiros">{d.membros!.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b>@{m.apelido}</b><small>{m.cidade}</small></div><button className="btn text" onClick={() => mudar(m.apelido, false)}>Tirar</button></li>)}</ul>
+        <ul className="pro-companheiros">{d.membros!.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b><Arroba a={m.apelido} /></b><small>{m.cidade}</small></div><button className="btn text" onClick={() => mudar(m.apelido, false)}>Tirar</button></li>)}</ul>
         <p className="pro-k cinza">Com o nome da equipe no perfil ({d.candidatos!.length})</p>
         {d.candidatos!.length === 0 && <p className="fine pro-sem-margem">Nenhum aluno com “{d.nome}” no perfil ainda. Peça para escreverem igual.</p>}
-        <ul className="pro-companheiros">{d.candidatos!.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b>@{m.apelido}</b><small>{m.cidade}</small></div><button className="btn outline" disabled={d.membros!.length >= d.vagas!} onClick={() => mudar(m.apelido, true)}>Adicionar</button></li>)}</ul>
+        <ul className="pro-companheiros">{d.candidatos!.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b><Arroba a={m.apelido} /></b><small>{m.cidade}</small></div><button className="btn outline" disabled={d.membros!.length >= d.vagas!} onClick={() => mudar(m.apelido, true)}>Adicionar</button></li>)}</ul>
       </>}
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
     </section>
@@ -1007,10 +1008,10 @@ function AdminPainel() {
         {d.pagamentos_mes.length > 0 && <p className="fine pro-sem-margem">Pagamentos do mês: {d.pagamentos_mes.map(x => `${x.n}× ${PLANO_NOME[x.plano] ?? x.plano} (${reais(x.valor)})`).join(' · ')}</p>}
         <p className="pro-k cinza">Vencem em 7 dias ({d.vencendo.length})</p>
         {d.vencendo.length === 0 && <p className="fine pro-sem-margem">Ninguém.</p>}
-        <ul className="pro-companheiros">{d.vencendo.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b>@{x.apelido}</b><small>vence {new Date(x.valida_ate).toLocaleDateString('pt-BR')} ({x.dias === 0 ? 'hoje' : `em ${x.dias} ${x.dias === 1 ? 'dia' : 'dias'}`})</small></div>{zap(x.whatsapp, `Oi, @${x.apelido}! Seu Radar Pro vence ${x.dias === 0 ? 'hoje' : `em ${x.dias} dia${x.dias === 1 ? '' : 's'}`}. Pra não perder o ranking e as medalhas, renova em radarcorridasma.com.br/pro (Pix de R$ 10). Qualquer dúvida é só chamar!`) && <a className="btn whats" href={zap(x.whatsapp, `Oi, @${x.apelido}! Seu Radar Pro vence ${x.dias === 0 ? 'hoje' : `em ${x.dias} dia${x.dias === 1 ? '' : 's'}`}. Pra não perder o ranking e as medalhas, renova em radarcorridasma.com.br/pro (Pix de R$ 10). Qualquer dúvida é só chamar!`)!} target="_blank" rel="noopener"><MessageCircle size={14} aria-hidden="true" />Lembrar</a>}</li>)}</ul>
+        <ul className="pro-companheiros">{d.vencendo.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b><Arroba a={x.apelido} /></b><small>vence {new Date(x.valida_ate).toLocaleDateString('pt-BR')} ({x.dias === 0 ? 'hoje' : `em ${x.dias} ${x.dias === 1 ? 'dia' : 'dias'}`})</small></div>{zap(x.whatsapp, `Oi, @${x.apelido}! Seu Radar Pro vence ${x.dias === 0 ? 'hoje' : `em ${x.dias} dia${x.dias === 1 ? '' : 's'}`}. Pra não perder o ranking e as medalhas, renova em radarcorridasma.com.br/pro (Pix de R$ 10). Qualquer dúvida é só chamar!`) && <a className="btn whats" href={zap(x.whatsapp, `Oi, @${x.apelido}! Seu Radar Pro vence ${x.dias === 0 ? 'hoje' : `em ${x.dias} dia${x.dias === 1 ? '' : 's'}`}. Pra não perder o ranking e as medalhas, renova em radarcorridasma.com.br/pro (Pix de R$ 10). Qualquer dúvida é só chamar!`)!} target="_blank" rel="noopener"><MessageCircle size={14} aria-hidden="true" />Lembrar</a>}</li>)}</ul>
         <p className="pro-k cinza">Venceram e não renovaram ({d.vencidos.length})</p>
         {d.vencidos.length === 0 && <p className="fine pro-sem-margem">Ninguém nos últimos 60 dias.</p>}
-        <ul className="pro-companheiros">{d.vencidos.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b>@{x.apelido}</b><small>venceu há {x.dias} {x.dias === 1 ? 'dia' : 'dias'} · {x.provas} {x.provas === 1 ? 'prova' : 'provas'}</small></div>{x.whatsapp && <a className="btn whats" href={zap(x.whatsapp, `Oi, @${x.apelido}! Sentimos sua falta no Radar Pro. Suas provas e medalhas continuam guardadas: é só renovar em radarcorridasma.com.br/pro (Pix de R$ 10) que volta tudo. Bora pra próxima prova?`)!} target="_blank" rel="noopener"><MessageCircle size={14} aria-hidden="true" />Chamar</a>}</li>)}</ul>
+        <ul className="pro-companheiros">{d.vencidos.map(x => <li key={x.apelido}><Avatar foto={x.foto} apelido={x.apelido} tam={32} /><div><b><Arroba a={x.apelido} /></b><small>venceu há {x.dias} {x.dias === 1 ? 'dia' : 'dias'} · {x.provas} {x.provas === 1 ? 'prova' : 'provas'}</small></div>{x.whatsapp && <a className="btn whats" href={zap(x.whatsapp, `Oi, @${x.apelido}! Sentimos sua falta no Radar Pro. Suas provas e medalhas continuam guardadas: é só renovar em radarcorridasma.com.br/pro (Pix de R$ 10) que volta tudo. Bora pra próxima prova?`)!} target="_blank" rel="noopener"><MessageCircle size={14} aria-hidden="true" />Chamar</a>}</li>)}</ul>
         <p className="pro-k cinza">Últimos pagamentos</p>
         <ul className="pro-provas">{d.ultimos_pagamentos.map((x, i) => <li key={i}><p className="pro-sem-margem"><b>{x.apelido ? `@${x.apelido}` : 'conta apagada'}</b> · {reais(x.valor)} · {PLANO_NOME[x.plano] ?? x.plano} · {new Date(x.quando).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</p></li>)}</ul>
       </>}
@@ -1053,7 +1054,7 @@ export function TelaAdmin() {
         <div className="pro-linha pro-quebra"><input className="pro-input" value={nomeCort} onChange={e => setNomeCort(e.target.value)} placeholder="Para quem (opcional)" aria-label="Nome da cortesia" /><input className="pro-input pro-curto" inputMode="numeric" value={diasCort} onChange={e => setDiasCort(e.target.value.replace(/\D/g, ''))} placeholder="dias" aria-label="Dias (vazio = vitalícia)" title="Dias de Pro. Vazio = vitalícia, até você tirar." /><button className="btn solid" onClick={async () => { const r = await chamar<{ link: string }>('radar-acoes', { acao: 'admin_cortesia_criar', nome: nomeCort, dias: diasCort || null }); if (r.erro) return setMsg(r.erro); setNomeCort(''); try { await navigator.clipboard.writeText(r.link); setMsg('Cortesia criada e link copiado: ' + r.link); } catch { setMsg('Cortesia criada: ' + r.link); } carregar(); }}>Gerar cortesia</button></div>
         <ul className="pro-provas">{p?.cortesias?.map(c => (
           <li key={c.codigo}>
-            <div className="pro-linha"><b>{c.nome} <small className="cinza">· {c.dias ? `${c.dias} dias` : 'vitalícia'}</small></b>{c.apelido ? <span className="pro-st ok">@{c.apelido}</span> : <span className="pro-st dec">Ainda não usado</span>}</div>
+            <div className="pro-linha"><b>{c.nome} <small className="cinza">· {c.dias ? `${c.dias} dias` : 'vitalícia'}</small></b>{c.apelido ? <span className="pro-st ok"><Arroba a={c.apelido} /></span> : <span className="pro-st dec">Ainda não usado</span>}</div>
             <p className="fine pro-sem-margem">radarcorridasma.com.br/?pro=cortesia&amp;k={c.codigo}</p>
             <div className="pro-linha pro-quebra">
               <button className="btn outline" onClick={() => { navigator.clipboard?.writeText(`https://radarcorridasma.com.br/?pro=cortesia&k=${c.codigo}`); setMsg('Link copiado.'); }}><Copy size={16} aria-hidden="true" />Copiar link</button>
@@ -1084,10 +1085,10 @@ function AdminSinalizacoes() {
   return (
     <section className="pro-card"><p className="pro-k cinza"><Flag size={14} aria-hidden="true" /> Posts sinalizados ({lista?.length ?? '…'})</p>
       <ul className="pro-provas">{lista?.map(x => <li key={x.post_id}>
-        <p className="pro-sem-margem"><b>@{x.autor}</b>{x.comunidade ? <small> · em {x.comunidade}</small> : null} <small>· {dataBR(x.criado_em)} · {x.quantas} {x.quantas === 1 ? 'sinalização' : 'sinalizações'}</small></p>
+        <p className="pro-sem-margem"><b><Arroba a={x.autor} /></b>{x.comunidade ? <small> · em {x.comunidade}</small> : null} <small>· {dataBR(x.criado_em)} · {x.quantas} {x.quantas === 1 ? 'sinalização' : 'sinalizações'}</small></p>
         {x.texto && <p className="pro-feed-post">{x.texto}</p>}
         {x.foto && <img className="pro-feed-foto" src={x.foto} alt="" loading="lazy" />}
-        <ul className="fine">{x.motivos.map((m, i) => <li key={i}>@{m.por}: {m.motivo || '(sem motivo)'}</li>)}</ul>
+        <ul className="fine">{x.motivos.map((m, i) => <li key={i}><Arroba a={m.por} />: {m.motivo || '(sem motivo)'}</li>)}</ul>
         <div className="pro-linha pro-quebra"><button className="btn outline pro-vermelho-txt" onClick={() => decidir(x.post_id, true)}>Remover post</button><button className="btn text" onClick={() => decidir(x.post_id, false)}>Manter</button></div>
       </li>)}</ul>
       {lista && !lista.length && <p className="fine">Nenhum post sinalizado.</p>}
@@ -1165,7 +1166,7 @@ function AdminUsuarios({ aviso }: { aviso: (m: string) => void }) {
           {vis.map(u => { const st = situacao(u); return (
             <li key={u.user_id}><button onClick={() => setSel(u.user_id)}>
               <Avatar foto={u.foto_url ?? fotosAdm.get(u.apelido)} apelido={u.apelido} tam={44} />
-              <div className="pro-usu-txt"><b>@{u.apelido}</b><small>{u.nome_completo} · {u.cidade}</small><small>{u.email}</small></div>
+              <div className="pro-usu-txt"><b><Arroba a={u.apelido} /></b><small>{u.nome_completo} · {u.cidade}</small><small>{u.email}</small></div>
               <div className="pro-dir"><span className={`pro-st ${st.cls}`}>{st.txt}</span><small>{u.provas} prova{u.provas === 1 ? '' : 's'}{u.oficiais ? ` · ${u.oficiais} oficial${u.oficiais === 1 ? '' : 'is'}` : ''}</small></div>
             </button></li>); })}
         </ul>
@@ -1209,7 +1210,7 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
       <button className="btn text pro-esq" onClick={voltar}>← Todos os usuários</button>
       <section className="pro-card azul">
         <Avatar foto={p.foto_url} apelido={p.apelido} tam={88} />
-        <p className="pro-medio">@{p.apelido}</p>
+        <p className="pro-medio"><Arroba a={p.apelido} /></p>
         <p className="pro-sub pro-sem-margem">{p.nome_completo}</p>
         <p className="pro-sub pro-sem-margem">{p.sexo === 'F' ? 'Feminino' : 'Masculino'} · {idade} anos · {p.cidade}{p.assessoria ? ` · ${p.assessoria}` : ''}</p>
         <div className="pro-tags"><span className={`pro-st ${st.cls}`}>{st.txt}</span>{p.publico === false && <span className="pro-st dec">Perfil privado</span>}</div>
@@ -1269,7 +1270,7 @@ function AdminEditarPerfil({ p, fechar, salvou }: { p: Perfil; fechar: () => voi
   };
   return (
     <section className="pro-card">
-      <p className="pro-k cinza">Editar perfil de @{p.apelido}</p>
+      <p className="pro-k cinza">Editar perfil de <Arroba a={p.apelido} /></p>
       <label className="ct-cidade">Apelido<input value={f.apelido} maxLength={20} onChange={muda('apelido')} autoCapitalize="none" /></label>
       <label className="ct-cidade">Nome completo<input value={f.nome_completo} maxLength={120} onChange={muda('nome_completo')} /></label>
       <label className="ct-cidade">Cidade<input list="adm-cidades" value={f.cidade} onChange={muda('cidade')} /><datalist id="adm-cidades">{NOMES_CIDADES.map(c => <option key={c} value={c} />)}</datalist></label>

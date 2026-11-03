@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BadgePercent, Check, KeyRound, Lock, MapPin, MessageCircle, Store, X } from 'lucide-react';
 import { whatsappLink } from '../lib';
 import { sb, type Perfil } from './sb';
+import { Arroba } from './Selo';
 
 type Nivel = { pct: number; provas: number; onde: string; liberado: boolean; gratis?: boolean };
 type Parceiro = { id: string; nome: string; logo: string | null; cor?: string | null; descricao: string | null; endereco: string | null; niveis: Nivel[]; usos: { pct: number; quando: string }[] };
@@ -115,7 +116,7 @@ function UsarCupom({ p, n, perfil, fechar, feito }: { p: Parceiro; n: Nivel; per
           <b>{n.pct}% OFF</b>
           <span>{n.onde} · {p.nome}</span>
           {p.endereco && <small className="pro-cupom-lojas">{p.endereco}</small>}
-          <span className="pro-cupom-quem">@{perfil.apelido} · <em>PRO</em></span>
+          <span className="pro-cupom-quem"><Arroba a={perfil.apelido} /> · <em>PRO</em></span>
         </div>
         {ok ? <>
           <p className="pro-ok pro-centro"><Check size={20} aria-hidden="true" /> Confirmado pelo atendente em {ok}. Pode aplicar os {n.pct}%.</p>
@@ -155,7 +156,7 @@ export function AdminDescontos() {
       <p className="pro-k cinza"><BadgePercent size={14} aria-hidden="true" /> Descontos usados</p>
       {lista === null ? <p className="fine">Carregando…</p> : !lista.length ? <p className="fine pro-sem-margem">Ninguém usou desconto ainda.</p> :
         <ul className="pro-desc-adm">{lista.map(u => (
-          <li key={u.id}><b>@{u.apelido}</b> · {u.pct}% · {u.parceiro} · {new Date(u.quando).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}{u.url && <> · <a href={u.url} target="_blank" rel="noopener">foto</a></>}</li>
+          <li key={u.id}><b><Arroba a={u.apelido} /></b> · {u.pct}% · {u.parceiro} · {new Date(u.quando).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}{u.url && <> · <a href={u.url} target="_blank" rel="noopener">foto</a></>}</li>
         ))}</ul>}
       <TrocarSenha />
     </section>

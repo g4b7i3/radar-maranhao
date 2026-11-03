@@ -5,6 +5,7 @@ import { sb, linkPerfil, type Perfil } from './sb';
 import { Avatar } from './Foto';
 import { useVoltar, telaInicial } from './voltar';
 import { TopoVoltar } from './Topo';
+import { Arroba } from './Selo';
 
 type Camp = { id: string; nome: string; rotulo: string | null; premio: string | null; descricao: string | null; temporada: number; inicio: string; fim: string; melhores: number; tipo: 'etapas' | 'constancia'; provas: number; realizadas: number; atletas: number };
 type Linha = { sexo: 'F' | 'M'; posicao: number; apelido: string; cidade: string; foto: string | null; pontos: number; provas: number; cidades: number; sequencias: number; eu: boolean | null };
@@ -84,7 +85,7 @@ function Campeonato({ c, perfil, voltar }: { c: Camp; perfil: Perfil; voltar: ()
             <button className="com-foto" disabled={c.tipo !== 'etapas'} onClick={() => setAberto(aberto === l.apelido ? null : l.apelido)} aria-expanded={c.tipo === 'etapas' ? aberto === l.apelido : undefined}>
               <b>{l.posicao}</b>
               <Avatar foto={l.foto} apelido={l.apelido} tam={36} />
-              <span>{l.eu ? <b>Você</b> : <a href={linkPerfil(l.apelido)} target="_blank" rel="noopener">@{l.apelido}</a>} <small>· {l.cidade} · {l.provas} {l.provas === 1 ? 'prova' : 'provas'}{c.tipo === 'constancia' ? ` · ${l.cidades} ${l.cidades === 1 ? 'cidade' : 'cidades'}${l.sequencias ? ` · ${l.sequencias}× 3 seguidos` : ''}` : ''}</small></span>
+              <span>{l.eu ? <b>Você</b> : <a href={linkPerfil(l.apelido)} target="_blank" rel="noopener"><Arroba a={l.apelido} /></a>} <small>· {l.cidade} · {l.provas} {l.provas === 1 ? 'prova' : 'provas'}{c.tipo === 'constancia' ? ` · ${l.cidades} ${l.cidades === 1 ? 'cidade' : 'cidades'}${l.sequencias ? ` · ${l.sequencias}× 3 seguidos` : ''}` : ''}</small></span>
               <b>{l.pontos}<small className="pro-pts-unid">{c.tipo === 'etapas' ? ' pts de etapa' : ' pts'}</small></b>
             </button>
             {aberto === l.apelido && <EtapasDe camp={c.id} apelido={l.apelido} />}

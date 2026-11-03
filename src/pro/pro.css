@@ -1065,3 +1065,7 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-buscas-cands li small{font-size:12px;opacity:.75}
 .pro-buscas-cands li .btn{flex-shrink:0}
 .pro-buscas-aviso{width:100%;min-height:72px;resize:vertical;font:inherit;margin:4px 0 8px}
+
+/* Selo do Radar Pro (depois do @) */
+.pro-arroba{white-space:nowrap}
+.pro-selo{display:inline-block;width:1.05em;height:1.05em;margin-left:.22em;vertical-align:-.16em;flex:none;filter:drop-shadow(0 1px 1px rgba(10,18,64,.25))}

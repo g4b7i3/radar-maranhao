@@ -8,6 +8,7 @@ import { conviteComunidade } from './Pro';
 import { ItemFeed, Publicar, type Evento } from './Feed';
 import { useVoltar, telaInicial } from './voltar';
 import { TopoVoltar } from './Topo';
+import { Arroba } from './Selo';
 
 type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; foto?: string | null; criador?: string | null; minha?: boolean; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
 
@@ -93,7 +94,7 @@ function ComunidadeFeed({ c, perfil, pro, assinar, voltar, sair, admin, mudou: m
           <div><p className="pro-k"><Lock size={12} aria-hidden="true" /> Comunidade fechada</p><p className="pro-comun-nome">{c.nome}</p></div>
         </div>
         <p className="pro-sub pro-sem-margem">{c.descricao}</p>
-        {c.criador && <p className="fine pro-sem-margem pro-comun-criador">Criada por @{c.criador}</p>}
+        {c.criador && <p className="fine pro-sem-margem pro-comun-criador">Criada por <Arroba a={c.criador} /></p>}
         {(admin || c.minha) && !editando && <button className="btn text pro-btn-p" onClick={() => setEditando(true)}><Pencil size={14} aria-hidden="true" />Editar comunidade</button>}
       </section>
       <ConvidarComunidade c={c} />
@@ -137,7 +138,7 @@ function Membros({ c }: { c: Comunidade }) {
         {lista.map(m => (
           <li key={m.apelido}><a href={`/?atleta=${encodeURIComponent(m.apelido)}`}>
             <Avatar foto={m.foto} apelido={m.apelido} tam={38} />
-            <span className="pro-membro-txt"><b>{m.eu ? 'Você' : `@${m.apelido}`}</b><small>{m.cidade}</small></span>
+            <span className="pro-membro-txt"><b>{m.eu ? 'Você' : <Arroba a={m.apelido} />}</b><small>{m.cidade}</small></span>
             {m.criador && <em className="pro-membro-tag">Criou</em>}
             {m.online && <em className="pro-membro-on">Online</em>}
           </a></li>

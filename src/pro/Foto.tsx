@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { useOnline } from './online';
+import { Arroba } from './Selo';
 
 
 /** Foto redonda do atleta (ou a inicial do apelido, se ainda não tiver foto). */
@@ -91,7 +92,7 @@ export function FotoConta({ perfil, pronto, titulo = 'Foto do perfil', compacto 
         <span className="pro-foto-topo-cam" aria-hidden="true"><Camera size={14} /></span>
       </button>
       <div>
-        <b>@{perfil.apelido}</b>
+        <b><Arroba a={perfil.apelido} /></b>
         <button className="btn text pro-btn-p" disabled={enviando} onClick={() => entrada.current?.click()}>{enviando ? 'Enviando…' : perfil.foto_url ? 'Trocar foto' : 'Colocar foto'}</button>
         {msg && <small className={msg === 'Foto salva!' ? 'pro-ok' : 'ct-erro'} role="status">{msg}</small>}
       </div>

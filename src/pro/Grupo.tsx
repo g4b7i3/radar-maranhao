@@ -4,6 +4,7 @@ import { Users, UserPlus, Share2, Copy } from 'lucide-react';
 import { sb, type Perfil } from './sb';
 import { Avatar } from './Foto';
 import { linkAssessoria } from './Assessoria';
+import { Arroba } from './Selo';
 
 type Meu = { nome: string; descricao: string | null; membros: { apelido: string; foto: string | null; cidade: string }[]; pendentes: { apelido: string; foto: string | null; quando: string }[]; recusados: number };
 
@@ -49,9 +50,9 @@ export function MeuGrupo({ perfil, pronto }: { perfil: Perfil; pronto: () => voi
       {msg && <p className="pro-ok">{msg}</p>}
       {erro && <p className="ct-erro" role="alert">{erro}</p>}
       <p className="pro-k cinza">No grupo ({d.membros.length})</p>
-      <ul className="pro-companheiros">{d.membros.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b>@{m.apelido}{m.apelido === perfil.apelido ? ' (você)' : ''}</b><small>{m.cidade}</small></div>{m.apelido !== perfil.apelido && <button className="btn text" onClick={() => { if (confirm(`Tirar @${m.apelido} do grupo?`)) rpc('radar_grupo_remover', { p_apelido: m.apelido }, `@${m.apelido} saiu do grupo.`); }}>Tirar</button>}</li>)}</ul>
+      <ul className="pro-companheiros">{d.membros.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={36} /><div><b><Arroba a={m.apelido} />{m.apelido === perfil.apelido ? ' (você)' : ''}</b><small>{m.cidade}</small></div>{m.apelido !== perfil.apelido && <button className="btn text" onClick={() => { if (confirm(`Tirar @${m.apelido} do grupo?`)) rpc('radar_grupo_remover', { p_apelido: m.apelido }, `@${m.apelido} saiu do grupo.`); }}>Tirar</button>}</li>)}</ul>
       {d.pendentes.length > 0 && <><p className="pro-k cinza">Convites esperando ({d.pendentes.length})</p>
-        <ul className="pro-companheiros">{d.pendentes.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={32} /><div><b>@{m.apelido}</b><small>ainda não respondeu</small></div></li>)}</ul></>}
+        <ul className="pro-companheiros">{d.pendentes.map(m => <li key={m.apelido}><Avatar foto={m.foto} apelido={m.apelido} tam={32} /><div><b><Arroba a={m.apelido} /></b><small>ainda não respondeu</small></div></li>)}</ul></>}
     </section>
   );
 }
