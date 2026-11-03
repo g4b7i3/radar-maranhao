@@ -85,7 +85,7 @@ Deno.serve(async req => {
     const pedido = async (motivo: string) => {
       const { count } = await db.from('radar_sugestoes_provas').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('status', 'pendente');
       if ((count ?? 0) >= 5) return resp({ erro: 'Você já tem 5 pedidos esperando. Aguarde a resposta do Radar.' }, 429);
-      await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk || null, obs: [obs, motivo].filter(Boolean).join(' · ').slice(0, 300) || null });
+      await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk || null, obs: [obs, motivo].filter(Boolean).join(' · ').slice(0, 300) || null, tempo_s: Number(b.tempo_s) >= 300 ? Math.round(Number(b.tempo_s)) : null, peito: String(b.peito ?? '').replace(/\D/g, '').slice(0, 8) || null });
       return resp({ pedido: true, motivo });
     };
     if (!lk) return await pedido('');

@@ -272,7 +272,7 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
     if (f.cidade.trim().length < 3) return setErro('Diga a cidade.');
     if (!dist) return setErro('Escolha a distância que você correu.');
     setIndo(true);
-    const r = await chamar<Resposta & { pedido?: boolean; motivo?: string }>('radar-registrar', { nova_prova: { nome: f.nome, data: f.data, cidade: f.cidade, obs: f.obs, uf: f.uf }, distancia_km: dist, link_resultado: f.link || undefined, peito: peito || undefined });
+    const r = await chamar<Resposta & { pedido?: boolean; motivo?: string }>('radar-registrar', { nova_prova: { nome: f.nome, data: f.data, cidade: f.cidade, obs: f.obs, uf: f.uf }, distancia_km: dist, link_resultado: f.link || undefined, peito: peito || undefined, tempo_s: seg ?? undefined });
     if (r.pedido && (seg || peito)) await sb.rpc('radar_pedido_completar', { p_tempo: seg, p_peito: peito || null }); // vai junto no pedido: ao aprovar, o Radar já registra
     setIndo(false);
     if (r.erro) return setErro(r.erro);
