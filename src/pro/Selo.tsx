@@ -24,7 +24,7 @@ export function marcarSelo(apelido: string) { selos = new Set([...selos, apelido
 /** O selo sozinho: roseta dourada com o losango do Radar. */
 export function SeloPro({ tamanho = '1em' }: { tamanho?: string }) {
   return (
-    <svg className="pro-selo" viewBox="0 0 24 24" width={tamanho} height={tamanho} role="img" aria-label="Radar Pro">
+    <svg className="radar-selo" viewBox="0 0 24 24" width={tamanho} height={tamanho} role="img" aria-label="Radar Pro">
       <title>Radar Pro</title>
       <defs><linearGradient id="pro-selo-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#ffe58a" /><stop offset="1" stopColor="#f2b705" /></linearGradient></defs>
       <path fill="url(#pro-selo-g)" stroke="#0a1240" strokeWidth="1.1" d="M12 1.6l2.1 1.9 2.8-.5 1.2 2.6 2.6 1.2-.5 2.8L22.4 12l-1.9 2.1.5 2.8-2.6 1.2-1.2 2.6-2.8-.5L12 22.4l-2.1-1.9-2.8.5-1.2-2.6-2.6-1.2.5-2.8L1.6 12l1.9-2.1-.5-2.8 2.6-1.2 1.2-2.6 2.8.5z" />

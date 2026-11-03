@@ -1068,4 +1068,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 
 /* Selo do Radar Pro (depois do @) */
 .pro-arroba{white-space:nowrap}
-.pro-selo{display:inline-block;width:1.05em;height:1.05em;margin-left:.22em;vertical-align:-.16em;flex:none;filter:drop-shadow(0 1px 1px rgba(10,18,64,.25))}
+.radar-selo{display:inline-block;width:1.05em;height:1.05em;margin-left:.22em;vertical-align:-.16em;flex:none;filter:drop-shadow(0 1px 1px rgba(10,18,64,.25))}
