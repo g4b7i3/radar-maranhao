@@ -10,6 +10,8 @@ import { PertoDeVoce, distancia, kmTexto, type Perto } from '../PertoFds';
 type Filtro = 'proximas' | 'abertas' | 'mes' | 'trail' | 'salvas' | 'passadas';
 /** Prova (ou filtro, com ":") pedida num link antigo do Radar, guardada até a pessoa entrar. */
 export const provaPedida = (): string | null => { try { return localStorage.getItem('radar-abrir-prova'); } catch { return null; } };
+/** Busca tolerante: cada palavra digitada tem que aparecer, ou começar com uma palavra da prova ("selfie" acha "Self Run", "corridas" acha "corrida"). */
+const bate = (q: string, alvo: string) => { const ps = alvo.split(' '); return q.split(' ').filter(Boolean).every(w => alvo.includes(w) || ps.some(p => p.length >= 4 && w.startsWith(p))); };
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00-03:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' }).replace('.', '');
 const tom = (s: string) => (s === 'Abertas' || s === 'Abertura anunciada' ? 'open' : s === 'Cancelada' ? 'bad' : s === 'Realizada' || s === 'Encerradas' ? 'done' : s === 'Abrem em breve' ? 'soon' : 'check');
 const rotulo = (s: string) => (s === 'Consultar' ? 'Confirmar inscrições' : s === 'Abertura anunciada' ? 'Abertas' : s);
@@ -43,7 +45,7 @@ export function TelaProvas() {
       if (filtro === 'mes') return (e.date ?? '').startsWith(mes);
       if (filtro === 'trail') return e.modality === 'Trail';
       return true;
-    }).filter(e => !q || norm(`${e.name} ${e.city} ${e.location}`).includes(q))
+    }).filter(e => !q || bate(q, norm(`${e.name} ${e.city} ${e.location ?? ''} ${e.notes ?? ''} ${e.edition ?? ''}`)))
       .filter(e => { if (!perto || filtro === 'salvas') return true; const d = distancia(perto, e.city); return d != null && d <= perto.raio; });
     return base.sort((a, b) => (filtro === 'passadas' ? b.date!.localeCompare(a.date!) : a.date!.localeCompare(b.date!)));
   }, [lista, filtro, busca, hoje, mes, salvas, perto]);
