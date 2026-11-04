@@ -112,6 +112,7 @@ Deno.serve(async (req) => {
       const { data: integ } = await db.from('radar_integracoes').select('id, token').eq('user_id', eu.id).eq('provedor', 'intervals').maybeSingle();
       if (integ?.token) await fetch(`${API}/disconnect-app`, { method: 'DELETE', headers: { Authorization: `Bearer ${integ.token}` } }).catch(() => {});
       if (integ) await db.from('radar_integracoes').delete().eq('id', integ.id);
+      await db.from('radar_atividades').delete().eq('user_id', eu.id).eq('fonte', 'intervals');
       return json({ ok: true });
     }
     return json({ erro: 'Ação desconhecida.' }, 400);

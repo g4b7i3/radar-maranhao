@@ -100,7 +100,11 @@ Deno.serve(async (req) => {
       if (Array.isArray(body.activities)) res.atividades = await receber(body.activities, false);
       if (Array.isArray(body.activityDetails)) res.detalhes = await receber(body.activityDetails, true);
       if (Array.isArray(body.manuallyUpdatedActivities)) res.editadas = await receber(body.manuallyUpdatedActivities, false);
-      for (const d of body.deregistrations || []) await db.from('radar_integracoes').delete().eq('provedor', 'garmin').eq('athlete_id', String(d.userId));
+      for (const d of body.deregistrations || []) { // o atleta desligou o Radar no Garmin Connect: apaga a conexão e tudo o que veio de lá
+        const { data: q } = await db.from('radar_integracoes').select('user_id').eq('provedor', 'garmin').eq('athlete_id', String(d.userId)).maybeSingle();
+        if (q) await db.from('radar_atividades').delete().eq('user_id', q.user_id).eq('fonte', 'garmin');
+        await db.from('radar_integracoes').delete().eq('provedor', 'garmin').eq('athlete_id', String(d.userId));
+      }
       for (const p of body.userPermissionsChange || []) {
         const ok = (p.permissions || []).includes('ACTIVITY_EXPORT');
         await db.from('radar_integracoes').update({ erro: ok ? null : 'Permissão de atividades desligada no Garmin Connect.' }).eq('provedor', 'garmin').eq('athlete_id', String(p.userId));
@@ -131,6 +135,7 @@ Deno.serve(async (req) => {
       if (integ) {
         try { const tk = await tokenValido(integ); await fetch(`${API}/user/registration`, { method: 'DELETE', headers: { Authorization: `Bearer ${tk}` } }); } catch (e) { console.error('desregistrar', e); }
         await db.from('radar_integracoes').delete().eq('id', integ.id);
+        await db.from('radar_atividades').delete().eq('user_id', eu.id).eq('fonte', 'garmin');
       }
       return json({ ok: true });
     }
