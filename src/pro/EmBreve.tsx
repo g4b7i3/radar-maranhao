@@ -11,7 +11,7 @@ const OPCOES = { fundo: 'radar', cor: 'branco', formato: 'story', img: null, cli
 function Miniatura({ layout, nome }: { layout: string; nome: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [visivel, setVisivel] = useState(false);
-  useEffect(() => { // desenha só quando aparece na tela (são 18 cards grandes)
+  useEffect(() => { // desenha só quando aparece na tela (são muitos cards grandes)
     const el = ref.current; if (!el) return;
     const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisivel(true); ob.disconnect(); } }, { rootMargin: '200px' });
     ob.observe(el); return () => ob.disconnect();
@@ -36,7 +36,7 @@ export function EmBreve() {
   return (
     <section className="pro-card pro-breve">
       <div className="pro-linha"><p className="pro-k cinza"><Sparkles size={14} aria-hidden="true" /> Em breve no Radar</p><span className="pro-st dec">Em breve</span></div>
-      <p className="pro-sub pro-sem-margem">Card da corrida pro story, com 18 modelos. Ainda bloqueado: está chegando.</p>
+      <p className="pro-sub pro-sem-margem">Card da corrida pro story, com {CARD_LAYOUTS.length} modelos, inclusive no jeito maranhense. Ainda bloqueado: está chegando.</p>
       <div className="pro-breve-galeria">{(CARD_LAYOUTS as [string, string][]).map(([k, n]) => <Miniatura key={k} layout={k} nome={n} />)}</div>
       <div className="pro-breve-con">
         <div className="pro-breve-item"><Watch size={20} aria-hidden="true" /><div><b>Garmin</b><small>Suas corridas do relógio chegam sozinhas no Radar.</small></div><button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button></div>

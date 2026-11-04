@@ -14,10 +14,82 @@ const isoDia = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.g
 const CARD_STATS = [['dist', 'Distância'], ['pace', 'Pace'], ['tempo', 'Tempo'], ['fc', 'FC média'], ['elev', 'Subida'], ['cad', 'Cadência'], ['kcal', 'Calorias'], ['passos', 'Passos'], ['rota', 'Percurso'], ['data', 'Data']];
 // modelos do card (inspirados nos stickers de corrida), com as cores do Radar e sem logo
 const CARD_LAYOUTS = [
+  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_dicionario', 'Dicionário maranhês'], ['ma_azulejo', 'Azulejo'], ['ma_manchete', 'Manchete'], ['ma_lencois', 'Lençóis'],
   ['icones', 'Com ícones'], ['clima', 'Clima'], ['clima_faixa', 'Clima + números'], ['tiros', 'Tiros'], ['classico', 'Coluna'], ['faixa', 'Faixa'], ['percurso', 'Percurso'], ['lado', 'Lado a lado'], ['mapa', 'Só o mapa'],
   ['sobre', 'Mapa + números'], ['tabela', 'Ficha'], ['ficha_mapa', 'Ficha + mapa'], ['lateral', 'Diagonal'], ['pilulas', 'Número de peito'],
   ['parciais', 'Parciais'], ['recibo', 'Medalha'], ['destaque', 'Destaque'], ['linha', 'Na foto'],
 ];
+/* ---------- falas maranhenses adaptadas ao treino (gírias de São Luís e do interior, antigas e de hoje) ---------- */
+// cada frase tem o "grito" (a exclamação) e a frase; {km} {pace} {tempo} {temp} viram os números da corrida
+const FALAS = {
+  longo: [
+    { g: 'Éguas, siô!', f: 'Fui na baixa da égua e voltei: {km} km no pé.' },
+    { g: 'Armaria!', f: '{km} km de longão. Agora tô só a broca.' },
+    { g: 'Marmenino!', f: '{tempo} correndo. Sem mentira nenhuma.' },
+  ],
+  rapido: [
+    { g: 'Piqueno, tu é o raio!', f: '{pace}/km de média. Fui zilado do começo ao fim.' },
+    { g: 'Só quer ser!', f: 'Diz que foi leve e vem com {pace}/km.' },
+    { g: 'Éguas!', f: 'Passei zilado: {km} km a {pace}/km.' },
+  ],
+  forte: [
+    { g: 'Té doido!', f: 'Esse treino foi louco: {km} km com o coração na boca.' },
+    { g: 'Armaria!', f: 'Até a dor desse treino doeu. E eu fui até o fim.' },
+    { g: 'Marrapaz!', f: 'Treino invocado. As pernas ainda tão tremendo.' },
+  ],
+  calor: [
+    { g: 'Égua do calor!', f: 'O sol de São Luís tava remoso e eu fui correr assim mesmo.' },
+    { g: 'Armaria!', f: '{temp}° na rua e eu lá, dando meus pulos.' },
+  ],
+  cedo: [
+    { g: 'Sem mentira nenhuma:', f: 'corri {km} km antes do sol nascer.' },
+    { g: 'Heheeein!', f: 'Acordei cedo, mermão: {km} km antes do café.' },
+  ],
+  leve: [
+    { g: 'Kiu pra preguiça!', f: 'Rodagem de boa, mas coirento hoje não.' },
+    { g: 'Aziado nada!', f: '{km} km leve, só pra manter o corpo ligado.' },
+  ],
+  geral: [
+    { g: 'Heheeein!', f: 'Treino pago: {km} km em {tempo}.' },
+    { g: 'Dá teus pulos!', f: 'Ninguém corre por ti. {km} km na conta.' },
+    { g: 'Foi bom? Pior!', f: '{km} km a {pace}/km. Pior que foi bom demais.' },
+    { g: 'Marrapaz!', f: '{km} km e ainda deu pra mangar da preguiça.' },
+    { g: 'Perainda!', f: 'Deixa eu respirar: {km} km em {tempo}.' },
+  ],
+};
+// verbetes do "dicionário maranhês", com o exemplo tirado do treino
+const VERBETES = {
+  longo: [{ p: 'brocado', cl: 'adj.', d: 'Como fica quem correu {km} km: com fome de comer um arroz de cuxá inteiro.' }],
+  rapido: [{ p: 'zilado', cl: 'adj.', d: 'Ligeiro demais. Ex.: correr a {pace}/km.' }],
+  forte: [{ p: 'invocado', cl: 'adj.', d: 'Treino bravo, que deixa as pernas tremendo. Ex.: o de hoje, {km} km.' }],
+  calor: [{ p: 'remoso', cl: 'adj.', d: 'Perigoso. Ex.: o sol de São Luís com {temp}° na rua.' }],
+  cedo: [{ p: 'sem mentira nenhuma', cl: 'expr.', d: 'Jeito de começar uma história. Ex.: sem mentira nenhuma, corri {km} km antes do sol.' }],
+  leve: [{ p: 'coirento', cl: 'adj.', d: 'Preguiçoso. Tudo o que tu não foi hoje: {km} km na conta.' }],
+  geral: [
+    { p: 'éguas', cl: 'interj.', d: 'O que se diz ao ver {km} km em {tempo}.' },
+    { p: 'aziado', cl: 'adj.', d: 'Desanimado. Mas foi treinar assim mesmo: {km} km.' },
+  ],
+};
+const sorteio = (t) => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
+function falaDe(c, clima, chave) {
+  const km = c.distancia_m ? (c.distancia_m / 1000).toFixed(c.distancia_m >= 10000 ? 1 : 2).replace(/\.?0+$/, '').replace('.', ',') : null;
+  const p = paceDe(c), h = new Date(c.data).getHours(), temp = clima && clima.temp != null ? clima.temp : null;
+  const val = { km, pace: p ? fmtPace(p).replace('/km', '') : null, tempo: c.duracao_s ? fmtDurLongo(c.duracao_s) : null, temp };
+  const tags = [];
+  if (c.distancia_m >= 15000) tags.push('longo');
+  if (p && p < 285) tags.push('rapido');
+  if ((c.fc_media || 0) >= 160 || (c._serie && c._serie.qual)) tags.push('forte');
+  if (temp != null && temp >= 29) tags.push('calor');
+  if (h < 6) tags.push('cedo');
+  if ((p && p > 390) || (c.distancia_m && c.distancia_m < 5000)) tags.push('leve');
+  tags.push('geral');
+  const encher = (t) => { let ok = true; const r = t.replace(/\{(\w+)\}/g, (_, k) => { if (val[k] == null) ok = false; return val[k] ?? ''; }); return ok ? r : null; };
+  const pega = (banco) => {
+    const lista = tags.flatMap((t) => banco[t] || []).map((x) => ({ ...x, f: x.f != null ? encher(x.f) : undefined, d: x.d != null ? encher(x.d) : undefined })).filter((x) => (x.f ?? x.d) != null);
+    return lista[sorteio((c.id || '') + chave) % lista.length];
+  };
+  return { ...pega(FALAS), verbete: pega(VERBETES), val };
+}
 const cardCarregarImg = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const CARD_IMGS = {};
 const DIAS_LONGOS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
@@ -177,7 +249,131 @@ async function desenharCard(cv, c, o) {
     }
     ctx.restore();
   };
-  if (L === 'clima') { // temperatura em destaque, com sensação, umidade e vento
+  // quebra o texto em linhas que cabem na largura
+  const quebra = (t, font, mw) => { const ps = String(t).split(' '), ls = []; let l = ''; for (const p of ps) { const n = l ? l + ' ' + p : p; if (larg(n, font) > mw && l) { ls.push(l); l = p; } else l = n; } if (l) ls.push(l); return ls; };
+  // os 6 cards no jeito maranhense
+  const maranhense = () => {
+    const F = falaDe(c, clima, L), lista = sel.slice(0, 3);
+    const OURO = '#ffd34d', COB = '#1d3fbf', NAVY = '#0a1240';
+    if (L === 'ma_eguas') { // a exclamação gigante, a frase e os números
+      const fg = (px) => `800 ${px}px ${FH}`; let px = post ? 190 : 230, gl = quebra(F.g.toUpperCase(), fg(px), W - 140);
+      while (gl.length > 2 && px > 110) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 140); }
+      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 140), lf = post ? 60 : 68;
+      const tot = gl.length * px * .9 + 50 + fl.length * lf + 70 + 76 * 1.9 + (dataTxt ? 70 : 0);
+      let y = (H - tot) / 2;
+      if (dataTxt) { txt(dataTxt, 70, y + 26, LBL(26), sub, 'left', 3); y += 70; }
+      gl.forEach((l) => { y += px * .9; txt(l, 66, y, fg(px), branco ? OURO : COB, 'left', -px * .03); });
+      y += 50; fl.forEach((l) => { y += lf; txt(l, 70, y, ff, tx, 'left'); });
+      y += 50; ctx.save(); ctx.fillStyle = branco ? OURO : COB; ctx.fillRect(70, y, 120, 8); ctx.restore(); y += 50;
+      grade(lista, y, 88, 70, W - 70, 3, 'left');
+    } else if (L === 'ma_balao') { // balão de fala com a frase e os números embaixo
+      const bx = 80, bw = W - 160, pad = 70;
+      const fgt = `800 ${post ? 92 : 104}px ${FH}`, ffr = `600 ${post ? 50 : 56}px ${FB}`;
+      const gl = quebra(F.g, fgt, bw - pad * 2), fl = quebra(F.f, ffr, bw - pad * 2), lg = post ? 96 : 108, lf = post ? 66 : 74;
+      const bh = pad * 2 + gl.length * lg + 20 + fl.length * lf, tot = 60 + bh + 90 + 76 * 1.9 + 76 * 1.9;
+      let y = (H - tot) / 2;
+      txt('NO MARANHÊS', bx, y + 28, LBL(28), sub, 'left', 6); y += 60;
+      ctx.save(); if (sombra || o.fundo === 'radar') { ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 30; }
+      ctx.fillStyle = branco ? '#ffffff' : NAVY; ret(ctx, bx, y, bw, bh, 56); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(bx + 120, y + bh - 2); ctx.lineTo(bx + 110, y + bh + 80); ctx.lineTo(bx + 230, y + bh - 2); ctx.closePath(); ctx.fill(); ctx.restore();
+      const tb = branco ? NAVY : '#ffffff', ab = branco ? COB : OURO; let yy = y + pad;
+      gl.forEach((l) => { yy += lg * .82; ctx.save(); ctx.font = fgt; ctx.fillStyle = ab; if ('letterSpacing' in ctx) ctx.letterSpacing = '-2px'; ctx.fillText(l, bx + pad, yy); ctx.restore(); yy += lg * .18; });
+      yy += 20; fl.forEach((l) => { yy += lf; ctx.save(); ctx.font = ffr; ctx.fillStyle = tb; ctx.fillText(l, bx + pad, yy - 14); ctx.restore(); });
+      y += bh + 130;
+      const y2 = grade(lista, y, 88, 80, W - 80, 3, 'left');
+      if (dataTxt) txt(dataTxt, 80, y2 + 10, LBL(26), sub, 'left', 3);
+    } else if (L === 'ma_dicionario') { // verbete do "dicionário maranhês" com o exemplo do treino
+      const vb = F.verbete, x = 90, w = W - 180, pad = 70, iw = w - pad * 2;
+      const fp = (px) => `800 ${px}px ${FH}`; let pp = 150; while (larg(vb.p, fp(pp)) > iw && pp > 70) pp -= 8;
+      const fd = `500 ${post ? 42 : 46}px ${FB}`, dl = quebra(vb.d, fd, iw), ld = post ? 60 : 66;
+      const fx = `italic 600 ${post ? 38 : 42}px ${FB}`, xl = quebra(`“${F.g} ${F.f}”`, fx, iw), lx = post ? 54 : 60;
+      const bh = pad + 40 + 30 + pp + 100 + dl.length * ld + 40 + xl.length * lx + 70 + 150 + pad;
+      let y = (H - bh - (dataTxt ? 80 : 0)) / 2;
+      ctx.save(); if (o.fundo !== 'transparente') { ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 30; }
+      ctx.fillStyle = '#fbf8ef'; ret(ctx, x, y, w, bh, 30); ctx.fill(); ctx.restore();
+      const P = (t, xx, yy, font, cor, al = 'left', esp = 0) => { ctx.save(); ctx.font = font; ctx.fillStyle = cor; ctx.textAlign = al; if ('letterSpacing' in ctx) ctx.letterSpacing = esp + 'px'; ctx.fillText(t, xx, yy); ctx.restore(); };
+      let yy = y + pad + 30;
+      P('DICIONÁRIO MARANHÊS', x + pad, yy, `800 28px ${FB}`, COB, 'left', 6);
+      P('M', x + w - pad, yy, `800 28px ${FB}`, 'rgba(10,18,64,.35)', 'right', 2);
+      ctx.save(); ctx.fillStyle = 'rgba(10,18,64,.18)'; ctx.fillRect(x + pad, yy + 22, iw, 3); ctx.restore();
+      yy += 30 + pp; P(vb.p, x + pad - 4, yy, fp(pp), NAVY, 'left', -pp * .02);
+      yy += 80; P(vb.cl, x + pad, yy, `italic 600 40px ${FB}`, COB); yy += 10;
+      dl.forEach((l) => { yy += ld; P(l, x + pad, yy, fd, NAVY); });
+      yy += 40; xl.forEach((l) => { yy += lx; P(l, x + pad, yy, fx, 'rgba(10,18,64,.65)'); });
+      yy += 50; ctx.save(); ctx.fillStyle = 'rgba(10,18,64,.35)'; for (let xx = x + pad; xx < x + w - pad; xx += 16) { ctx.beginPath(); ctx.arc(xx, yy, 2.6, 0, Math.PI * 2); ctx.fill(); } ctx.restore();
+      const cw = iw / Math.max(1, lista.length);
+      lista.forEach((s2, k) => { const cx = x + pad + cw * k; P(s2.l.toUpperCase(), cx, yy + 60, `700 24px ${FB}`, 'rgba(10,18,64,.55)', 'left', 3); P(s2.v, cx, yy + 128, `800 64px ${FH}`, NAVY, 'left', -1); if (s2.u) P(s2.u, cx + larg(s2.v, `800 64px ${FH}`, -1) + 8, yy + 128, `700 26px ${FB}`, 'rgba(10,18,64,.55)'); });
+      if (dataTxt) txt(dataTxt, W / 2, y + bh + 70, LBL(26), sub, 'center', 3);
+    } else if (L === 'ma_azulejo') { // faixas de azulejo português do Centro Histórico de São Luís
+      const azulejo = (x0, y0, s2) => {
+        ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, s2, s2); ctx.clip();
+        ctx.fillStyle = '#f4f6ff'; ctx.fillRect(x0, y0, s2, s2);
+        ctx.fillStyle = COB; [[x0, y0], [x0 + s2, y0], [x0, y0 + s2], [x0 + s2, y0 + s2]].forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a, b, s2 * .3, 0, Math.PI * 2); ctx.fill(); });
+        ctx.fillStyle = '#f4f6ff'; [[x0, y0], [x0 + s2, y0], [x0, y0 + s2], [x0 + s2, y0 + s2]].forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a, b, s2 * .14, 0, Math.PI * 2); ctx.fill(); });
+        const cx = x0 + s2 / 2, cy = y0 + s2 / 2;
+        ctx.strokeStyle = COB; ctx.lineWidth = s2 * .045; ctx.beginPath(); ctx.moveTo(cx, y0 + s2 * .16); ctx.lineTo(x0 + s2 * .84, cy); ctx.lineTo(cx, y0 + s2 * .84); ctx.lineTo(x0 + s2 * .16, cy); ctx.closePath(); ctx.stroke();
+        for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; ctx.fillStyle = COB; ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * s2 * .16, cy + Math.sin(a) * s2 * .16, s2 * .1, s2 * .05, a, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = NAVY; ctx.beginPath(); ctx.arc(cx, cy, s2 * .07, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = OURO; ctx.beginPath(); ctx.arc(cx, cy, s2 * .03, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(10,18,64,.18)'; ctx.lineWidth = 2; ctx.strokeRect(x0, y0, s2, s2); ctx.restore();
+      };
+      const s2 = W / 6, filas = post ? 1 : 2;
+      for (let r = 0; r < filas; r++) for (let k = 0; k < 6; k++) { azulejo(k * s2, r * s2, s2); azulejo(k * s2, H - (r + 1) * s2, s2); }
+      const fg = `800 ${post ? 120 : 140}px ${FH}`, gl = quebra(F.g.toUpperCase(), fg, W - 160), lgg = post ? 112 : 130;
+      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 200), lf = post ? 60 : 68;
+      const tot = gl.length * lgg + 30 + fl.length * lf + 80 + 74 * 1.9 + (dataTxt ? 60 : 0);
+      let y = (H - tot) / 2;
+      gl.forEach((l) => { y += lgg; txt(l, W / 2, y, fg, branco ? OURO : COB, 'center', -2); });
+      y += 30; fl.forEach((l) => { y += lf; txt(l, W / 2, y, ff, tx, 'center'); });
+      y += 70; const y2 = grade(lista, y, 88, 70, W - 70, 3, 'center');
+      if (dataTxt) txt(dataTxt, W / 2, y2 + 10, LBL(24), sub, 'center', 3);
+    } else if (L === 'ma_manchete') { // capa de jornal: a corrida virou notícia
+      const x = 60, w = W - 120, pad = 50, iw = w - pad * 2;
+      const fh = (px) => `800 ${px}px ${FH}`, man = `${F.g} Atleta corre ${F.val.km} km${F.val.pace ? ` a ${F.val.pace}/km` : ''}`.toUpperCase();
+      let ph = post ? 104 : 120, hl = quebra(man, fh(ph), iw); while (hl.length > 4 && ph > 70) { ph -= 8; hl = quebra(man, fh(ph), iw); }
+      const fd = `500 ${post ? 40 : 44}px ${FB}`, dl = quebra(F.f, fd, iw), ld = post ? 56 : 62;
+      const hFoto = temRota ? (post ? 300 : 460) : 0;
+      const bh = pad + 110 + 50 + hl.length * ph * .95 + 40 + dl.length * ld + 50 + (hFoto ? hFoto + 50 : 0) + 160 + pad;
+      let y = (H - bh) / 2;
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.28)'; ctx.shadowBlur = 30; ctx.fillStyle = '#f7f4ea'; ctx.fillRect(x, y, w, bh); ctx.restore();
+      const P = (t, xx, yy, font, cor, al = 'left', esp = 0) => { ctx.save(); ctx.font = font; ctx.fillStyle = cor; ctx.textAlign = al; if ('letterSpacing' in ctx) ctx.letterSpacing = esp + 'px'; ctx.fillText(t, xx, yy); ctx.restore(); };
+      const regua = (yy, e = 3) => { ctx.save(); ctx.fillStyle = NAVY; ctx.fillRect(x + pad, yy, iw, e); ctx.restore(); };
+      let yy = y + pad + 80;
+      P('JORNAL DO TREINO', W / 2, yy, `800 ${post ? 74 : 84}px ${FH}`, NAVY, 'center', 2);
+      yy += 30; regua(yy, 6); yy += 34;
+      P(`SÃO LUÍS · ${DIAS_LONGOS[dt.getDay()].toUpperCase()}, ${dt.getDate()} ${MESES[dt.getMonth()]} ${dt.getFullYear()}`, x + pad, yy, `700 22px ${FB}`, 'rgba(10,18,64,.65)', 'left', 3);
+      P('EDIÇÃO EXTRA', x + w - pad, yy, `800 22px ${FB}`, COB, 'right', 3);
+      yy += 16; regua(yy, 2); yy += 20;
+      hl.forEach((l) => { yy += ph * .95; P(l, x + pad, yy, fh(ph), NAVY, 'left', -1); });
+      yy += 20; dl.forEach((l) => { yy += ld; P(l, x + pad, yy, fd, 'rgba(10,18,64,.8)'); });
+      yy += 40;
+      if (hFoto) { ctx.save(); ctx.fillStyle = '#dde3f3'; ctx.fillRect(x + pad, yy, iw, hFoto); ctx.restore(); cardRota(ctx, c.rota, x + pad + 40, yy + 30, iw - 80, hFoto - 60, COB, 9); yy += hFoto + 50; }
+      regua(yy, 2);
+      const cw = iw / Math.max(1, lista.length);
+      lista.forEach((s3, k) => { const cx = x + pad + cw * k; if (k) { ctx.save(); ctx.fillStyle = 'rgba(10,18,64,.3)'; ctx.fillRect(cx - 20, yy + 30, 2, 110); ctx.restore(); }
+        P(s3.l.toUpperCase(), cx, yy + 60, `700 24px ${FB}`, 'rgba(10,18,64,.6)', 'left', 3); P(s3.v, cx, yy + 130, `800 66px ${FH}`, NAVY, 'left', -1); if (s3.u) P(s3.u, cx + larg(s3.v, `800 66px ${FH}`, -1) + 8, yy + 130, `700 26px ${FB}`, 'rgba(10,18,64,.6)'); });
+    } else { // 'ma_lencois': dunas e lagoas dos Lençóis Maranhenses embaixo
+      const base = H * (post ? .64 : .66);
+      const duna = (y0, amp, fase, c1, c2) => { const g = ctx.createLinearGradient(0, y0 - amp, 0, H); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(0, y0); for (let x = 0; x <= W; x += 20) ctx.lineTo(x, y0 - amp * Math.sin((x / W) * Math.PI * 1.6 + fase) - amp * .35 * Math.sin((x / W) * Math.PI * 4.2 + fase * 2)); ctx.lineTo(W, H); ctx.closePath(); ctx.fill(); };
+      ctx.save();
+      duna(base, 60, .4, '#f3e2ad', '#e6cd86');
+      const lagoa = (x0, y0, rx, ry) => { const g = ctx.createLinearGradient(0, y0 - ry, 0, y0 + ry); g.addColorStop(0, '#43c4e6'); g.addColorStop(1, '#1d7fc4'); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x0, y0, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); };
+      lagoa(W * .3, base + 120, 210, 34); lagoa(W * .78, base + 100, 150, 26);
+      duna(base + 170, 50, 2.1, '#f8ecc6', '#ead39a');
+      lagoa(W * .55, base + 300, 260, 40);
+      duna(base + 360, 44, 4.0, '#fbf3d9', '#efdcaa');
+      ctx.restore();
+      const fg = `800 ${post ? 140 : 160}px ${FH}`, gl = quebra(F.g.toUpperCase(), fg, W - 140), lgg = post ? 128 : 148;
+      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 140), lf = post ? 60 : 68;
+      let y = post ? 110 : 220;
+      if (dataTxt) { txt(dataTxt, 70, y, LBL(26), sub, 'left', 3); y += 20; }
+      gl.forEach((l) => { y += lgg; txt(l, 66, y, fg, branco ? OURO : COB, 'left', -2); });
+      y += 20; fl.forEach((l) => { y += lf; txt(l, 70, y, ff, tx, 'left'); });
+      grade(lista, Math.min(y + 70, base - 88 * 1.9 - 40), 88, 70, W - 70, 3, 'left');
+    }
+  };
+  if (L.startsWith('ma_')) maranhense();
+  else if (L === 'clima') { // temperatura em destaque, com sensação, umidade e vento
     let y = post ? 120 : 330;
     simbolo(W / 2, y, 220); y += 170;
     if (clima) {
@@ -201,7 +397,7 @@ async function desenharCard(cv, c, o) {
       txt(extra, 200 + larg(t, `800 46px ${FH}`) + 26, y + 68, `600 ${fs}px ${FB}`, sub, 'left');
     }
     y += 190;
-    grade(lista, y, 76, 80, W - 80, 3, 'left');
+    grade(lista, y, 88, 80, W - 80, 3, 'left');
   } else if (L === 'tiros') { // só as voltas fortes (sem recuperação)
     const tr = tirosDe(c), pk = tr.map((v) => v.p), mn = Math.min(...pk), mx = Math.max(...pk);
     const dists = tr.map((v) => Math.round(v.d / 100) * 100), iguais = dists.every((d) => Math.abs(d - dists[0]) <= 100);
@@ -383,4 +579,4 @@ async function desenharCard(cv, c, o) {
   assinatura();
 }
 
-export { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe, serieDe, tirosDe };
+export { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe, serieDe, tirosDe, falaDe };
