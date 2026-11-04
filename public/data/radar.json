@@ -3578,9 +3578,117 @@
       "start": "17:30",
       "verifiedAt": "2026-11-02T10:52:05.809Z",
       "firstSeenAt": "2026-11-01T17:33:41.969Z"
+    },
+    {
+      "id": "street-race-dp-2026-dom-pedro",
+      "name": "Street Race DP",
+      "edition": "2026",
+      "city": "Dom Pedro",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-15",
+      "distances": [
+        5
+      ],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.even3.com.br/e/street-race-dp-2026-764585",
+      "sourceUrl": "https://running.life/en/event/street-race-dp",
+      "sourceName": "running.life",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Vista só no running.life, que aponta a inscrição no Even3 (página não pôde ser aberta nesta conferência). A página da prova diz 5 km; a lista do running.life mostra 3 e 5 km. Horário, local, preço e status a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-04T11:14:45.182Z",
+      "firstSeenAt": "2026-11-04T11:14:45.182Z"
+    },
+    {
+      "id": "padroeira-2026-igarape-grande",
+      "name": "II Corrida da Padroeira",
+      "edition": "2026",
+      "city": "Igarapé Grande",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-08",
+      "distances": [
+        3
+      ],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://uticket.com.br/event/ii-corrida-da-padroeira/01MGZV68WB0DSY",
+      "sourceUrl": "https://running.life/en/event/corrida-da-padroeira-igarape-grande",
+      "sourceName": "running.life",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Vista só no running.life (\"Ii Corre Da Padroeira 3km\"), que aponta a inscrição na Uticket (página não pôde ser aberta nesta conferência). Terça-feira, 08/12, dia da Imaculada Conceição. Horário, local, preço e status a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-04T11:14:45.182Z",
+      "firstSeenAt": "2026-11-04T11:14:45.182Z"
+    },
+    {
+      "id": "run-love-2026-sao-domingos-do-maranhao",
+      "name": "Run Love",
+      "edition": "2026",
+      "city": "São Domingos do Maranhão",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [
+        5
+      ],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.sporttimer.com.br/site/eventosel.php?ev=2710",
+      "sourceUrl": "https://running.life/en/event/run-love-sao-domingos-do-maranhao",
+      "sourceName": "running.life",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Vista só no running.life (\"Corrida 5k\"), que aponta a inscrição na Sporttimer (página não pôde ser aberta nesta conferência). Horário, local, preço e status a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-04T11:14:45.182Z",
+      "firstSeenAt": "2026-11-04T11:14:45.182Z"
     }
   ],
   "changes": [
+    {
+      "id": "efc22b19-8a0d-4b75-8695-67c14f7fd26c",
+      "eventId": "run-love-2026-sao-domingos-do-maranhao",
+      "version": "[\"2026-12-20\",[5],\"Local a confirmar\",null,null,\"Consultar\",\"https://www.sporttimer.com.br/site/eventosel.php?ev=2710\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-04T11:14:45.182Z",
+      "notifiedAt": "2026-11-04T11:15:07.738Z"
+    },
+    {
+      "id": "da8b1f65-0179-4e4a-836d-d7640a979fe0",
+      "eventId": "padroeira-2026-igarape-grande",
+      "version": "[\"2026-12-08\",[3],\"Local a confirmar\",null,null,\"Consultar\",\"https://uticket.com.br/event/ii-corrida-da-padroeira/01MGZV68WB0DSY\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-04T11:14:45.182Z",
+      "notifiedAt": "2026-11-04T11:15:07.738Z"
+    },
+    {
+      "id": "0d2e5e97-de67-4c9d-bf30-d1f5f87e9f48",
+      "eventId": "street-race-dp-2026-dom-pedro",
+      "version": "[\"2026-11-15\",[5],\"Local a confirmar\",null,null,\"Consultar\",\"https://www.even3.com.br/e/street-race-dp-2026-764585\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-04T11:14:45.182Z",
+      "notifiedAt": "2026-11-04T11:15:07.738Z"
+    },
     {
       "id": "552bae95-b5e0-4732-8f3e-f9f15f3f0a71",
       "eventId": "iii-corrida-da-amizade-2026-duque-bacelar",
@@ -5510,7 +5618,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-04T10:50:50.792Z",
+  "lastChecked": "2026-11-04T11:14:45.182Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
