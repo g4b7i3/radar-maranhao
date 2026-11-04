@@ -14,7 +14,7 @@ const isoDia = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.g
 const CARD_STATS = [['dist', 'Distância'], ['pace', 'Pace'], ['tempo', 'Tempo'], ['fc', 'FC média'], ['elev', 'Subida'], ['cad', 'Cadência'], ['kcal', 'Calorias'], ['passos', 'Passos'], ['rota', 'Percurso'], ['data', 'Data']];
 // modelos do card (inspirados nos stickers de corrida), com as cores do Radar e sem logo
 const CARD_LAYOUTS = [
-  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_azulejo', 'Azulejo'], ['ma_manchete', 'Manchete'], ['ma_lencois', 'Lençóis'],
+  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'],
   ['icones', 'Com ícones'], ['clima', 'Clima'], ['clima_faixa', 'Clima + números'], ['tiros', 'Tiros'], ['classico', 'Coluna'], ['faixa', 'Faixa'], ['percurso', 'Percurso'], ['lado', 'Lado a lado'], ['mapa', 'Só o mapa'],
   ['sobre', 'Mapa + números'], ['tabela', 'Ficha'], ['ficha_mapa', 'Ficha + mapa'], ['lateral', 'Diagonal'], ['pilulas', 'Número de peito'],
   ['parciais', 'Parciais'], ['recibo', 'Medalha'], ['destaque', 'Destaque'], ['linha', 'Na foto'],
@@ -293,72 +293,33 @@ async function desenharCard(cv, c, o) {
       let y = cy + R + (post ? 70 : 110);
       fl.forEach((l) => { y += lf; txt(l, W / 2, y, ff, tx, 'center'); });
       grade(sel.filter((s4) => s4 !== V.dist).slice(0, 3), y + 70, 88, 70, W - 70, 3, 'center');
-    } else if (L === 'ma_azulejo') { // faixas de azulejo português do Centro Histórico de São Luís
-      const azulejo = (x0, y0, s2) => {
-        ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, s2, s2); ctx.clip();
-        ctx.fillStyle = '#f4f6ff'; ctx.fillRect(x0, y0, s2, s2);
-        ctx.fillStyle = COB; [[x0, y0], [x0 + s2, y0], [x0, y0 + s2], [x0 + s2, y0 + s2]].forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a, b, s2 * .3, 0, Math.PI * 2); ctx.fill(); });
-        ctx.fillStyle = '#f4f6ff'; [[x0, y0], [x0 + s2, y0], [x0, y0 + s2], [x0 + s2, y0 + s2]].forEach(([a, b]) => { ctx.beginPath(); ctx.arc(a, b, s2 * .14, 0, Math.PI * 2); ctx.fill(); });
-        const cx = x0 + s2 / 2, cy = y0 + s2 / 2;
-        ctx.strokeStyle = COB; ctx.lineWidth = s2 * .045; ctx.beginPath(); ctx.moveTo(cx, y0 + s2 * .16); ctx.lineTo(x0 + s2 * .84, cy); ctx.lineTo(cx, y0 + s2 * .84); ctx.lineTo(x0 + s2 * .16, cy); ctx.closePath(); ctx.stroke();
-        for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; ctx.fillStyle = COB; ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * s2 * .16, cy + Math.sin(a) * s2 * .16, s2 * .1, s2 * .05, a, 0, Math.PI * 2); ctx.fill(); }
-        ctx.fillStyle = NAVY; ctx.beginPath(); ctx.arc(cx, cy, s2 * .07, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = OURO; ctx.beginPath(); ctx.arc(cx, cy, s2 * .03, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(10,18,64,.18)'; ctx.lineWidth = 2; ctx.strokeRect(x0, y0, s2, s2); ctx.restore();
-      };
-      const s2 = W / 6, filas = post ? 1 : 2;
-      for (let r = 0; r < filas; r++) for (let k = 0; k < 6; k++) { azulejo(k * s2, r * s2, s2); azulejo(k * s2, H - (r + 1) * s2, s2); }
-      const fg = `800 ${post ? 120 : 140}px ${FH}`, gl = quebra(F.g.toUpperCase(), fg, W - 160), lgg = post ? 112 : 130;
-      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 200), lf = post ? 60 : 68;
-      const tot = gl.length * lgg + 30 + fl.length * lf + 80 + 74 * 1.9 + (dataTxt ? 60 : 0);
+    } else if (L === 'ma_centro') { // fala centralizada, número grande embaixo
+      const fg = (px) => `800 ${px}px ${FH}`; let px = post ? 150 : 170, gl = quebra(F.g.toUpperCase(), fg(px), W - 140);
+      while (gl.length > 2 && px > 90) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 140); }
+      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 200), lf = post ? 62 : 70;
+      const tot = gl.length * px * .9 + 40 + fl.length * lf + 90 + 88 * 1.9 + (dataTxt ? 70 : 0);
       let y = (H - tot) / 2;
-      gl.forEach((l) => { y += lgg; txt(l, W / 2, y, fg, branco ? OURO : COB, 'center', -2); });
-      y += 30; fl.forEach((l) => { y += lf; txt(l, W / 2, y, ff, tx, 'center'); });
-      y += 70; const y2 = grade(lista, y, 88, 70, W - 70, 3, 'center');
+      gl.forEach((l) => { y += px * .9; txt(l, W / 2, y, fg(px), branco ? OURO : COB, 'center', -px * .03); });
+      y += 40; fl.forEach((l) => { y += lf; txt(l, W / 2, y, ff, tx, 'center'); });
+      y += 80; const y2 = grade(lista, y, 88, 70, W - 70, 3, 'center');
       if (dataTxt) txt(dataTxt, W / 2, y2 + 10, LBL(24), sub, 'center', 3);
-    } else if (L === 'ma_manchete') { // capa de jornal: a corrida virou notícia
-      const x = 60, w = W - 120, pad = 50, iw = w - pad * 2;
-      const fh = (px) => `800 ${px}px ${FH}`, man = `${F.g} Atleta corre ${F.val.km} km${F.val.pace ? ` a ${F.val.pace}/km` : ''}`.toUpperCase();
-      let ph = post ? 104 : 120, hl = quebra(man, fh(ph), iw); while (hl.length > 4 && ph > 70) { ph -= 8; hl = quebra(man, fh(ph), iw); }
-      const fd = `500 ${post ? 40 : 44}px ${FB}`, dl = quebra(F.f, fd, iw), ld = post ? 56 : 62;
-      const hFoto = temRota ? (post ? 300 : 460) : 0;
-      const bh = pad + 110 + 50 + hl.length * ph * .95 + 40 + dl.length * ld + 50 + (hFoto ? hFoto + 50 : 0) + 160 + pad;
-      let y = (H - bh) / 2;
-      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.28)'; ctx.shadowBlur = 30; ctx.fillStyle = '#f7f4ea'; ctx.fillRect(x, y, w, bh); ctx.restore();
-      const P = (t, xx, yy, font, cor, al = 'left', esp = 0) => { ctx.save(); ctx.font = font; ctx.fillStyle = cor; ctx.textAlign = al; if ('letterSpacing' in ctx) ctx.letterSpacing = esp + 'px'; ctx.fillText(t, xx, yy); ctx.restore(); };
-      const regua = (yy, e = 3) => { ctx.save(); ctx.fillStyle = NAVY; ctx.fillRect(x + pad, yy, iw, e); ctx.restore(); };
-      let yy = y + pad + 80;
-      P('JORNAL DO TREINO', W / 2, yy, `800 ${post ? 74 : 84}px ${FH}`, NAVY, 'center', 2);
-      yy += 30; regua(yy, 6); yy += 34;
-      P(`SÃO LUÍS · ${DIAS_LONGOS[dt.getDay()].toUpperCase()}, ${dt.getDate()} ${MESES[dt.getMonth()]} ${dt.getFullYear()}`, x + pad, yy, `700 22px ${FB}`, 'rgba(10,18,64,.65)', 'left', 3);
-      P('EDIÇÃO EXTRA', x + w - pad, yy, `800 22px ${FB}`, COB, 'right', 3);
-      yy += 16; regua(yy, 2); yy += 20;
-      hl.forEach((l) => { yy += ph * .95; P(l, x + pad, yy, fh(ph), NAVY, 'left', -1); });
-      yy += 20; dl.forEach((l) => { yy += ld; P(l, x + pad, yy, fd, 'rgba(10,18,64,.8)'); });
-      yy += 40;
-      if (hFoto) { ctx.save(); ctx.fillStyle = '#dde3f3'; ctx.fillRect(x + pad, yy, iw, hFoto); ctx.restore(); cardRota(ctx, c.rota, x + pad + 40, yy + 30, iw - 80, hFoto - 60, COB, 9); yy += hFoto + 50; }
-      regua(yy, 2);
-      const cw = iw / Math.max(1, lista.length);
-      lista.forEach((s3, k) => { const cx = x + pad + cw * k; if (k) { ctx.save(); ctx.fillStyle = 'rgba(10,18,64,.3)'; ctx.fillRect(cx - 20, yy + 30, 2, 110); ctx.restore(); }
-        P(s3.l.toUpperCase(), cx, yy + 60, `700 24px ${FB}`, 'rgba(10,18,64,.6)', 'left', 3); P(s3.v, cx, yy + 130, `800 66px ${FH}`, NAVY, 'left', -1); if (s3.u) P(s3.u, cx + larg(s3.v, `800 66px ${FH}`, -1) + 8, yy + 130, `700 26px ${FB}`, 'rgba(10,18,64,.6)'); });
-    } else { // 'ma_lencois': dunas e lagoas dos Lençóis Maranhenses embaixo
-      const base = H * (post ? .64 : .66);
-      const duna = (y0, amp, fase, c1, c2) => { const g = ctx.createLinearGradient(0, y0 - amp, 0, H); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(0, y0); for (let x = 0; x <= W; x += 20) ctx.lineTo(x, y0 - amp * Math.sin((x / W) * Math.PI * 1.6 + fase) - amp * .35 * Math.sin((x / W) * Math.PI * 4.2 + fase * 2)); ctx.lineTo(W, H); ctx.closePath(); ctx.fill(); };
-      ctx.save();
-      duna(base, 60, .4, '#f3e2ad', '#e6cd86');
-      const lagoa = (x0, y0, rx, ry) => { const g = ctx.createLinearGradient(0, y0 - ry, 0, y0 + ry); g.addColorStop(0, '#43c4e6'); g.addColorStop(1, '#1d7fc4'); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x0, y0, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); };
-      lagoa(W * .3, base + 120, 210, 34); lagoa(W * .78, base + 100, 150, 26);
-      duna(base + 170, 50, 2.1, '#f8ecc6', '#ead39a');
-      lagoa(W * .55, base + 300, 260, 40);
-      duna(base + 360, 44, 4.0, '#fbf3d9', '#efdcaa');
-      ctx.restore();
-      const fg = `800 ${post ? 140 : 160}px ${FH}`, gl = quebra(F.g.toUpperCase(), fg, W - 140), lgg = post ? 128 : 148;
-      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 140), lf = post ? 60 : 68;
-      let y = post ? 110 : 220;
-      if (dataTxt) { txt(dataTxt, 70, y, LBL(26), sub, 'left', 3); y += 20; }
-      gl.forEach((l) => { y += lgg; txt(l, 66, y, fg, branco ? OURO : COB, 'left', -2); });
-      y += 20; fl.forEach((l) => { y += lf; txt(l, 70, y, ff, tx, 'left'); });
-      grade(lista, Math.min(y + 70, base - 88 * 1.9 - 40), 88, 70, W - 70, 3, 'left');
+    } else if (L === 'ma_rodape') { // números em cima, a fala fechando embaixo
+      const fg = (px) => `800 ${px}px ${FH}`; let px = post ? 140 : 160, gl = quebra(F.g.toUpperCase(), fg(px), W - 140);
+      while (gl.length > 2 && px > 90) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 140); }
+      const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 140), lf = post ? 62 : 70;
+      let y = post ? 120 : 200;
+      if (dataTxt) { txt(dataTxt, 70, y, LBL(26), sub, 'left', 3); y += 80; }
+      grade(sel.slice(0, 6), y, 88, 70, W - 70, 3, 'left');
+      let yb = H - (post ? 110 : 200) - fl.length * lf;
+      fl.slice().reverse().forEach((l, i) => txt(l, 70, H - (post ? 110 : 200) - i * lf, ff, tx, 'left'));
+      yb -= 40; gl.slice().reverse().forEach((l, i) => txt(l, 66, yb - i * px * .9, fg(px), branco ? OURO : COB, 'left', -px * .03));
+    } else { // 'ma_so': só a fala, bem grande, e a distância pequena
+      const fg = (px) => `800 ${px}px ${FH}`; let px = post ? 210 : 250, gl = quebra(F.g.toUpperCase(), fg(px), W - 120);
+      while (gl.length > 3 && px > 110) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 120); }
+      const d0 = V.dist, tot = gl.length * px * .88 + (d0 ? 120 : 0);
+      let y = (H - tot) / 2;
+      gl.forEach((l) => { y += px * .88; txt(l, W / 2, y, fg(px), branco ? OURO : COB, 'center', -px * .03); });
+      if (d0) txt(`${d0.v} ${d0.u}${V.pace ? ' · ' + V.pace.v + '/km' : ''}`.toUpperCase(), W / 2, y + 100, `700 44px ${FB}`, tx, 'center', 6);
     }
   };
   if (L.startsWith('ma_')) maranhense();
