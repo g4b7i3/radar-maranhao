@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Watch, ChevronRight, X, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2 } from 'lucide-react';
 import { sb, relogio, dataBR, type Perfil } from './sb';
 // @ts-expect-error módulo JS de desenho (canvas)
-import { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe } from './cards/desenho.js';
+import { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe, tirosDe } from './cards/desenho.js';
 
 export type Atividade = {
   id: string; fonte: string; data: string; titulo: string | null; tipo: string; distancia_m: number; duracao_s: number;
@@ -168,16 +168,18 @@ function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfil: Perf
   const [foto, setFoto] = useState<HTMLImageElement | null>(null);
   const [stats, setStats] = useState<Record<string, boolean>>({ dist: true, pace: true, tempo: true, fc: false, elev: false, cad: false, kcal: false, passos: false, rota: true, data: true });
   const [fala, setFala] = useState(0);
-  const [clima, setClima] = useState<unknown>(null);
+  const [clima, setClima] = useState<unknown>(undefined); // undefined = buscando; null = sem clima
+  // só os modelos que fazem sentido pra esta corrida (sem tiros, sem card de tiros; sem clima, sem card de clima)
+  const modelos = (CARD_LAYOUTS as [string, string][]).filter(([k]) => (k !== 'tiros' || tirosDe(a).length > 0) && ((k !== 'clima' && k !== 'clima_faixa') || !!clima));
   const [envio, setEnvio] = useState<{ url: string } | null>(null);
   const [ocupado, setOcupado] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
-  useEffect(() => { climaDe(a).then(setClima).catch(() => null); }, [a]);
+  useEffect(() => { climaDe(a).then((c: unknown) => setClima(c ?? null)).catch(() => setClima(null)); }, [a]);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
     const c = { ...a, id: fala ? `${a.id}#${fala}` : a.id };
     document.fonts.load("800 60px 'Radar Cond'").catch(() => null)
-      .then(() => desenharCard(cv, c, { layout, formato, cor, fundo: foto ? 'foto' : 'radar', img: foto, stats, clima, zoom: 1, dx: 0, dy: 0 }))
+      .then(() => desenharCard(cv, c, { layout, formato, cor, fundo: foto ? 'foto' : 'radar', img: foto, stats, clima: clima ?? null, zoom: 1, dx: 0, dy: 0 }))
       .catch(() => null);
   }, [a, layout, formato, cor, foto, stats, clima, fala]);
   const escolherFoto = (f: File | null) => { if (!f) return; const im = new Image(); im.onload = () => setFoto(im); im.src = URL.createObjectURL(f); };
@@ -205,7 +207,7 @@ function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfil: Perf
         <div className="pro-linha"><b>Card da corrida</b><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
         <div className="pro-gerador-previa"><canvas ref={ref} /></div>
         <div className="pro-gerador-modelos" role="group" aria-label="Modelo">
-          {(CARD_LAYOUTS as [string, string][]).map(([k, n]) => <button key={k} className="chip" aria-pressed={layout === k} onClick={() => setLayout(k)}>{n}</button>)}
+          {modelos.map(([k, n]) => <button key={k} className="chip" aria-pressed={layout === k} onClick={() => setLayout(k)}>{n}</button>)}
         </div>
         {maranhense && <button className="btn text pro-btn-p" onClick={() => setFala(f => f + 1)}><RefreshCw size={15} aria-hidden="true" />Trocar fala</button>}
         <div className="chips" role="group" aria-label="Formato">
