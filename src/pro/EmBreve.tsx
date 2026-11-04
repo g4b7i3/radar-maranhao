@@ -1,6 +1,6 @@
 // Radar Pro · "Relógio e cards": conexão oficial com o Garmin Connect e a vitrine dos modelos de card da corrida.
 import { useEffect, useRef, useState } from 'react';
-import { Lock, Watch, Activity, Check } from 'lucide-react';
+import { Watch, Check, Plus, X } from 'lucide-react';
 // @ts-expect-error módulo JS de desenho (canvas)
 import { CARD_LAYOUTS, desenharCard } from './cards/desenho.js';
 import { CORRIDA_DEMO, CLIMA_DEMO } from './cards/demo';
@@ -83,6 +83,37 @@ function GarminBotao() {
   );
 }
 
+/** As outras marcas (como na Nexos): Coros, Polar, Suunto e Wahoo chegam pelo Intervals.icu, que ainda está a caminho. */
+const MARCAS: [string, string][] = [['coros', 'Coros'], ['polar', 'Polar'], ['suunto', 'Suunto'], ['wahoo', 'Wahoo'], ['outro', 'Outro relógio']];
+function Marcas() {
+  const [aberta, setAberta] = useState<string | null>(null);
+  const nome = MARCAS.find(m => m[0] === aberta)?.[1];
+  return (
+    <>
+      <p className="pro-k cinza pro-sem-margem">Também compatível</p>
+      <div className="pro-marcas">
+        {MARCAS.map(([k, n]) => (
+          <button key={k} className={'pro-marca' + (k === 'outro' ? ' outro' : '')} onClick={() => setAberta(k)}>
+            {k === 'outro' ? <><Plus size={16} aria-hidden="true" /><small>{n}</small></> : <b>{n}</b>}
+            {k !== 'outro' && <em>em breve</em>}
+          </button>
+        ))}
+      </div>
+      {aberta && (
+        <div className="pro-folha" role="dialog" aria-modal="true" aria-label={nome} onClick={() => setAberta(null)}>
+          <div className="pro-folha-caixa" onClick={e => e.stopPropagation()}>
+            <div className="pro-linha"><b>{nome}</b><button className="btn text" onClick={() => setAberta(null)} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
+            {aberta === 'outro'
+              ? <p className="pro-sub pro-sem-margem">Amazfit, Apple Watch, Samsung, Xiaomi ou app de celular: por enquanto, registre suas provas em <b>Eu corri uma prova</b>. A importação desses relógios está nos planos do Radar.</p>
+              : <p className="pro-sub pro-sem-margem">O {nome} vai se conectar ao Radar pelo <b>Intervals.icu</b>, um serviço gratuito que recebe as corridas do seu relógio. Essa conexão está chegando: assim que liberar, é só conectar uma vez e as corridas passam a chegar sozinhas, igual ao Garmin.</p>}
+            <button className="btn solid" onClick={() => setAberta(null)}>Entendi</button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 export function EmBreve() {
   return (
     <section className="pro-card pro-breve">
@@ -93,8 +124,8 @@ export function EmBreve() {
       </div>
       <div className="pro-breve-con">
         <div className="pro-breve-item"><img className="pro-breve-logo" src="/img/marcas/garmin.png" width={40} height={40} alt="Garmin" /><div><b>Garmin</b><small>Conecte uma vez e cada corrida do relógio chega sozinha no Radar, com pace, frequência cardíaca, parciais e percurso.</small></div><GarminBotao /></div>
-        <div className="pro-breve-item"><Activity size={20} aria-hidden="true" /><div><b>Intervals.icu</b><small>Coros, Polar, Suunto e Wahoo pelo Intervals.icu.</small></div><button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button></div>
       </div>
+      <Marcas />
       <p className="pro-sub pro-sem-margem">Card da corrida pro story: {CARD_LAYOUTS.length} modelos, inclusive no jeito maranhense. Abra um treino em <b>Meus treinos</b> e toque em <b>Gerar card</b>.</p>
       <div className="pro-breve-galeria">{(CARD_LAYOUTS as [string, string][]).map(([k, n]) => <Miniatura key={k} layout={k} nome={n} />)}</div>
     </section>

@@ -1120,3 +1120,9 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-breve-oficial img { height: 44px; width: auto; display: block; }
 .pro-breve-tag { display: inline-flex; align-items: center; gap: 6px; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--cobalt); border: 1px solid rgba(29,63,191,.35); background: rgba(29,63,191,.08); padding: 6px 11px; border-radius: 999px; }
 .pro-breve-logo { width: 40px; height: 40px; border-radius: 10px; flex: none; }
+.pro-marcas { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.pro-marca { position: relative; min-height: 58px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 6px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+.pro-marca b { font-size: 1rem; font-weight: 900; letter-spacing: .02em; text-transform: uppercase; font-stretch: 75%; }
+.pro-marca em { font-style: normal; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.pro-marca.outro { color: var(--muted); border-style: dashed; }
+.pro-marca.outro small { font-size: .78rem; font-weight: 700; }
