@@ -14,7 +14,7 @@ const isoDia = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.g
 const CARD_STATS = [['dist', 'Distância'], ['pace', 'Pace'], ['tempo', 'Tempo'], ['fc', 'FC média'], ['elev', 'Subida'], ['cad', 'Cadência'], ['kcal', 'Calorias'], ['passos', 'Passos'], ['rota', 'Percurso'], ['data', 'Data']];
 // modelos do card (inspirados nos stickers de corrida), com as cores do Radar e sem logo
 const CARD_LAYOUTS = [
-  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'],
+  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'], ['ma_aspas', 'Entre aspas'], ['ma_pilha', 'Empilhado'], ['ma_contorno', 'Contorno'], ['ma_placar', 'Placar'], ['ma_faixa', 'Faixa dourada'], ['ma_lateral', 'Fala de lado'],
   ['icones', 'Com ícones'], ['clima', 'Clima'], ['clima_faixa', 'Clima + números'], ['tiros', 'Tiros'], ['classico', 'Coluna'], ['faixa', 'Faixa'], ['percurso', 'Percurso'], ['lado', 'Lado a lado'], ['mapa', 'Só o mapa'],
   ['sobre', 'Mapa + números'], ['tabela', 'Ficha'], ['ficha_mapa', 'Ficha + mapa'], ['lateral', 'Diagonal'], ['pilulas', 'Número de peito'],
   ['parciais', 'Parciais'], ['recibo', 'Medalha'], ['destaque', 'Destaque'], ['linha', 'Na foto'],
@@ -370,6 +370,63 @@ async function desenharCard(cv, c, o) {
       let yb = H - (post ? 110 : 200) - fl.length * lf;
       fl.slice().reverse().forEach((l, i) => txt(l, 70, H - (post ? 110 : 200) - i * lf, ff, tx, 'left'));
       yb -= 40; gl.slice().reverse().forEach((l, i) => txt(l, 66, yb - i * px * .9, fg(px), branco ? OURO : COB, 'left', -px * .03));
+    } else if (L === 'ma_aspas') { // a frase como citação, com aspas grandes e a exclamação assinando
+      const fq = `600 ${post ? 64 : 72}px ${FB}`, ql = quebra(F.f, fq, W - 200), lq = post ? 84 : 94;
+      const tot = 200 + ql.length * lq + 120 + 88 * 1.9 + (dataTxt ? 70 : 0);
+      let y = (H - tot) / 2;
+      txt('“', 80, y + 230, `800 300px ${FH}`, branco ? OURO : COB, 'left');
+      y += 200; ql.forEach((l) => { y += lq; txt(l, 100, y, fq, tx, 'left'); });
+      y += 70; txt('— ' + F.g, 100, y, `800 ${post ? 58 : 66}px ${FH}`, branco ? OURO : COB, 'left', -1);
+      y += 70; const y2 = grade(lista, y, 88, 100, W - 80, 3, 'left');
+      if (dataTxt) txt(dataTxt, 100, y2 + 10, LBL(24), sub, 'left', 3);
+    } else if (L === 'ma_pilha') { // cada palavra da fala numa linha, alternando as cores
+      const ps = F.g.toUpperCase().split(/\s+/).filter(Boolean);
+      let px = post ? 200 : 240; const fg = (n) => `800 ${n}px ${FH}`;
+      while (ps.some((w) => larg(w, fg(px), -px * .03) > W - 140) && px > 90) px -= 10;
+      const lh = px * .86, tot = ps.length * lh + 60 + 88 * 1.9 + 70;
+      let y = (H - tot) / 2;
+      ps.forEach((w, i) => { y += lh; txt(w, 66, y, fg(px), i % 2 ? tx : (branco ? OURO : COB), 'left', -px * .03); });
+      y += 40; txt(F.f, 70, y + 30, `600 ${post ? 40 : 44}px ${FB}`, sub, 'left');
+      grade(lista, y + 110, 88, 70, W - 70, 3, 'left');
+    } else if (L === 'ma_contorno') { // a fala só no contorno, bem grande, e os números embaixo
+      const fg = (n) => `800 ${n}px ${FH}`; let px = post ? 190 : 230, gl = quebra(F.g.toUpperCase(), fg(px), W - 120);
+      while (gl.length > 3 && px > 100) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 120); }
+      const tot = gl.length * px * .9 + 60 + 88 * 1.9 + (dataTxt ? 70 : 0);
+      let y = (H - tot) / 2;
+      ctx.save(); ctx.font = fg(px); ctx.textAlign = 'center'; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = branco ? OURO : COB; if ('letterSpacing' in ctx) ctx.letterSpacing = `${-px * .02}px`;
+      if (sombra) { ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 12; }
+      gl.forEach((l) => { y += px * .9; ctx.strokeText(l, W / 2, y); }); ctx.restore();
+      y += 40; txt(F.f, W / 2, y + 30, `600 ${post ? 40 : 46}px ${FB}`, tx, 'center');
+      const y2 = grade(lista, y + 100, 88, 70, W - 70, 3, 'center');
+      if (dataTxt) txt(dataTxt, W / 2, y2 + 10, LBL(24), sub, 'center', 3);
+    } else if (L === 'ma_placar') { // a distância gigante, com a fala de legenda
+      const d0 = V.dist || sel[0], resto = sel.filter((s4) => s4 !== d0).slice(0, 3);
+      const px = post ? 300 : 360; let y = (H - (px + 120 + 140 + 80 + 88 * 1.9)) / 2;
+      if (dataTxt) txt(dataTxt, W / 2, y - 20, LBL(26), sub, 'center', 4);
+      if (d0) { y += px * .95; txt(d0.v, W / 2, y, `800 ${px}px ${FH}`, tx, 'center', -px * .05); txt((d0.u || '').toUpperCase(), W / 2, y + 105, `800 46px ${FB}`, branco ? OURO : COB, 'center', 12); }
+      y += 230; const fg = `800 ${post ? 92 : 108}px ${FH}`; quebra(F.g.toUpperCase(), fg, W - 140).slice(0, 2).forEach((l) => { txt(l, W / 2, y, fg, branco ? OURO : COB, 'center', -2); y += post ? 92 : 104; });
+      y += 10; txt(F.f, W / 2, y, `600 ${post ? 38 : 42}px ${FB}`, sub, 'center');
+      grade(resto, y + 70, 80, 90, W - 90, 3, 'center');
+    } else if (L === 'ma_faixa') { // uma faixa dourada atravessando, com a fala dentro
+      const fg = (n) => `800 ${n}px ${FH}`; let px = post ? 120 : 140; while (larg(F.g.toUpperCase(), fg(px), -2) > W - 120 && px > 60) px -= 6;
+      const yc = H * .44, bh = px * 1.5;
+      ctx.save(); ctx.translate(W / 2, yc); ctx.rotate(-0.05); ctx.fillStyle = OURO; ctx.fillRect(-W * .6, -bh / 2, W * 1.2, bh);
+      ctx.font = fg(px); ctx.fillStyle = NAVY; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; if ('letterSpacing' in ctx) ctx.letterSpacing = '-2px'; ctx.fillText(F.g.toUpperCase(), 0, px * .04); ctx.restore();
+      const ff = `600 ${post ? 42 : 48}px ${FB}`, fl = quebra(F.f, ff, W - 160); let y = yc + bh / 2 + 70;
+      fl.forEach((l) => { y += post ? 58 : 66; txt(l, W / 2, y, ff, tx, 'center'); });
+      const y2 = grade(lista, y + 70, 88, 70, W - 70, 3, 'center');
+      if (dataTxt) txt(dataTxt, W / 2, yc - bh / 2 - 60, LBL(26), sub, 'center', 4); else void y2;
+    } else if (L === 'ma_lateral') { // a fala de pé na lateral, os números em coluna do outro lado
+      const fg = (n) => `800 ${n}px ${FH}`, alt = H - (post ? 160 : 260); let px = post ? 170 : 200;
+      while (larg(F.g.toUpperCase(), fg(px), -2) > alt && px > 70) px -= 8;
+      ctx.save(); ctx.translate(80 + px * .78, H / 2); ctx.rotate(-Math.PI / 2); ctx.font = fg(px); ctx.fillStyle = branco ? OURO : COB; ctx.textAlign = 'center'; if ('letterSpacing' in ctx) ctx.letterSpacing = '-2px';
+      if (sombra) { ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 14; } ctx.fillText(F.g.toUpperCase(), 0, 0); ctx.restore();
+      const x0 = 80 + px + 70, col = sel.slice(0, 4), pp = 84;
+      const ff = `600 ${post ? 38 : 42}px ${FB}`, fl = quebra(F.f, ff, W - x0 - 70);
+      let y = (H - (fl.length * 54 + 60 + col.length * pp * 1.9 + (dataTxt ? 60 : 0))) / 2;
+      if (dataTxt) { txt(dataTxt, x0, y, LBL(24), sub, 'left', 3); y += 60; }
+      fl.forEach((l) => { y += 54; txt(l, x0, y, ff, tx, 'left'); }); y += 60;
+      col.forEach((s5) => { stat(s5, x0, y, pp, 'left'); y += pp * 1.9; });
     } else { // 'ma_so': só a fala, bem grande, e a distância pequena
       const fg = (px) => `800 ${px}px ${FH}`; let px = post ? 210 : 250, gl = quebra(F.g.toUpperCase(), fg(px), W - 120);
       while (gl.length > 3 && px > 110) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 120); }
