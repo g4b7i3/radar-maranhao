@@ -14,7 +14,7 @@ const isoDia = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.g
 const CARD_STATS = [['dist', 'Distância'], ['pace', 'Pace'], ['tempo', 'Tempo'], ['fc', 'FC média'], ['elev', 'Subida'], ['cad', 'Cadência'], ['kcal', 'Calorias'], ['passos', 'Passos'], ['rota', 'Percurso'], ['data', 'Data']];
 // modelos do card (inspirados nos stickers de corrida), com as cores do Radar e sem logo
 const CARD_LAYOUTS = [
-  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_dicionario', 'Dicionário maranhês'], ['ma_azulejo', 'Azulejo'], ['ma_manchete', 'Manchete'], ['ma_lencois', 'Lençóis'],
+  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_azulejo', 'Azulejo'], ['ma_manchete', 'Manchete'], ['ma_lencois', 'Lençóis'],
   ['icones', 'Com ícones'], ['clima', 'Clima'], ['clima_faixa', 'Clima + números'], ['tiros', 'Tiros'], ['classico', 'Coluna'], ['faixa', 'Faixa'], ['percurso', 'Percurso'], ['lado', 'Lado a lado'], ['mapa', 'Só o mapa'],
   ['sobre', 'Mapa + números'], ['tabela', 'Ficha'], ['ficha_mapa', 'Ficha + mapa'], ['lateral', 'Diagonal'], ['pilulas', 'Número de peito'],
   ['parciais', 'Parciais'], ['recibo', 'Medalha'], ['destaque', 'Destaque'], ['linha', 'Na foto'],
@@ -57,19 +57,6 @@ const FALAS = {
     { g: 'Perainda!', f: 'Deixa eu respirar: {km} km em {tempo}.' },
   ],
 };
-// verbetes do "dicionário maranhês", com o exemplo tirado do treino
-const VERBETES = {
-  longo: [{ p: 'brocado', cl: 'adj.', d: 'Como fica quem correu {km} km: com fome de comer um arroz de cuxá inteiro.' }],
-  rapido: [{ p: 'zilado', cl: 'adj.', d: 'Ligeiro demais. Ex.: correr a {pace}/km.' }],
-  forte: [{ p: 'invocado', cl: 'adj.', d: 'Treino bravo, que deixa as pernas tremendo. Ex.: o de hoje, {km} km.' }],
-  calor: [{ p: 'remoso', cl: 'adj.', d: 'Perigoso. Ex.: o sol de São Luís com {temp}° na rua.' }],
-  cedo: [{ p: 'sem mentira nenhuma', cl: 'expr.', d: 'Jeito de começar uma história. Ex.: sem mentira nenhuma, corri {km} km antes do sol.' }],
-  leve: [{ p: 'coirento', cl: 'adj.', d: 'Preguiçoso. Tudo o que tu não foi hoje: {km} km na conta.' }],
-  geral: [
-    { p: 'éguas', cl: 'interj.', d: 'O que se diz ao ver {km} km em {tempo}.' },
-    { p: 'aziado', cl: 'adj.', d: 'Desanimado. Mas foi treinar assim mesmo: {km} km.' },
-  ],
-};
 const sorteio = (t) => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
 function falaDe(c, clima, chave) {
   const km = c.distancia_m ? (c.distancia_m / 1000).toFixed(c.distancia_m >= 10000 ? 1 : 2).replace(/\.?0+$/, '').replace('.', ',') : null;
@@ -88,7 +75,7 @@ function falaDe(c, clima, chave) {
     const lista = tags.flatMap((t) => banco[t] || []).map((x) => ({ ...x, f: x.f != null ? encher(x.f) : undefined, d: x.d != null ? encher(x.d) : undefined })).filter((x) => (x.f ?? x.d) != null);
     return lista[sorteio((c.id || '') + chave) % lista.length];
   };
-  return { ...pega(FALAS), verbete: pega(VERBETES), val };
+  return { ...pega(FALAS), val };
 }
 const cardCarregarImg = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const CARD_IMGS = {};
@@ -282,28 +269,30 @@ async function desenharCard(cv, c, o) {
       y += bh + 130;
       const y2 = grade(lista, y, 88, 80, W - 80, 3, 'left');
       if (dataTxt) txt(dataTxt, 80, y2 + 10, LBL(26), sub, 'left', 3);
-    } else if (L === 'ma_dicionario') { // verbete do "dicionário maranhês" com o exemplo do treino
-      const vb = F.verbete, x = 90, w = W - 180, pad = 70, iw = w - pad * 2;
-      const fp = (px) => `800 ${px}px ${FH}`; let pp = 150; while (larg(vb.p, fp(pp)) > iw && pp > 70) pp -= 8;
-      const fd = `500 ${post ? 42 : 46}px ${FB}`, dl = quebra(vb.d, fd, iw), ld = post ? 60 : 66;
-      const fx = `italic 600 ${post ? 38 : 42}px ${FB}`, xl = quebra(`“${F.g} ${F.f}”`, fx, iw), lx = post ? 54 : 60;
-      const bh = pad + 40 + 30 + pp + 100 + dl.length * ld + 40 + xl.length * lx + 70 + 150 + pad;
-      let y = (H - bh - (dataTxt ? 80 : 0)) / 2;
-      ctx.save(); if (o.fundo !== 'transparente') { ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 30; }
-      ctx.fillStyle = '#fbf8ef'; ret(ctx, x, y, w, bh, 30); ctx.fill(); ctx.restore();
-      const P = (t, xx, yy, font, cor, al = 'left', esp = 0) => { ctx.save(); ctx.font = font; ctx.fillStyle = cor; ctx.textAlign = al; if ('letterSpacing' in ctx) ctx.letterSpacing = esp + 'px'; ctx.fillText(t, xx, yy); ctx.restore(); };
-      let yy = y + pad + 30;
-      P('DICIONÁRIO MARANHÊS', x + pad, yy, `800 28px ${FB}`, COB, 'left', 6);
-      P('M', x + w - pad, yy, `800 28px ${FB}`, 'rgba(10,18,64,.35)', 'right', 2);
-      ctx.save(); ctx.fillStyle = 'rgba(10,18,64,.18)'; ctx.fillRect(x + pad, yy + 22, iw, 3); ctx.restore();
-      yy += 30 + pp; P(vb.p, x + pad - 4, yy, fp(pp), NAVY, 'left', -pp * .02);
-      yy += 80; P(vb.cl, x + pad, yy, `italic 600 40px ${FB}`, COB); yy += 10;
-      dl.forEach((l) => { yy += ld; P(l, x + pad, yy, fd, NAVY); });
-      yy += 40; xl.forEach((l) => { yy += lx; P(l, x + pad, yy, fx, 'rgba(10,18,64,.65)'); });
-      yy += 50; ctx.save(); ctx.fillStyle = 'rgba(10,18,64,.35)'; for (let xx = x + pad; xx < x + w - pad; xx += 16) { ctx.beginPath(); ctx.arc(xx, yy, 2.6, 0, Math.PI * 2); ctx.fill(); } ctx.restore();
-      const cw = iw / Math.max(1, lista.length);
-      lista.forEach((s2, k) => { const cx = x + pad + cw * k; P(s2.l.toUpperCase(), cx, yy + 60, `700 24px ${FB}`, 'rgba(10,18,64,.55)', 'left', 3); P(s2.v, cx, yy + 128, `800 64px ${FH}`, NAVY, 'left', -1); if (s2.u) P(s2.u, cx + larg(s2.v, `800 64px ${FH}`, -1) + 8, yy + 128, `700 26px ${FB}`, 'rgba(10,18,64,.55)'); });
-      if (dataTxt) txt(dataTxt, W / 2, y + bh + 70, LBL(26), sub, 'center', 3);
+    } else if (L === 'ma_carimbo') { // carimbo redondo, torto, com a fala na borda e a distância no meio
+      const cx = W / 2, cy = H * (post ? .42 : .4), R = post ? 330 : 370, cor = branco ? OURO : COB;
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-0.16);
+      ctx.strokeStyle = cor; ctx.lineWidth = 14; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+      ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(0, 0, R - 34, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, R * .56, 0, Math.PI * 2); ctx.stroke();
+      // a fala escrita em volta, letra por letra
+      const grito = F.g.toUpperCase().replace(/[:!?]+$/, '') + '!';
+      let fs = 72; ctx.font = `800 ${fs}px ${FH}`; const rr = R - 100, arco = Math.PI * 1.15;
+      while (ctx.measureText(grito).width > rr * arco && fs > 40) { fs -= 4; ctx.font = `800 ${fs}px ${FH}`; }
+      const wt = ctx.measureText(grito).width; let ang = -Math.PI / 2 - (wt / rr) / 2;
+      ctx.fillStyle = cor; ctx.textAlign = 'center';
+      for (const ch of grito) { const wc = ctx.measureText(ch).width; ang += wc / rr / 2; ctx.save(); ctx.rotate(ang + Math.PI / 2); ctx.fillText(ch, 0, -rr + fs * .35); ctx.restore(); ang += wc / rr / 2; }
+      // estrelinhas e o dia embaixo
+      ctx.font = `800 34px ${FB}`; if ('letterSpacing' in ctx) ctx.letterSpacing = '8px';
+      ctx.fillText(`★ ${dt.getDate()} ${MESES[dt.getMonth()]} ${dt.getFullYear()} ★`, 0, R * .78);
+      if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+      const d0 = V.dist || sel[0];
+      if (d0) { ctx.font = `800 ${R * .42}px ${FH}`; ctx.fillStyle = cor; if ('letterSpacing' in ctx) ctx.letterSpacing = '-6px'; ctx.fillText(d0.v, 0, R * .13); if ('letterSpacing' in ctx) ctx.letterSpacing = '10px'; ctx.font = `800 40px ${FB}`; ctx.fillText((d0.u || '').toUpperCase(), 0, R * .32); }
+      ctx.restore();
+      const ff = `600 ${post ? 46 : 52}px ${FB}`, fl = quebra(F.f, ff, W - 160), lf = post ? 62 : 70;
+      let y = cy + R + (post ? 70 : 110);
+      fl.forEach((l) => { y += lf; txt(l, W / 2, y, ff, tx, 'center'); });
+      grade(sel.filter((s4) => s4 !== V.dist).slice(0, 3), y + 70, 88, 70, W - 70, 3, 'center');
     } else if (L === 'ma_azulejo') { // faixas de azulejo português do Centro Histórico de São Luís
       const azulejo = (x0, y0, s2) => {
         ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, s2, s2); ctx.clip();
