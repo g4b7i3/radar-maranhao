@@ -1069,3 +1069,15 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 /* Selo do Radar Pro (depois do @) */
 .pro-arroba{white-space:nowrap}
 .radar-selo{display:inline-block;width:1.05em;height:1.05em;margin-left:.22em;vertical-align:-.16em;flex:none;filter:drop-shadow(0 1px 1px rgba(10,18,64,.25))}
+
+/* Em breve: cards da corrida (bloqueados), Garmin e Intervals.icu */
+@font-face{font-family:'Radar Cond';src:url(/fonts/radar-cond.woff2) format('woff2');font-weight:100 900;font-display:swap}
+.pro-breve-galeria{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 2px 6px;margin:0 -2px}
+.pro-breve-card{position:relative;flex:0 0 112px;scroll-snap-align:start;display:flex;flex-direction:column;gap:5px}
+.pro-breve-card canvas{width:112px;height:199px;border-radius:14px;display:block;filter:saturate(.75) brightness(.8)}
+.pro-breve-card small{font-size:.72rem;font-weight:700;text-align:center;color:var(--muted,#5b6475)}
+.pro-breve-cadeado{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#ffd34d;color:#0a1240;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.pro-breve-con{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.pro-breve-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(127,140,170,.1)}
+.pro-breve-item div{flex:1;min-width:0}.pro-breve-item b{display:block}.pro-breve-item small{font-size:.8rem;opacity:.75}
+.pro-breve-item .btn{flex-shrink:0}

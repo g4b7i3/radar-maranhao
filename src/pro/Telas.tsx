@@ -10,6 +10,7 @@ import { GRUPOS, medalhaSVG, type Medalha } from './medalhas';
 import CardResultado from './CardResultado';
 import { MeusDescontos, AdminDescontos } from './Descontos';
 import { AdminBuscas } from './AdminBuscas';
+import { EmBreve } from './EmBreve';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
@@ -175,6 +176,7 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
       <MeusDescontos perfil={perfil} />
+      <EmBreve />
 
       {evolucao.length >= 2 && (
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
