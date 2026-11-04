@@ -26,28 +26,72 @@ const FALAS = {
     { g: 'Éguas, siô!', f: 'Fui na baixa da égua e voltei: {km} km no pé.' },
     { g: 'Armaria!', f: '{km} km de longão. Agora tô só a broca.' },
     { g: 'Marmenino!', f: '{tempo} correndo. Sem mentira nenhuma.' },
+    { g: 'Tô brocado!', f: '{km} km depois, só um arroz de cuxá me salva.' },
+    { g: 'Vai pra caixa-prego!', f: 'Foi lá que eu fui parar: {km} km de longão.' },
+    { g: 'Marróia!', f: 'Olha o tamanho desse longão: {km} km.' },
+    { g: 'Égua do longão!', f: '{tempo} na rua. A ilha ficou pequena.' },
+    { g: 'Cabra da peste!', f: 'Encarou {km} km e ainda voltou rindo.' },
+    { g: 'Rapá, siô!', f: '{km} km. Juçara com farinha pra repor tudo.' },
+    { g: 'Égua, mermã!', f: 'Dei a volta na ilha quase: {km} km.' },
   ],
   rapido: [
     { g: 'Piqueno, tu é o raio!', f: '{pace}/km de média. Fui zilado do começo ao fim.' },
     { g: 'Só quer ser!', f: 'Diz que foi leve e vem com {pace}/km.' },
     { g: 'Éguas!', f: 'Passei zilado: {km} km a {pace}/km.' },
+    { g: 'Fui zilado!', f: '{pace}/km. Nem o vento da Litorânea me pegou.' },
+    { g: 'Bunitim de corpo!', f: 'Com esse pace de {pace}/km, pode se achar mesmo.' },
+    { g: 'Esparroso!', f: '{pace}/km e ainda quer que todo mundo veja. E vai ver.' },
+    { g: 'Kiu!', f: 'Pra quem disse que eu não fazia {pace}/km.' },
+    { g: 'Marrapaz!', f: 'Que pace foi esse? {pace}/km, rapá.' },
+    { g: 'Chegou na caruda!', f: 'Sem aquecer conversa: {km} km a {pace}/km.' },
   ],
   forte: [
     { g: 'Té doido!', f: 'Esse treino foi louco: {km} km com o coração na boca.' },
     { g: 'Armaria!', f: 'Até a dor desse treino doeu. E eu fui até o fim.' },
     { g: 'Marrapaz!', f: 'Treino invocado. As pernas ainda tão tremendo.' },
+    { g: 'Tu é doido!', f: 'Quem foi que passou esse treino? Fiz, mas fiz chorando.' },
+    { g: 'Égua, siô!', f: 'Coração batendo a {fc} e eu lá, dando meus pulos.' },
+    { g: 'Farré!', f: 'Faz é vergonha o tanto que esse treino puxou.' },
+    { g: 'Treino invocado!', f: 'Saí de lá ralado, mas saí inteiro.' },
+    { g: 'Armaria, siô!', f: 'O treino me deu um bogue. E eu dei outro nele.' },
+    { g: 'Heheeein!', f: 'Diz que foi fácil? Pergunta pras minhas pernas.' },
   ],
   calor: [
     { g: 'Égua do calor!', f: 'O sol de São Luís tava remoso e eu fui correr assim mesmo.' },
     { g: 'Armaria!', f: '{temp}° na rua e eu lá, dando meus pulos.' },
+    { g: 'Tá remoso!', f: '{temp}° no asfalto. Correr aqui é pra quem é da ilha.' },
+    { g: 'Égua, mermão!', f: 'Banhei de suor antes de banhar de chuveiro.' },
+    { g: 'Marmenino!', f: '{temp}° e {km} km. O sol mangou de mim, eu manguei dele.' },
+  ],
+  chuva: [
+    { g: 'Éguas!', f: 'Banhei de chuva no meio do treino: {km} km assim.' },
+    { g: 'Choveu? Pior!', f: 'Choveu, e eu corri {km} km do mesmo jeito.' },
+    { g: 'Marrapaz!', f: 'Chuva na ilha e eu lá na rua: {km} km.' },
+  ],
+  subida: [
+    { g: 'Armaria, a ladeira!', f: '{elev} m de subida. Parecia a ladeira do Desterro.' },
+    { g: 'Égua da subida!', f: '{elev} m pra cima e o coração lá em cima também.' },
+    { g: 'Tu é doido!', f: 'Quem bota {elev} m de subida num treino?' },
   ],
   cedo: [
     { g: 'Sem mentira nenhuma:', f: 'corri {km} km antes do sol nascer.' },
     { g: 'Heheeein!', f: 'Acordei cedo, mermão: {km} km antes do café.' },
+    { g: 'Égua, que cedo!', f: 'O galo ainda tava dormindo e eu já tinha {km} km.' },
+    { g: 'Aziado nada!', f: 'Acordei de madrugada e fui: {km} km antes do sol.' },
+    { g: 'Marmenino!', f: 'De madrugada na rua: {km} km e a cidade ainda dormindo.' },
+  ],
+  noite: [
+    { g: 'Égua, siô!', f: 'Treino de noite, com a lua de testemunha: {km} km.' },
+    { g: 'Heheeein!', f: 'Saí do trabalho e fui correr: {km} km na conta.' },
+    { g: 'Perainda!', f: 'Antes da seresta tem treino: {km} km.' },
   ],
   leve: [
     { g: 'Kiu pra preguiça!', f: 'Rodagem de boa, mas coirento hoje não.' },
     { g: 'Aziado nada!', f: '{km} km leve, só pra manter o corpo ligado.' },
+    { g: 'Nã, nã, nã!', f: 'Hoje não teve galudice: {km} km tranquilo.' },
+    { g: 'Rodagem de boa!', f: 'Devagarinho, no ritmo de um reggae da ilha.' },
+    { g: 'Treino cabuloso?', f: 'Nã. Treino leve também conta: {km} km.' },
+    { g: 'Mermã!', f: 'Hoje foi só triscar no asfalto: {km} km de boa.' },
   ],
   geral: [
     { g: 'Heheeein!', f: 'Treino pago: {km} km em {tempo}.' },
@@ -55,18 +99,31 @@ const FALAS = {
     { g: 'Foi bom? Pior!', f: '{km} km a {pace}/km. Pior que foi bom demais.' },
     { g: 'Marrapaz!', f: '{km} km e ainda deu pra mangar da preguiça.' },
     { g: 'Perainda!', f: 'Deixa eu respirar: {km} km em {tempo}.' },
+    { g: 'Noisomo!', f: 'Nós somos da ilha, e a ilha corre: {km} km.' },
+    { g: 'Égua, mermão!', f: '{km} km feitos. Agora é banhar e comer.' },
+    { g: 'Armaria!', f: 'Tarra com preguiça, mas fui: {km} km.' },
+    { g: 'Kiu!', f: 'Pro coirento que ficou na cama. {km} km aqui.' },
+    { g: 'Fi de mã!', f: 'Mais um treino no bolso: {km} km em {tempo}.' },
+    { g: 'Rapá, siô!', f: 'Corri {km} km e nem senti. Sem mentira nenhuma.' },
+    { g: 'Marmenino!', f: 'Olha eu de novo na rua: {km} km.' },
+    { g: 'Égua, que treino!', f: '{km} km em {tempo}. Hoje o boi dançou.' },
+    { g: 'Tô é tu!', f: 'Disse que não ia treinar hoje? Fui: {km} km.' },
+    { g: 'Pior!', f: 'Quem treina, colhe: {km} km a {pace}/km.' },
   ],
 };
 const sorteio = (t) => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
 function falaDe(c, clima, chave) {
   const km = c.distancia_m ? (c.distancia_m / 1000).toFixed(c.distancia_m >= 10000 ? 1 : 2).replace(/\.?0+$/, '').replace('.', ',') : null;
   const p = paceDe(c), h = new Date(c.data).getHours(), temp = clima && clima.temp != null ? clima.temp : null;
-  const val = { km, pace: p ? fmtPace(p).replace('/km', '') : null, tempo: c.duracao_s ? fmtDurLongo(c.duracao_s) : null, temp };
+  const val = { km, pace: p ? fmtPace(p).replace('/km', '') : null, tempo: c.duracao_s ? fmtDurLongo(c.duracao_s) : null, temp, fc: c.fc_media || null, elev: c.elevacao_m ? Math.round(c.elevacao_m) : null };
   const tags = [];
   if (c.distancia_m >= 15000) tags.push('longo');
   if (p && p < 285) tags.push('rapido');
   if ((c.fc_media || 0) >= 160 || (c._serie && c._serie.qual)) tags.push('forte');
   if (temp != null && temp >= 29) tags.push('calor');
+  if (clima && clima.cod != null && clima.cod >= 51) tags.push('chuva');
+  if (c.elevacao_m >= 80) tags.push('subida');
+  if (h >= 19) tags.push('noite');
   if (h < 6) tags.push('cedo');
   if ((p && p > 390) || (c.distancia_m && c.distancia_m < 5000)) tags.push('leve');
   tags.push('geral');
