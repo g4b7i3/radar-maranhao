@@ -174,11 +174,11 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
       {temp.pontos_pendentes > 0 && <p className="fine pro-sem-margem">+{temp.pontos_pendentes} pontos esperando o resultado oficial ou o comprovante.</p>}
 
       <button className="btn solid pro-btn" onClick={irCorri}><Plus size={18} aria-hidden="true" />Eu corri uma prova</button>
+      <EmBreve />
+      <MeusTreinos perfil={perfil} />
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
       <MeusDescontos perfil={perfil} />
-      <EmBreve />
-      <MeusTreinos perfil={perfil} />
 
       {evolucao.length >= 2 && (
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
