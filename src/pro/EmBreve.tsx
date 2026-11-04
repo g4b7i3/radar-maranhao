@@ -38,43 +38,51 @@ function Miniatura({ layout, nome }: { layout: string; nome: string }) {
 /** Botão do Garmin: liberado só pro admin testar enquanto está "Em breve" pros atletas. */
 function GarminBotao() {
   const [admin, setAdmin] = useState(false);
-  const [conectado, setConectado] = useState(false);
-  const [msg, setMsg] = useState<string | null>(() => (location.hash.includes('garmin-ok') ? 'Garmin conectado! As próximas corridas do relógio chegam sozinhas.' : location.hash.includes('garmin-erro') ? 'Não deu pra conectar o Garmin. Tente de novo.' : null));
-  const [ocupado, setOcupado] = useState(false);
-  const conferir = () => sb.from('radar_minhas_integracoes').select('provedor').eq('provedor', 'garmin').then(({ data: d }) => { const c = !!d?.length; setConectado(antes => { if (c && !antes && esperando.current) setMsg('Garmin conectado! As próximas corridas do relógio chegam sozinhas.'); return c; }); });
-  const esperando = useRef(false);
+  const [conectado, setConectado] = useState<boolean | null>(null);
+  const [msg, setMsg] = useState<string | null>(() => (location.hash.includes('garmin-erro') ? 'Não deu pra conectar o Garmin. Tente de novo.' : null));
+  const [indo, setIndo] = useState(false);
+  const pronto = useRef<{ url: string; em: number } | null>(null); // link da Garmin já preparado, pro toque abrir na hora
+  // volta pro mesmo endereço em que o app está aberto (igual à Nexos)
+  const preparar = () => chamar<{ url?: string }>('radar-garmin', { acao: 'iniciar', retorno: location.origin + location.pathname })
+    .then(r => { if (r.url) pronto.current = { url: r.url, em: Date.now() }; return r; });
   useEffect(() => {
+    const veioOk = location.hash.includes('garmin-ok');
+    if (location.hash.includes('garmin-')) history.replaceState(null, '', location.pathname + location.search + '#temporada');
     sb.auth.getUser().then(({ data }) => {
       if (data.user?.email !== ADMIN) return;
-      setAdmin(true); conferir();
+      setAdmin(true);
+      // voltando da Garmin: a conexão termina em 1 ou 2 segundos, então confere algumas vezes
+      let voltou = veioOk; try { voltou ||= sessionStorage.getItem('radar-garmin-volta') === '1'; sessionStorage.removeItem('radar-garmin-volta'); } catch { /* */ }
+      let n = 0;
+      const conferir = () => sb.from('radar_minhas_integracoes').select('provedor').eq('provedor', 'garmin').then(({ data: d }) => {
+        const c = !!d?.length;
+        if (!c && voltou && ++n < 8) { setConectado(null); setMsg('Conectando o Garmin…'); setTimeout(conferir, 800); return; }
+        setConectado(c);
+        if (voltou) setMsg(c ? 'Garmin conectado! As próximas corridas do relógio chegam sozinhas.' : 'Não deu pra conectar o Garmin. Tente de novo.');
+        if (!c) preparar();
+      });
+      conferir();
     });
-    // voltou pro app depois de autorizar na aba da Garmin: confere de novo
-    const volta = () => { if (document.visibilityState === 'visible' && esperando.current) conferir(); };
-    document.addEventListener('visibilitychange', volta); window.addEventListener('focus', volta);
-    return () => { document.removeEventListener('visibilitychange', volta); window.removeEventListener('focus', volta); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   if (!admin) return <button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button>;
   const conectar = async () => {
-    // no app instalado, a Garmin abre numa aba por cima e o app fica esperando; no navegador, vai e volta na mesma aba
-    const instalado = matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true;
-    const aba = instalado ? window.open('about:blank', '_blank') : null;
-    setOcupado(true);
-    const r = await chamar<{ url?: string; configurado?: boolean }>('radar-garmin', { acao: 'iniciar', app: instalado });
-    setOcupado(false);
-    if (r.url) {
-      if (instalado) { esperando.current = true; if (aba) aba.location.href = r.url; else window.open(r.url, '_blank'); setMsg('Autorize na Garmin e volte pra cá.'); }
-      else location.href = r.url;
-      return;
-    }
-    aba?.close();
-    setMsg(r.erro ?? 'As chaves do Garmin ainda não estão configuradas.');
+    setIndo(true);
+    const p = pronto.current;
+    try { sessionStorage.setItem('radar-garmin-volta', '1'); } catch { /* */ }
+    if (p && Date.now() - p.em < 15 * 60000) { location.href = p.url; return; } // já pronto: vai direto
+    const r = await preparar();
+    if (r.url) { location.href = r.url; return; }
+    setIndo(false); setMsg(r.erro ?? 'As chaves do Garmin ainda não estão configuradas.');
   };
-  const desconectar = async () => { setOcupado(true); const r = await chamar('radar-garmin', { acao: 'desconectar' }); setOcupado(false); setConectado(false); setMsg(r.erro ?? 'Garmin desconectado.'); };
+  const desconectar = () => { // muda na hora; o servidor termina por trás
+    setConectado(false); setMsg('Garmin desconectado.');
+    chamar('radar-garmin', { acao: 'desconectar' }).then(r => { if (r.erro) { setConectado(true); setMsg(r.erro); } else preparar(); });
+  };
   return (
     <span className="pro-breve-admin">
       {conectado
-        ? <button className="btn outline" onClick={desconectar} disabled={ocupado}>Desconectar</button>
-        : <button className="btn solid" onClick={conectar} disabled={ocupado}>{ocupado ? 'Abrindo…' : 'Conectar (teste)'}</button>}
+        ? <button className="btn outline" onClick={desconectar}>Desconectar</button>
+        : <button className="btn solid" onClick={conectar} disabled={indo || conectado === null}>{indo ? 'Abrindo…' : 'Conectar (teste)'}</button>}
       {msg && <small role="status">{msg}</small>}
     </span>
   );

@@ -25,6 +25,8 @@ async function carregarChaves() {
   WEBHOOK ||= (await ler('garmin_webhook_key')) || '';
 }
 
+// trabalho que continua depois de responder (sem deixar a pessoa esperando)
+const depois = (p: PromiseLike<unknown>) => { const er = (globalThis as any).EdgeRuntime; if (er?.waitUntil) er.waitUntil(Promise.resolve(p)); else Promise.resolve(p).catch(() => null); };
 const aleatorio = (n: number) => b64u(crypto.getRandomValues(new Uint8Array(n)));
 const sha256 = async (t: string) => b64u(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t))));
 
@@ -88,18 +90,21 @@ Deno.serve(async (req) => {
       const { data: pk } = await db.from('radar_garmin_pkce').select('*').eq('state', state).maybeSingle();
       if (pk) await db.from('radar_garmin_pkce').delete().eq('state', state);
       if (!pk || Date.now() - new Date(pk.criado_em).getTime() > 20 * 60000) return pagina('Link expirado', 'Volte ao Radar e toque em “Conectar Garmin” de novo.');
-      // aberto por cima do app instalado: mostra a mensagem e fecha a aba (o app confere sozinho quando volta)
-      const voltar = (ok: boolean) => pk.retorno === 'app'
-        ? Response.redirect(`${SITE}/garmin.html?ok=${ok ? 1 : 0}`, 302)
-        : Response.redirect(`${pk.retorno}#temporada/garmin-${ok ? 'ok' : 'erro'}`, 302);
+      // volta pro mesmo endereço onde o app estava aberto (igual à Nexos): assim o celular reabre o app instalado
+      const voltar = (ok: boolean) => Response.redirect(`${pk.retorno}#temporada/garmin-${ok ? 'ok' : 'erro'}`, 302);
       if (!code) return voltar(false);
-      const t = await pedirToken({ grant_type: 'authorization_code', code, code_verifier: pk.verifier, redirect_uri: CALLBACK });
-      const ur = await fetch(`${API}/user/id`, { headers: { Authorization: `Bearer ${t.access_token}` } });
-      if (!ur.ok) { console.error('user id', ur.status, await ur.text()); return voltar(false); }
-      const gid = String((await ur.json()).userId);
-      await db.from('radar_integracoes').delete().eq('provedor', 'garmin').eq('athlete_id', gid).neq('user_id', pk.user_id); // uma conta Garmin, um atleta
-      const { error } = await db.from('radar_integracoes').upsert({ user_id: pk.user_id, provedor: 'garmin', athlete_id: gid, token: t.access_token, refresh_token: t.refresh_token, ...validade(t), conectado_em: new Date().toISOString(), ultima_sync: null, erro: null }, { onConflict: 'user_id,provedor' });
-      if (error) { console.error(error); return voltar(false); }
+      // volta pro app na hora; a troca do código e o cadastro da conexão terminam por trás (o app confere sozinho)
+      depois((async () => {
+        try {
+          const t = await pedirToken({ grant_type: 'authorization_code', code, code_verifier: pk.verifier, redirect_uri: CALLBACK });
+          const ur = await fetch(`${API}/user/id`, { headers: { Authorization: `Bearer ${t.access_token}` } });
+          if (!ur.ok) { console.error('user id', ur.status, await ur.text()); return; }
+          const gid = String((await ur.json()).userId);
+          await db.from('radar_integracoes').delete().eq('provedor', 'garmin').eq('athlete_id', gid).neq('user_id', pk.user_id); // uma conta Garmin, um atleta
+          const { error } = await db.from('radar_integracoes').upsert({ user_id: pk.user_id, provedor: 'garmin', athlete_id: gid, token: t.access_token, refresh_token: t.refresh_token, ...validade(t), conectado_em: new Date().toISOString(), ultima_sync: null, erro: null }, { onConflict: 'user_id,provedor' });
+          if (error) console.error(error);
+        } catch (e) { console.error('conectar', e); }
+      })());
       return voltar(true);
     }
     if (req.method !== 'POST') return json({ erro: 'Método não suportado.' }, 405);
@@ -135,19 +140,23 @@ Deno.serve(async (req) => {
     if (body.acao === 'iniciar') {
       if (!(await liberado(db, eu.email))) return json({ em_breve: true });
       if (!CLIENT_ID || !CLIENT_SECRET) return json({ configurado: false });
-      const retorno = body.app ? 'app' : `${SITE}/?pro`;
+      let retorno = `${SITE}/?pro`;
+      try { const r = new URL(String(body.retorno || '')); if (/(^|\.)radarcorridasma\.com\.br$|\.netlify\.app$/.test(r.hostname) && r.protocol === 'https:') retorno = `${r.origin}${r.pathname}?pro`; } catch { /* fica o padrão */ }
       const verifier = aleatorio(48), state = aleatorio(24);
-      await db.from('radar_garmin_pkce').delete().lt('criado_em', new Date(Date.now() - 3600e3).toISOString());
       await db.from('radar_garmin_pkce').insert({ state, user_id: eu.id, verifier, retorno });
+      depois(db.from('radar_garmin_pkce').delete().lt('criado_em', new Date(Date.now() - 3600e3).toISOString()));
       const url = `${AUTH_URL}?${new URLSearchParams({ response_type: 'code', client_id: CLIENT_ID, code_challenge: await sha256(verifier), code_challenge_method: 'S256', redirect_uri: CALLBACK, state })}`;
       return json({ configurado: true, url });
     }
     if (body.acao === 'desconectar') {
       const { data: integ } = await db.from('radar_integracoes').select('*').eq('user_id', eu.id).eq('provedor', 'garmin').maybeSingle();
       if (integ) {
-        try { const tk = await tokenValido(integ); await fetch(`${API}/user/registration`, { method: 'DELETE', headers: { Authorization: `Bearer ${tk}` } }); } catch (e) { console.error('desregistrar', e); }
+        // responde na hora; o aviso pra Garmin e a limpeza das corridas seguem por trás
         await db.from('radar_integracoes').delete().eq('id', integ.id);
-        await db.from('radar_atividades').delete().eq('user_id', eu.id).eq('fonte', 'garmin');
+        depois((async () => {
+          try { const tk = await tokenValido(integ); await fetch(`${API}/user/registration`, { method: 'DELETE', headers: { Authorization: `Bearer ${tk}` } }); } catch (e) { console.error('desregistrar', e); }
+          await db.from('radar_atividades').delete().eq('user_id', eu.id).eq('fonte', 'garmin');
+        })());
       }
       return json({ ok: true });
     }
