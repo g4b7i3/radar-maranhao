@@ -12,10 +12,18 @@ const CALLBACK = `${SUPA}/functions/v1/radar-garmin`;
 const AUTH_URL = 'https://connect.garmin.com/oauth2Confirm';
 const TOKEN_URL = 'https://diauth.garmin.com/di-oauth2-service/oauth/token';
 const API = 'https://apis.garmin.com/wellness-api/rest';
-const CLIENT_ID = Deno.env.get('GARMIN_CLIENT_ID') || '';
-const CLIENT_SECRET = Deno.env.get('GARMIN_CLIENT_SECRET') || '';
-const WEBHOOK = Deno.env.get('GARMIN_WEBHOOK_KEY') || '';
 const db = createClient(SUPA, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+// chaves: do painel (env) ou do cofre criptografado do banco do Radar (vault, via radar_segredo)
+let CLIENT_ID = Deno.env.get('GARMIN_CLIENT_ID') || '';
+let CLIENT_SECRET = Deno.env.get('GARMIN_CLIENT_SECRET') || '';
+let WEBHOOK = Deno.env.get('GARMIN_WEBHOOK_KEY') || '';
+async function carregarChaves() {
+  if (CLIENT_ID && CLIENT_SECRET && WEBHOOK) return;
+  const ler = async (n: string) => (await db.rpc('radar_segredo', { p: n })).data as string | null;
+  CLIENT_ID ||= (await ler('garmin_client_id')) || '';
+  CLIENT_SECRET ||= (await ler('garmin_client_secret')) || '';
+  WEBHOOK ||= (await ler('garmin_webhook_key')) || '';
+}
 
 const aleatorio = (n: number) => b64u(crypto.getRandomValues(new Uint8Array(n)));
 const sha256 = async (t: string) => b64u(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t))));
@@ -72,6 +80,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   const u = new URL(req.url);
   try {
+    await carregarChaves();
     // 1) volta da tela de autorização da Garmin
     if (req.method === 'GET') {
       const state = u.searchParams.get('state') || '', code = u.searchParams.get('code');
