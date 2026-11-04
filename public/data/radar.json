@@ -2892,7 +2892,7 @@
       "location": "Em frente à Cidade Eco, Avenida Ataliba Vieira de Almeida",
       "registrationOpen": null,
       "registrationClose": "2026-11-01",
-      "status": "Abertas",
+      "status": "Em breve",
       "officialUrl": "https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026",
       "sourceUrl": "https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026",
       "sourceName": "SA Crono (página da prova)",
@@ -2910,7 +2910,7 @@
         "text": "Solidária: 5 kg de alimentos"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-11-04T18:42:52.658Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
     {
@@ -3662,9 +3662,51 @@
       "start": null,
       "verifiedAt": "2026-11-04T11:14:45.182Z",
       "firstSeenAt": "2026-11-04T11:14:45.182Z"
+    },
+    {
+      "id": "ii-edicao-aeroclick-2027-imperatriz",
+      "name": "II Edição Aeroclick",
+      "edition": "2027",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-11-02",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-04T18:42:52.658Z",
+      "firstSeenAt": "2026-11-04T18:42:52.658Z"
     }
   ],
   "changes": [
+    {
+      "id": "dc5e1241-9de9-4917-a8e5-598768722478",
+      "eventId": "ii-edicao-aeroclick-2027-imperatriz",
+      "version": "[\"2027-11-02\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-04T18:42:52.658Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "0275af37-d022-46df-bcf5-d784e92ddeda",
+      "eventId": "ecorun-2026-chapadinha",
+      "version": "[\"2026-11-08\",[5],\"Em frente à Cidade Eco, Avenida Ataliba Vieira de Almeida\",null,\"2026-11-01\",\"Em breve\",\"https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-04T18:42:52.658Z",
+      "notifiedAt": null
+    },
     {
       "id": "efc22b19-8a0d-4b75-8695-67c14f7fd26c",
       "eventId": "run-love-2026-sao-domingos-do-maranhao",
@@ -5618,7 +5660,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-04T11:14:45.182Z",
+  "lastChecked": "2026-11-04T18:42:52.658Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
