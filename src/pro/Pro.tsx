@@ -266,7 +266,7 @@ function ProTelas() {
         </section>
       ))}
       {aba === 'campeonatos' && <TelaCampeonatos perfil={perfil} />}
-      {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} fotoMudou={recarregar} />}
+      {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} fotoMudou={recarregar} pro={pro || admin} assinar={irAssinar} />}
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pro={pro} assinar={irAssinar} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}

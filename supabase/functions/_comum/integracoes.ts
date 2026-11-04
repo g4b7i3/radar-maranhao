@@ -14,6 +14,13 @@ export async function liberado(db: any, email?: string | null) {
   return String(data?.valor) === 'true';
 }
 
+/** Relógio, atividades e cards são do Radar Pro (assinatura, cortesia ou plano assessoria). O admin sempre passa. */
+export async function ehPro(db: any, uid: string, email?: string | null) {
+  if (email === ADMIN) return true;
+  const { data } = await db.rpc('radar_eh_assinante', { uid });
+  return data === true;
+}
+
 export const TIPO = (t: string) => {
   t = String(t || '').toUpperCase();
   if (/TRAIL/.test(t)) return 'trail';

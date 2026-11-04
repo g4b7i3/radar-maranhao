@@ -130,7 +130,7 @@ function Medalhas({ meds }: { meds: string[] }) {
 }
 
 /* ───────── 3 · Minha temporada ───────── */
-export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Perfil; temp: Temporada; irCorri: () => void; fotoMudou?: () => void }) {
+export function TelaTemporada({ perfil, temp, irCorri, fotoMudou, pro = true, assinar }: { perfil: Perfil; temp: Temporada; irCorri: () => void; fotoMudou?: () => void; pro?: boolean; assinar?: () => void }) {
   const [res, setRes] = useState<Resultado[] | null>(null);
   const [card, setCard] = useState<string | null>(null);
   const [quem, setQuem] = useState<string | null>(null);
@@ -174,8 +174,16 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
       {temp.pontos_pendentes > 0 && <p className="fine pro-sem-margem">+{temp.pontos_pendentes} pontos esperando o resultado oficial ou o comprovante.</p>}
 
       <button className="btn solid pro-btn" onClick={irCorri}><Plus size={18} aria-hidden="true" />Eu corri uma prova</button>
-      <EmBreve />
-      <MeusTreinos perfil={perfil} />
+      {pro ? <>
+        <EmBreve />
+        <MeusTreinos perfil={perfil} />
+      </> : (
+        <section className="pro-card pro-trava-relogio">
+          <p className="pro-k cinza">🔒 Relógio, atividades e cards</p>
+          <p className="pro-sub pro-sem-margem">Conecte o Garmin e cada corrida chega sozinha, com gráficos de pace e frequência cardíaca, card pro story em 30 modelos (12 no jeito maranhense) e treino no feed. É do <b>Radar Pro</b>.</p>
+          {assinar && <button className="btn solid pro-btn" onClick={assinar}>Assinar o Radar Pro</button>}
+        </section>
+      )}
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
       <MeusDescontos perfil={perfil} />

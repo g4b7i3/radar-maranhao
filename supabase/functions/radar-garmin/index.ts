@@ -5,7 +5,7 @@
 //   retorno (redirect) ......... https://<projeto>.supabase.co/functions/v1/radar-garmin
 //   avisos (push/ping) ......... https://<projeto>.supabase.co/functions/v1/radar-garmin?k=<GARMIN_WEBHOOK_KEY>
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
-import { CORS, json, pagina, SITE, b64u, liberado, TIPO, avisarCorrida, parciaisERota } from '../_comum/integracoes.ts';
+import { CORS, json, pagina, SITE, b64u, liberado, ehPro, TIPO, avisarCorrida, parciaisERota } from '../_comum/integracoes.ts';
 
 const SUPA = Deno.env.get('SUPABASE_URL')!;
 const CALLBACK = `${SUPA}/functions/v1/radar-garmin`;
@@ -56,6 +56,7 @@ async function receber(lista: Record<string, any>[], detalhes: boolean) {
     if (!tipo || tipo === 'outro') continue; // o Radar é de corrida
     const { data: integ } = await db.from('radar_integracoes').select('user_id').eq('provedor', 'garmin').eq('athlete_id', String(a.userId)).maybeSingle();
     if (!integ) continue;
+    if (!(await ehPro(db, integ.user_id))) continue; // sem Pro ativo, a corrida não entra
     const distancia_m = Math.round(Number(s.distanceInMeters) || 0), duracao_s = Math.round(Number(s.durationInSeconds) || 0);
     if (distancia_m < 500) continue;
     const cad = Number(s.averageRunCadenceInStepsPerMinute) || null;
@@ -139,6 +140,7 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     if (body.acao === 'iniciar') {
       if (!(await liberado(db, eu.email))) return json({ em_breve: true });
+      if (!(await ehPro(db, eu.id, eu.email))) return json({ so_pro: true, erro: 'A conexão com o relógio é do Radar Pro.' });
       if (!CLIENT_ID || !CLIENT_SECRET) return json({ configurado: false });
       let retorno = `${SITE}/?pro`;
       try { const r = new URL(String(body.retorno || '')); if (/(^|\.)radarcorridasma\.com\.br$|\.netlify\.app$/.test(r.hostname) && r.protocol === 'https:') retorno = `${r.origin}${r.pathname}?pro`; } catch { /* fica o padrão */ }

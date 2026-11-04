@@ -1140,3 +1140,4 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-gerador .chip { display: inline-flex; align-items: center; gap: 6px; }
 .pro-folha-caixa > * { flex-shrink: 0; }
 .pro-gerador-topo { display: inline-flex; align-items: center; gap: 4px; }
+.pro-trava-relogio { border-style: dashed; }

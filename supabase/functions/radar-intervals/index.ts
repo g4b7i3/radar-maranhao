@@ -3,7 +3,7 @@
 // Endereço de retorno para cadastrar no app: https://<projeto>.supabase.co/functions/v1/radar-intervals/callback
 // Nada aqui usa a Nexos.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
-import { CORS, json, pagina, SITE, b64u, liberado, avisarCorrida, parciaisERota } from '../_comum/integracoes.ts';
+import { CORS, json, pagina, SITE, b64u, liberado, ehPro, avisarCorrida, parciaisERota } from '../_comum/integracoes.ts';
 
 const SUPA = Deno.env.get('SUPABASE_URL')!;
 const CALLBACK = `${SUPA}/functions/v1/radar-intervals/callback`;
@@ -39,6 +39,7 @@ async function detalhar(tk: string, id: string) {
 }
 
 async function importar(integ: Record<string, string>) {
+  if (!(await ehPro(db, integ.user_id))) return 0; // sem Pro ativo, não importa
   const desde = new Date(integ.ultima_sync ? new Date(integ.ultima_sync).getTime() - 3 * 864e5 : Date.now() - 30 * 864e5);
   const ate = new Date(Date.now() + 864e5);
   const r = await fetch(`${API}/athlete/0/activities?oldest=${desde.toISOString().slice(0, 10)}&newest=${ate.toISOString().slice(0, 10)}`, { headers: { Authorization: `Bearer ${integ.token}`, Accept: 'application/json' } });
@@ -99,6 +100,7 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     if (body.acao === 'iniciar') {
       if (!(await liberado(db, eu.email))) return json({ em_breve: true });
+      if (!(await ehPro(db, eu.id, eu.email))) return json({ so_pro: true, erro: 'A conexão com o relógio é do Radar Pro.' });
       if (!CLIENT_ID || !CLIENT_SECRET) return json({ configurado: false });
       const state = await assinar({ u: eu.id, exp: Date.now() + 15 * 60000 });
       return json({ configurado: true, url: `https://intervals.icu/oauth/authorize?${new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: CALLBACK, scope: 'ACTIVITY:READ', state })}` });
