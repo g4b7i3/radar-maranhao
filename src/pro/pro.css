@@ -1126,3 +1126,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-marca em { font-style: normal; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .pro-marca.outro { color: var(--muted); border-style: dashed; }
 .pro-marca.outro small { font-size: .78rem; font-weight: 700; }
+.pro-treinos-tit { width: 100%; margin: 0; padding: 6px 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 8px; text-align: left; }
+.pro-treinos-tit > span { display: inline-flex; align-items: center; gap: 8px; }
+.pro-treinos-tit small { font-size: .75rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: var(--cobalt-tint); color: var(--cobalt); }

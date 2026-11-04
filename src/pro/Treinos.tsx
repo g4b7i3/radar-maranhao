@@ -1,7 +1,7 @@
 // Radar Pro · "Meus treinos": as corridas que chegam do Garmin / Intervals.icu.
 // Cada uma abre com gráficos (pace e FC por km, percurso), vira card pro story e pode ir pro feed.
 import { useEffect, useRef, useState } from 'react';
-import { Watch, ChevronRight, X, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2 } from 'lucide-react';
+import { Watch, ChevronRight, ChevronDown, X, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2 } from 'lucide-react';
 import { sb, relogio, dataBR, type Perfil } from './sb';
 // @ts-expect-error módulo JS de desenho (canvas)
 import { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe, tirosDe } from './cards/desenho.js';
@@ -24,26 +24,36 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
   const [lista, setLista] = useState<Atividade[] | null>(null);
   const [aberta, setAberta] = useState<Atividade | null>(null);
   const [todas, setTodas] = useState(false);
+  // aberta ou fechada, como a pessoa deixou da última vez
+  const [aberto, setAberto] = useState(() => { try { return localStorage.getItem('radar-atividades-aberto') === '1'; } catch { return false; } });
+  const trocar = () => { const v = !aberto; setAberto(v); try { localStorage.setItem('radar-atividades-aberto', v ? '1' : '0'); } catch { /* */ } };
   const carregar = () => sb.from('radar_atividades').select('*').order('data', { ascending: false }).limit(60)
     .then(({ data }) => setLista((data ?? []) as Atividade[]));
   useEffect(() => { carregar(); }, []);
-  if (!lista?.length) return null;
-  const vis = todas ? lista : lista.slice(0, 5);
+  const vis = todas ? (lista ?? []) : (lista ?? []).slice(0, 5);
   return (
     <section className="pro-card pro-treinos">
-      <p className="pro-k cinza"><Watch size={14} aria-hidden="true" /> Meus treinos</p>
-      <ul>
-        {vis.map(a => (
-          <li key={a.id}>
-            <button className="pro-treino-linha" onClick={() => setAberta(a)}>
-              <span><b>{a.titulo || TIPO[a.tipo] || 'Corrida'}</b><small>{dataBR(a.data)} · {hora(a.data)} · {FONTE[a.fonte] ?? a.fonte}{a.feed_em ? ' · no feed' : ''}</small></span>
-              <span className="pro-treino-num"><b>{km(a.distancia_m)} km</b><small>{relogio(a.duracao_s)} · {pace(paceDe(a))}/km</small></span>
-              <ChevronRight size={18} aria-hidden="true" />
-            </button>
-          </li>
-        ))}
-      </ul>
-      {lista.length > 5 && <button className="btn text pro-btn-p" onClick={() => setTodas(!todas)}>{todas ? 'Ver menos' : `Ver todos (${lista.length})`}</button>}
+      <button className="pro-treinos-tit" onClick={trocar} aria-expanded={aberto}>
+        <span><Watch size={16} aria-hidden="true" /> Minhas atividades</span>
+        {lista && lista.length > 0 && <small>{lista.length}</small>}
+        <ChevronDown size={18} aria-hidden="true" className={'pro-aniver-seta' + (aberto ? ' virado' : '')} />
+      </button>
+      {aberto && <>
+        {lista === null && <p className="fine pro-sem-margem">Carregando…</p>}
+        {lista?.length === 0 && <p className="pro-sub pro-sem-margem">Nenhuma atividade ainda. Conecte o Garmin aqui em cima e cada corrida do relógio aparece aqui sozinha.</p>}
+        {!!lista?.length && <ul>
+          {vis.map(a => (
+            <li key={a.id}>
+              <button className="pro-treino-linha" onClick={() => setAberta(a)}>
+                <span><b>{a.titulo || TIPO[a.tipo] || 'Corrida'}</b><small>{dataBR(a.data)} · {hora(a.data)} · {FONTE[a.fonte] ?? a.fonte}{a.feed_em ? ' · no feed' : ''}</small></span>
+                <span className="pro-treino-num"><b>{km(a.distancia_m)} km</b><small>{relogio(a.duracao_s)} · {pace(paceDe(a))}/km</small></span>
+                <ChevronRight size={18} aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>}
+        {lista && lista.length > 5 && <button className="btn text pro-btn-p" onClick={() => setTodas(!todas)}>{todas ? 'Ver menos' : `Ver todas (${lista.length})`}</button>}
+      </>}
       {aberta && <DetalheTreino a={aberta} perfil={perfil} fechar={() => setAberta(null)} mudou={(n) => { setAberta(n); carregar(); }} />}
     </section>
   );

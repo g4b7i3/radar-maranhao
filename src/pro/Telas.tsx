@@ -177,8 +177,8 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
       <MeusDescontos perfil={perfil} />
-      <MeusTreinos perfil={perfil} />
       <EmBreve />
+      <MeusTreinos perfil={perfil} />
 
       {evolucao.length >= 2 && (
         <section className="pro-card"><p className="pro-k cinza">Sua evolução (nota por idade)</p><Grafico v={evolucao} /></section>
