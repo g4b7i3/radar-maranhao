@@ -33,6 +33,7 @@ const FALAS = {
     { g: 'Cabra da peste!', f: 'Encarou {km} km e ainda voltou rindo.' },
     { g: 'Rapá, siô!', f: '{km} km. Juçara com farinha pra repor tudo.' },
     { g: 'Égua, mermã!', f: 'Dei a volta na ilha quase: {km} km.' },
+    { g: 'Té doido, cansei!', f: '{tempo} correndo. Agora é só deitar.' },
   ],
   rapido: [
     { g: 'Piqueno, tu é o raio!', f: '{pace}/km de média. Fui zilado do começo ao fim.' },
@@ -55,6 +56,7 @@ const FALAS = {
     { g: 'Treino invocado!', f: 'Saí de lá ralado, mas saí inteiro.' },
     { g: 'Armaria, siô!', f: 'O treino me deu um bogue. E eu dei outro nele.' },
     { g: 'Heheeein!', f: 'Diz que foi fácil? Pergunta pras minhas pernas.' },
+    { g: 'Té doido, cansei!', f: '{km} km a {pace}/km. As pernas pediram arrego.' },
   ],
   calor: [
     { g: 'Égua do calor!', f: 'O sol de São Luís tava remoso e eu fui correr assim mesmo.' },
@@ -109,6 +111,7 @@ const FALAS = {
     { g: 'Égua, que treino!', f: '{km} km em {tempo}. Hoje o boi dançou.' },
     { g: 'Tô é tu!', f: 'Disse que não ia treinar hoje? Fui: {km} km.' },
     { g: 'Pior!', f: 'Quem treina, colhe: {km} km a {pace}/km.' },
+    { g: 'Té doido, cansei!', f: 'Mas tá feito: {km} km em {tempo}.' },
   ],
 };
 const sorteio = (t) => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
