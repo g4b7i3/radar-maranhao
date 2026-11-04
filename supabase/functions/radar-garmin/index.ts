@@ -88,7 +88,10 @@ Deno.serve(async (req) => {
       const { data: pk } = await db.from('radar_garmin_pkce').select('*').eq('state', state).maybeSingle();
       if (pk) await db.from('radar_garmin_pkce').delete().eq('state', state);
       if (!pk || Date.now() - new Date(pk.criado_em).getTime() > 20 * 60000) return pagina('Link expirado', 'Volte ao Radar e toque em “Conectar Garmin” de novo.');
-      const voltar = (ok: boolean) => Response.redirect(`${pk.retorno}#temporada/garmin-${ok ? 'ok' : 'erro'}`, 302);
+      // aberto por cima do app instalado: mostra a mensagem e fecha a aba (o app confere sozinho quando volta)
+      const voltar = (ok: boolean) => pk.retorno === 'app'
+        ? Response.redirect(`${SITE}/garmin.html?ok=${ok ? 1 : 0}`, 302)
+        : Response.redirect(`${pk.retorno}#temporada/garmin-${ok ? 'ok' : 'erro'}`, 302);
       if (!code) return voltar(false);
       const t = await pedirToken({ grant_type: 'authorization_code', code, code_verifier: pk.verifier, redirect_uri: CALLBACK });
       const ur = await fetch(`${API}/user/id`, { headers: { Authorization: `Bearer ${t.access_token}` } });
@@ -132,7 +135,7 @@ Deno.serve(async (req) => {
     if (body.acao === 'iniciar') {
       if (!(await liberado(db, eu.email))) return json({ em_breve: true });
       if (!CLIENT_ID || !CLIENT_SECRET) return json({ configurado: false });
-      const retorno = `${SITE}/?pro`;
+      const retorno = body.app ? 'app' : `${SITE}/?pro`;
       const verifier = aleatorio(48), state = aleatorio(24);
       await db.from('radar_garmin_pkce').delete().lt('criado_em', new Date(Date.now() - 3600e3).toISOString());
       await db.from('radar_garmin_pkce').insert({ state, user_id: eu.id, verifier, retorno });

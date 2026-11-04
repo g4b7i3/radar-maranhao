@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Radar · Garmin</title>
+<style>
+  :root { --navy:#0a1240; --ouro:#ffd34d; }
+  body { margin:0; min-height:100dvh; display:grid; place-items:center; background:var(--navy); color:#fff; font-family:system-ui, sans-serif; text-align:center; padding:24px; box-sizing:border-box; }
+  h1 { font-size:1.6rem; margin:0 0 8px; } h1 span { color:var(--ouro); }
+  p { opacity:.85; margin:0 0 20px; line-height:1.5; }
+  a { display:inline-block; padding:12px 22px; border-radius:999px; background:var(--ouro); color:var(--navy); font-weight:800; text-decoration:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="t">Garmin conectado <span>✓</span></h1>
+  <p id="m">Pode fechar esta aba e voltar pro app do Radar. As próximas corridas do relógio chegam sozinhas.</p>
+  <a href="/?pro#temporada">Voltar pro Radar</a>
+</main>
+<script>
+  if (new URLSearchParams(location.search).get('ok') !== '1') {
+    document.getElementById('t').textContent = 'Não deu pra conectar';
+    document.getElementById('m').textContent = 'Feche esta aba e tente de novo no app do Radar.';
+  }
+  setTimeout(function () { window.close(); }, 1500);
+</script>
+</body>
+</html>

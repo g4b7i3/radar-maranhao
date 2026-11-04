@@ -41,19 +41,32 @@ function GarminBotao() {
   const [conectado, setConectado] = useState(false);
   const [msg, setMsg] = useState<string | null>(() => (location.hash.includes('garmin-ok') ? 'Garmin conectado! As próximas corridas do relógio chegam sozinhas.' : location.hash.includes('garmin-erro') ? 'Não deu pra conectar o Garmin. Tente de novo.' : null));
   const [ocupado, setOcupado] = useState(false);
+  const conferir = () => sb.from('radar_minhas_integracoes').select('provedor').eq('provedor', 'garmin').then(({ data: d }) => { const c = !!d?.length; setConectado(antes => { if (c && !antes && esperando.current) setMsg('Garmin conectado! As próximas corridas do relógio chegam sozinhas.'); return c; }); });
+  const esperando = useRef(false);
   useEffect(() => {
     sb.auth.getUser().then(({ data }) => {
       if (data.user?.email !== ADMIN) return;
-      setAdmin(true);
-      sb.from('radar_minhas_integracoes').select('provedor').eq('provedor', 'garmin').then(({ data: d }) => setConectado(!!d?.length));
+      setAdmin(true); conferir();
     });
-  }, []);
+    // voltou pro app depois de autorizar na aba da Garmin: confere de novo
+    const volta = () => { if (document.visibilityState === 'visible' && esperando.current) conferir(); };
+    document.addEventListener('visibilitychange', volta); window.addEventListener('focus', volta);
+    return () => { document.removeEventListener('visibilitychange', volta); window.removeEventListener('focus', volta); };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   if (!admin) return <button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button>;
   const conectar = async () => {
+    // no app instalado, a Garmin abre numa aba por cima e o app fica esperando; no navegador, vai e volta na mesma aba
+    const instalado = matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true;
+    const aba = instalado ? window.open('about:blank', '_blank') : null;
     setOcupado(true);
-    const r = await chamar<{ url?: string; configurado?: boolean }>('radar-garmin', { acao: 'iniciar' });
+    const r = await chamar<{ url?: string; configurado?: boolean }>('radar-garmin', { acao: 'iniciar', app: instalado });
     setOcupado(false);
-    if (r.url) { location.href = r.url; return; }
+    if (r.url) {
+      if (instalado) { esperando.current = true; if (aba) aba.location.href = r.url; else window.open(r.url, '_blank'); setMsg('Autorize na Garmin e volte pra cá.'); }
+      else location.href = r.url;
+      return;
+    }
+    aba?.close();
     setMsg(r.erro ?? 'As chaves do Garmin ainda não estão configuradas.');
   };
   const desconectar = async () => { setOcupado(true); const r = await chamar('radar-garmin', { acao: 'desconectar' }); setOcupado(false); setConectado(false); setMsg(r.erro ?? 'Garmin desconectado.'); };
