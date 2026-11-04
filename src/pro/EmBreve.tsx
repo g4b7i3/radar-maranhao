@@ -126,7 +126,7 @@ export function EmBreve() {
         <div className="pro-breve-item"><img className="pro-breve-logo" src="/img/marcas/garmin.png" width={40} height={40} alt="Garmin" /><div><b>Garmin</b><small>Conecte uma vez e cada corrida do relógio chega sozinha no Radar, com pace, frequência cardíaca, parciais e percurso.</small></div><GarminBotao /></div>
       </div>
       <Marcas />
-      <p className="pro-sub pro-sem-margem">Card da corrida pro story: {CARD_LAYOUTS.length} modelos, inclusive no jeito maranhense. Abra um treino em <b>Meus treinos</b> e toque em <b>Gerar card</b>.</p>
+      <p className="pro-sub pro-sem-margem">Card da corrida pro story: {CARD_LAYOUTS.length} modelos, inclusive no jeito maranhense. Abra uma atividade em <b>Minhas atividades</b>, logo abaixo, e toque em <b>Gerar card</b>.</p>
       <div className="pro-breve-galeria">{(CARD_LAYOUTS as [string, string][]).map(([k, n]) => <Miniatura key={k} layout={k} nome={n} />)}</div>
     </section>
   );

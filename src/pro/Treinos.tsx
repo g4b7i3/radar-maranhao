@@ -1,4 +1,4 @@
-// Radar Pro · "Meus treinos": as corridas que chegam do Garmin / Intervals.icu.
+// Radar Pro · "Minhas atividades": as corridas que chegam do Garmin / Intervals.icu.
 // Cada uma abre com gráficos (pace e FC por km, percurso), vira card pro story e pode ir pro feed.
 import { useEffect, useRef, useState } from 'react';
 import { Watch, ChevronRight, ChevronDown, X, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2 } from 'lucide-react';
@@ -85,7 +85,7 @@ function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perfil: Per
             ? <button className="btn outline" onClick={tirar}><Trash2 size={16} aria-hidden="true" />Tirar do feed</button>
             : <button className="btn outline" onClick={() => setPostar(true)}><Send size={16} aria-hidden="true" />Postar no feed</button>}
         </div>
-        <p className="fine pro-sem-margem">Seus treinos aparecem só pra você. No feed vão só a distância, o tempo, o pace e a subida (e o card, se você postar com ele). Frequência cardíaca e percurso ficam com você, a não ser que estejam no card que você escolher.</p>
+        <p className="fine pro-sem-margem">Suas atividades aparecem só pra você. No feed vão só a distância, o tempo, o pace e a subida (e o card, se você postar com ele). Frequência cardíaca e percurso ficam com você, a não ser que estejam no card que você escolher.</p>
       </div>
       {card && <GeradorCard a={a} perfil={perfil} fechar={() => setCard(false)} postou={(url) => { setCard(false); mudou({ ...a, feed_em: a.feed_em ?? new Date().toISOString(), card_url: url }); }} />}
       {postar && <PostarTreino a={a} fechar={() => setPostar(false)} postou={() => { setPostar(false); mudou({ ...a, feed_em: new Date().toISOString() }); }} />}
