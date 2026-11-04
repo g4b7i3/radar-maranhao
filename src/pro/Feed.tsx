@@ -2,18 +2,21 @@
 // Reação única (aplauso), sem comentários. Filtro "Quem eu sigo".
 import { linhaIdade } from './X1';
 import { useEffect, useMemo, useState } from 'react';
-import { Crown, Swords, Medal, Trophy, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown, MessageCircle } from 'lucide-react';
+import { Crown, Swords, Medal, Trophy, Footprints, UserPlus, UserCheck, Image as ImagemIc, X, Send, Trash2, Flag, ChevronDown, MessageCircle } from 'lucide-react';
 import { sb, MEDALHAS, relogio, pct, kmTxt, dataBR, linkPerfil, type Perfil, souAdmin } from './sb';
 import { Avatar, reduzirFoto } from './Foto';
 import { medalhaSVG } from './medalhas';
 import { Arroba } from './Selo';
 
 export type Evento = {
-  quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1'; alvo: string; apelido: string; foto: string | null; cidade: string;
+  quando: string; tipo: 'prova' | 'rei' | 'duelo' | 'post' | 'x1' | 'treino'; alvo: string; apelido: string; foto: string | null; cidade: string;
   dados: { prova?: string; data?: string; cidade?: string; km?: number; tempo?: number; nota?: number; pontos?: number; geral?: number | null; total?: number | null; podio?: boolean; recorde?: boolean; medalhas?: string[]; sexo?: 'F' | 'M'; atletas?: number | null; adversario?: string; foto_adv?: string | null; mes?: string; perdedor?: string; foto_perdedor?: string | null; local?: string | null; tempo_v?: number; tempo_p?: number; empate?: boolean; nota_v?: number | null; nota_p?: number | null };
   reacoes: Reacoes; minha: TipoReacao | null; comentarios?: number;
 };
 type DadosPost = { id?: string; texto?: string; foto?: string | null; meu?: boolean };
+type DadosTreino = { id: string; km: number; tempo: number; elev: number | null; tipo: string; fonte: string; titulo: string | null; legenda: string | null; card: string | null; meu?: boolean };
+const TREINO_TIPO: Record<string, string> = { corrida: 'Treino de corrida', trail: 'Treino de trail', esteira: 'Treino na esteira', caminhada: 'Caminhada' };
+const paceTxt = (s: number) => { const r = Math.round(s); return `${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`; };
 
 const quandoTxt = (iso: string) => {
   const d = (Date.now() - new Date(iso).getTime()) / 60000;
@@ -81,16 +84,17 @@ function Meds({ ids }: { ids: string[] }) {
 export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }: { e: Evento; eu: string; sigo?: boolean; mudouSigo?: (s: boolean) => void; pro?: boolean; assinar?: () => void; apagou?: () => void }) {
   const d = e.dados, meu = e.apelido === eu;
   const post = e.tipo === 'post' ? (e.dados as unknown as DadosPost) : null;
+  const treino = e.tipo === 'treino' ? (e.dados as unknown as DadosTreino) : null;
   const adm = souAdmin.v;
   // apagar: o próprio post; tirar do feed: duelo/X1 de quem participou. O admin pode tudo.
   const participa = e.tipo === 'duelo' ? (e.apelido === eu || d.adversario === eu) : e.tipo === 'x1' ? (e.apelido === eu || d.perdedor === eu) : false;
-  const podeApagar = (post && (meu || post.meu || adm)) || ((e.tipo === 'duelo' || e.tipo === 'x1') && (participa || adm));
+  const podeApagar = (treino && (meu || treino.meu || adm)) || (post && (meu || post.meu || adm)) || ((e.tipo === 'duelo' || e.tipo === 'x1') && (participa || adm));
   const [sumiu, setSumiu] = useState(false);
   const [abertoC, setAbertoC] = useState(false);
   const [nComent, setNComent] = useState(e.comentarios ?? 0);
   const apagar = async () => {
     if (!confirm(post ? 'Apagar este post?' : 'Tirar do feed?')) return;
-    const { data } = await sb.rpc('radar_feed_ocultar', { p_alvo: post?.id ? `post:${post.id}` : e.alvo });
+    const { data } = treino ? await sb.rpc('radar_treino_tirar', { p_id: treino.id }) : await sb.rpc('radar_feed_ocultar', { p_alvo: post?.id ? `post:${post.id}` : e.alvo });
     if (data) { setSumiu(true); apagou?.(); } else alert('Não deu para apagar agora.');
   };
   if (sumiu) return null;
@@ -114,6 +118,12 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
       {e.tipo === 'rei' && (
         <p className="pro-feed-txt"><Crown size={16} aria-hidden="true" /> É {d.sexo === 'F' ? <b>Rainha</b> : <b>Rei</b>} da prova nos {kmTxt(Number(d.km))} da <b>{d.prova}</b>: melhor nota por idade entre {d.atletas ? `${d.atletas} atletas` : 'todos'} ({pct(d.nota)}%, {relogio(Number(d.tempo))}).</p>
       )}
+      {treino && <>
+        <p className="pro-feed-txt"><Footprints size={16} aria-hidden="true" /> {TREINO_TIPO[treino.tipo] ?? 'Treino'}{treino.titulo ? <> · <b>{treino.titulo}</b></> : null}: <b>{kmTxt(Number(treino.km))} em {relogio(Number(treino.tempo))}</b>{Number(treino.km) > 0 ? ` (${paceTxt(Number(treino.tempo) / Number(treino.km))}/km)` : ''}{treino.elev ? ` · ${treino.elev} m de subida` : ''}.</p>
+        {treino.legenda && <p className="pro-feed-post"><TextoComLinks texto={treino.legenda} /></p>}
+        {treino.card && <img className="pro-feed-treino-card" src={treino.card} alt={`Card da corrida de ${kmTxt(Number(treino.km))}`} loading="lazy" />}
+        <small className="pro-feed-fonte">via {treino.fonte === 'garmin' ? 'Garmin' : treino.fonte === 'intervals' ? 'Intervals.icu' : treino.fonte}</small>
+      </>}
       {post && <>
         {post.texto && <p className="pro-feed-post"><TextoComLinks texto={post.texto} /></p>}
         {post.foto && <img className="pro-feed-foto" src={post.foto} alt="" loading="lazy" />}
@@ -205,9 +215,9 @@ export function TelaFeed({ perfil, pro = true, assinar }: { perfil: Perfil; pro?
       <Aniversariantes />
       <Publicar perfil={perfil} pro={pro} assinar={assinar} publicou={carregar} />
       {lista === null && <p className="fine">Carregando…</p>}
-      {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova verificada aparece aqui.'}</p>}
+      {lista?.length === 0 && <p className="fine">{soSigo ? 'Você ainda não segue ninguém. Toque em “Seguir” nos atletas do feed ou do ranking.' : 'Ainda não aconteceu nada. A primeira prova ou treino postado aparece aqui.'}</p>}
       {lista?.map(e => <ItemFeed key={e.alvo} e={e} eu={perfil.apelido} sigo={sigo.has(e.apelido)} mudouSigo={mudou(e.apelido)} pro={pro} assinar={assinar} apagou={carregar} />)}
-      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que a galera publica e o que vem do resultado oficial: provas verificadas, Rei e Rainha da prova e duelos. Sem comentários, só reações.</p>}
+      {lista && lista.length > 0 && <p className="fine pro-centro">Aqui aparece o que a galera publica e o que vem do resultado oficial: provas aprovadas, treinos que a galera posta, Rei e Rainha da prova e duelos.</p>}
     </div>
   );
 }

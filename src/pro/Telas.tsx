@@ -11,6 +11,7 @@ import CardResultado from './CardResultado';
 import { MeusDescontos, AdminDescontos } from './Descontos';
 import { AdminBuscas } from './AdminBuscas';
 import { EmBreve } from './EmBreve';
+import { MeusTreinos } from './Treinos';
 import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
@@ -176,6 +177,7 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou }: { perfil: Pe
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
       <MeusDescontos perfil={perfil} />
+      <MeusTreinos perfil={perfil} />
       <EmBreve />
 
       {evolucao.length >= 2 && (
