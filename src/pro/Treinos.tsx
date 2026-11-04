@@ -60,7 +60,7 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
 }
 
 /* ───────── detalhe: números, gráficos e ações ───────── */
-function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perfil: Perfil; fechar: () => void; mudou: (a: Atividade) => void }) {
+export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perfil: Perfil; fechar: () => void; mudou: (a: Atividade) => void }) {
   const [card, setCard] = useState(false);
   const [postar, setPostar] = useState(false);
   const parc = (a.parciais ?? []).filter(p => !p.parcial || (p.km % 1) > .3);
@@ -170,7 +170,7 @@ function PostarTreino({ a, fechar, postou, cardUrl }: { a: Atividade; fechar: ()
 
 /* ───────── gerador do card ───────── */
 const ROTULOS: Record<string, string> = Object.fromEntries(CARD_STATS as [string, string][]);
-function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfil: Perfil; fechar: () => void; postou: (url: string) => void }) {
+export function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfil: Perfil; fechar: () => void; postou: (url: string) => void }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [layout, setLayout] = useState<string>((CARD_LAYOUTS as [string, string][])[0][0]);
   const [formato, setFormato] = useState<'story' | 'post'>('story');
