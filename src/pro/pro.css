@@ -1081,3 +1081,6 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-breve-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(127,140,170,.1)}
 .pro-breve-item div{flex:1;min-width:0}.pro-breve-item b{display:block}.pro-breve-item small{font-size:.8rem;opacity:.75}
 .pro-breve-item .btn{flex-shrink:0}
+
+.pro-breve-admin{display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:180px;text-align:right}
+.pro-breve-admin small{font-size:.75rem;opacity:.85}

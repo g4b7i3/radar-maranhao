@@ -4,6 +4,9 @@ import { Lock, Sparkles, Watch, Activity } from 'lucide-react';
 // @ts-expect-error módulo JS de desenho (canvas)
 import { CARD_LAYOUTS, desenharCard } from './cards/desenho.js';
 import { CORRIDA_DEMO, CLIMA_DEMO } from './cards/demo';
+import { sb, chamar } from './sb';
+
+const ADMIN = 'vinikautor@gmail.com';
 
 const OPCOES = { fundo: 'radar', cor: 'branco', formato: 'story', img: null, clima: CLIMA_DEMO, zoom: 1, dx: 0, dy: 0,
   stats: { dist: true, pace: true, tempo: true, fc: true, elev: false, cad: false, kcal: false, passos: false, rota: true, data: true } };
@@ -32,6 +35,38 @@ function Miniatura({ layout, nome }: { layout: string; nome: string }) {
   );
 }
 
+/** Botão do Garmin: liberado só pro admin testar enquanto está "Em breve" pros atletas. */
+function GarminBotao() {
+  const [admin, setAdmin] = useState(false);
+  const [conectado, setConectado] = useState(false);
+  const [msg, setMsg] = useState<string | null>(() => (location.hash.includes('garmin-ok') ? 'Garmin conectado! As próximas corridas do relógio chegam sozinhas.' : location.hash.includes('garmin-erro') ? 'Não deu pra conectar o Garmin. Tente de novo.' : null));
+  const [ocupado, setOcupado] = useState(false);
+  useEffect(() => {
+    sb.auth.getUser().then(({ data }) => {
+      if (data.user?.email !== ADMIN) return;
+      setAdmin(true);
+      sb.from('radar_minhas_integracoes').select('provedor').eq('provedor', 'garmin').then(({ data: d }) => setConectado(!!d?.length));
+    });
+  }, []);
+  if (!admin) return <button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button>;
+  const conectar = async () => {
+    setOcupado(true);
+    const r = await chamar<{ url?: string; configurado?: boolean }>('radar-garmin', { acao: 'iniciar' });
+    setOcupado(false);
+    if (r.url) { location.href = r.url; return; }
+    setMsg(r.erro ?? 'As chaves do Garmin ainda não estão configuradas.');
+  };
+  const desconectar = async () => { setOcupado(true); const r = await chamar('radar-garmin', { acao: 'desconectar' }); setOcupado(false); setConectado(false); setMsg(r.erro ?? 'Garmin desconectado.'); };
+  return (
+    <span className="pro-breve-admin">
+      {conectado
+        ? <button className="btn outline" onClick={desconectar} disabled={ocupado}>Desconectar</button>
+        : <button className="btn solid" onClick={conectar} disabled={ocupado}>{ocupado ? 'Abrindo…' : 'Conectar (teste)'}</button>}
+      {msg && <small role="status">{msg}</small>}
+    </span>
+  );
+}
+
 export function EmBreve() {
   return (
     <section className="pro-card pro-breve">
@@ -39,7 +74,7 @@ export function EmBreve() {
       <p className="pro-sub pro-sem-margem">Card da corrida pro story, com {CARD_LAYOUTS.length} modelos, inclusive no jeito maranhense. Ainda bloqueado: está chegando.</p>
       <div className="pro-breve-galeria">{(CARD_LAYOUTS as [string, string][]).map(([k, n]) => <Miniatura key={k} layout={k} nome={n} />)}</div>
       <div className="pro-breve-con">
-        <div className="pro-breve-item"><Watch size={20} aria-hidden="true" /><div><b>Garmin</b><small>Suas corridas do relógio chegam sozinhas no Radar.</small></div><button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button></div>
+        <div className="pro-breve-item"><Watch size={20} aria-hidden="true" /><div><b>Garmin</b><small>Suas corridas do relógio chegam sozinhas no Radar.</small></div><GarminBotao /></div>
         <div className="pro-breve-item"><Activity size={20} aria-hidden="true" /><div><b>Intervals.icu</b><small>Importa as corridas do Intervals.icu.</small></div><button className="btn outline" disabled><Lock size={14} aria-hidden="true" />Em breve</button></div>
       </div>
     </section>
