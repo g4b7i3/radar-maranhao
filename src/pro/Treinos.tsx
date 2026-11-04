@@ -265,11 +265,11 @@ export function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfi
     setEnvio({ url: sb.storage.from('posts').getPublicUrl(caminho).data.publicUrl });
   };
   const maranhense = layout.startsWith('ma_');
-  const dica = fundo === 'transparente' ? 'Sem fundo: toque em “Copiar” e cole no story do Instagram por cima da sua foto.' : fundo === 'foto' ? 'Com a sua foto de fundo: toque em “Compartilhar” ou “Baixar”.' : 'Fundo azul do Radar: pronto pra postar.';
+  const dica = fundo === 'transparente' ? 'Sem fundo: toque em “Copiar” e cole no story do Instagram por cima da sua foto.' : fundo === 'foto' ? 'Com a sua foto de fundo: “Copiar”, “Compartilhar” ou “Baixar”.' : 'Fundo azul do Radar: pronto pra postar.';
   return (
     <div className="pro-folha" role="dialog" aria-modal="true" aria-label="Gerar card">
       <div className="pro-folha-caixa pro-gerador">
-        <div className="pro-linha"><b>Card da corrida</b><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
+        <div className="pro-linha"><b>Card da corrida</b><span className="pro-gerador-topo"><button className="btn solid" onClick={copiar}><Copy size={16} aria-hidden="true" />Copiar</button><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></span></div>
         <div className={'pro-gerador-previa' + (fundo === 'transparente' ? ' xadrez' : '') + (formato === 'post' ? ' post' : '')}><canvas ref={ref} /></div>
         <div className="pro-gerador-zoom">
           <button className="btn outline" onClick={() => zoomBtn(1 / 1.12)} aria-label="Diminuir">−</button>
@@ -299,8 +299,8 @@ export function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfi
           {Object.keys(stats).filter(k => k !== 'rota' || temRota).map(k => <button key={k} className="chip" aria-pressed={stats[k]} onClick={() => setStats(s => ({ ...s, [k]: !s[k] }))}>{ROTULOS[k] ?? k}</button>)}
         </div>
         <div className="pro-linha pro-quebra">
-          {fundo === 'transparente' && <button className="btn solid" onClick={copiar}><Copy size={16} aria-hidden="true" />Copiar</button>}
-          <button className={'btn ' + (fundo === 'transparente' ? 'outline' : 'solid')} onClick={compartilhar}><Share2 size={16} aria-hidden="true" />Compartilhar</button>
+          <button className="btn solid" onClick={copiar}><Copy size={16} aria-hidden="true" />Copiar</button>
+          <button className="btn outline" onClick={compartilhar}><Share2 size={16} aria-hidden="true" />Compartilhar</button>
           <button className="btn outline" onClick={baixar}><Download size={16} aria-hidden="true" />Baixar</button>
           <button className="btn outline" onClick={paraFeed} disabled={ocupado}><Send size={16} aria-hidden="true" />{ocupado ? 'Enviando…' : 'Postar no feed'}</button>
         </div>
