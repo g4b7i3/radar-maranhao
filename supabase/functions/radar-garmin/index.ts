@@ -169,6 +169,23 @@ Deno.serve(async (req) => {
         }
         return json({ ok: true, res });
       }
+      if (b.acao === 'puxar') { // busca direto as corridas enviadas nas últimas horas (janelas de até 24 h)
+        const horas = Math.min(24, Math.max(1, Number(b.horas) || 24)), fim = Math.floor(Date.now() / 1000), ini = fim - horas * 3600;
+        const { data: todos } = await db.from('radar_integracoes').select('*').eq('provedor', 'garmin');
+        const res: Record<string, unknown>[] = [];
+        for (const ig of todos || []) {
+          try {
+            const tk = await tokenValido(ig);
+            for (const tipo of ['activities', 'activityDetails']) {
+              const r = await fetch(`${API}/${tipo}?uploadStartTimeInSeconds=${ini}&uploadEndTimeInSeconds=${fim}`, { headers: { Authorization: `Bearer ${tk}` } });
+              if (!r.ok) { res.push({ user: ig.user_id, tipo, status: r.status, txt: (await r.text()).slice(0, 200) }); continue; }
+              const itens = ((await r.json()) as any[]).map((x) => ({ userId: ig.athlete_id, ...x }));
+              res.push({ user: ig.user_id, tipo, recebidas: itens.length, gravadas: await receber(itens, tipo === 'activityDetails') });
+            }
+          } catch (e) { res.push({ user: ig.user_id, erro: String(e) }); }
+        }
+        return json({ ok: true, res });
+      }
     }
 
     // 3) ações do atleta logado
