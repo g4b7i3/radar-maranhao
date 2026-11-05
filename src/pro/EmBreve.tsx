@@ -1,6 +1,6 @@
 // Radar Pro · "Relógio e cards": conexão oficial com o Garmin Connect e a vitrine dos modelos de card da corrida.
 import { useEffect, useRef, useState } from 'react';
-import { Watch, Check, Plus, X } from 'lucide-react';
+import { Watch, Check, Plus, X, RefreshCw } from 'lucide-react';
 // @ts-expect-error módulo JS de desenho (canvas)
 import { CARD_LAYOUTS, desenharCard } from './cards/desenho.js';
 import { CORRIDA_DEMO, CLIMA_DEMO } from './cards/demo';
@@ -83,6 +83,40 @@ function GarminBotao() {
   );
 }
 
+/** Quando chegou a última corrida do Garmin (e a dica de sincronizar, se nada chegou). */
+const quando = (d: string) => {
+  const t = new Date(d), hoje = new Date(), ontem = new Date(Date.now() - 864e5);
+  const h = t.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  if (t.toDateString() === hoje.toDateString()) return `hoje às ${h}`;
+  if (t.toDateString() === ontem.toDateString()) return `ontem às ${h}`;
+  return `${t.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} às ${h}`;
+};
+function GarminStatus() {
+  const [st, setSt] = useState<{ conectado: boolean; ultima: string | null; erro: string | null } | null>(null);
+  const [vendo, setVendo] = useState(false);
+  const ver = async () => {
+    setVendo(true);
+    const [{ data: c }, { data: a }] = await Promise.all([
+      sb.from('radar_minhas_integracoes').select('erro').eq('provedor', 'garmin').maybeSingle(),
+      sb.from('radar_atividades').select('criado_em').eq('fonte', 'garmin').order('criado_em', { ascending: false }).limit(1),
+    ]);
+    setSt({ conectado: !!c, ultima: a?.[0]?.criado_em ?? null, erro: (c as { erro?: string | null } | null)?.erro ?? null });
+    setVendo(false);
+    window.dispatchEvent(new Event('radar-atividades-recarregar'));
+  };
+  useEffect(() => { ver(); }, []);
+  if (!st?.conectado) return null;
+  return (
+    <div className="pro-garmin-status" role="status">
+      <span>
+        {st.erro ? <b>{st.erro}</b> : st.ultima ? <>Última corrida recebida: <b>{quando(st.ultima)}</b></> : <>Nenhuma corrida recebida ainda.</>}
+        <small>Correu? Sincronize o relógio no app Garmin Connect. A corrida chega aqui em até 2 minutos.</small>
+      </span>
+      <button className="btn outline" onClick={ver} disabled={vendo}><RefreshCw size={15} aria-hidden="true" className={vendo ? 'girando' : ''} />{vendo ? 'Vendo…' : 'Atualizar'}</button>
+    </div>
+  );
+}
+
 /** As outras marcas (como na Nexos): Coros, Polar, Suunto e Wahoo chegam pelo Intervals.icu, que ainda está a caminho. */
 const MARCAS: [string, string][] = [['coros', 'Coros'], ['polar', 'Polar'], ['suunto', 'Suunto'], ['wahoo', 'Wahoo'], ['outro', 'Outro relógio']];
 function Marcas() {
@@ -124,6 +158,7 @@ export function EmBreve() {
       </div>
       <div className="pro-breve-con">
         <div className="pro-breve-item"><img className="pro-breve-logo" src="/img/marcas/garmin.png" width={40} height={40} alt="Garmin" /><div><b>Garmin</b><small>Conecte uma vez e cada corrida do relógio chega sozinha no Radar, com pace, frequência cardíaca, parciais e percurso.</small></div><GarminBotao /></div>
+        <GarminStatus />
       </div>
       <Marcas />
       <p className="pro-sub pro-sem-margem">Card da corrida pro story: {CARD_LAYOUTS.length} modelos, inclusive no jeito maranhense. Abra uma atividade em <b>Minhas atividades</b>, logo abaixo, e toque em <b>Gerar card</b>.</p>

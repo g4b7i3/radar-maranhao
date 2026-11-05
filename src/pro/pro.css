@@ -1141,3 +1141,11 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-folha-caixa > * { flex-shrink: 0; }
 .pro-gerador-topo { display: inline-flex; align-items: center; gap: 4px; }
 .pro-trava-relogio { border-style: dashed; }
+.pro-garmin-status { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: var(--cobalt-tint); font-size: .85rem; }
+.pro-garmin-status > span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pro-garmin-status small { color: var(--muted); font-size: .75rem; line-height: 1.35; }
+.pro-garmin-status .btn { flex: none; }
+.pro-treinos-atualizar { align-self: flex-start; }
+@keyframes radar-gira { to { transform: rotate(360deg); } }
+.girando { animation: radar-gira 1s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .girando { animation: none; } }

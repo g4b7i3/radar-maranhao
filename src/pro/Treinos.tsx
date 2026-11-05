@@ -29,7 +29,9 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
   const trocar = () => { const v = !aberto; setAberto(v); try { localStorage.setItem('radar-atividades-aberto', v ? '1' : '0'); } catch { /* */ } };
   const carregar = () => sb.from('radar_atividades').select('*').order('data', { ascending: false }).limit(60)
     .then(({ data }) => setLista((data ?? []) as Atividade[]));
-  useEffect(() => { carregar(); }, []);
+  const [recarregando, setRecarregando] = useState(false);
+  const atualizar = async () => { setRecarregando(true); await carregar(); setRecarregando(false); };
+  useEffect(() => { carregar(); const f = () => { carregar(); }; window.addEventListener('radar-atividades-recarregar', f); return () => window.removeEventListener('radar-atividades-recarregar', f); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const vis = todas ? (lista ?? []) : (lista ?? []).slice(0, 5);
   return (
     <section className="pro-card pro-treinos">
@@ -39,6 +41,7 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
         <ChevronDown size={18} aria-hidden="true" className={'pro-aniver-seta' + (aberto ? ' virado' : '')} />
       </button>
       {aberto && <>
+        <button className="btn text pro-btn-p pro-treinos-atualizar" onClick={atualizar} disabled={recarregando}><RefreshCw size={15} aria-hidden="true" className={recarregando ? 'girando' : ''} />{recarregando ? 'Atualizando…' : 'Atualizar'}</button>
         {lista === null && <p className="fine pro-sem-margem">Carregando…</p>}
         {lista?.length === 0 && <p className="pro-sub pro-sem-margem">Nenhuma atividade ainda. Conecte o Garmin aqui em cima e cada corrida do relógio aparece aqui sozinha.</p>}
         {!!lista?.length && <ul>
