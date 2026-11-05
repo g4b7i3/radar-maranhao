@@ -3414,8 +3414,8 @@
       ],
       "location": "Praça Padre André",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Esgotadas",
+      "registrationClose": "2026-11-05",
+      "status": "Encerradas",
       "officialUrl": "https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026",
       "sourceUrl": "https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026",
       "sourceName": "SA Crono",
@@ -3426,7 +3426,7 @@
       "elevation": null,
       "price": null,
       "start": "04:45",
-      "verifiedAt": "2026-10-29T10:53:43.607Z",
+      "verifiedAt": "2026-11-05T04:56:57.151Z",
       "firstSeenAt": "2026-10-28T17:34:49.143Z"
     },
     {
@@ -3691,6 +3691,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "79136702-727f-45af-998b-1b877fcbea24",
+      "eventId": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
+      "version": "[\"2026-11-07\",[5],\"Praça Padre André\",null,\"2026-11-05\",\"Encerradas\",\"https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-05T04:56:57.151Z",
+      "notifiedAt": null
+    },
     {
       "id": "dc5e1241-9de9-4917-a8e5-598768722478",
       "eventId": "ii-edicao-aeroclick-2027-imperatriz",
@@ -5660,7 +5668,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-04T18:42:52.658Z",
+  "lastChecked": "2026-11-05T04:56:57.151Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
