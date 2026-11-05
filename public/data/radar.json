@@ -759,7 +759,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridaiboa16anos",
       "sourceUrl": "https://running.life/en/event/corrida-iboa",
       "sourceName": "running.life",
@@ -770,7 +770,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-11-05T18:53:34.813Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -787,7 +787,7 @@
       "location": "Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto",
       "registrationOpen": null,
       "registrationClose": "2026-10-30",
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://topchip.com.br/acailandiasicoob",
       "sourceUrl": "https://topchip.com.br/acailandiasicoob",
       "sourceName": "Topchip",
@@ -805,7 +805,7 @@
         "text": "R$ 98 + 1 kg de alimento (cooperados: 40% off)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-11-05T18:53:34.813Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3692,6 +3692,22 @@
   ],
   "changes": [
     {
+      "id": "1285e5a9-9819-478e-b77d-10c18edd49fa",
+      "eventId": "sicoob-2026-acailandia",
+      "version": "[\"2026-11-08\",[5],\"Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto\",null,\"2026-10-30\",\"Encerradas\",\"https://topchip.com.br/acailandiasicoob\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-05T18:53:34.813Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "3fe063d9-26fa-4448-b433-f44bc03915c3",
+      "eventId": "iboa-16-anos-2026-sao-luis",
+      "version": "[\"2026-11-07\",[5,10],\"Local a confirmar\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/corridaiboa16anos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-05T18:53:34.813Z",
+      "notifiedAt": null
+    },
+    {
       "id": "79136702-727f-45af-998b-1b877fcbea24",
       "eventId": "alto-alegre-do-pindare-run-2026-alto-alegre-do-pindare",
       "version": "[\"2026-11-07\",[5],\"Praça Padre André\",null,\"2026-11-05\",\"Encerradas\",\"https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026\"]",
@@ -5668,7 +5684,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-05T04:56:57.151Z",
+  "lastChecked": "2026-11-05T18:53:34.813Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
