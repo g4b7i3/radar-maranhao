@@ -1158,6 +1158,7 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-intel-dest li { background: rgba(255,211,77,.14); border-radius: 10px; padding: 6px 10px; }
 .pro-intel-det { color: rgba(255,255,255,.85); }
 .pro-intel .btn.text { color: #ffd34d; align-self: flex-start; padding-left: 0; }
+.pro-intel .btn.text:hover, .pro-intel .btn.text:focus, .pro-intel .btn.text:active { background: transparent; color: #ffe27a; }
 
 /* sequência da semana e meta (estilo Strava) */
 .pro-seq { gap: 14px; }
