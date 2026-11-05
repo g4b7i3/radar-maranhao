@@ -110,10 +110,28 @@ Deno.serve(async (req) => {
     }
     if (req.method !== 'POST') return json({ erro: 'Método não suportado.' }, 405);
 
-    // 2) avisos (push) da Garmin: só com a chave secreta no endereço
-    if (u.searchParams.has('k')) {
-      if (!WEBHOOK || u.searchParams.get('k') !== WEBHOOK) return json({ erro: 'não autorizado' }, 401);
+    // 2) avisos (push) da Garmin. Vêm com a chave no endereço (?k=) ou, se o portal guardou o endereço sem ela,
+    // com o "Garmin Health API" (e o garmin-client-id, quando vem). Só gravam corrida de quem já conectou (userId conhecido).
+    const ua = req.headers.get('user-agent') || '', gcid = req.headers.get('garmin-client-id');
+    const daGarmin = u.searchParams.has('k') || /Garmin/i.test(ua) || !!gcid;
+    if (daGarmin && !req.headers.get('authorization')?.match(/^Bearer\s+ey/)) {
+      if (u.searchParams.has('k') && (!WEBHOOK || u.searchParams.get('k') !== WEBHOOK)) return json({ erro: 'não autorizado' }, 401);
+      if (gcid && CLIENT_ID && gcid !== CLIENT_ID) return json({ erro: 'não autorizado' }, 401);
       const body = await req.json().catch(() => ({}));
+      console.log('garmin push', Object.keys(body).join(','));
+      // modo "ping": a Garmin manda só o link pra buscar; busca com o token do atleta
+      for (const chave of ['activities', 'activityDetails', 'manuallyUpdatedActivities']) {
+        const itens = Array.isArray(body[chave]) ? body[chave] : [];
+        if (!itens.some((x: any) => x?.callbackURL)) continue;
+        const juntos: any[] = [];
+        for (const it of itens) {
+          if (!it.callbackURL) { juntos.push(it); continue; }
+          const { data: ig } = await db.from('radar_integracoes').select('*').eq('provedor', 'garmin').eq('athlete_id', String(it.userId)).maybeSingle();
+          if (!ig) continue;
+          try { const tk = await tokenValido(ig); const r = await fetch(it.callbackURL, { headers: { Authorization: `Bearer ${tk}` } }); if (r.ok) juntos.push(...((await r.json()) as any[]).map((x) => ({ userId: it.userId, ...x }))); else console.error('ping', r.status, await r.text()); } catch (e) { console.error('ping', e); }
+        }
+        body[chave] = juntos;
+      }
       const res: Record<string, unknown> = {};
       if (Array.isArray(body.activities)) res.atividades = await receber(body.activities, false);
       if (Array.isArray(body.activityDetails)) res.detalhes = await receber(body.activityDetails, true);
@@ -130,6 +148,27 @@ Deno.serve(async (req) => {
       const ids = [...new Set([...(body.activities || []), ...(body.activityDetails || [])].map((a: any) => String(a.userId)))];
       if (ids.length) await db.from('radar_integracoes').update({ ultima_sync: new Date().toISOString() }).eq('provedor', 'garmin').in('athlete_id', ids);
       return json({ ok: true, ...res });
+    }
+
+    // 2b) chamada interna: pede pra Garmin reenviar as corridas dos últimos dias de todo mundo conectado
+    const interno = req.headers.get('x-radar-interno') ?? '';
+    if (interno && (interno === Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || interno === Deno.env.get('RADAR_INTERNO'))) {
+      const b = await req.json().catch(() => ({}));
+      if (b.acao === 'backfill') {
+        const dias = Math.min(30, Math.max(1, Number(b.dias) || 3)), fim = Math.floor(Date.now() / 1000), ini = fim - dias * 86400;
+        const { data: todos } = await db.from('radar_integracoes').select('*').eq('provedor', 'garmin');
+        const res: Record<string, unknown>[] = [];
+        for (const ig of todos || []) {
+          try {
+            const tk = await tokenValido(ig);
+            for (const tipo of ['activities', 'activityDetails']) {
+              const r = await fetch(`${API}/backfill/${tipo}?summaryStartTimeInSeconds=${ini}&summaryEndTimeInSeconds=${fim}`, { headers: { Authorization: `Bearer ${tk}` } });
+              res.push({ user: ig.user_id, tipo, status: r.status, txt: r.ok ? '' : (await r.text()).slice(0, 200) });
+            }
+          } catch (e) { res.push({ user: ig.user_id, erro: String(e) }); }
+        }
+        return json({ ok: true, res });
+      }
     }
 
     // 3) ações do atleta logado
