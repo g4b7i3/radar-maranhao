@@ -1,8 +1,9 @@
 // Radar Pro · "Minhas atividades": as corridas que chegam do Garmin / Intervals.icu.
 // Cada uma abre com gráficos (pace e FC por km, percurso), vira card pro story e pode ir pro feed.
 import { useEffect, useRef, useState } from 'react';
-import { Watch, ChevronRight, ChevronDown, X, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy } from 'lucide-react';
+import { Watch, ChevronRight, ChevronDown, X, Sparkles, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy } from 'lucide-react';
 import { sb, relogio, dataBR, type Perfil } from './sb';
+import { radarInteligencia, type Corrida, type Leitura } from './inteligencia';
 // @ts-expect-error módulo JS de desenho (canvas)
 import { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe, tirosDe } from './cards/desenho.js';
 
@@ -62,6 +63,29 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
   );
 }
 
+/* ───────── Radar Inteligência: a leitura curta do treino ───────── */
+function PainelInteligencia({ a }: { a: Atividade }) {
+  const [r, setR] = useState<Leitura | null | undefined>(undefined);
+  const [mais, setMais] = useState(false);
+  useEffect(() => {
+    const desde = new Date(new Date(a.data).getTime() - 92 * 864e5).toISOString();
+    sb.from('radar_atividades').select('id, data, tipo, distancia_m, duracao_s, fc_media, elevacao_m, parciais').gte('data', desde).lte('data', a.data)
+      .then(({ data }) => setR(radarInteligencia(a as Corrida, (data ?? []) as Corrida[])), () => setR(radarInteligencia(a as Corrida, [])));
+  }, [a]);
+  if (!r) return null;
+  return (
+    <div className="pro-intel">
+      <p className="pro-intel-h"><Sparkles size={15} aria-hidden="true" /> {r.titulo}</p>
+      <p className="pro-intel-txt">{r.txt}</p>
+      {r.destaques.length > 0 && <ul className="pro-intel-dest">{r.destaques.map(d => <li key={d}>{d}</li>)}</ul>}
+      {r.detalhes.length > 0 && <>
+        <button className="btn text pro-btn-p" onClick={() => setMais(!mais)} aria-expanded={mais}>{mais ? 'Ver menos' : 'Ver mais'}</button>
+        {mais && <ul className="pro-intel-det">{r.detalhes.map(d => <li key={d}>{d}</li>)}</ul>}
+      </>}
+    </div>
+  );
+}
+
 /* ───────── detalhe: números, gráficos e ações ───────── */
 export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perfil: Perfil; fechar: () => void; mudou: (a: Atividade) => void }) {
   const [card, setCard] = useState(false);
@@ -78,6 +102,7 @@ export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perf
     <div className="pro-folha" role="dialog" aria-modal="true" aria-label="Treino">
       <div className="pro-folha-caixa">
         <div className="pro-linha"><div><b>{a.titulo || TIPO[a.tipo] || 'Corrida'}</b><p className="fine pro-sem-margem">{dataBR(a.data)} · {hora(a.data)} · via {FONTE[a.fonte] ?? a.fonte}</p></div><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
+        <PainelInteligencia a={a} />
         <div className="pro-treino-grade">{nums.map(n => <div key={n.l}><small>{n.l}</small><b>{n.v}</b></div>)}</div>
         {parc.length > 1 && <GraficoPace parc={parc} />}
         {parc.some(p => p.fc) && <GraficoFC parc={parc} />}
