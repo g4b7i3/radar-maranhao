@@ -1,4 +1,4 @@
-// Radar Inteligência: a leitura curta de cada treino, no estilo do Strava.
+// Resenha do treino: a leitura curta de cada treino, no estilo do Strava.
 // Tudo por regras, aqui no app: compara a corrida com as suas dos últimos 90 dias. Nenhum dado vai pra serviço de IA.
 export type Parcial = { km: number; seg: number; fc?: number | null; parcial?: boolean };
 export type Corrida = { id: string; data: string; tipo: string; distancia_m: number; duracao_s: number; fc_media: number | null; elevacao_m?: number | null; parciais?: Parcial[] | null };
@@ -78,5 +78,5 @@ export function radarInteligencia(c: Corrida, hist: Corrida[]): Leitura | null {
   if (semana.length) detalhes.push(`${semana.length + 1}ª corrida da semana, ${km1(semana.reduce((s, h) => s + h.distancia_m, 0) + c.distancia_m)} km somados.`);
   if (c.elevacao_m && c.elevacao_m / km >= 8) detalhes.push(`Percurso com subida: ${c.elevacao_m} m (${(c.elevacao_m / km).toFixed(0)} m por km). Isso pesa no ritmo.`);
 
-  return { titulo: 'Radar Inteligência', txt: frases.slice(0, 2).join(' '), destaques: destaques.slice(0, 3), detalhes };
+  return { titulo: 'Resenha do treino', txt: frases.slice(0, 2).join(' '), destaques: destaques.slice(0, 3), detalhes };
 }

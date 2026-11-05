@@ -1,7 +1,7 @@
 // Radar Pro · "Minhas atividades": as corridas que chegam do Garmin / Intervals.icu.
 // Cada uma abre com gráficos (pace e FC por km, percurso), vira card pro story e pode ir pro feed.
 import { useEffect, useRef, useState } from 'react';
-import { Watch, ChevronRight, ChevronDown, X, Sparkles, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy } from 'lucide-react';
+import { Watch, ChevronRight, ChevronDown, X, MessagesSquare, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy } from 'lucide-react';
 import { sb, relogio, dataBR, type Perfil } from './sb';
 import { radarInteligencia, type Corrida, type Leitura } from './inteligencia';
 // @ts-expect-error módulo JS de desenho (canvas)
@@ -63,7 +63,7 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
   );
 }
 
-/* ───────── Radar Inteligência: a leitura curta do treino ───────── */
+/* ───────── Resenha do treino: a leitura curta do treino ───────── */
 function PainelInteligencia({ a }: { a: Atividade }) {
   const [r, setR] = useState<Leitura | null | undefined>(undefined);
   const [mais, setMais] = useState(false);
@@ -75,7 +75,7 @@ function PainelInteligencia({ a }: { a: Atividade }) {
   if (!r) return null;
   return (
     <div className="pro-intel">
-      <p className="pro-intel-h"><Sparkles size={15} aria-hidden="true" /> {r.titulo}</p>
+      <p className="pro-intel-h"><MessagesSquare size={15} aria-hidden="true" /> {r.titulo}</p>
       <p className="pro-intel-txt">{r.txt}</p>
       {r.destaques.length > 0 && <ul className="pro-intel-dest">{r.destaques.map(d => <li key={d}>{d}</li>)}</ul>}
       {r.detalhes.length > 0 && <>
