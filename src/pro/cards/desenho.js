@@ -14,7 +14,7 @@ const isoDia = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.g
 const CARD_STATS = [['dist', 'Distância'], ['pace', 'Pace'], ['tempo', 'Tempo'], ['fc', 'FC média'], ['elev', 'Subida'], ['cad', 'Cadência'], ['kcal', 'Calorias'], ['passos', 'Passos'], ['rota', 'Percurso'], ['data', 'Data']];
 // modelos do card (inspirados nos stickers de corrida), com as cores do Radar e sem logo
 const CARD_LAYOUTS = [
-  ['ma_juro', 'Jurooo'], ['ma_tudo', 'Tudooo'], ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'], ['ma_aspas', 'Entre aspas'], ['ma_pilha', 'Empilhado'], ['ma_contorno', 'Contorno'], ['ma_placar', 'Placar'], ['ma_faixa', 'Faixa dourada'], ['ma_lateral', 'Fala de lado'],
+  ['ma_juro', 'Jurooo'], ['ma_tudo', 'Tudooo'], ['ma_diabo', 'Diabéisso?'], ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'], ['ma_aspas', 'Entre aspas'], ['ma_pilha', 'Empilhado'], ['ma_contorno', 'Contorno'], ['ma_placar', 'Placar'], ['ma_faixa', 'Faixa dourada'], ['ma_lateral', 'Fala de lado'],
   ['icones', 'Com ícones'], ['clima', 'Clima'], ['clima_faixa', 'Clima + números'], ['tiros', 'Tiros'], ['classico', 'Coluna'], ['faixa', 'Faixa'], ['percurso', 'Percurso'], ['lado', 'Lado a lado'], ['mapa', 'Só o mapa'],
   ['sobre', 'Mapa + números'], ['tabela', 'Ficha'], ['ficha_mapa', 'Ficha + mapa'], ['lateral', 'Diagonal'], ['pilulas', 'Número de peito'],
   ['parciais', 'Parciais'], ['recibo', 'Medalha'], ['destaque', 'Destaque'], ['linha', 'Na foto'],
@@ -35,6 +35,7 @@ const FALAS = {
     { g: 'Égua, mermã!', f: 'Dei a volta na ilha quase: {km} km.' },
     { g: 'Té doido, cansei!', f: '{tempo} correndo. Agora é só deitar.' },
     { g: 'Juroooo!', f: '{km} km. Nem eu acredito que fui.' },
+    { g: 'Diabéisso?', f: '{km} km de longão. As pernas tão perguntando também.' },
   ],
   rapido: [
     { g: 'Piqueno, tu é o raio!', f: '{pace}/km de média. Fui zilado do começo ao fim.' },
@@ -48,6 +49,7 @@ const FALAS = {
     { g: 'Chegou na caruda!', f: 'Sem aquecer conversa: {km} km a {pace}/km.' },
     { g: 'Jurooo!', f: '{pace}/km. Tô sem acreditar até agora.' },
     { g: 'Tudooo!', f: '{pace}/km de média. Foi tudo.' },
+    { g: 'Diabéisso?', f: '{pace}/km. Quem foi que correu isso?' },
   ],
   forte: [
     { g: 'Té doido!', f: 'Esse treino foi louco: {km} km com o coração na boca.' },
@@ -61,6 +63,7 @@ const FALAS = {
     { g: 'Heheeein!', f: 'Diz que foi fácil? Pergunta pras minhas pernas.' },
     { g: 'Té doido, cansei!', f: '{km} km a {pace}/km. As pernas pediram arrego.' },
     { g: 'Juro, vey!', f: 'Esse treino quase me levou. Mas fui até o fim.' },
+    { g: 'Diabéisso?', f: 'Quem foi que passou esse treino? Fiz, mas não entendi até agora.' },
   ],
   calor: [
     { g: 'Égua do calor!', f: 'O sol de São Luís tava remoso e eu fui correr assim mesmo.' },
@@ -308,7 +311,25 @@ async function desenharCard(cv, c, o) {
   const maranhense = () => {
     const F = falaDe(c, clima, L), lista = sel.slice(0, 3);
     const OURO = '#ffd34d', COB = '#1d3fbf', NAVY = '#0a1240';
-    if (L === 'ma_juro' || L === 'ma_tudo') { // "JUROOOO" / "TUDOOO": o O esticado, cada vez mais apagado
+    if (L === 'ma_diabo') { // "DIABÉISSO?": o espanto com a própria corrida, e um ponto de interrogação gigante atrás
+      const cor = branco ? OURO : COB, fg = (n) => `800 ${n}px ${FH}`, p0 = F.val;
+      let px = post ? 280 : 330; while (larg('DIABÉ', fg(px), -px * .03) > W - 130 && px > 80) px -= 6;
+      const frase = p0.pace && paceDe(c) < 285 ? `${p0.pace}/km. Quem foi que correu isso?`
+        : c.distancia_m >= 15000 && p0.km ? `${p0.km} km de longão. Quem foi que correu isso?`
+        : p0.km && p0.tempo ? `${p0.km} km em ${p0.tempo}. Quem foi que correu isso?` : 'Quem foi que correu isso?';
+      const ff = `600 ${post ? 46 : 52}px ${FB}`, fl = quebra(frase, ff, W - 140), lf = post ? 62 : 70;
+      const tot = px * .9 * 2 + 60 + fl.length * lf + 90 + 88 * 1.9 + (dataTxt ? 70 : 0);
+      let y = (H - tot) / 2;
+      // a interrogação enorme, apagadinha, atrás de tudo
+      ctx.save(); ctx.globalAlpha = .12; ctx.font = fg(post ? 900 : 1100); ctx.fillStyle = cor; ctx.textAlign = 'right'; ctx.fillText('?', W + 40, y + (post ? 820 : 1000)); ctx.restore();
+      if (dataTxt) { txt(dataTxt, 66, y + 26, LBL(26), sub, 'left', 3); y += 70; }
+      y += px * .9; txt('DIABÉ', 62, y, fg(px), cor, 'left', -px * .03);
+      y += px * .9; const wI = larg('ISSO', fg(px), -px * .03);
+      txt('ISSO', 62, y, fg(px), cor, 'left', -px * .03); txt('?', 62 + wI + px * .04, y, fg(px), tx, 'left');
+      y += 60; fl.forEach((l) => { y += lf; txt(l, 66, y, ff, tx, 'left'); });
+      y += 50; ctx.save(); ctx.fillStyle = cor; ctx.fillRect(66, y, 120, 8); ctx.restore(); y += 50;
+      grade(lista, y, 88, 66, W - 66, 3, 'left');
+    } else if (L === 'ma_juro' || L === 'ma_tudo') { // "JUROOOO" / "TUDOOO": o O esticado, cada vez mais apagado
       const tudo = L === 'ma_tudo', RAIZ = tudo ? 'TUD' : 'JUR';
       const OS = 5, fg = (n) => `800 ${n}px ${FH}`, cor = branco ? OURO : COB;
       let px = post ? 230 : 270; const ew = (n) => -n * .03;
