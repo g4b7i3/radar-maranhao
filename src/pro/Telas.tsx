@@ -16,6 +16,7 @@ import CardDuelo, { type FimDuelo } from './CardDuelo';
 import { Avatar, FotoConta, useFotos } from './Foto';
 import { Seguir } from './Feed';
 import { Metas } from './Metas';
+import { Sequencia } from './Sequencia';
 import { Recordes } from './Recordes';
 import { MapaCidades } from './Mapa';
 import { DesafioAssessorias } from './Desafio';
@@ -175,6 +176,7 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou, pro = true, as
 
       <button className="btn solid pro-btn" onClick={irCorri}><Plus size={18} aria-hidden="true" />Eu corri uma prova</button>
       {pro ? <>
+        <Sequencia perfil={perfil} />
         <EmBreve />
         <MeusTreinos perfil={perfil} />
       </> : (

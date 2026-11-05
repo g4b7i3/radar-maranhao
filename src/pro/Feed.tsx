@@ -111,7 +111,13 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
       </header>
       {e.tipo === 'prova' && (
         <>
-          <p className="pro-feed-txt"><Trophy size={16} aria-hidden="true" /> {d.podio ? 'Subiu ao pódio na' : 'Correu a'} <b>{d.prova}</b> ({d.data ? dataBR(d.data) : ''}, {d.cidade}): <b>{kmTxt(Number(d.km))} em {relogio(Number(d.tempo))}</b>, nota {pct(d.nota)}%{d.geral ? ` · ${d.geral}º geral${d.total ? ` de ${d.total}` : ''}` : ''}{d.recorde ? ' · recorde pessoal' : ''}.</p>
+          <p className="pro-feed-sub"><Trophy size={15} aria-hidden="true" /> {d.podio ? 'Subiu ao pódio' : 'Prova'} · {d.data ? dataBR(d.data) : ''} · {d.cidade}{d.recorde ? ' · recorde pessoal' : ''}</p>
+          <h3 className="pro-feed-titulo">{d.prova}</h3>
+          <dl className="pro-feed-nums">
+            <div><dt>Distância</dt><dd>{kmTxt(Number(d.km))}</dd></div>
+            <div><dt>Tempo</dt><dd>{relogio(Number(d.tempo))}</dd></div>
+            <div><dt>{d.geral ? 'Geral' : 'Nota'}</dt><dd>{d.geral ? <>{d.geral}º{d.total ? <small> de {d.total}</small> : null}</> : `${pct(d.nota)}%`}</dd></div>
+          </dl>
           {d.medalhas?.length ? <Meds ids={d.medalhas} /> : null}
         </>
       )}
@@ -119,10 +125,16 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
         <p className="pro-feed-txt"><Crown size={16} aria-hidden="true" /> É {d.sexo === 'F' ? <b>Rainha</b> : <b>Rei</b>} da prova nos {kmTxt(Number(d.km))} da <b>{d.prova}</b>: melhor nota por idade entre {d.atletas ? `${d.atletas} atletas` : 'todos'} ({pct(d.nota)}%, {relogio(Number(d.tempo))}).</p>
       )}
       {treino && <>
-        <p className="pro-feed-txt"><Footprints size={16} aria-hidden="true" /> {TREINO_TIPO[treino.tipo] ?? 'Treino'}{treino.titulo ? <> · <b>{treino.titulo}</b></> : null}: <b>{kmTxt(Number(treino.km))} em {relogio(Number(treino.tempo))}</b>{Number(treino.km) > 0 ? ` (${paceTxt(Number(treino.tempo) / Number(treino.km))}/km)` : ''}{treino.elev ? ` · ${treino.elev} m de subida` : ''}.</p>
+        <p className="pro-feed-sub"><Footprints size={15} aria-hidden="true" /> {TREINO_TIPO[treino.tipo] ?? 'Treino'} · via {treino.fonte === 'garmin' ? 'Garmin' : treino.fonte === 'intervals' ? 'Intervals.icu' : treino.fonte}</p>
+        <h3 className="pro-feed-titulo">{treino.titulo || TREINO_TIPO[treino.tipo] || 'Treino'}</h3>
+        <dl className="pro-feed-nums">
+          <div><dt>Distância</dt><dd>{kmTxt(Number(treino.km))}</dd></div>
+          {Number(treino.km) > 0 && <div><dt>Pace</dt><dd>{paceTxt(Number(treino.tempo) / Number(treino.km))}<small>/km</small></dd></div>}
+          <div><dt>Tempo</dt><dd>{relogio(Number(treino.tempo))}</dd></div>
+          {treino.elev ? <div><dt>Subida</dt><dd>{treino.elev}<small> m</small></dd></div> : null}
+        </dl>
         {treino.legenda && <p className="pro-feed-post"><TextoComLinks texto={treino.legenda} /></p>}
         {treino.card && <img className="pro-feed-treino-card" src={treino.card} alt={`Card da corrida de ${kmTxt(Number(treino.km))}`} loading="lazy" />}
-        <small className="pro-feed-fonte">via {treino.fonte === 'garmin' ? 'Garmin' : treino.fonte === 'intervals' ? 'Intervals.icu' : treino.fonte}</small>
       </>}
       {post && <>
         {post.texto && <p className="pro-feed-post"><TextoComLinks texto={post.texto} /></p>}

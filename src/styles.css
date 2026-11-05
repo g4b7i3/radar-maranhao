@@ -198,13 +198,16 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 .month h2 { font-weight: 850; font-stretch: 68%; font-size: 2.125rem; letter-spacing: -0.01em; padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
 .month h2 small { font-size: 1.25rem; color: var(--muted); font-weight: 600; }
 .races { list-style: none; margin: 0; padding: 0; }
-.race { display: flex; align-items: stretch; border-bottom: 1px solid var(--line); }
-.race-main { flex: 1; display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 18px; text-align: left; padding: 18px 8px 18px 0; min-width: 0; border-radius: 6px; }
+.race { display: flex; align-items: stretch; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; margin-top: 10px; box-shadow: 0 1px 2px rgba(10,18,64,.05), 0 6px 18px -12px rgba(10,18,64,.25); transition: transform .15s, box-shadow .15s; }
+.race:hover { box-shadow: 0 2px 4px rgba(10,18,64,.06), 0 12px 26px -14px rgba(10,18,64,.35); }
+.race-main { flex: 1; display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 16px; text-align: left; padding: 16px 4px 16px 14px; min-width: 0; border-radius: 18px; }
 .race-main:hover .race-name { color: var(--cobalt); }
-.race-date { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 2px; }
-.race-date b { font-weight: 900; font-stretch: 62%; font-size: 3.25rem; line-height: .85; color: var(--cobalt); font-variant-numeric: tabular-nums; }
+/* selo de calendário: mês numa faixa, o dia grande e o dia da semana */
+.race-date { align-self: flex-start; display: flex; flex-direction: column; align-items: center; width: 64px; overflow: hidden; border-radius: 10px; background: var(--bg, #fff); border: 1px solid var(--line); box-shadow: 0 2px 6px -3px rgba(10,18,64,.3); }
+.race-date i { width: 100%; text-align: center; font-style: normal; font-size: .78rem; font-weight: 850; letter-spacing: .08em; padding: 3px 0 2px; background: #0a1240; color: #ffd34d; }
+.race-date b { font-weight: 900; font-stretch: 62%; font-size: 2.6rem; line-height: 1; margin-top: 4px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .race-date b.tbd { color: var(--muted); }
-.race-date small { margin-top: 6px; font-size: 0.875rem; font-weight: 600; color: var(--muted); }
+.race-date small { margin: 0 0 6px; font-size: .78rem; font-weight: 750; color: var(--cobalt); text-transform: uppercase; letter-spacing: .04em; }
 .race-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .race-name { overflow-wrap: anywhere; font-weight: 750; font-size: 1.1875rem; line-height: 1.25; transition: color .15s; }
 .race-place { color: var(--muted); display: flex; align-items: flex-start; gap: 6px; overflow-wrap: anywhere; }
@@ -246,6 +249,24 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
 .save.on { color: var(--cobalt); }
 .race.past { opacity: .55; }
 .race.past .race-date b { color: var(--muted); }
+.race.past .race-date i { background: var(--muted); color: #fff; }
+.month .races { margin-top: 4px; }
+
+/* prova em destaque (foto grande, data no canto) */
+.destaque { display: flex; flex-direction: column; width: 100%; margin-top: 18px; text-align: left; overflow: hidden; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 2px 4px rgba(10,18,64,.06), 0 16px 34px -18px rgba(10,18,64,.45); padding: 0; }
+.destaque-img { position: relative; display: block; aspect-ratio: 16 / 9; background-size: cover; background-position: center; }
+.destaque-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(4,7,26,.55)); }
+.destaque-img.sem-foto { background: radial-gradient(circle at 88% 10%, rgba(255,211,77,.3), transparent 55%), linear-gradient(160deg, #14278a, #0a1240); }
+.destaque-data { position: absolute; z-index: 1; top: 12px; right: 12px; font-style: normal; font-weight: 800; font-size: .9rem; padding: 6px 12px; border-radius: 10px; background: #fff; color: #0a1240; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+.destaque-k { position: absolute; z-index: 1; left: 14px; bottom: 12px; font-size: .75rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; color: #ffd34d; }
+.destaque-dia { position: absolute; z-index: 1; left: 18px; top: 18px; display: flex; flex-direction: column; color: #fff; line-height: .9; }
+.destaque-dia i { font-style: normal; font-weight: 850; letter-spacing: .1em; color: #ffd34d; font-size: 1.1rem; }
+.destaque-dia b { font-weight: 900; font-stretch: 62%; font-size: 5.5rem; }
+.destaque-corpo { display: flex; flex-direction: column; gap: 6px; padding: 14px 18px 18px; }
+.destaque-corpo b { font-size: 1.35rem; font-weight: 850; line-height: 1.2; color: var(--ink); }
+.destaque-corpo span { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .98rem; }
+.destaque-corpo svg { flex: none; color: var(--cobalt); }
+.destaque:hover .destaque-corpo b { color: var(--cobalt); }
 
 .empty { text-align: center; padding: 56px 16px; }
 .empty h2 { font-size: 1.375rem; font-weight: 750; }
@@ -351,7 +372,8 @@ select { min-height: 44px; max-width: 100%; font-size: 1rem; border-radius: 10px
   .clock-n { white-space: nowrap; font-size: 5.25rem; }
   .clock-unit { margin: 0; }
   .hero-sum { flex-direction: column; }
-  .race-main { grid-template-columns: 52px minmax(0, 1fr); gap: 14px; }
+  .race-main { grid-template-columns: 58px minmax(0, 1fr); gap: 12px; padding-left: 10px; }
+  .race-date { width: 56px; } .race-date b { font-size: 2.2rem; }
 
   .race-date b { font-size: 2.625rem; }
   .race-name { font-size: 1.0625rem; }

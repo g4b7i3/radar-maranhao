@@ -27,7 +27,7 @@ export async function chamar<T = any>(fn: string, corpo?: unknown): Promise<T & 
   }
 }
 
-export type Perfil = { user_id: string; apelido: string; foto_url?: string | null; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null; publico?: boolean; bio?: string | null; edicoes_mes?: string | null; edicoes_qtd?: number; avisos_perto?: boolean; pcd?: boolean; genero?: string | null };
+export type Perfil = { user_id: string; apelido: string; foto_url?: string | null; nome_completo: string; cidade: string; sexo: 'F' | 'M'; nascimento: string; assessoria: string | null; whatsapp?: string | null; publico?: boolean; bio?: string | null; edicoes_mes?: string | null; edicoes_qtd?: number; avisos_perto?: boolean; pcd?: boolean; genero?: string | null; meta_semana?: number | null };
 export const GENEROS: [string, string][] = [['mulher', 'Mulher'], ['homem', 'Homem'], ['nao_binario', 'Não binário'], ['trans_mulher', 'Mulher trans'], ['trans_homem', 'Homem trans'], ['outro', 'Outro'], ['prefiro_nao_dizer', 'Prefiro não dizer']];
 export const generoTxt = (g?: string | null) => GENEROS.find(x => x[0] === g)?.[1] ?? null;
 export type Resultado = {

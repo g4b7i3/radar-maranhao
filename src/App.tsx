@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown, ArrowLeft } from 'lucide-react';
+import { Bookmark, CalendarDays, Clock, Ticket, Send, CalendarPlus, Check, ExternalLink, MapPin, Mountain, Search, X, Download, RotateCcw, Link2, Smartphone, MessageCircle, Instagram, Banknote, PartyPopper, Moon, Sun, SlidersHorizontal, ArrowUpRight, Activity, Crown, ArrowLeft, Footprints } from 'lucide-react';
 import InstallPrompt, { openInstallPrompt } from './InstallPrompt';
 import { CountUp, useReveal } from './HeroFx';
 import { RadarFundo, BandeiraMA } from './HeroRadar';
@@ -38,6 +38,34 @@ function Logo() {
       <rect width="32" height="32" rx="7" />
       <g fill="none" strokeWidth="2.2"><path d="M4 12a8 8 0 0 0 8-8M20 4a8 8 0 0 0 8 8M28 20a8 8 0 0 0-8 8M12 28a8 8 0 0 0-8-8" /><path d="M16 9l7 7-7 7-7-7z" /></g>
     </svg>
+  );
+}
+
+const mesCurto = (d: string) => ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'][Number(d.slice(5, 7)) - 1];
+// a prova em destaque: a próxima com inscrições abertas (até 60 dias), com a foto da ilha quando é em São Luís
+const FOTOS_ILHA = ['/img/ma/lagoa-da-jansen.jpg', '/img/ma/por-do-sol.jpg', '/img/ma/telhados.jpg', '/img/ma/rua-do-giz.jpg', '/img/ma/catedral.jpg', '/img/ma/calhau.jpg'];
+function destaque(events: Race[]) {
+  const t = today();
+  return events.filter(e => e.date && e.date >= t && (daysUntil(e.date) ?? 999) <= 60 && status(e) === 'Abertas').sort((a, b) => a.date!.localeCompare(b.date!))[0] ?? null;
+}
+function ProvaDestaque({ e, onAbrir }: { e: Race; onAbrir: () => void }) {
+  const ilha = norm(e.city) === norm('São Luís');
+  const foto = ilha ? FOTOS_ILHA[[...e.id].reduce((a, c) => a + c.charCodeAt(0), 0) % FOTOS_ILHA.length] : null;
+  const n = daysUntil(e.date!) ?? 0;
+  return (
+    <button className="destaque" onClick={onAbrir} data-umami-event="Abrir prova em destaque" data-umami-event-prova={e.name}>
+      <span className={foto ? 'destaque-img' : 'destaque-img sem-foto'} style={foto ? { backgroundImage: `url(${foto})` } : undefined}>
+        <em className="destaque-data">{fmt.full(e.date)}</em>
+        {!foto && <span className="destaque-dia" aria-hidden="true"><i>{mesCurto(e.date!)}</i><b>{fmt.day(e.date!)}</b></span>}
+        <small className="destaque-k">Próxima com inscrição aberta</small>
+      </span>
+      <span className="destaque-corpo">
+        <b>{e.name}</b>
+        <span><MapPin size={16} aria-hidden="true" />{placeList(e)}</span>
+        <span><Footprints size={16} aria-hidden="true" />{e.distances.length ? e.distances.map(d => d + ' km').join(' · ') : 'Distâncias a confirmar'}</span>
+        <span><Clock size={16} aria-hidden="true" />{n === 0 ? 'É hoje!' : n === 1 ? 'É amanhã' : `Faltam ${n} dias`}{e.price ? ` · ${e.price.text}` : ''}</span>
+      </span>
+    </button>
   );
 }
 
@@ -469,6 +497,10 @@ export default function App() {
           </div>
 
           {tab === 'agenda' && vista === 'mapa' && <MapaProvas events={filtered} onAbrir={e => setSelected(e)} onVerLista={c => { setCity(c); setVista('lista'); setTimeout(() => document.querySelector('.list-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }} />}
+          {tab === 'agenda' && vista === 'lista' && !filtersOn && !escolhendo && (() => {
+            const d = destaque(events); if (!d) return null;
+            return <ProvaDestaque e={d} onAbrir={() => abrirProva(d)} />;
+          })()}
           {(tab !== 'agenda' || vista === 'lista') && groups.map(([key, list], gi) => (
             <Fragment key={key}>
             <section className="month" aria-labelledby={'m-' + key}>
@@ -479,7 +511,7 @@ export default function App() {
                   return (
                     <li key={e.id} className={past ? 'race past' : 'race'}>
                       <button className="race-main" onClick={() => abrirProva(e)} data-umami-event={escolhendo ? 'Eu vou: escolheu a prova' : 'Abrir prova'} data-umami-event-prova={e.name}>
-                        <span className="race-date">{e.date ? <><b>{fmt.day(e.date)}</b><small>{fmt.weekdayShort(e.date)}</small></> : <b className="tbd">?</b>}</span>
+                        <span className="race-date">{e.date ? <><i>{mesCurto(e.date)}</i><b>{fmt.day(e.date)}</b><small>{fmt.weekdayShort(e.date)}</small></> : <><i>—</i><b className="tbd">?</b><small>a definir</small></>}</span>
                         <span className="race-body">
                           <span className="race-name">{e.name}</span>
                           <span className="race-place">{e.modality === 'Trail' && <Mountain size={14} aria-label="Trail" />}{placeList(e)}{pertoAtivo && (() => { const d = distancia(perto!, e.city); return d != null ? <em className="race-km"> · {kmTexto(d)}</em> : null; })()}</span>
