@@ -1199,3 +1199,13 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-feed-nums dt { font-size: .8rem; color: var(--muted); }
 .pro-feed-nums dd { margin: 0; font-size: 1.45rem; font-weight: 850; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .pro-feed-nums dd small { font-size: .8rem; font-weight: 700; color: var(--muted); }
+
+/* banner pra assinar (uma vez por dia) */
+.pro-banner-assinar { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px 12px; padding: 14px 40px 14px 14px; border-radius: 18px; color: #fff; background: radial-gradient(circle at 92% 0%, rgba(255,211,77,.28), transparent 55%), linear-gradient(140deg, #1d3fbf, #0a1240); box-shadow: 0 14px 30px -18px rgba(10,18,64,.7); animation: pro-banner-entra .45s ease both; }
+.pro-banner-emoji { font-size: 1.8rem; line-height: 1; }
+.pro-banner-assinar p { margin: 0; font-size: .95rem; line-height: 1.35; }
+.pro-banner-assinar p b { color: #ffd34d; }
+.pro-banner-assinar .btn { grid-column: 1 / -1; background: #ffd34d; color: #0a1240; }
+.pro-banner-x { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; }
+@keyframes pro-banner-entra { from { opacity: 0; transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .pro-banner-assinar { animation: none; } }

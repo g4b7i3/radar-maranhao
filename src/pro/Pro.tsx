@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -253,6 +253,7 @@ function ProTelas() {
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <BannerAviso lista={notif.lista} abrir={() => setNotifAberto(true)} />
       <PushConvite userId={perfil.user_id} />
+      {!pro && !admin && <BannerAssinar pendentes={temp.pontos_pendentes} provas={temp.provas} assinar={irAssinar} />}
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê a agenda de provas, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
       {bemVindo && <BemVindoPro fechar={() => { setBemVindo(false); setAba('temporada'); window.scrollTo(0, 0); }} />}
@@ -608,3 +609,22 @@ function Abertura({ saindo }: { saindo: boolean }) {
   );
 }
 
+
+/** Banner pra quem não assina: aparece uma vez por dia, ao entrar. Quem já registrou provas vê os próprios pontos esperando. */
+function BannerAssinar({ pendentes, provas, assinar }: { pendentes: number; provas: number; assinar: () => void }) {
+  const hoje = new Date().toISOString().slice(0, 10);
+  const [aberto, setAberto] = useState(() => { try { return localStorage.getItem('radar-banner-assinar') !== hoje; } catch { return true; } });
+  if (!aberto) return null;
+  const fechar = () => { setAberto(false); try { localStorage.setItem('radar-banner-assinar', hoje); } catch { /* */ } };
+  const temProvas = provas > 0;
+  return (
+    <div className="pro-banner-assinar" role="status">
+      <span className="pro-banner-emoji" aria-hidden="true">{temProvas ? '⏳' : '🏅'}</span>
+      <p>{temProvas
+        ? <><b>{pendentes > 0 ? `${pendentes} pontos esperando você.` : 'Suas provas estão esperando.'}</b> Assine o Pro e suas provas entram no ranking.</>
+        : <><b>Sua próxima prova pode valer pontos.</b> Ranking, medalhas, Garmin e cards no Radar Pro.</>}</p>
+      <button className="btn solid" onClick={() => { fechar(); assinar(); }}>Assinar · R$ 10</button>
+      <button className="pro-banner-x" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button>
+    </div>
+  );
+}
