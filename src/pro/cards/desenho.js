@@ -14,7 +14,7 @@ const isoDia = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.g
 const CARD_STATS = [['dist', 'Distância'], ['pace', 'Pace'], ['tempo', 'Tempo'], ['fc', 'FC média'], ['elev', 'Subida'], ['cad', 'Cadência'], ['kcal', 'Calorias'], ['passos', 'Passos'], ['rota', 'Percurso'], ['data', 'Data']];
 // modelos do card (inspirados nos stickers de corrida), com as cores do Radar e sem logo
 const CARD_LAYOUTS = [
-  ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'], ['ma_aspas', 'Entre aspas'], ['ma_pilha', 'Empilhado'], ['ma_contorno', 'Contorno'], ['ma_placar', 'Placar'], ['ma_faixa', 'Faixa dourada'], ['ma_lateral', 'Fala de lado'],
+  ['ma_juro', 'Jurooo'], ['ma_tudo', 'Tudooo'], ['ma_eguas', 'Éguas!'], ['ma_balao', 'Balão de fala'], ['ma_carimbo', 'Carimbo'], ['ma_centro', 'Fala no centro'], ['ma_rodape', 'Fala embaixo'], ['ma_so', 'Só a fala'], ['ma_aspas', 'Entre aspas'], ['ma_pilha', 'Empilhado'], ['ma_contorno', 'Contorno'], ['ma_placar', 'Placar'], ['ma_faixa', 'Faixa dourada'], ['ma_lateral', 'Fala de lado'],
   ['icones', 'Com ícones'], ['clima', 'Clima'], ['clima_faixa', 'Clima + números'], ['tiros', 'Tiros'], ['classico', 'Coluna'], ['faixa', 'Faixa'], ['percurso', 'Percurso'], ['lado', 'Lado a lado'], ['mapa', 'Só o mapa'],
   ['sobre', 'Mapa + números'], ['tabela', 'Ficha'], ['ficha_mapa', 'Ficha + mapa'], ['lateral', 'Diagonal'], ['pilulas', 'Número de peito'],
   ['parciais', 'Parciais'], ['recibo', 'Medalha'], ['destaque', 'Destaque'], ['linha', 'Na foto'],
@@ -34,6 +34,7 @@ const FALAS = {
     { g: 'Rapá, siô!', f: '{km} km. Juçara com farinha pra repor tudo.' },
     { g: 'Égua, mermã!', f: 'Dei a volta na ilha quase: {km} km.' },
     { g: 'Té doido, cansei!', f: '{tempo} correndo. Agora é só deitar.' },
+    { g: 'Juroooo!', f: '{km} km. Nem eu acredito que fui.' },
   ],
   rapido: [
     { g: 'Piqueno, tu é o raio!', f: '{pace}/km de média. Fui zilado do começo ao fim.' },
@@ -45,6 +46,8 @@ const FALAS = {
     { g: 'Kiu!', f: 'Pra quem disse que eu não fazia {pace}/km.' },
     { g: 'Marrapaz!', f: 'Que pace foi esse? {pace}/km, rapá.' },
     { g: 'Chegou na caruda!', f: 'Sem aquecer conversa: {km} km a {pace}/km.' },
+    { g: 'Jurooo!', f: '{pace}/km. Tô sem acreditar até agora.' },
+    { g: 'Tudooo!', f: '{pace}/km de média. Foi tudo.' },
   ],
   forte: [
     { g: 'Té doido!', f: 'Esse treino foi louco: {km} km com o coração na boca.' },
@@ -57,6 +60,7 @@ const FALAS = {
     { g: 'Armaria, siô!', f: 'O treino me deu um bogue. E eu dei outro nele.' },
     { g: 'Heheeein!', f: 'Diz que foi fácil? Pergunta pras minhas pernas.' },
     { g: 'Té doido, cansei!', f: '{km} km a {pace}/km. As pernas pediram arrego.' },
+    { g: 'Juro, vey!', f: 'Esse treino quase me levou. Mas fui até o fim.' },
   ],
   calor: [
     { g: 'Égua do calor!', f: 'O sol de São Luís tava remoso e eu fui correr assim mesmo.' },
@@ -112,6 +116,8 @@ const FALAS = {
     { g: 'Tô é tu!', f: 'Disse que não ia treinar hoje? Fui: {km} km.' },
     { g: 'Pior!', f: 'Quem treina, colhe: {km} km a {pace}/km.' },
     { g: 'Té doido, cansei!', f: 'Mas tá feito: {km} km em {tempo}.' },
+    { g: 'Jurooo!', f: 'Acordei com preguiça e mesmo assim: {km} km.' },
+    { g: 'Tudooo!', f: '{km} km em {tempo}. Esse treino foi tudo.' },
   ],
 };
 const sorteio = (t) => { let h = 7; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
@@ -302,7 +308,31 @@ async function desenharCard(cv, c, o) {
   const maranhense = () => {
     const F = falaDe(c, clima, L), lista = sel.slice(0, 3);
     const OURO = '#ffd34d', COB = '#1d3fbf', NAVY = '#0a1240';
-    if (L === 'ma_eguas') { // a exclamação gigante, a frase e os números
+    if (L === 'ma_juro' || L === 'ma_tudo') { // "JUROOOO" / "TUDOOO": o O esticado, cada vez mais apagado
+      const tudo = L === 'ma_tudo', RAIZ = tudo ? 'TUD' : 'JUR';
+      const OS = 5, fg = (n) => `800 ${n}px ${FH}`, cor = branco ? OURO : COB;
+      let px = post ? 230 : 270; const ew = (n) => -n * .03;
+      const largura = (n) => larg(RAIZ, fg(n), ew(n)) + OS * larg('O', fg(n), ew(n));
+      while (largura(px) > W - 130 && px > 90) px -= 6;
+      const p0 = F.val;
+      const frase = tudo ? (c.distancia_m >= 15000 && p0.km ? `${p0.km} km de longão. Foi tudo.`
+        : p0.pace && paceDe(c) < 285 ? `${p0.km} km a ${p0.pace}/km. Esse treino foi tudo.`
+        : p0.km && p0.tempo ? `${p0.km} km em ${p0.tempo}. Esse treino foi tudo.` : 'Esse treino foi tudo.')
+        : c.distancia_m >= 15000 && p0.km ? `${p0.km} km. Tô sem acreditar até agora.`
+        : p0.pace && paceDe(c) < 285 ? `${p0.pace}/km. Tô sem acreditar até agora.`
+        : p0.km && p0.tempo ? `${p0.km} km em ${p0.tempo}. Tô sem acreditar até agora.` : 'Tô sem acreditar até agora.';
+      const ff = `600 ${post ? 46 : 52}px ${FB}`, fl = quebra(frase, ff, W - 140), lf = post ? 62 : 70;
+      const tot = px * .9 + 60 + fl.length * lf + 90 + 88 * 1.9 + (dataTxt ? 70 : 0);
+      let y = (H - tot) / 2;
+      if (dataTxt) { txt(dataTxt, 66, y + 26, LBL(26), sub, 'left', 3); y += 70; }
+      y += px * .9;
+      let x = 62; const wJ = larg(RAIZ, fg(px), ew(px)), wO = larg('O', fg(px), ew(px));
+      txt(RAIZ, x, y, fg(px), cor, 'left', ew(px)); x += wJ;
+      for (let i = 0; i < OS; i++) { ctx.save(); ctx.globalAlpha = Math.max(.18, 1 - i * .19); txt('O', x, y, fg(px), cor, 'left', ew(px)); ctx.restore(); x += wO; }
+      y += 60; fl.forEach((l) => { y += lf; txt(l, 66, y, ff, tx, 'left'); });
+      y += 50; ctx.save(); ctx.fillStyle = cor; ctx.fillRect(66, y, 120, 8); ctx.restore(); y += 50;
+      grade(lista, y, 88, 66, W - 66, 3, 'left');
+    } else if (L === 'ma_eguas') { // a exclamação gigante, a frase e os números
       const fg = (px) => `800 ${px}px ${FH}`; let px = post ? 190 : 230, gl = quebra(F.g.toUpperCase(), fg(px), W - 140);
       while (gl.length > 2 && px > 110) { px -= 10; gl = quebra(F.g.toUpperCase(), fg(px), W - 140); }
       const ff = `600 ${post ? 44 : 50}px ${FB}`, fl = quebra(F.f, ff, W - 140), lf = post ? 60 : 68;
