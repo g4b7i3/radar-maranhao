@@ -922,7 +922,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Encerradas",
+      "status": "Consultar",
       "officialUrl": "https://centraldacorrida.com.br/evento/1%C2%AA-edi%C3%A7%C3%A3o-da-corrida-%E2%80%9Cnascido-para-correr%E2%80%9D-de-",
       "sourceUrl": "https://vamucorrer.com.br/corridas/maranhao",
       "sourceName": "Vamu Correr",
@@ -933,7 +933,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-06T10:56:06.200Z",
+      "verifiedAt": "2026-11-06T18:09:01.255Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -2064,7 +2064,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
+      "status": "Abertas",
       "officialUrl": "https://www.topchip.com.br/6-aniversario-cdm-running",
       "sourceUrl": "https://roadrunners.run/evento/2027-6-aniversario-cdm-running/",
       "sourceName": "Road Runners",
@@ -2075,7 +2075,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-11-06T18:09:01.255Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
@@ -3720,6 +3720,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "26c4dc7c-b201-4456-ab30-93d26b922760",
+      "eventId": "cdm-running-2027-campestre",
+      "version": "[\"2027-01-24\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.topchip.com.br/6-aniversario-cdm-running\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-06T18:09:01.255Z",
+      "notifiedAt": null
+    },
     {
       "id": "ee3d9218-e3f1-42c5-bfd9-f8f77edae038",
       "eventId": "nascido-para-correr-2026-morros",
@@ -5737,7 +5745,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-06T10:56:32.039Z",
+  "lastChecked": "2026-11-06T18:09:01.255Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
