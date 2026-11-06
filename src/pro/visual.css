@@ -1,32 +1,34 @@
 /* ─────────────────────────────────────────────────────────────
-   Visual 2026 · "Aurora" no claro e "Noturno" no escuro.
-   Fundo com luz suave (azul e dourado) e grade fina, cartões leves de vidro,
+   Visual 2026 · "Pista" no claro e "Noturno" no escuro.
+   Claro: fundo branco com curvas de nível e títulos em caixa alta. Escuro: grade fina com brilho.
    botões em pílula sem gradiente. Carrega por último e só ajusta a aparência.
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  --paper: #f4f6fc;
+  --paper: #ffffff;
   --surface: #ffffff;
-  --vidro: rgba(255, 255, 255, .74);
-  --vidro-forte: rgba(255, 255, 255, .9);
-  --vidro-borda: rgba(255, 255, 255, .95);
+  --vidro: #ffffff;
+  --vidro-forte: #ffffff;
+  --vidro-borda: #eceef5;
   --ink: #0a1240;
   --muted: #5b6383;
-  --line: rgba(10, 18, 64, .09);
+  --line: #e9ecf3;
   --cobalt: #1d3fbf;
   --cobalt-deep: #14278a;
-  --cobalt-tint: rgba(29, 63, 191, .08);
-  --primario: #0a1240;
+  --cobalt-tint: #eef1fb;
+  --primario: #1d3fbf;
   --primario-txt: #ffffff;
-  --sombra: 0 1px 2px rgba(10, 18, 64, .04), 0 10px 28px -18px rgba(10, 18, 64, .35);
+  --sombra: 0 1px 2px rgba(10, 18, 64, .04), 0 10px 26px -20px rgba(10, 18, 64, .4);
   --sombra-alta: 0 2px 6px rgba(10, 18, 64, .06), 0 22px 44px -22px rgba(10, 18, 64, .45);
-  --raio: 22px;
-  --fundo-luz:
-    radial-gradient(70% 40% at 0% 0%, rgba(29, 63, 191, .26), transparent 70%),
-    radial-gradient(55% 34% at 105% 10%, rgba(255, 211, 77, .38), transparent 70%),
-    radial-gradient(70% 40% at 60% 105%, rgba(91, 124, 255, .16), transparent 70%);
-  --fundo-grade: radial-gradient(rgba(10, 18, 64, .11) 1px, transparent 1.2px);
-  --fundo-grade-tam: 18px 18px;
+  --raio: 20px;
+  /* fundo "Pista": curvas de nível bem claras, como num mapa de trilha */
+  --fundo-luz: none;
+  --fundo-grade: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='900' viewBox='0 0 400 900' preserveAspectRatio='none'%3E%3Cpath d='M-20 60 C 110 8, 250 130, 420 40' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 86 C 110 35, 250 154, 420 66' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 112 C 110 62, 250 178, 420 92' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 138 C 110 89, 250 202, 420 118' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 164 C 110 116, 250 226, 420 144' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 190 C 110 143, 250 250, 420 170' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 216 C 110 170, 250 274, 420 196' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 242 C 110 197, 250 298, 420 222' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 268 C 110 224, 250 322, 420 248' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 294 C 110 251, 250 346, 420 274' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 320 C 110 278, 250 370, 420 300' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 346 C 110 305, 250 394, 420 326' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 372 C 110 332, 250 418, 420 352' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 398 C 110 359, 250 442, 420 378' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 424 C 110 386, 250 466, 420 404' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 450 C 110 413, 250 490, 420 430' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 476 C 110 440, 250 514, 420 456' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 502 C 110 467, 250 538, 420 482' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 528 C 110 494, 250 562, 420 508' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 554 C 110 521, 250 586, 420 534' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 580 C 110 548, 250 610, 420 560' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 606 C 110 575, 250 634, 420 586' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 632 C 110 602, 250 658, 420 612' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 658 C 110 629, 250 682, 420 638' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 684 C 110 656, 250 706, 420 664' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 710 C 110 683, 250 730, 420 690' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 736 C 110 710, 250 754, 420 716' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 762 C 110 737, 250 778, 420 742' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 788 C 110 764, 250 802, 420 768' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 814 C 110 791, 250 826, 420 794' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 840 C 110 818, 250 850, 420 820' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 866 C 110 845, 250 874, 420 846' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3Cpath d='M-20 892 C 110 872, 250 898, 420 872' fill='none' stroke='%23dfe3ee' stroke-width='1.1'/%3E%3Cpath d='M-20 918 C 110 899, 250 922, 420 898' fill='none' stroke='%23eceef5' stroke-width='1.1'/%3E%3C/svg%3E");
+  --fundo-grade-tam: 100% 100%;
+  --fundo-mascara: linear-gradient(#000 30%, rgba(0, 0, 0, .35));
+  --titulo-caixa: uppercase;
+  --titulo-larg: 62%;
+  --prova-fundo: transparent; --prova-borda: transparent; --prova-sombra: none; --prova-divisa: 1px solid var(--line);
   --destaque-bg:
     radial-gradient(90% 70% at 100% 0%, rgba(61, 95, 224, .55), transparent 60%),
     radial-gradient(60% 60% at 0% 110%, rgba(255, 211, 77, .16), transparent 70%),
@@ -46,6 +48,8 @@
       radial-gradient(50% 30% at 0% 100%, rgba(61, 95, 224, .14), transparent 70%);
     --fundo-grade: linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
     --fundo-grade-tam: 32px 32px;
+    --fundo-mascara: radial-gradient(90% 50% at 50% 0%, #000, transparent); --titulo-caixa: none; --titulo-larg: 85%;
+    --prova-fundo: var(--vidro); --prova-borda: var(--vidro-borda); --prova-sombra: var(--sombra); --prova-divisa: 1px solid var(--vidro-borda);
     --destaque-bg:
       radial-gradient(90% 70% at 100% 0%, rgba(61, 95, 224, .45), transparent 60%),
       radial-gradient(60% 60% at 0% 110%, rgba(255, 211, 77, .12), transparent 70%),
@@ -65,6 +69,8 @@
     radial-gradient(50% 30% at 0% 100%, rgba(61, 95, 224, .14), transparent 70%);
   --fundo-grade: linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
   --fundo-grade-tam: 32px 32px;
+  --fundo-mascara: radial-gradient(90% 50% at 50% 0%, #000, transparent); --titulo-caixa: none; --titulo-larg: 85%;
+  --prova-fundo: var(--vidro); --prova-borda: var(--vidro-borda); --prova-sombra: var(--sombra); --prova-divisa: 1px solid var(--vidro-borda);
   --destaque-bg:
     radial-gradient(90% 70% at 100% 0%, rgba(61, 95, 224, .45), transparent 60%),
     radial-gradient(60% 60% at 0% 110%, rgba(255, 211, 77, .12), transparent 70%),
@@ -75,9 +81,7 @@
 body { background: var(--paper); }
 body::before, body::after { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 body::before { background: var(--fundo-luz); }
-body::after { background-image: var(--fundo-grade); background-size: var(--fundo-grade-tam); -webkit-mask-image: linear-gradient(#000, transparent 55%); mask-image: linear-gradient(#000, transparent 55%); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body::after { -webkit-mask-image: radial-gradient(90% 50% at 50% 0%, #000, transparent); mask-image: radial-gradient(90% 50% at 50% 0%, #000, transparent); } }
-:root[data-theme="dark"] body::after { -webkit-mask-image: radial-gradient(90% 50% at 50% 0%, #000, transparent); mask-image: radial-gradient(90% 50% at 50% 0%, #000, transparent); }
+body::after { background-image: var(--fundo-grade); background-size: var(--fundo-grade-tam); -webkit-mask-image: var(--fundo-mascara); mask-image: var(--fundo-mascara); }
 
 /* ── cartões: vidro leve ── */
 .pro .pro-card, .pro .pro-mini div, .race, .destaque, .pro-feed-item, .pro .pro-seq, .pro-inicio-temporada, .pro .pro-garmin-status {
@@ -119,6 +123,9 @@ body::after { background-image: var(--fundo-grade); background-size: var(--fundo
 .pro-menu::before { background: linear-gradient(to right, color-mix(in srgb, var(--surface) 90%, transparent) 20%, transparent); }
 .pro-menu::after { background: linear-gradient(to left, color-mix(in srgb, var(--surface) 90%, transparent) 20%, transparent); }
 
+/* ── títulos: caixa alta condensada no claro (Pista) ── */
+.pro .pro-topo b { text-transform: var(--titulo-caixa); font-stretch: var(--titulo-larg); font-weight: 900; letter-spacing: 0; }
+
 /* ── login: sem bloco, texto direto no fundo de luz ── */
 .pro .pro-card.azul.pro-hero { background: transparent !important; border: 0; box-shadow: none; color: var(--ink); padding: 34px 4px 8px; }
 .pro .pro-card.azul.pro-hero::before, .pro .pro-card.azul.pro-hero::after { display: none; }
@@ -127,8 +134,8 @@ body::after { background-image: var(--fundo-grade); background-size: var(--fundo
 .pro .pro-hero .pro-k { color: var(--cobalt) !important; }
 .pro .pro-entrar-gratis { background: var(--vidro) !important; color: var(--ink) !important; border: 1px solid var(--vidro-borda) !important; box-shadow: var(--sombra); }
 .pro .pro-hero { padding: 26px 22px 24px; border-radius: 28px; }
-.pro .pro-hero h1 { font-stretch: 75%; font-size: 3rem; letter-spacing: -.01em; line-height: .9; }
-.pro .pro-hero h1 span { color: transparent; background: linear-gradient(90deg, var(--cobalt), #5b7cff 60%, #c9a227); -webkit-background-clip: text; background-clip: text; }
+.pro .pro-hero h1 { font-stretch: 62%; font-size: 3.6rem; text-transform: uppercase; letter-spacing: -.01em; line-height: .9; }
+.pro .pro-hero h1 span { color: transparent; background: linear-gradient(90deg, var(--cobalt), var(--cobalt)); -webkit-background-clip: text; background-clip: text; }
 .pro .pro-lista li { background: var(--vidro); border: 1px solid var(--vidro-borda); border-radius: 18px; padding: 12px 14px; box-shadow: var(--sombra); animation: none; }
 .pro .pro-lista i { background: var(--primario); color: var(--primario-txt); border-radius: 9px; }
 
@@ -174,3 +181,13 @@ body::after { background-image: var(--fundo-grade); background-size: var(--fundo
 .pro-tema { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--vidro); color: var(--ink); cursor: pointer; }
 .pro-tema:hover { background: var(--vidro-forte); }
 .pro .pro-topo b { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1.22rem; }
+
+/* kicker com o tracinho dourado, como no modelo Pista */
+.pro .pro-hero .pro-k { display: inline-flex; align-items: center; gap: 8px; }
+.pro .pro-hero .pro-k::before { content: ''; flex: none; width: 22px; height: 3px; border-radius: 2px; background: #ffd34d; }
+
+/* agenda em linhas com divisória (claro) e cartões (escuro) */
+.pro .pro-card.pro-prova-card { background: var(--prova-fundo); border: 1px solid var(--prova-borda); box-shadow: var(--prova-sombra); border-radius: var(--raio); }
+:root:not([data-theme="dark"]) .pro .pro-card.pro-prova-card { border-radius: 0; border-width: 0 0 1px; border-color: var(--line); padding-left: 2px; padding-right: 2px; margin: 0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pro .pro-card.pro-prova-card { border-radius: var(--raio); border-width: 1px; border-color: var(--vidro-borda); padding-left: 16px; padding-right: 16px; } }
+.pro .pro-provas-mes .pro-k { margin-bottom: 4px; }

@@ -328,8 +328,9 @@ function Vitrine() {
   const [d, setD] = useState<{ total: number; fotos: { foto: string; apelido: string }[] } | null>(null);
   useEffect(() => { sb.rpc('radar_vitrine').then(({ data }) => { if (data) setD(data as typeof d); }); }, []);
   if (!d || d.total < 1) return null;
-  const dez = Math.floor(d.total / 10) * 10;
-  const txt = d.total < 10 || d.total === dez ? `${d.total} atletas inscritos` : `Mais de ${dez} atletas inscritos`;
+  // a partir de 100, sempre arredonda pra centena: "Mais de 100", "Mais de 200"…
+  const cem = Math.floor(d.total / 100) * 100, dez = Math.floor(d.total / 10) * 10;
+  const txt = d.total >= 100 ? `Mais de ${cem} atletas inscritos` : d.total < 10 || d.total === dez ? `${d.total} atletas inscritos` : `Mais de ${dez} atletas inscritos`;
   const fotos = d.fotos.length >= 4 ? d.fotos : [];
   return (
     <section className="pro-vitrine" aria-label={`${txt} até o momento`}>
