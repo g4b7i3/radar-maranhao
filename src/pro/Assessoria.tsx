@@ -3,6 +3,7 @@ import { Crown, Share2, Users } from 'lucide-react';
 import { sb, LIGAS, pct, kmTxt, dataBR, linkPerfil, type Liga } from './sb';
 import { Avatar } from './Foto';
 import './pro.css';
+import './visual.css';
 import { DesafioAssessorias } from './Desafio';
 import { Arroba } from './Selo';
 

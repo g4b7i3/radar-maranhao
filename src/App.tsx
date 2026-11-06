@@ -41,14 +41,14 @@ function Logo() {
   );
 }
 
-const mesCurto = (d: string) => ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'][Number(d.slice(5, 7)) - 1];
+export const mesCurto = (d: string) => ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'][Number(d.slice(5, 7)) - 1];
 // a prova em destaque: a próxima com inscrições abertas (até 60 dias), com a foto da ilha quando é em São Luís
 const FOTOS_ILHA = ['/img/ma/lagoa-da-jansen.jpg', '/img/ma/por-do-sol.jpg', '/img/ma/telhados.jpg', '/img/ma/rua-do-giz.jpg', '/img/ma/catedral.jpg', '/img/ma/calhau.jpg'];
-function destaque(events: Race[]) {
+export function destaque(events: Race[]) {
   const t = today();
   return events.filter(e => e.date && e.date >= t && (daysUntil(e.date) ?? 999) <= 60 && status(e) === 'Abertas').sort((a, b) => a.date!.localeCompare(b.date!))[0] ?? null;
 }
-function ProvaDestaque({ e, onAbrir }: { e: Race; onAbrir: () => void }) {
+export function ProvaDestaque({ e, onAbrir }: { e: Race; onAbrir: () => void }) {
   const ilha = norm(e.city) === norm('São Luís');
   const foto = ilha ? FOTOS_ILHA[[...e.id].reduce((a, c) => a + c.charCodeAt(0), 0) % FOTOS_ILHA.length] : null;
   const n = daysUntil(e.date!) ?? 0;

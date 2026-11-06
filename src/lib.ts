@@ -30,7 +30,7 @@ export function daysUntil(d: string | null) {
 
 export const fmt = {
   day: (d: string) => d.slice(8, 10).replace(/^0/, ''),
-  weekdayShort: (d: string) => new Intl.DateTimeFormat('pt-BR', { weekday: 'short', timeZone: TZ }).format(asDate(d)).replace('.', ''),
+  weekdayShort: (d: string) => new Intl.DateTimeFormat('pt-BR', { weekday: 'short', timeZone: TZ }).format(asDate(d)).replace(/[.,]/g, ''),
   monthKey: (d: string) => d.slice(0, 7),
   monthName: (key: string) => { const s = new Intl.DateTimeFormat('pt-BR', { month: 'long', timeZone: TZ }).format(asDate(key + '-15')); return s[0].toUpperCase() + s.slice(1); },
   year: (key: string) => key.slice(0, 4),

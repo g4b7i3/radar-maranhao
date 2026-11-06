@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, Sun, Moon, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -26,6 +26,8 @@ import { TopoVoltar } from './Topo';
 import PerfilPublico from './PerfilPublico';
 import AssessoriaPublica from './Assessoria';
 import './pro.css';
+import './visual.css';
+import { useTema } from '../tema';
 import { Arroba } from './Selo';
 
 const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'assista', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
@@ -246,7 +248,7 @@ function ProTelas() {
   return (
     <main className="pro" onClickCapture={abrirLinkInterno}>
       {telaAbertura}
-      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Pré-temporada 2027' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
+      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Pré-temporada 2027' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<BotaoTema /><Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
       <MenuAbas abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
@@ -626,5 +628,15 @@ function BannerAssinar({ pendentes, provas, assinar }: { pendentes: number; prov
       <button className="btn solid" onClick={() => { fechar(); assinar(); }}>Assinar · R$ 10</button>
       <button className="pro-banner-x" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button>
     </div>
+  );
+}
+
+/** Claro ou escuro: segue o celular até a pessoa escolher aqui; a escolha fica salva no aparelho. */
+function BotaoTema() {
+  const tema = useTema();
+  return (
+    <button className="pro-tema" onClick={tema.alternar} aria-label={tema.escuro ? 'Mudar para o modo claro' : 'Mudar para o modo escuro'} title={tema.escuro ? 'Modo claro' : 'Modo escuro'}>
+      {tema.escuro ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
+    </button>
   );
 }

@@ -3,6 +3,7 @@ import { Crown, Share2, ShieldCheck } from 'lucide-react';
 import { sb, LIGAS, pct, relogio, kmTxt, dataBR, type Liga, linkPerfil , generoTxt} from './sb';
 import { GRUPOS, MEDALHAS, medalhaSVG, type Medalha } from './medalhas';
 import './pro.css';
+import './visual.css';
 import { Avatar } from './Foto';
 import { Aplauso, Seguir, type Reacoes, type TipoReacao } from './Feed';
 import { Metas } from './Metas';

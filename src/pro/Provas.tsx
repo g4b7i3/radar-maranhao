@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CalendarDays, ExternalLink, MapPin, Search } from 'lucide-react';
 import { status, norm, load, store, icsFor, type Race } from '../lib';
-import { Sheet } from '../App';
+import { Sheet, ProvaDestaque, destaque, mesCurto } from '../App';
 import { useClimas } from '../Clima';
 import { useVoltar, telaInicial } from './voltar';
 import { PertoDeVoce, distancia, kmTexto, type Perto } from '../PertoFds';
@@ -62,13 +62,14 @@ export function TelaProvas() {
       {erro && <p className="ct-erro" role="alert">Não consegui carregar a agenda. Confira a internet e tente de novo.</p>}
       {lista === null && !erro && <p className="fine">Carregando a agenda…</p>}
       {lista && vis.length === 0 && <p className="fine">{filtro === 'salvas' && !busca ? 'Sua agenda está vazia. Abra uma prova e toque em Salvar pra ela aparecer aqui.' : `Nenhuma prova aqui${busca ? ' com essa busca' : ''}.`}</p>}
+      {filtro === 'proximas' && !busca && !perto && lista && (() => { const d = destaque(lista); return d ? <ProvaDestaque e={d} onAbrir={() => setAberta(d)} /> : null; })()}
       {grupos.map(([k, provas]) => (
         <section key={k} className="pro-provas-mes">
           <p className="pro-k cinza"><CalendarDays size={14} aria-hidden="true" /> {nomeMes(k)} · {provas.length}</p>
           {provas.map(e => { const st = status(e); return (
             <article key={e.id} className="pro-card pro-prova-card">
               <button className="pro-prova-corpo" onClick={() => setAberta(e)}>
-                <div className="pro-prova-data"><b>{e.date!.slice(8, 10)}</b><small>{dataLonga(e.date!).split(' ')[0]}</small></div>
+                <div className="pro-prova-data"><i>{mesCurto(e.date!)}</i><b>{e.date!.slice(8, 10)}</b><small>{dataLonga(e.date!).split(' ')[0].replace(/[.,]/g, '')}</small></div>
                 <div className="pro-prova-info">
                   <b>{e.name}</b>
                   <small><MapPin size={12} aria-hidden="true" /> {e.city}{perto && (() => { const d = distancia(perto, e.city); return d != null ? ` · ${kmTexto(d)}` : ''; })()}{e.modality === 'Trail' ? ' · Trail' : ''}{e.start ? ` · ${e.start}` : ''}</small>

@@ -12,7 +12,7 @@ function aplicar(t: Tema, escolhido: boolean) {
   const cs = document.querySelector('meta[name="color-scheme"]');
   if (cs) cs.setAttribute('content', escolhido ? t : 'light dark');
   // barra do navegador no celular acompanha o tema
-  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', (escolhido ? t === 'dark' : m.getAttribute('media')?.includes('dark')) ? '#141c31' : '#ffffff'));
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', (escolhido ? t === 'dark' : m.getAttribute('media')?.includes('dark')) ? '#05081a' : '#f4f6fc'));
 }
 
 export function useTema() {
