@@ -922,17 +922,18 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://centraldacorrida.com.br/evento/1%C2%AA-edi%C3%A7%C3%A3o-da-corrida-%E2%80%9Cnascido-para-correr%E2%80%9D-de-",
       "sourceUrl": "https://vamucorrer.com.br/corridas/maranhao",
       "sourceName": "Vamu Correr",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Largada às 6h. Inscrições abertas na Central da Corrida.",
+      "notes": "Largada às 6h. Inscrições pela Central da Corrida; em 06/11/2026 a página passou a mostrar \"Inscrições Indisponíveis\" (prova em 08/11). Kit em 5, 6 e 7/11, local a definir.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-11-06T10:56:06.200Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3691,7 +3692,7 @@
     },
     {
       "id": "corre-dom-pedro-2026-dom-pedro",
-      "name": "CORRE DOM PEDRO 2026",
+      "name": "Corre Dom Pedro 2026",
       "edition": "2026",
       "city": "Dom Pedro",
       "state": "MA",
@@ -3709,23 +3710,31 @@
       "sourceName": "SA Crono",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h. Encontrada automaticamente na SA Crono; detalhes na página da plataforma.",
+      "notes": "Domingo, 20/12/2026: concentração às 5h30 e largada às 6h na Praça da Prefeitura (largada e chegada). Corrida de 5 km a partir de 13 anos e provas kids de 500 m (5 a 8 anos) e 2 km (9 a 12 anos). Preço, prazo e premiação não aparecem no texto da página; regulamento em PDF na SA Crono ainda não conferido.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-06T04:53:00.510Z",
+      "start": "06:00",
+      "verifiedAt": "2026-11-06T10:56:32.039Z",
       "firstSeenAt": "2026-11-06T04:53:00.510Z"
     }
   ],
   "changes": [
+    {
+      "id": "ee3d9218-e3f1-42c5-bfd9-f8f77edae038",
+      "eventId": "nascido-para-correr-2026-morros",
+      "version": "[\"2026-11-08\",[5],\"Local a confirmar\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/1%C2%AA-edi%C3%A7%C3%A3o-da-corrida-%E2%80%9Cnascido-para-correr%E2%80%9D-de-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-06T10:55:46.617Z",
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
+    },
     {
       "id": "6e5fd8a3-b97a-4ac3-b589-4f39acf30f69",
       "eventId": "corre-dom-pedro-2026-dom-pedro",
       "version": "[\"2026-12-20\",[5],\"Praça da Prefeitura\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/corre-dom-pedro-2026\"]",
       "kind": "Nova prova",
       "at": "2026-11-06T04:53:00.510Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "e7023270-a522-401f-8b0c-9d39d8bdf257",
@@ -3733,7 +3742,7 @@
       "version": "[\"2026-11-08\",[1,5],\"Memorial da Balaiada\",null,\"2026-11-05\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/3589/circuito-sesc-de-corridas-2026-caxias\"]",
       "kind": "Alteração importante",
       "at": "2026-11-06T04:53:00.510Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "1285e5a9-9819-478e-b77d-10c18edd49fa",
@@ -3741,7 +3750,7 @@
       "version": "[\"2026-11-08\",[5],\"Espaço Cultural José Carlos Brandão (Zeppelim), Av. Alexandre Costa, Parque Planalto\",null,\"2026-10-30\",\"Encerradas\",\"https://topchip.com.br/acailandiasicoob\"]",
       "kind": "Alteração importante",
       "at": "2026-11-05T18:53:34.813Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "3fe063d9-26fa-4448-b433-f44bc03915c3",
@@ -3749,7 +3758,7 @@
       "version": "[\"2026-11-07\",[5,10],\"Local a confirmar\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/corridaiboa16anos\"]",
       "kind": "Alteração importante",
       "at": "2026-11-05T18:53:34.813Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "79136702-727f-45af-998b-1b877fcbea24",
@@ -3757,7 +3766,7 @@
       "version": "[\"2026-11-07\",[5],\"Praça Padre André\",null,\"2026-11-05\",\"Encerradas\",\"https://www.sacrono.com.br/evento/alto-alegre-do-pindare-run-2026\"]",
       "kind": "Alteração importante",
       "at": "2026-11-05T04:56:57.151Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "dc5e1241-9de9-4917-a8e5-598768722478",
@@ -3765,7 +3774,7 @@
       "version": "[\"2027-11-02\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-11-04T18:42:52.658Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "0275af37-d022-46df-bcf5-d784e92ddeda",
@@ -3773,7 +3782,7 @@
       "version": "[\"2026-11-08\",[5],\"Em frente à Cidade Eco, Avenida Ataliba Vieira de Almeida\",null,\"2026-11-01\",\"Em breve\",\"https://www.sacrono.com.br/evento/ecorun-edicao-chapadinha-2026\"]",
       "kind": "Alteração importante",
       "at": "2026-11-04T18:42:52.658Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-06T10:57:03.903Z"
     },
     {
       "id": "efc22b19-8a0d-4b75-8695-67c14f7fd26c",
@@ -5728,7 +5737,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-06T04:53:00.510Z",
+  "lastChecked": "2026-11-06T10:56:32.039Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
