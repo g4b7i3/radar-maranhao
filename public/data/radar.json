@@ -2150,8 +2150,8 @@
       ],
       "location": "Memorial da Balaiada",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Abertas",
+      "registrationClose": "2026-11-05",
+      "status": "Encerradas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/3589/circuito-sesc-de-corridas-2026-caxias",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/3589/circuito-sesc-de-corridas-2026-caxias",
       "sourceName": "Crono Esportes",
@@ -2166,7 +2166,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-21T10:58:57.704Z",
+      "verifiedAt": "2026-11-06T04:53:00.510Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3688,9 +3688,53 @@
       "start": null,
       "verifiedAt": "2026-11-04T18:42:52.658Z",
       "firstSeenAt": "2026-11-04T18:42:52.658Z"
+    },
+    {
+      "id": "corre-dom-pedro-2026-dom-pedro",
+      "name": "CORRE DOM PEDRO 2026",
+      "edition": "2026",
+      "city": "Dom Pedro",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [
+        5
+      ],
+      "location": "Praça da Prefeitura",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://www.sacrono.com.br/evento/corre-dom-pedro-2026",
+      "sourceUrl": "https://www.sacrono.com.br/evento/corre-dom-pedro-2026",
+      "sourceName": "SA Crono",
+      "publishedAt": null,
+      "confidence": "Página de inscrição oficial",
+      "notes": "Largada às 6h. Encontrada automaticamente na SA Crono; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-06T04:53:00.510Z",
+      "firstSeenAt": "2026-11-06T04:53:00.510Z"
     }
   ],
   "changes": [
+    {
+      "id": "6e5fd8a3-b97a-4ac3-b589-4f39acf30f69",
+      "eventId": "corre-dom-pedro-2026-dom-pedro",
+      "version": "[\"2026-12-20\",[5],\"Praça da Prefeitura\",null,null,\"Abertas\",\"https://www.sacrono.com.br/evento/corre-dom-pedro-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-06T04:53:00.510Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "e7023270-a522-401f-8b0c-9d39d8bdf257",
+      "eventId": "sesc-2026-caxias",
+      "version": "[\"2026-11-08\",[1,5],\"Memorial da Balaiada\",null,\"2026-11-05\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/3589/circuito-sesc-de-corridas-2026-caxias\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-06T04:53:00.510Z",
+      "notifiedAt": null
+    },
     {
       "id": "1285e5a9-9819-478e-b77d-10c18edd49fa",
       "eventId": "sicoob-2026-acailandia",
@@ -5684,7 +5728,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-05T18:53:34.813Z",
+  "lastChecked": "2026-11-06T04:53:00.510Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
