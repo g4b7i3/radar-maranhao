@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Watch, ChevronRight, ChevronDown, X, MessagesSquare, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy } from 'lucide-react';
 import { sb, relogio, dataBR, type Perfil } from './sb';
+import { MapaCorrida } from './MapaCorrida';
 import { radarInteligencia, type Corrida, type Leitura } from './inteligencia';
 // @ts-expect-error módulo JS de desenho (canvas)
 import { CARD_LAYOUTS, CARD_STATS, desenharCard, climaDe, tirosDe } from './cards/desenho.js';
@@ -106,7 +107,7 @@ export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perf
         <div className="pro-treino-grade">{nums.map(n => <div key={n.l}><small>{n.l}</small><b>{n.v}</b></div>)}</div>
         {parc.length > 1 && <GraficoPace parc={parc} />}
         {parc.some(p => p.fc) && <GraficoFC parc={parc} />}
-        {a.rota && a.rota.length > 1 && <Percurso rota={a.rota} />}
+        {a.rota && a.rota.length > 1 && <PercursoMapa rota={a.rota} />}
         <div className="pro-linha pro-quebra">
           <button className="btn solid" onClick={() => setCard(true)}><ImagemIc size={16} aria-hidden="true" />Gerar card</button>
           {a.feed_em
@@ -155,6 +156,12 @@ function GraficoFC({ parc }: { parc: NonNullable<Atividade['parciais']> }) {
       </svg>
     </div>
   );
+}
+
+/** Percurso no mapa de verdade; se o mapa não carregar, volta pro desenho simples. */
+function PercursoMapa({ rota }: { rota: [number, number][] }) {
+  const [falhou, setFalhou] = useState(false);
+  return falhou ? <Percurso rota={rota} /> : <section className="pro-treino-graf"><p className="pro-k cinza pro-sem-margem">Percurso</p><MapaCorrida rota={rota} falhou={() => setFalhou(true)} /></section>;
 }
 
 function Percurso({ rota }: { rota: [number, number][] }) {

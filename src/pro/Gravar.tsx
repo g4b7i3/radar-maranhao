@@ -2,7 +2,8 @@
 // Livre ou seguindo o treino que o treinador passou (aquecimento, parte principal ou séries, desaquecimento),
 // com voz a cada etapa e a cada km. No fim vira uma atividade em "Minhas atividades", com resenha, card e feed.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { MapPin, Footprints, Plus, Minus, Play, Pause, Square, SkipForward, Volume2, VolumeX, X, Trash2, Pencil, Lock, ChevronRight, Check } from 'lucide-react';
+import { MapPin, Footprints, Plus, Minus, Play, Pause, Square, SkipForward, Volume2, VolumeX, X, Trash2, Pencil, Lock, ChevronRight, Check, Map as IcMapa, EyeOff } from 'lucide-react';
+import { MapaCorrida } from './MapaCorrida';
 import { sb } from './sb';
 
 /* ───────── ícone do menu: o círculo de gravar ───────── */
@@ -223,6 +224,8 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
   const [sinal, setSinal] = useState<'buscando' | 'ok' | 'fraco' | 'negado' | null>(s0.modo === 'rua' ? 'buscando' : null);
   const [voz, setVoz] = useState(vozLigada);
   const [confirmaFim, setConfirmaFim] = useState(false);
+  const [verMapa, setVerMapa] = useState(() => ler<boolean>('radar-gravar-mapa', true));
+  const trocarMapa = () => { const v = !verMapa; setVerMapa(v); gravarLocal('radar-gravar-mapa', v); };
   const etapas = useMemo(() => etapasDe(s0.treino), [s0.treino]);
   const ult = useRef<{ p: [number, number]; t: number } | null>(null);
   const janela = useRef<{ t: number; d: number }[]>([]);
@@ -329,9 +332,12 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
     <div className={'pro-gravando' + (st.estado === 'pausado' ? ' pausado' : '')}>
       <div className="pro-gravando-topo">
         <span className="pro-gravando-tit"><b>{st.treino?.nome ?? (st.modo === 'rua' ? 'Corrida livre' : 'Esteira livre')}</b>
-          <small>{st.modo === 'esteira' ? 'Esteira' : sinal === 'ok' ? '● GPS bom' : sinal === 'fraco' ? '● GPS fraco' : sinal === 'negado' ? 'GPS bloqueado: libere a localização' : 'Procurando GPS…'}</small></span>
-        <button className="pro-gravando-voz" onClick={() => { vozLigada = !vozLigada; setVoz(vozLigada); if (!vozLigada) speechSynthesis?.cancel?.(); }} aria-label={voz ? 'Desligar voz' : 'Ligar voz'}>{voz ? <Volume2 size={20} /> : <VolumeX size={20} />}</button>
+          <small className={sinal === 'ok' ? 'ok' : sinal === 'fraco' || sinal === 'negado' ? 'ruim' : ''}>{st.modo === 'esteira' ? 'Esteira' : sinal === 'ok' ? '● GPS bom' : sinal === 'fraco' ? '● GPS fraco' : sinal === 'negado' ? 'GPS bloqueado: libere a localização' : 'Procurando GPS…'}</small></span>
+        <span className="pro-gravando-bts">{st.modo === 'rua' && <button className="pro-gravando-voz" onClick={trocarMapa} aria-label={verMapa ? 'Esconder o mapa' : 'Mostrar o mapa'} title={verMapa ? 'Esconder o mapa' : 'Mostrar o mapa'}>{verMapa ? <EyeOff size={19} /> : <IcMapa size={19} />}</button>}
+        <button className="pro-gravando-voz" onClick={() => { vozLigada = !vozLigada; setVoz(vozLigada); if (!vozLigada) speechSynthesis?.cancel?.(); }} aria-label={voz ? 'Desligar voz' : 'Ligar voz'}>{voz ? <Volume2 size={20} /> : <VolumeX size={20} />}</button></span>
       </div>
+
+      {st.modo === 'rua' && verMapa && <MapaCorrida rota={st.rota} eu={ult.current?.p ?? null} aoVivo />}
 
       {e ? <div className={'pro-gravando-etapa e-' + e.k}>
         <span>{nomeEtapa(e)} · etapa {st.etapa + 1} de {etapas.length}</span>

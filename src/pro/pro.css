@@ -1303,3 +1303,15 @@ button.pro-grav-op { border: 1.5px solid var(--line); background: var(--vidro, v
 .pro-gravando.pausado .pro-gravando-tempo b { animation: pro-pisca 1.4s ease-in-out infinite; }
 @keyframes pro-pisca { 50% { opacity: .35; } }
 @media (prefers-reduced-motion: reduce) { .pro-gravando.pausado .pro-gravando-tempo b { animation: none; opacity: .6; } }
+
+/* mapa da corrida */
+.pro-mapa { position: relative; border-radius: 22px; overflow: hidden; background: var(--cobalt-tint); min-height: 220px; }
+.pro-mapa > .pro-mapa-caixa { position: absolute !important; inset: 0; width: 100%; height: 100%; }
+.pro-mapa.vivo { flex: 0 0 auto; height: min(38vh, 340px); }
+.pro-treino-graf .pro-mapa { height: 240px; margin-top: 6px; }
+.pro-mapa-msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--muted); font-size: .88rem; }
+.pro-mapa-bts { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 8px; z-index: 2; }
+.pro-mapa-bts button { width: 44px; height: 44px; border-radius: 14px; border: 0; display: grid; place-items: center; font: inherit; font-weight: 900; font-size: .95rem; background: rgba(255,255,255,.92); color: #0a1240; box-shadow: 0 6px 16px -6px rgba(0,0,0,.4); cursor: pointer; }
+.pro-mapa .maplibregl-ctrl-attrib { font-size: 10px; }
+.pro-gravando-bts { display: flex; gap: 8px; flex: none; }
+.pro-gravando-tit small.ok { color: #1f9d5c; } .pro-gravando-tit small.ruim { color: #d35400; }
