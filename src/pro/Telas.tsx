@@ -182,10 +182,11 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou, pro = true, as
       </> : (
         <section className="pro-card pro-trava-relogio">
           <p className="pro-k cinza">🔒 Relógio, atividades e cards</p>
-          <p className="pro-sub pro-sem-margem">Conecte o Garmin e cada corrida chega sozinha, com gráficos de pace e frequência cardíaca, card pro story em 30 modelos (12 no jeito maranhense) e treino no feed. É do <b>Radar Pro</b>.</p>
+          <p className="pro-sub pro-sem-margem">Gravar a corrida pelo celular é grátis, na aba <b>Gravar</b>. Conecte o Garmin e cada corrida chega sozinha, com gráficos de pace e frequência cardíaca, card pro story em 30 modelos (12 no jeito maranhense) e treino no feed. É do <b>Radar Pro</b>.</p>
           {assinar && <button className="btn solid pro-btn" onClick={assinar}>Assinar o Radar Pro</button>}
         </section>
       )}
+      {!pro && <MeusTreinos perfil={perfil} pro={false} assinar={assinar} soComAtividades />}
       <RivalCard perfil={perfil} />
       <LinkPerfil perfil={perfil} />
       <MeusDescontos perfil={perfil} />

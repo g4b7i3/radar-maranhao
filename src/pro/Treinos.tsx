@@ -1,7 +1,7 @@
 // Radar Pro · "Minhas atividades": as corridas que chegam do Garmin / Intervals.icu.
 // Cada uma abre com gráficos (pace e FC por km, percurso), vira card pro story e pode ir pro feed.
 import { useEffect, useRef, useState } from 'react';
-import { Watch, ChevronRight, ChevronDown, X, MessagesSquare, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy } from 'lucide-react';
+import { Watch, ChevronRight, ChevronDown, X, MessagesSquare, Image as ImagemIc, Send, Download, Share2, RefreshCw, Trash2, Copy, Lock } from 'lucide-react';
 import { sb, relogio, dataBR, type Perfil } from './sb';
 import { MapaCorrida } from './MapaCorrida';
 import { radarInteligencia, type Corrida, type Leitura } from './inteligencia';
@@ -22,7 +22,7 @@ const pace = (s: number) => { const r = Math.round(s); return `${Math.floor(r / 
 const paceDe = (a: Atividade) => (a.distancia_m > 0 ? a.duracao_s / (a.distancia_m / 1000) : 0);
 const hora = (d: string) => new Date(d).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-export function MeusTreinos({ perfil }: { perfil: Perfil }) {
+export function MeusTreinos({ perfil, pro = true, assinar, soComAtividades = false }: { perfil: Perfil; pro?: boolean; assinar?: () => void; soComAtividades?: boolean }) {
   const [lista, setLista] = useState<Atividade[] | null>(null);
   const [aberta, setAberta] = useState<Atividade | null>(null);
   const [todas, setTodas] = useState(false);
@@ -35,6 +35,7 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
   const atualizar = async () => { setRecarregando(true); await carregar(); setRecarregando(false); };
   useEffect(() => { carregar(); const f = () => { carregar(); }; window.addEventListener('radar-atividades-recarregar', f); return () => window.removeEventListener('radar-atividades-recarregar', f); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const vis = todas ? (lista ?? []) : (lista ?? []).slice(0, 5);
+  if (soComAtividades && !lista?.length) return null; // grátis: só aparece depois da primeira corrida gravada
   return (
     <section className="pro-card pro-treinos">
       <button className="pro-treinos-tit" onClick={trocar} aria-expanded={aberto}>
@@ -59,7 +60,7 @@ export function MeusTreinos({ perfil }: { perfil: Perfil }) {
         </ul>}
         {lista && lista.length > 5 && <button className="btn text pro-btn-p" onClick={() => setTodas(!todas)}>{todas ? 'Ver menos' : `Ver todas (${lista.length})`}</button>}
       </>}
-      {aberta && <DetalheTreino a={aberta} perfil={perfil} fechar={() => setAberta(null)} mudou={(n) => { setAberta(n); carregar(); }} />}
+      {aberta && <DetalheTreino a={aberta} perfil={perfil} pro={pro} assinar={assinar} fechar={() => setAberta(null)} mudou={(n) => { setAberta(n); carregar(); }} />}
     </section>
   );
 }
@@ -88,7 +89,7 @@ function PainelInteligencia({ a }: { a: Atividade }) {
 }
 
 /* ───────── detalhe: números, gráficos e ações ───────── */
-export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perfil: Perfil; fechar: () => void; mudou: (a: Atividade) => void }) {
+export function DetalheTreino({ a, perfil, fechar, mudou, pro = true, assinar }: { a: Atividade; perfil: Perfil; fechar: () => void; mudou: (a: Atividade) => void; pro?: boolean; assinar?: () => void }) {
   const [card, setCard] = useState(false);
   const [postar, setPostar] = useState(false);
   const parc = (a.parciais ?? []).filter(p => !p.parcial || (p.km % 1) > .3);
@@ -103,16 +104,18 @@ export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perf
     <div className="pro-folha" role="dialog" aria-modal="true" aria-label="Treino">
       <div className="pro-folha-caixa">
         <div className="pro-linha"><div><b>{a.titulo || TIPO[a.tipo] || 'Corrida'}</b><p className="fine pro-sem-margem">{dataBR(a.data)} · {hora(a.data)} · via {FONTE[a.fonte] ?? a.fonte}</p></div><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
-        <PainelInteligencia a={a} />
+        {pro ? <PainelInteligencia a={a} /> : <button className="pro-intel pro-intel-trava" onClick={assinar}><p className="pro-k"><MessagesSquare size={14} aria-hidden="true" /> Resenha do treino · Pro</p><span>O Radar lê a sua corrida e conta o que foi bem, o que mudou e o que evoluiu. Toque pra assinar.</span></button>}
         <div className="pro-treino-grade">{nums.map(n => <div key={n.l}><small>{n.l}</small><b>{n.v}</b></div>)}</div>
         {parc.length > 1 && <GraficoPace parc={parc} />}
         {parc.some(p => p.fc) && <GraficoFC parc={parc} />}
         {a.rota && a.rota.length > 1 && <PercursoMapa rota={a.rota} />}
         <div className="pro-linha pro-quebra">
-          <button className="btn solid" onClick={() => setCard(true)}><ImagemIc size={16} aria-hidden="true" />Gerar card</button>
-          {a.feed_em
-            ? <button className="btn outline" onClick={tirar}><Trash2 size={16} aria-hidden="true" />Tirar do feed</button>
-            : <button className="btn outline" onClick={() => setPostar(true)}><Send size={16} aria-hidden="true" />Postar no feed</button>}
+          {pro ? <>
+            <button className="btn solid" onClick={() => setCard(true)}><ImagemIc size={16} aria-hidden="true" />Gerar card</button>
+            {a.feed_em
+              ? <button className="btn outline" onClick={tirar}><Trash2 size={16} aria-hidden="true" />Tirar do feed</button>
+              : <button className="btn outline" onClick={() => setPostar(true)}><Send size={16} aria-hidden="true" />Postar no feed</button>}
+          </> : <button className="btn solid" onClick={assinar}><Lock size={16} aria-hidden="true" />Card e feed · Radar Pro</button>}
         </div>
         {a.fonte === 'celular' && <ApagarAtividade id={a.id} apagou={fechar} />}
         <p className="fine pro-sem-margem">Suas atividades aparecem só pra você. No feed vão só a distância, o tempo, o pace e a subida (e o card, se você postar com ele). Frequência cardíaca e percurso ficam com você, a não ser que estejam no card que você escolher.</p>

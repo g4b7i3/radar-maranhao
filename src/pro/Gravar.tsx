@@ -18,13 +18,30 @@ export function IconeGravar({ size = 22 }: { size?: number }) {
 
 /* ───────── treino montado (do treinador) ───────── */
 type Med = 'min' | 'km' | 'm';
-type Trecho = { v: number; med: Med };
+export type Ritmo = { modo: 'livre' } | { modo: 'zona'; z: number } | { modo: 'pace'; de: number; ate: number }; // pace em s/km (de = mais rápido)
+type Trecho = { v: number; med: Med; ritmo?: Ritmo; jeito?: 'trote' | 'caminhada' | 'parado' };
 export type Treino = {
   id: string; nome: string; tipo: string; obs?: string;
   aq?: Trecho | null; dq?: Trecho | null;
   principal: { modo: 'continuo'; corrida: Trecho } | { modo: 'series'; n: number; esforco: Trecho; rec: Trecho };
 };
-type Etapa = { k: 'aq' | 'co' | 'tiro' | 'rec' | 'dq'; t?: number; d?: number; rep?: number; nrep?: number };
+type Etapa = { k: 'aq' | 'co' | 'tiro' | 'rec' | 'dq'; t?: number; d?: number; rep?: number; nrep?: number; ritmo?: Ritmo; jeito?: Trecho['jeito'] };
+
+export const ZONAS = [
+  { z: 1, n: 'Muito leve', d: 'regenerativo, quase caminhando' },
+  { z: 2, n: 'Leve', d: 'dá pra conversar' },
+  { z: 3, n: 'Moderado', d: 'frases curtas' },
+  { z: 4, n: 'Forte', d: 'ritmo de limiar, poucas palavras' },
+  { z: 5, n: 'Muito forte', d: 'tiros, sem conversa' },
+];
+const JEITO = { trote: 'trotando', caminhada: 'caminhando', parado: 'parado' } as const;
+const paceTxt = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+const lerPace = (t: string) => { const m = t.trim().match(/^(\d{1,2})[:.,'h ]?(\d{2})$/); if (!m) return NaN; const v = +m[1] * 60 + +m[2]; return +m[2] < 60 && v >= 150 && v <= 900 ? v : NaN; };
+const kmh = (p: number) => (3600 / p).toFixed(1).replace('.', ',');
+export const ritmoTxt = (r?: Ritmo, esteira = false) => !r || r.modo === 'livre' ? '' : r.modo === 'zona' ? `Z${r.z} · ${ZONAS[r.z - 1].n}`
+  : esteira ? `${kmh(r.ate)} a ${kmh(r.de)} km/h` : r.de === r.ate ? `${paceTxt(r.de)}/km` : `${paceTxt(r.de)} a ${paceTxt(r.ate)}/km`;
+const ritmoFala = (r?: Ritmo, esteira = false) => !r || r.modo === 'livre' ? '' : r.modo === 'zona' ? ` Zona ${r.z}, ${ZONAS[r.z - 1].n.toLowerCase()}.`
+  : esteira ? ` Velocidade de ${kmh(r.ate).replace(',', ' vírgula ')} a ${kmh(r.de).replace(',', ' vírgula ')}.` : ` Pace de ${paceFala(r.de)}${r.de !== r.ate ? ` a ${paceFala(r.ate)}` : ''}.`;
 
 export const TIPOS_TREINO = ['Rodagem', 'Intervalado', 'Tiros', 'Longão', 'Progressivo', 'Fartlek', 'Ritmo', 'Regenerativo', 'Subida'];
 const CHAVE_TREINOS = 'radar-treinos';
@@ -33,7 +50,7 @@ const ler = <T,>(k: string, d: T): T => { try { const v = localStorage.getItem(k
 const gravarLocal = (k: string, v: unknown) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch { /* */ } };
 const uid = () => (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2) + Date.now().toString(36));
 
-const alvo = (t: Trecho) => (t.med === 'min' ? { t: t.v * 60 } : { d: t.med === 'km' ? t.v * 1000 : t.v });
+const alvo = (t: Trecho) => ({ ...(t.med === 'min' ? { t: t.v * 60 } : { d: t.med === 'km' ? t.v * 1000 : t.v }), ritmo: t.ritmo, jeito: t.jeito });
 function etapasDe(tr: Treino | null): Etapa[] {
   if (!tr) return [];
   const out: Etapa[] = [];
@@ -50,7 +67,8 @@ const NOME_ETAPA = { aq: 'Aquecimento', co: 'Corrida', tiro: 'Tiro', rec: 'Recup
 const nomeEtapa = (e: Etapa) => (e.k === 'tiro' ? `Tiro ${e.rep} de ${e.nrep}` : e.k === 'rec' ? `Recuperação ${e.rep} de ${(e.nrep ?? 1) - 1}` : NOME_ETAPA[e.k]);
 const trechoTxt = (t: Trecho) => (t.med === 'min' ? `${String(t.v).replace('.', ',')} min` : t.med === 'km' ? `${String(t.v).replace('.', ',')} km` : `${t.v} m`);
 const alvoTxt = (e: Etapa) => (e.t ? `${Math.round(e.t / 60 * 10) / 10} min`.replace('.', ',') : e.d! >= 1000 ? `${(e.d! / 1000).toString().replace('.', ',')} km` : `${Math.round(e.d!)} m`);
-export const resumoTreino = (tr: Treino) => [tr.aq && `${trechoTxt(tr.aq)} de aquecimento`, tr.principal.modo === 'continuo' ? trechoTxt(tr.principal.corrida) : `${tr.principal.n} × ${trechoTxt(tr.principal.esforco)} (rec. ${trechoTxt(tr.principal.rec)})`, tr.dq && `${trechoTxt(tr.dq)} de desaquecimento`].filter(Boolean).join(' · ');
+const comRitmo = (t: Trecho) => trechoTxt(t) + (ritmoTxt(t.ritmo) ? ` em ${ritmoTxt(t.ritmo)}` : '');
+export const resumoTreino = (tr: Treino) => [tr.aq && `${trechoTxt(tr.aq)} de aquecimento`, tr.principal.modo === 'continuo' ? comRitmo(tr.principal.corrida) : `${tr.principal.n} × ${comRitmo(tr.principal.esforco)} (rec. ${trechoTxt(tr.principal.rec)}${tr.principal.rec.jeito ? ' ' + JEITO[tr.principal.rec.jeito] : ''})`, tr.dq && `${trechoTxt(tr.dq)} de desaquecimento`].filter(Boolean).join(' · ');
 
 /* ───────── números ───────── */
 const fmtT = (s: number) => { s = Math.max(0, Math.round(s)); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}` : `${m}:${String(x).padStart(2, '0')}`; };
@@ -88,18 +106,8 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
   const [fim, setFim] = useState<Sessao | null>(null);
   useEffect(() => gravarLocal('radar-gravar-modo', modo), [modo]);
   const salvarTreinos = (l: Treino[]) => { setTreinos(l); gravarLocal(CHAVE_TREINOS, l); };
-  const treino = treinos.find(t => t.id === escolhido) ?? null;
-
-  if (!pro) return (
-    <div className="pro-cont">
-      <section className="pro-card pro-grav-trava">
-        <span className="pro-grav-trava-ic"><IconeGravar size={34} /></span>
-        <h2>Corra sem relógio</h2>
-        <p className="pro-sub">Grave a corrida pelo celular, na rua com GPS ou na esteira, livre ou seguindo o treino que o seu treinador passou. Voz a cada etapa e a cada km, e a corrida entra nas suas atividades com resenha e card.</p>
-        <button className="btn solid" onClick={assinar}><Lock size={16} aria-hidden="true" />É do Radar Pro · Assinar</button>
-      </section>
-    </div>
-  );
+  const treino = pro ? treinos.find(t => t.id === escolhido) ?? null : null;
+  const [trava, setTrava] = useState(false);
 
   if (sessao) return <Gravando s0={sessao} sair={s => { setSessao(null); if (s) setFim(s); }} />;
   if (fim) return <Concluir s={fim} pronto={ok => { setFim(null); gravarLocal(CHAVE_SESSAO, null); if (ok) irAtividades(); }} />;
@@ -123,7 +131,7 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
           <span className="pro-grav-check">{!escolhido && <Check size={16} aria-hidden="true" />}</span>
           <span><b>Corrida livre</b><small>Sem etapas: só tempo, distância e pace</small></span>
         </button>
-        {treinos.map(t => (
+        {pro && treinos.map(t => (
           <div key={t.id} className={'pro-grav-op' + (escolhido === t.id ? ' on' : '')}>
             <button className="pro-grav-op-corpo" onClick={() => setEscolhido(t.id)}>
               <span className="pro-grav-check">{escolhido === t.id && <Check size={16} aria-hidden="true" />}</span>
@@ -132,12 +140,12 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
             <button className="btn text pro-grav-ed" onClick={() => setEditando(t)} aria-label={`Editar ${t.nome}`}><Pencil size={17} aria-hidden="true" /></button>
           </div>
         ))}
-        <button className="pro-grav-novo" onClick={() => setEditando('novo')}><Plus size={18} aria-hidden="true" />Montar treino do treinador</button>
+        <button className="pro-grav-novo" onClick={() => (pro ? setEditando('novo') : setTrava(true))}>{pro ? <Plus size={18} aria-hidden="true" /> : <Lock size={16} aria-hidden="true" />}Montar treino do treinador{!pro && <span className="pro-grav-tag">PRO</span>}</button>
       </div>
 
       {treino && <section className="pro-card pro-grav-etapas">
         <p className="pro-k cinza pro-sem-margem">{treino.nome} · {treino.tipo}</p>
-        <ol>{etapasDe(treino).slice(0, 14).map((e, i) => <li key={i} className={'e-' + e.k}><span>{nomeEtapa(e)}</span><b>{alvoTxt(e)}</b></li>)}</ol>
+        <ol>{etapasDe(treino).slice(0, 14).map((e, i) => <li key={i} className={'e-' + e.k}><span>{nomeEtapa(e)}{(ritmoTxt(e.ritmo) || (e.k === 'rec' && e.jeito)) && <small>{e.k === 'rec' && e.jeito ? JEITO[e.jeito] : ritmoTxt(e.ritmo, modo === 'esteira')}</small>}</span><b>{alvoTxt(e)}</b></li>)}</ol>
         {etapasDe(treino).length > 14 && <small className="pro-sub">e mais {etapasDe(treino).length - 14} etapas</small>}
         {treino.obs && <p className="pro-grav-obs">“{treino.obs}”</p>}
       </section>}
@@ -145,6 +153,15 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
       <button className="btn solid pro-btn pro-grav-iniciar" onClick={iniciar}><IconeGravar size={22} />Iniciar {modo === 'rua' ? 'na rua' : 'na esteira'}</button>
       <p className="fine pro-centro">{modo === 'rua' ? 'Deixe o app aberto com a tela ligada durante a corrida: o Radar mantém a tela acesa. Com a tela apagada, o celular pode parar o GPS.' : 'Na esteira o Radar calcula a distância pela velocidade que você informa (igual à do painel). No fim, confira com o painel.'}</p>
 
+      {trava && <div className="pro-folha" role="dialog" aria-modal="true" aria-label="Treino do treinador" onClick={() => setTrava(false)}>
+        <div className="pro-folha-caixa pro-grav-trava" onClick={ev => ev.stopPropagation()}>
+          <span className="pro-grav-trava-ic"><IconeGravar size={34} /></span>
+          <h2>Treino do treinador</h2>
+          <p className="pro-sub pro-sem-margem">Monte o treino que o seu treinador passou (aquecimento, tiros com recuperação, desaquecimento) e o Radar conduz cada etapa por voz: “Tiro 3 de 6, 400 metros”. É do <b>Radar Pro</b>.</p>
+          <button className="btn solid" onClick={() => { setTrava(false); assinar(); }}>Assinar o Radar Pro · R$ 10</button>
+          <button className="btn text" onClick={() => setTrava(false)}>Agora não, vou correr livre</button>
+        </div>
+      </div>}
       {editando && <MontarTreino t={editando === 'novo' ? null : editando} fechar={() => setEditando(null)}
         salvar={t => { const l = treinos.some(x => x.id === t.id) ? treinos.map(x => (x.id === t.id ? t : x)) : [t, ...treinos]; salvarTreinos(l); setEscolhido(t.id); setEditando(null); }}
         apagar={id => { salvarTreinos(treinos.filter(x => x.id !== id)); if (escolhido === id) setEscolhido(null); setEditando(null); }} />}
@@ -153,13 +170,54 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
 }
 
 /* ───────── montar o treino que o treinador passou ───────── */
-function CampoTrecho({ rot, t, mudar, meds = ['min', 'km', 'm'] }: { rot: string; t: Trecho; mudar: (t: Trecho) => void; meds?: Med[] }) {
+function Duracao({ t, mudar, meds = ['min', 'km', 'm'] }: { t: Trecho; mudar: (t: Trecho) => void; meds?: Med[] }) {
+  const NOME = { min: 'minutos', km: 'km', m: 'metros' } as const;
   return (
-    <div className="pro-grav-trecho">
-      <span>{rot}</span>
-      <input type="number" inputMode="decimal" min={0} step="any" value={Number.isFinite(t.v) ? t.v : ''} onChange={e => mudar({ ...t, v: parseFloat(e.target.value.replace(',', '.')) })} aria-label={`${rot}: valor`} />
-      <select value={t.med} onChange={e => mudar({ ...t, med: e.target.value as Med })} aria-label={`${rot}: unidade`}>{meds.map(m => <option key={m} value={m}>{m}</option>)}</select>
+    <div className="mt-linha">
+      <span className="mt-rot">Duração</span>
+      <div className="mt-dur">
+        <input type="number" inputMode="decimal" min={0} step="any" value={Number.isFinite(t.v) ? t.v : ''} onChange={e => mudar({ ...t, v: parseFloat(e.target.value.replace(',', '.')) })} aria-label="Quanto" />
+        <div className="mt-seg pequeno" role="radiogroup" aria-label="Unidade">{meds.map(m => <button key={m} role="radio" aria-checked={t.med === m} className={t.med === m ? 'on' : ''} onClick={() => mudar({ ...t, med: m })}>{NOME[m]}</button>)}</div>
+      </div>
     </div>
+  );
+}
+function CampoRitmo({ r, mudar }: { r?: Ritmo; mudar: (r: Ritmo) => void }) {
+  const at = r ?? { modo: 'livre' as const };
+  const [de, setDe] = useState(at.modo === 'pace' ? paceTxt(at.de) : '');
+  const [ate, setAte] = useState(at.modo === 'pace' ? paceTxt(at.ate) : '');
+  const aplicarPace = (a: string, b: string) => { const x = lerPace(a), y = lerPace(b || a); if (Number.isFinite(x) && Number.isFinite(y)) mudar({ modo: 'pace', de: Math.min(x, y), ate: Math.max(x, y) }); };
+  return (
+    <div className="mt-linha">
+      <span className="mt-rot">Ritmo</span>
+      <div className="mt-seg" role="radiogroup" aria-label="Como medir o ritmo">
+        {([['livre', 'Livre'], ['zona', 'Zona'], ['pace', 'Pace']] as const).map(([k, n]) => <button key={k} role="radio" aria-checked={at.modo === k} className={at.modo === k ? 'on' : ''}
+          onClick={() => mudar(k === 'livre' ? { modo: 'livre' } : k === 'zona' ? { modo: 'zona', z: at.modo === 'zona' ? at.z : 2 } : (Number.isFinite(lerPace(de)) ? { modo: 'pace', de: lerPace(de), ate: Number.isFinite(lerPace(ate)) ? lerPace(ate) : lerPace(de) } : { modo: 'pace', de: NaN, ate: NaN }))}>{n}</button>)}
+      </div>
+      {at.modo === 'zona' && <div className="mt-zonas" role="radiogroup" aria-label="Zona">
+        {ZONAS.map(z => <button key={z.z} role="radio" aria-checked={at.z === z.z} className={'z' + z.z + (at.z === z.z ? ' on' : '')} onClick={() => mudar({ modo: 'zona', z: z.z })}><b>Z{z.z}</b><span>{z.n}</span></button>)}
+        <small className="mt-ajuda">{ZONAS[at.z - 1].n}: {ZONAS[at.z - 1].d}</small>
+      </div>}
+      {at.modo === 'pace' && <div className="mt-pace">
+        <label><span>de</span><input inputMode="numeric" placeholder="4:20" value={de} onChange={e => { setDe(e.target.value); aplicarPace(e.target.value, ate); }} aria-label="Pace mais rápido" /></label>
+        <label><span>até</span><input inputMode="numeric" placeholder="4:30" value={ate} onChange={e => { setAte(e.target.value); aplicarPace(de, e.target.value); }} aria-label="Pace mais lento (opcional)" /></label>
+        <span className="mt-un">/km</span>
+        <small className="mt-ajuda">Escreva o pace como no relógio, ex.: 4:20. O "até" é opcional.</small>
+      </div>}
+    </div>
+  );
+}
+function Bloco({ cor, titulo, sub, ligado, ligar, children }: { cor: string; titulo: string; sub?: string; ligado?: boolean; ligar?: (v: boolean) => void; children: React.ReactNode }) {
+  const aberto = ligado ?? true;
+  return (
+    <section className={'mt-bloco' + (aberto ? '' : ' desl')} style={{ ['--c' as string]: cor }}>
+      <header>
+        <i aria-hidden="true" />
+        <span><b>{titulo}</b>{sub && <small>{sub}</small>}</span>
+        {ligar && <label className="mt-chave"><input type="checkbox" checked={aberto} onChange={e => ligar(e.target.checked)} aria-label={`Incluir ${titulo.toLowerCase()}`} /><em /></label>}
+      </header>
+      {aberto && <div className="mt-corpo">{children}</div>}
+    </section>
   );
 }
 function MontarTreino({ t, fechar, salvar, apagar }: { t: Treino | null; fechar: () => void; salvar: (t: Treino) => void; apagar: (id: string) => void }) {
@@ -167,51 +225,77 @@ function MontarTreino({ t, fechar, salvar, apagar }: { t: Treino | null; fechar:
   const [tipo, setTipo] = useState(t?.tipo ?? 'Intervalado');
   const [obs, setObs] = useState(t?.obs ?? '');
   const [comAq, setComAq] = useState(t ? !!t.aq : true);
-  const [aq, setAq] = useState<Trecho>(t?.aq ?? { v: 10, med: 'min' });
+  const [aq, setAq] = useState<Trecho>(t?.aq ?? { v: 10, med: 'min', ritmo: { modo: 'zona', z: 2 } });
   const [comDq, setComDq] = useState(t ? !!t.dq : true);
-  const [dq, setDq] = useState<Trecho>(t?.dq ?? { v: 5, med: 'min' });
+  const [dq, setDq] = useState<Trecho>(t?.dq ?? { v: 5, med: 'min', ritmo: { modo: 'zona', z: 1 } });
   const [pm, setPm] = useState<'continuo' | 'series'>(t?.principal.modo ?? 'series');
-  const [corrida, setCorrida] = useState<Trecho>(t?.principal.modo === 'continuo' ? t.principal.corrida : { v: 5, med: 'km' });
+  const [corrida, setCorrida] = useState<Trecho>(t?.principal.modo === 'continuo' ? t.principal.corrida : { v: 5, med: 'km', ritmo: { modo: 'zona', z: 3 } });
   const [n, setN] = useState(t?.principal.modo === 'series' ? t.principal.n : 6);
-  const [esf, setEsf] = useState<Trecho>(t?.principal.modo === 'series' ? t.principal.esforco : { v: 400, med: 'm' });
-  const [rec, setRec] = useState<Trecho>(t?.principal.modo === 'series' ? t.principal.rec : { v: 1.5, med: 'min' });
+  const [esf, setEsf] = useState<Trecho>(t?.principal.modo === 'series' ? t.principal.esforco : { v: 400, med: 'm', ritmo: { modo: 'zona', z: 5 } });
+  const [rec, setRec] = useState<Trecho>(t?.principal.modo === 'series' ? t.principal.rec : { v: 1.5, med: 'min', jeito: 'trote' });
   const [erro, setErro] = useState<string | null>(null);
-  const ok = (x: Trecho) => Number.isFinite(x.v) && x.v > 0 && (x.med !== 'm' || x.v >= 20) && (x.med !== 'km' || x.v <= 100) && (x.med !== 'min' || x.v <= 600);
+  const okDur = (x: Trecho) => Number.isFinite(x.v) && x.v > 0 && (x.med !== 'm' || x.v >= 20) && (x.med !== 'km' || x.v <= 100) && (x.med !== 'min' || x.v <= 600);
+  const okRit = (x: Trecho) => !x.ritmo || x.ritmo.modo !== 'pace' || (Number.isFinite(x.ritmo.de) && Number.isFinite(x.ritmo.ate));
   const enviar = () => {
     if (!nome.trim()) return setErro('Dê um nome ao treino (ex.: 6 × 400 m).');
     const trechos = [comAq && aq, comDq && dq, ...(pm === 'continuo' ? [corrida] : [esf, rec])].filter(Boolean) as Trecho[];
-    if (!trechos.every(ok)) return setErro('Confira os valores: todos precisam ser maiores que zero.');
+    if (!trechos.every(okDur)) return setErro('Confira as durações: todas precisam ser maiores que zero.');
+    if (!trechos.every(okRit)) return setErro('Confira o pace: escreva como no relógio, ex.: 4:20.');
     if (pm === 'series' && !(n >= 1 && n <= 50)) return setErro('As séries vão de 1 a 50 repetições.');
     salvar({ id: t?.id ?? uid(), nome: nome.trim().slice(0, 60), tipo, obs: obs.trim().slice(0, 200) || undefined, aq: comAq ? aq : null, dq: comDq ? dq : null,
       principal: pm === 'continuo' ? { modo: 'continuo', corrida } : { modo: 'series', n, esforco: esf, rec } });
   };
+  const rascunho: Treino = { id: '', nome, tipo, aq: comAq ? aq : null, dq: comDq ? dq : null, principal: pm === 'continuo' ? { modo: 'continuo', corrida } : { modo: 'series', n, esforco: esf, rec } };
   return (
     <div className="pro-folha" role="dialog" aria-modal="true" aria-label="Montar treino" onClick={fechar}>
-      <div className="pro-folha-caixa pro-grav-form" onClick={e => e.stopPropagation()}>
-        <div className="pro-linha"><b>{t ? 'Editar treino' : 'Treino do treinador'}</b><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
-        <label className="pro-campo"><span>Nome do treino</span><input value={nome} onChange={e => setNome(e.target.value)} placeholder="Ex.: 6 × 400 m na pista" maxLength={60} /></label>
-        <div><span className="pro-grav-rot">Tipo de treino</span>
-          <div className="chips">{TIPOS_TREINO.map(x => <button key={x} className="chip" aria-pressed={tipo === x} onClick={() => setTipo(x)}>{x}</button>)}</div></div>
+      <div className="pro-folha-caixa mt" onClick={e => e.stopPropagation()}>
+        <div className="mt-topo"><b>{t ? 'Editar treino' : 'Treino do treinador'}</b><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
 
-        <label className="pro-grav-liga"><input type="checkbox" checked={comAq} onChange={e => setComAq(e.target.checked)} />Aquecimento</label>
-        {comAq && <CampoTrecho rot="Aquecimento" t={aq} mudar={setAq} meds={['min', 'km']} />}
+        <section className="mt-cartao">
+          <label className="mt-campo"><span>Nome do treino</span><input value={nome} onChange={e => setNome(e.target.value)} placeholder="Ex.: 6 × 400 m na pista" maxLength={60} /></label>
+          <div className="mt-campo"><span>Tipo</span><div className="mt-tipos">{TIPOS_TREINO.map(x => <button key={x} className={tipo === x ? 'on' : ''} aria-pressed={tipo === x} onClick={() => setTipo(x)}>{x}</button>)}</div></div>
+        </section>
 
-        <div><span className="pro-grav-rot">Parte principal</span>
-          <div className="pro-grav-seg"><button className={pm === 'series' ? 'on' : ''} onClick={() => setPm('series')}>Séries (tiros)</button><button className={pm === 'continuo' ? 'on' : ''} onClick={() => setPm('continuo')}>Contínuo</button></div></div>
-        {pm === 'continuo' ? <CampoTrecho rot="Correr" t={corrida} mudar={setCorrida} /> : <>
-          <div className="pro-grav-trecho"><span>Repetições</span>
-            <span className="pro-grav-n"><button className="btn outline" onClick={() => setN(v => Math.max(1, v - 1))} aria-label="Menos"><Minus size={16} aria-hidden="true" /></button><b>{n}</b><button className="btn outline" onClick={() => setN(v => Math.min(50, v + 1))} aria-label="Mais"><Plus size={16} aria-hidden="true" /></button></span></div>
-          <CampoTrecho rot="Cada tiro" t={esf} mudar={setEsf} />
-          <CampoTrecho rot="Recuperação" t={rec} mudar={setRec} meds={['min', 'm']} />
-        </>}
+        <div className="mt-linha-tempo">
+          <Bloco cor="#1f9d5c" titulo="Aquecimento" sub={comAq ? trechoTxt(aq) : 'sem aquecimento'} ligado={comAq} ligar={setComAq}>
+            <Duracao t={aq} mudar={setAq} meds={['min', 'km']} />
+            <CampoRitmo r={aq.ritmo} mudar={r => setAq({ ...aq, ritmo: r })} />
+          </Bloco>
 
-        <label className="pro-grav-liga"><input type="checkbox" checked={comDq} onChange={e => setComDq(e.target.checked)} />Desaquecimento</label>
-        {comDq && <CampoTrecho rot="Desaquecimento" t={dq} mudar={setDq} meds={['min', 'km']} />}
+          <Bloco cor="#1d3fbf" titulo="Parte principal" sub={pm === 'series' ? `${n} × ${trechoTxt(esf)}` : trechoTxt(corrida)}>
+            <div className="mt-seg largo" role="radiogroup" aria-label="Formato"><button role="radio" aria-checked={pm === 'series'} className={pm === 'series' ? 'on' : ''} onClick={() => setPm('series')}>Séries (tiros)</button><button role="radio" aria-checked={pm === 'continuo'} className={pm === 'continuo' ? 'on' : ''} onClick={() => setPm('continuo')}>Contínuo</button></div>
+            {pm === 'continuo' ? <>
+              <Duracao t={corrida} mudar={setCorrida} />
+              <CampoRitmo r={corrida.ritmo} mudar={r => setCorrida({ ...corrida, ritmo: r })} />
+            </> : <>
+              <div className="mt-linha"><span className="mt-rot">Repetições</span>
+                <div className="mt-contador"><button onClick={() => setN(v => Math.max(1, v - 1))} aria-label="Menos uma"><Minus size={18} aria-hidden="true" /></button><b>{n}×</b><button onClick={() => setN(v => Math.min(50, v + 1))} aria-label="Mais uma"><Plus size={18} aria-hidden="true" /></button></div></div>
+              <div className="mt-sub"><p className="mt-sub-t">Cada tiro</p>
+                <Duracao t={esf} mudar={setEsf} />
+                <CampoRitmo r={esf.ritmo} mudar={r => setEsf({ ...esf, ritmo: r })} />
+              </div>
+              <div className="mt-sub rec"><p className="mt-sub-t">Recuperação entre os tiros</p>
+                <Duracao t={rec} mudar={setRec} meds={['min', 'm']} />
+                <div className="mt-linha"><span className="mt-rot">Como</span>
+                  <div className="mt-seg" role="radiogroup" aria-label="Jeito da recuperação">{(['trote', 'caminhada', 'parado'] as const).map(j => <button key={j} role="radio" aria-checked={(rec.jeito ?? 'trote') === j} className={(rec.jeito ?? 'trote') === j ? 'on' : ''} onClick={() => setRec({ ...rec, jeito: j })}>{j === 'trote' ? 'Trotando' : j === 'caminhada' ? 'Caminhando' : 'Parado'}</button>)}</div></div>
+              </div>
+            </>}
+          </Bloco>
 
-        <label className="pro-campo"><span>Recado do treinador (opcional)</span><input value={obs} onChange={e => setObs(e.target.value)} placeholder="Ex.: tiros a 4:30/km, recuperação trotando" maxLength={200} /></label>
+          <Bloco cor="#1f9d5c" titulo="Desaquecimento" sub={comDq ? trechoTxt(dq) : 'sem desaquecimento'} ligado={comDq} ligar={setComDq}>
+            <Duracao t={dq} mudar={setDq} meds={['min', 'km']} />
+            <CampoRitmo r={dq.ritmo} mudar={r => setDq({ ...dq, ritmo: r })} />
+          </Bloco>
+        </div>
+
+        <label className="mt-campo mt-cartao"><span>Recado do treinador <em>(opcional)</em></span><textarea rows={2} value={obs} onChange={e => setObs(e.target.value)} placeholder="Ex.: soltar os braços no fim dos tiros" maxLength={200} /></label>
+
+        <div className="mt-resumo"><small>Resumo</small><span>{resumoTreino(rascunho)}</span></div>
         {erro && <p className="ct-erro" role="alert">{erro}</p>}
-        <button className="btn solid" onClick={enviar}>Salvar treino</button>
-        {t && <button className="btn text pro-grav-apagar" onClick={() => apagar(t.id)}><Trash2 size={16} aria-hidden="true" />Apagar este treino</button>}
+        <div className="mt-pe">
+          <button className="btn solid" onClick={enviar}><Check size={18} aria-hidden="true" />Salvar treino</button>
+          {t && <button className="btn text pro-grav-apagar" onClick={() => apagar(t.id)}><Trash2 size={16} aria-hidden="true" />Apagar este treino</button>}
+        </div>
       </div>
     </div>
   );
@@ -230,9 +314,10 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
   const ult = useRef<{ p: [number, number]; t: number } | null>(null);
   const janela = useRef<{ t: number; d: number }[]>([]);
   const ultT = useRef<number | null>(null);
+  const avisoRitmo = useRef<{ qual: string | null; t: number }>({ qual: null, t: 0 });
   const salvar = () => { s.current.salvoEm = Date.now(); gravarLocal(CHAVE_SESSAO, s.current); };
 
-  const anunciarEtapa = (i: number) => { const e = etapas[i]; if (!e) return; bipe(2); falar(`${nomeEtapa(e)}. ${alvoTxt(e).replace(',', ' vírgula ').replace(/ km$/, ' quilômetros').replace(/ m$/, ' metros').replace(/ min$/, ' minutos')}.`); };
+  const anunciarEtapa = (i: number) => { const e = etapas[i]; if (!e) return; bipe(2); falar(`${nomeEtapa(e)}. ${alvoTxt(e).replace(',', ' vírgula ').replace(/ km$/, ' quilômetros').replace(/ m$/, ' metros').replace(/ min$/, ' minutos')}.${e.k === 'rec' && e.jeito ? ` ${JEITO[e.jeito]}.` : ritmoFala(e.ritmo, s0.modo === 'esteira')}`); avisoRitmo.current = { qual: null, t: movDe(s.current) }; };
   // começo
   useEffect(() => {
     if (s.current.mov === 0 && s.current.dist === 0) { if (etapas.length) anunciarEtapa(0); else { bipe(); falar(s0.modo === 'rua' ? 'Corrida iniciada.' : 'Esteira iniciada.'); } }
@@ -316,6 +401,11 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
   const jan = janela.current, pAtual = st.modo === 'esteira' ? (st.vel > 0 ? 3600 / st.vel : 0) : jan.length > 3 && jan[jan.length - 1].d - jan[0].d > 15 ? (jan[jan.length - 1].t - jan[0].t) / ((jan[jan.length - 1].d - jan[0].d) / 1000) : 0;
   const pMed = st.dist > 50 ? t / (st.dist / 1000) : 0;
   const falta = e ? (e.t ? e.t - (t - st.etapaIni.t) : (e.d ?? 0) - (st.dist - st.etapaIni.d)) : 0;
+  // no ritmo? (só na rua e com pace alvo; espera 20 s de etapa pra estabilizar)
+  const noRitmo = st.modo === 'rua' && e?.ritmo?.modo === 'pace' && pAtual > 0 && t - st.etapaIni.t > 20 ? (pAtual < e.ritmo.de - 5 ? 'rapido' : pAtual > e.ritmo.ate + 5 ? 'lento' : 'ok') : null;
+  if (noRitmo && noRitmo !== 'ok' && st.estado === 'correndo' && (avisoRitmo.current.qual !== noRitmo || t - avisoRitmo.current.t > 60) && t - avisoRitmo.current.t > 25) {
+    avisoRitmo.current = { qual: noRitmo, t }; falar(noRitmo === 'rapido' ? 'Rápido demais. Segure um pouco.' : 'Abaixo do ritmo. Acelere.');
+  }
   const prog = e ? Math.min(1, Math.max(0, e.t ? (t - st.etapaIni.t) / e.t : (st.dist - st.etapaIni.d) / (e.d ?? 1))) : 0;
   const pausar = () => { if (st.estado === 'correndo') { st.mov = movDe(st); st.marca = null; st.estado = 'pausado'; falar('Pausado.'); } else { st.marca = Date.now(); st.estado = 'correndo'; ult.current = null; ultT.current = null; falar('Continuando.'); } salvar(); tique(x => x + 1); };
   const mudarVel = (dv: number) => { st.vel = Math.max(1, Math.min(25, Math.round((st.vel + dv) * 10) / 10)); gravarLocal('radar-esteira-vel', st.vel); salvar(); tique(x => x + 1); };
@@ -342,6 +432,7 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
       {e ? <div className={'pro-gravando-etapa e-' + e.k}>
         <span>{nomeEtapa(e)} · etapa {st.etapa + 1} de {etapas.length}</span>
         <b>{e.t ? fmtT(falta) : falta >= 1000 ? `${fmtKm(falta)} km` : `${Math.max(0, Math.round(falta))} m`}<small> faltando</small></b>
+        {(e.ritmo && e.ritmo.modo !== 'livre') || (e.k === 'rec' && e.jeito) ? <span className="pro-gravando-alvo">{e.k === 'rec' && e.jeito ? `Recupere ${JEITO[e.jeito]}` : `Alvo: ${ritmoTxt(e.ritmo, st.modo === 'esteira')}`}{noRitmo && <em className={'r-' + noRitmo}>{noRitmo === 'ok' ? 'No ritmo' : noRitmo === 'rapido' ? 'Rápido demais' : 'Acelere'}</em>}</span> : null}
         <i><em style={{ width: `${prog * 100}%` }} /></i>
         <small>{prox ? <>Depois: <b>{nomeEtapa(prox)}</b> · {alvoTxt(prox)}</> : 'Última etapa'}</small>
       </div> : etapas.length ? <div className="pro-gravando-etapa fim"><b>Treino concluído ✓</b><small>Continue correndo livre ou encerre.</small></div> : null}
@@ -401,7 +492,7 @@ function Concluir({ s, pronto }: { s: Sessao; pronto: (ok: boolean) => void }) {
       resumo_rel: { celular: true, treino: s.treino ? { nome: s.treino.nome, tipo: s.treino.tipo, resumo: resumoTreino(s.treino), obs: s.treino.obs ?? null } : null, etapas: s.voltas },
     } });
     setIndo(false);
-    if (error) return setErro(error.message.includes('Pro') ? 'Gravar corridas é do Radar Pro.' : 'Não deu pra salvar agora. Confira a internet e tente de novo: a corrida continua guardada no aparelho.');
+    if (error) return setErro(error.message.includes('Pro') ? 'Treino do treinador é do Radar Pro.' : error.message.includes('Limite') ? 'No modo grátis dá pra salvar até 3 corridas por dia.' : error.message.includes('perfil') ? 'Complete o seu perfil antes de salvar.' : 'Não deu pra salvar agora. Confira a internet e tente de novo: a corrida continua guardada no aparelho.');
     window.dispatchEvent(new Event('radar-atividades-recarregar'));
     pronto(true);
   };
