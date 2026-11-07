@@ -65,8 +65,9 @@ function etapasDe(tr: Treino | null): Etapa[] {
 }
 const NOME_ETAPA = { aq: 'Aquecimento', co: 'Corrida', tiro: 'Tiro', rec: 'Recuperação', dq: 'Desaquecimento' } as const;
 const nomeEtapa = (e: Etapa) => (e.k === 'tiro' ? `Tiro ${e.rep} de ${e.nrep}` : e.k === 'rec' ? `Recuperação ${e.rep} de ${(e.nrep ?? 1) - 1}` : NOME_ETAPA[e.k]);
-const trechoTxt = (t: Trecho) => (t.med === 'min' ? `${String(t.v).replace('.', ',')} min` : t.med === 'km' ? `${String(t.v).replace('.', ',')} km` : `${t.v} m`);
-const alvoTxt = (e: Etapa) => (e.t ? `${Math.round(e.t / 60 * 10) / 10} min`.replace('.', ',') : e.d! >= 1000 ? `${(e.d! / 1000).toString().replace('.', ',')} km` : `${Math.round(e.d!)} m`);
+const minTxt = (min: number) => { const sg = Math.round(min * 60), m = Math.floor(sg / 60), x = sg % 60; return x ? `${m}:${String(x).padStart(2, '0')} min` : `${m} min`; };
+const trechoTxt = (t: Trecho) => (t.med === 'min' ? minTxt(t.v) : t.med === 'km' ? `${String(t.v).replace('.', ',')} km` : `${t.v} m`);
+const alvoTxt = (e: Etapa) => (e.t ? minTxt(e.t / 60) : e.d! >= 1000 ? `${(e.d! / 1000).toString().replace('.', ',')} km` : `${Math.round(e.d!)} m`);
 const comRitmo = (t: Trecho) => trechoTxt(t) + (ritmoTxt(t.ritmo) ? ` em ${ritmoTxt(t.ritmo)}` : '');
 export const resumoTreino = (tr: Treino) => [tr.aq && `${trechoTxt(tr.aq)} de aquecimento`, tr.principal.modo === 'continuo' ? comRitmo(tr.principal.corrida) : `${tr.principal.n} × ${comRitmo(tr.principal.esforco)} (rec. ${trechoTxt(tr.principal.rec)}${tr.principal.rec.jeito ? ' ' + JEITO[tr.principal.rec.jeito] : ''})`, tr.dq && `${trechoTxt(tr.dq)} de desaquecimento`].filter(Boolean).join(' · ');
 
@@ -170,15 +171,31 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
 }
 
 /* ───────── montar o treino que o treinador passou ───────── */
+// máscaras: tempo como no relógio (10:00), km com vírgula (5,25), metros só inteiros (400)
+const mascaraMinSeg = (t: string) => { const d = t.replace(/\D/g, '').replace(/^0+(?=\d{3})/, '').slice(0, 4); return d.length <= 2 ? d : `${d.slice(0, -2)}:${d.slice(-2)}`; };
+const lerMinSeg = (t: string) => { const m = t.match(/^(\d{1,2})(?::(\d{2}))?$/); if (!m) return NaN; const seg = m[2] == null ? +m[1] * 60 : +m[1] * 60 + +m[2]; return m[2] != null && +m[2] > 59 ? NaN : seg; };
+const mascaraKm = (t: string) => { const [i, ...r] = t.replace(/\./g, ',').replace(/[^\d,]/g, '').split(','); return (i.replace(/^0+(?=\d)/, '').slice(0, 3) || (r.length ? '0' : '')) + (r.length ? ',' + r.join('').slice(0, 2) : ''); };
+const mascaraMetros = (t: string) => t.replace(/\D/g, '').replace(/^0+/, '').slice(0, 5);
+const mascaraPace = (t: string) => { const d = t.replace(/\D/g, '').slice(0, 4); return d.length <= 2 ? d : `${d.slice(0, -2)}:${d.slice(-2)}`; };
+const txtDe = (t: Trecho) => !Number.isFinite(t.v) ? '' : t.med === 'min' ? `${Math.floor(t.v)}:${String(Math.round((t.v % 1) * 60)).padStart(2, '0')}` : t.med === 'km' ? String(t.v).replace('.', ',') : String(Math.round(t.v));
 function Duracao({ t, mudar, meds = ['min', 'km', 'm'] }: { t: Trecho; mudar: (t: Trecho) => void; meds?: Med[] }) {
-  const NOME = { min: 'minutos', km: 'km', m: 'metros' } as const;
+  const NOME = { min: 'tempo', km: 'km', m: 'metros' } as const;
+  const [txt, setTxt] = useState(() => txtDe(t));
+  const digitar = (bruto: string) => {
+    const v = t.med === 'min' ? mascaraMinSeg(bruto) : t.med === 'km' ? mascaraKm(bruto) : mascaraMetros(bruto);
+    setTxt(v);
+    const n = t.med === 'min' ? lerMinSeg(v) / 60 : t.med === 'km' ? parseFloat(v.replace(',', '.')) : parseInt(v, 10);
+    mudar({ ...t, v: Number.isFinite(n) ? n : NaN });
+  };
+  const trocar = (m: Med) => { if (m === t.med) return; setTxt(''); mudar({ ...t, med: m, v: NaN }); };
   return (
     <div className="mt-linha">
       <span className="mt-rot">Duração</span>
       <div className="mt-dur">
-        <input type="number" inputMode="decimal" min={0} step="any" value={Number.isFinite(t.v) ? t.v : ''} onChange={e => mudar({ ...t, v: parseFloat(e.target.value.replace(',', '.')) })} aria-label="Quanto" />
-        <div className="mt-seg pequeno" role="radiogroup" aria-label="Unidade">{meds.map(m => <button key={m} role="radio" aria-checked={t.med === m} className={t.med === m ? 'on' : ''} onClick={() => mudar({ ...t, med: m })}>{NOME[m]}</button>)}</div>
+        <input inputMode={t.med === 'km' ? 'decimal' : 'numeric'} value={txt} onChange={e => digitar(e.target.value)} placeholder={t.med === 'min' ? '10:00' : t.med === 'km' ? '5,0' : '400'} aria-label={t.med === 'min' ? 'Tempo em minutos e segundos' : t.med === 'km' ? 'Distância em km' : 'Distância em metros'} />
+        <div className="mt-seg pequeno" role="radiogroup" aria-label="Unidade">{meds.map(m => <button key={m} role="radio" aria-checked={t.med === m} className={t.med === m ? 'on' : ''} onClick={() => trocar(m)}>{NOME[m]}</button>)}</div>
       </div>
+      <small className="mt-ajuda">{t.med === 'min' ? 'Minutos e segundos, como no relógio: 1:30 é um minuto e meio.' : t.med === 'km' ? 'Em km, com vírgula: 5,5.' : 'Em metros: 400.'}</small>
     </div>
   );
 }
@@ -199,10 +216,10 @@ function CampoRitmo({ r, mudar }: { r?: Ritmo; mudar: (r: Ritmo) => void }) {
         <small className="mt-ajuda">{ZONAS[at.z - 1].n}: {ZONAS[at.z - 1].d}</small>
       </div>}
       {at.modo === 'pace' && <div className="mt-pace">
-        <label><span>de</span><input inputMode="numeric" placeholder="4:20" value={de} onChange={e => { setDe(e.target.value); aplicarPace(e.target.value, ate); }} aria-label="Pace mais rápido" /></label>
-        <label><span>até</span><input inputMode="numeric" placeholder="4:30" value={ate} onChange={e => { setAte(e.target.value); aplicarPace(de, e.target.value); }} aria-label="Pace mais lento (opcional)" /></label>
+        <label><span>de</span><input inputMode="numeric" placeholder="4:20" value={de} onChange={e => { const v = mascaraPace(e.target.value); setDe(v); aplicarPace(v, ate); }} aria-label="Pace mais rápido" /></label>
+        <label><span>até</span><input inputMode="numeric" placeholder="4:30" value={ate} onChange={e => { const v = mascaraPace(e.target.value); setAte(v); aplicarPace(de, v); }} aria-label="Pace mais lento (opcional)" /></label>
         <span className="mt-un">/km</span>
-        <small className="mt-ajuda">Escreva o pace como no relógio, ex.: 4:20. O "até" é opcional.</small>
+        <small className="mt-ajuda">Digite só os números: 420 vira 4:20. O "até" é opcional.</small>
       </div>}
     </div>
   );
@@ -317,7 +334,7 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
   const avisoRitmo = useRef<{ qual: string | null; t: number }>({ qual: null, t: 0 });
   const salvar = () => { s.current.salvoEm = Date.now(); gravarLocal(CHAVE_SESSAO, s.current); };
 
-  const anunciarEtapa = (i: number) => { const e = etapas[i]; if (!e) return; bipe(2); falar(`${nomeEtapa(e)}. ${alvoTxt(e).replace(',', ' vírgula ').replace(/ km$/, ' quilômetros').replace(/ m$/, ' metros').replace(/ min$/, ' minutos')}.${e.k === 'rec' && e.jeito ? ` ${JEITO[e.jeito]}.` : ritmoFala(e.ritmo, s0.modo === 'esteira')}`); avisoRitmo.current = { qual: null, t: movDe(s.current) }; };
+  const anunciarEtapa = (i: number) => { const e = etapas[i]; if (!e) return; bipe(2); falar(`${nomeEtapa(e)}. ${e.t ? paceFala(e.t) : alvoTxt(e).replace(',', ' vírgula ').replace(/ km$/, ' quilômetros').replace(/ m$/, ' metros')}.${e.k === 'rec' && e.jeito ? ` ${JEITO[e.jeito]}.` : ritmoFala(e.ritmo, s0.modo === 'esteira')}`); avisoRitmo.current = { qual: null, t: movDe(s.current) }; };
   // começo
   useEffect(() => {
     if (s.current.mov === 0 && s.current.dist === 0) { if (etapas.length) anunciarEtapa(0); else { bipe(); falar(s0.modo === 'rua' ? 'Corrida iniciada.' : 'Esteira iniciada.'); } }
