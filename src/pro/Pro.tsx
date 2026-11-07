@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, Sun, Moon, CircleUserRound, Settings, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, Sun, Moon, CircleUserRound, Settings, LayoutGrid, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -249,13 +249,10 @@ function ProTelas() {
   return (
     <main className="pro" onClickCapture={abrirLinkInterno}>
       {telaAbertura}
-      {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Pré-temporada 2027' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<BotaoTema /><Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
+      {topo(ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<BotaoTema /><Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
-      <MenuAbas abas={ABAS.filter(a => a.id !== 'temporada' && a.id !== 'provas' && a.id !== 'feed')} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
-      <nav className="pro-seg-topo" aria-label="Principais">
-        {([['temporada', 'Você'], ['provas', 'Agenda'], ['feed', 'Feed']] as [Aba, string][]).map(([id, n]) => <button key={id} aria-current={aba === id ? 'page' : undefined} className={aba === id ? 'on' : ''} onClick={() => { setAba(id); window.scrollTo(0, 0); }}>{n}</button>)}
-      </nav>
+      <MenuFixo abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <BannerAviso lista={notif.lista} abrir={() => setNotifAberto(true)} />
       <PushConvite userId={perfil.user_id} />
@@ -292,19 +289,30 @@ function ProTelas() {
   );
 }
 
-/* ───────── Menu de baixo: rola de lado, a aba ativa fica à vista, esfumado nas pontas quando tem mais ───────── */
-function MenuAbas({ abas, aba, ir }: { abas: { id: Aba; nome: string; Icone: LucideIcon }[]; aba: Aba; ir: (a: Aba) => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [borda, setBorda] = useState({ esq: false, dir: true });
-  const medir = () => { const el = ref.current; if (!el) return; setBorda({ esq: el.scrollLeft > 6, dir: el.scrollLeft + el.clientWidth < el.scrollWidth - 6 }); };
-  useEffect(() => { medir(); const el = ref.current; el?.addEventListener('scroll', medir, { passive: true }); window.addEventListener('resize', medir); return () => { el?.removeEventListener('scroll', medir); window.removeEventListener('resize', medir); }; }, []);
-  useEffect(() => { ref.current?.querySelector<HTMLElement>('a[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }, [aba]);
+
+/* ───────── Menu de baixo: Feed · Gravar · Agenda · Você · Mais (o resto fica no Mais) ───────── */
+const FIXAS: Aba[] = ['feed', 'gravar', 'provas', 'temporada'];
+function MenuFixo({ abas, aba, ir }: { abas: { id: Aba; nome: string; Icone: LucideIcon }[]; aba: Aba; ir: (a: Aba) => void }) {
+  const [mais, setMais] = useState(false);
+  const fixas = FIXAS.map(id => abas.find(a => a.id === id)!).filter(Boolean);
+  const resto = abas.filter(a => !FIXAS.includes(a.id));
+  const noMais = !FIXAS.includes(aba);
+  useEffect(() => { if (!mais) return; const f = (e: KeyboardEvent) => { if (e.key === 'Escape') setMais(false); }; addEventListener('keydown', f); return () => removeEventListener('keydown', f); }, [mais]);
   return (
-    <nav className={'pro-menu' + (borda.esq ? ' esq' : '') + (borda.dir ? ' dir' : '')} aria-label="Radar Pro">
-      <div className="pro-menu-rol" ref={ref}>
-        {abas.map(a => <a key={a.id} href={`#${a.id}`} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); ir(a.id); }}><a.Icone size={22} aria-hidden="true" /><span>{a.nome}</span></a>)}
-      </div>
-    </nav>
+    <>
+      <nav className="pro-menu pro-menu-fixo" aria-label="Radar">
+        {fixas.map(a => <a key={a.id} href={`#${a.id}`} className={a.id === 'gravar' ? 'gravar' : ''} aria-current={aba === a.id ? 'page' : undefined} onClick={e => { e.preventDefault(); setMais(false); ir(a.id); }}><a.Icone size={a.id === 'gravar' ? 26 : 22} aria-hidden="true" /><span>{a.nome}</span></a>)}
+        <a href="#mais" aria-current={noMais ? 'page' : undefined} aria-expanded={mais} onClick={e => { e.preventDefault(); setMais(v => !v); }}><LayoutGrid size={22} aria-hidden="true" /><span>Mais</span></a>
+      </nav>
+      {mais && <div className="pro-folha pro-mais" role="dialog" aria-modal="true" aria-label="Mais" onClick={() => setMais(false)}>
+        <div className="pro-folha-caixa" onClick={e => e.stopPropagation()}>
+          <div className="pro-linha"><b>Mais</b><button className="btn text" onClick={() => setMais(false)} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
+          <div className="pro-mais-grade">
+            {resto.map(a => <button key={a.id} className={aba === a.id ? 'on' : ''} onClick={() => { setMais(false); ir(a.id); }}><span><a.Icone size={24} aria-hidden="true" /></span><b>{a.nome}</b></button>)}
+          </div>
+        </div>
+      </div>}
+    </>
   );
 }
 

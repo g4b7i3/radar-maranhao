@@ -192,9 +192,15 @@ body::after { background-image: var(--fundo-grade); background-size: var(--fundo
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pro .pro-card.pro-prova-card { border-radius: var(--raio); border-width: 1px; border-color: var(--vidro-borda); padding-left: 16px; padding-right: 16px; } }
 .pro .pro-provas-mes .pro-k { margin-bottom: 4px; }
 
-/* barra de cima: Você · Agenda · Feed (como no modelo Pista) */
-.pro-seg-topo { position: sticky; top: calc(max(10px, env(safe-area-inset-top)) + 46px); z-index: 19; display: flex; gap: 2px; padding: 4px; margin: 2px 0 12px; border-radius: 999px; background: color-mix(in srgb, var(--cobalt-tint) 70%, var(--paper)); border: 1px solid var(--line); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
-.pro-seg-topo button { flex: 1; border: 0; border-radius: 999px; padding: 9px 0; font: inherit; font-size: .95rem; font-weight: 800; color: var(--muted); background: transparent; cursor: pointer; transition: background .15s, color .15s; }
-.pro-seg-topo button.on { background: var(--surface, #fff); color: var(--ink); box-shadow: 0 2px 8px -3px rgba(10, 18, 64, .35); }
-:root[data-theme="dark"] .pro-seg-topo button.on { background: rgba(255, 255, 255, .14); color: #fff; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pro-seg-topo button.on { background: rgba(255, 255, 255, .14); color: #fff; } }
+/* menu de baixo fixo: Feed · Gravar · Agenda · Você · Mais */
+.pro-menu.pro-menu-fixo { display: flex; justify-content: space-around; align-items: center; padding: 6px 6px; }
+.pro-menu-fixo a { flex: 1; max-width: none; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px; border-radius: 16px; font-size: .7rem; font-weight: 750; text-decoration: none; }
+.pro-menu-fixo a.gravar svg { color: var(--cobalt); }
+.pro-menu-fixo a.gravar[aria-current="page"] svg { color: currentColor; }
+.pro-mais .pro-folha-caixa { gap: 14px; }
+.pro-mais-grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pro-mais-grade button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border-radius: 18px; border: 1px solid var(--line); background: var(--vidro, var(--surface)); color: var(--ink); font: inherit; cursor: pointer; }
+.pro-mais-grade button span { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--cobalt-tint); color: var(--cobalt); }
+.pro-mais-grade button b { font-size: .86rem; font-weight: 750; text-align: center; }
+.pro-mais-grade button.on { border-color: var(--primario, #1d3fbf); }
+.pro-mais-grade button.on span { background: var(--primario, #1d3fbf); color: var(--primario-txt, #fff); }
