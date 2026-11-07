@@ -25,6 +25,10 @@ const atleta = (qs.get('atleta') ?? '').toLowerCase().replace(/[^a-z0-9_.]/g, ''
 {
   const prova = (qs.get('prova') ?? '').slice(0, 120);
   const abaVelha = qs.get('aba');
+  // /?rota=id: rota compartilhada (Mapas) abre dentro do app, depois do login
+  const rota = (qs.get('rota') ?? '').toLowerCase().replace(/[^0-9a-f-]/g, '').slice(0, 36);
+  if (rota.length === 36) { try { localStorage.setItem('radar-abrir-rota', rota); } catch { /* */ } }
+  if (qs.has('rota')) { qs.delete('rota'); window.history.replaceState(null, '', window.location.pathname + (qs.toString() ? '?' + qs : '') + window.location.hash); }
   try {
     if (prova) localStorage.setItem('radar-abrir-prova', prova);
     else if (abaVelha === 'salvas') localStorage.setItem('radar-abrir-prova', ':salvas');

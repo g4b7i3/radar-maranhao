@@ -29,7 +29,7 @@ import './pro.css';
 import './visual.css';
 import { useTema } from '../tema';
 import { TelaGravar, IconeGravar } from './Gravar';
-import { TelaMapas } from './Mapas';
+import { TelaMapas, rotaPedida } from './Mapas';
 import { Arroba } from './Selo';
 
 const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'gravar', 'mapas', 'comunidades', 'assista', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
@@ -92,7 +92,7 @@ function ProTelas() {
   const [perfil, setPerfil] = useState<Perfil | null | undefined>(undefined);
   const [temp, setTemp] = useState<Temporada | null>(null);
   // aba vem do endereço (#feed, #comunidades/feminina…): atualizar mantém a tela; o voltar leva à Temporada e depois sai
-  const [aba, setAbaEstado] = useState<Aba>(() => { const a = provaPedida() ? 'provas' : abaDoEndereco() ?? (conviteComunidade() ? 'comunidades' : 'temporada'); iniciarHistorico(a); return a; });
+  const [aba, setAbaEstado] = useState<Aba>(() => { const a = provaPedida() ? 'provas' : rotaPedida() ? 'mapas' : abaDoEndereco() ?? (conviteComunidade() ? 'comunidades' : 'temporada'); iniciarHistorico(a); return a; });
   const abaRef = useRef(aba); abaRef.current = aba;
   const fecharCamadas = useRef<() => boolean>(() => false); // fecha perfil/assessoria/notificações abertos por cima
   const setAba = useCallback((a: Aba) => {
@@ -418,6 +418,7 @@ function Convite() {
         <p className="pro-entrar-gratis">✓ Entrar é grátis · leva 10 segundos</p>
       </section>
       {modo === 'botoes' && <button className="btn solid pro-btn pro-cta" onClick={google}>{GOOGLE_IC}Entrar grátis com Google</button>}
+      {rotaPedida() && <div className="pro-card pro-cortesia"><b>🗺️ Falta só entrar</b><span>Te mandaram uma rota de treino. Entre com o Google e ela abre no mapa, pronta pra salvar e correr.</span></div>}
       {provaPedida() && <div className="pro-card pro-cortesia"><b>📍 Falta só entrar</b><span>A agenda agora fica dentro do Radar Pro, de graça. Entre com o Google e a prova que você abriu já aparece.</span></div>}
       <Vitrine />
       <ol className="pro-lista">

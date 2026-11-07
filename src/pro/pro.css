@@ -1429,3 +1429,15 @@ button.pro-grav-op { border: 1.5px solid var(--line); background: var(--vidro, v
 .mp-ponto.ini { background: #1f9d5c; } .mp-ponto.fim { background: #0a1240; color: #ffd34d; }
 .pro-grav-guia { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px; background: var(--cobalt-tint); border: 1px dashed var(--cobalt); }
 .pro-grav-guia span { flex: 1; display: flex; flex-direction: column; } .pro-grav-guia small { font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--cobalt); } .pro-grav-guia em { font-style: normal; font-size: .8rem; color: var(--muted); }
+
+/* Mapas: enviar e receber rota */
+.mp-acoes{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:6px}
+.mp-acoes .pro-btn{margin:0}
+.mp-enviar{margin-top:12px;padding:14px;border-radius:16px;border:1px dashed var(--cobalt,#1d3fbf);background:color-mix(in srgb,var(--cobalt,#1d3fbf) 6%,transparent);display:grid;gap:10px}
+.mp-enviar-bts{display:flex;flex-wrap:wrap;gap:8px}
+.mp-enviar-bts .btn{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px}
+.mp-enviar-bts a.btn.solid{background:#1faa59;border-color:#1faa59;color:#fff;text-decoration:none}
+.mp-enviar-bts .desab{opacity:.5;pointer-events:none}
+.mp-parar{justify-self:start;font-size:.85rem;opacity:.8}
+.mp-rec-nome{display:block;font-size:1.1rem}
+.mp-status{display:flex;align-items:center;gap:5px}

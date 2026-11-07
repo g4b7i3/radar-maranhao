@@ -1,18 +1,23 @@
 // Radar · Mapas: criar rotas tocando no mapa (o caminho segue as ruas), salvar e usar no Gravar.
 import { useEffect, useRef, useState } from 'react';
-import { Plus, X, Undo2, Trash2, Repeat, Check, MapPin, ChevronRight, Play, Crosshair, Mountain } from 'lucide-react';
+import { Plus, X, Undo2, Trash2, Repeat, Check, MapPin, ChevronRight, Play, Crosshair, Mountain, Share2, Link2, BookmarkPlus } from 'lucide-react';
 import type { Map as MLMap, GeoJSONSource, Marker } from 'maplibre-gl';
 import { sb, chamar } from './sb';
 import { MapaCorrida } from './MapaCorrida';
 
 type P = [number, number];
-export type Rota = { id: string; nome: string; pontos: P[]; geometria: P[]; distancia_m: number; subida_m: number | null; piso: { tipo: string; pct: number }[] | null; elevacao: number[] | null; ida_volta: boolean; criado_em: string };
+export type Rota = { id: string; nome: string; pontos: P[]; geometria: P[]; distancia_m: number; subida_m: number | null; piso: { tipo: string; pct: number }[] | null; elevacao: number[] | null; ida_volta: boolean; criado_em: string; compartilhada?: boolean };
+type Recebida = Rota & { autor: string | null; minha: boolean };
 type Calculo = { geometria: P[]; distancia_m: number; subida_m: number | null; descida_m: number | null; piso: Rota['piso']; elevacao: number[] | null; fonte: string };
 
 const kmTxt = (m: number) => (m / 1000).toFixed(m >= 10000 ? 1 : 2).replace('.', ',');
 const NOME_PISO: Record<string, [string, string]> = { asfalto: ['Asfalto', '#1d3fbf'], concreto: ['Concreto', '#5b7cff'], paralelepipedo: ['Paralelepípedo', '#8fa6ff'], terra: ['Terra', '#b07a3b'], cascalho: ['Cascalho', '#c9a227'], areia: ['Areia', '#f2d58a'], grama: ['Grama', '#2fbf71'], madeira: ['Madeira', '#8d6e63'], metal: ['Metal', '#9aa4cc'], nao_informado: ['Não informado', '#d5d9e4'] };
 const escuro = () => document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 const estiloMapa = () => { try { const v = localStorage.getItem('radar-mapa-estilo'); if (v === 'positron' || v === 'fiord' || v === 'bright') return v; } catch { /* */ } return escuro() ? 'fiord' : 'positron'; };
+
+// link de rota compartilhada (/?rota=id) guardado até a pessoa entrar
+export const rotaPedida = (): string | null => { try { return localStorage.getItem('radar-abrir-rota'); } catch { return null; } };
+export const linkRota = (id: string) => `https://radarcorridasma.com.br/?rota=${id}`;
 
 /** Desenho pequeno do percurso (pra lista). */
 function Miniatura({ g }: { g: P[] }) {
@@ -38,8 +43,19 @@ export function TelaMapas({ correr }: { correr: (r: Rota) => void }) {
   const [rotas, setRotas] = useState<Rota[] | null>(null);
   const [criando, setCriando] = useState(false);
   const [aberta, setAberta] = useState<Rota | null>(null);
+  const [recebida, setRecebida] = useState<Recebida | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
   const carregar = () => sb.from('radar_rotas').select('*').order('criado_em', { ascending: false }).then(({ data }) => setRotas((data ?? []) as Rota[]));
-  useEffect(() => { carregar(); }, []);
+  useEffect(() => {
+    carregar();
+    const id = rotaPedida(); if (!id) return;
+    try { localStorage.removeItem('radar-abrir-rota'); } catch { /* */ }
+    sb.rpc('radar_rota_publica', { p_id: id }).then(({ data }) => {
+      const r = data as Recebida | null;
+      if (!r) return setAviso('Essa rota não existe mais ou deixou de ser compartilhada.');
+      if (r.minha) setAberta(r); else setRecebida(r);
+    });
+  }, []);
   return (
     <div className="pro-cont mp">
       <section className="pro-card mp-capa">
@@ -47,6 +63,7 @@ export function TelaMapas({ correr }: { correr: (r: Rota) => void }) {
         <p className="pro-sub pro-sem-margem">Toque no mapa pra marcar o caminho: o Radar segue as ruas e calcula a distância. Depois é só correr a rota no <b>Gravar</b>.</p>
         <button className="btn solid pro-btn" onClick={() => setCriando(true)}><Plus size={18} aria-hidden="true" />Criar rota</button>
       </section>
+      {aviso && <p className="ct-erro" role="alert">{aviso}</p>}
       {rotas === null && <p className="fine">Carregando…</p>}
       {rotas?.length === 0 && <p className="fine pro-centro">Nenhuma rota ainda. Crie a primeira: a sua volta na orla, o caminho do treino longo…</p>}
       {!!rotas?.length && <ul className="mp-lista">
@@ -59,13 +76,15 @@ export function TelaMapas({ correr }: { correr: (r: Rota) => void }) {
         ))}
       </ul>}
       {criando && <EditorRota fechar={() => setCriando(false)} salvou={r => { setCriando(false); carregar(); setAberta(r); }} />}
-      {aberta && <DetalheRota r={aberta} fechar={() => setAberta(null)} correr={() => { setAberta(null); correr(aberta); }} apagou={() => { setAberta(null); carregar(); }} />}
+      {aberta && <DetalheRota r={aberta} fechar={() => setAberta(null)} correr={() => { setAberta(null); correr(aberta); }} apagou={() => { setAberta(null); carregar(); }} mudou={r => { setAberta(r); carregar(); }} />}
+      {recebida && <RotaRecebida r={recebida} fechar={() => setRecebida(null)} correr={() => { const r = recebida; setRecebida(null); correr(r); }} salvou={r => { setRecebida(null); carregar(); setAberta(r); }} />}
     </div>
   );
 }
 
-function DetalheRota({ r, fechar, correr, apagou }: { r: Rota; fechar: () => void; correr: () => void; apagou: () => void }) {
+function DetalheRota({ r, fechar, correr, apagou, mudou }: { r: Rota; fechar: () => void; correr: () => void; apagou: () => void; mudou: (r: Rota) => void }) {
   const [certeza, setCerteza] = useState(false);
+  const [enviar, setEnviar] = useState(false);
   const apagar = async () => { await sb.from('radar_rotas').delete().eq('id', r.id); apagou(); };
   return (
     <div className="pro-folha" role="dialog" aria-modal="true" aria-label={r.nome} onClick={fechar}>
@@ -74,7 +93,12 @@ function DetalheRota({ r, fechar, correr, apagou }: { r: Rota; fechar: () => voi
         <MapaCorrida rota={r.geometria} />
         <div className="mp-nums"><span><small>Distância</small><b>{kmTxt(r.distancia_m)} km</b></span>{r.subida_m != null && <span><small>Subida</small><b>{r.subida_m} m</b></span>}<span><small>Tipo</small><b>{r.ida_volta ? 'Ida e volta' : 'Só ida'}</b></span></div>
         <BarraPiso piso={r.piso} />
-        <button className="btn solid pro-btn" onClick={correr}><Play size={18} aria-hidden="true" />Correr esta rota</button>
+        <div className="mp-acoes">
+          <button className="btn solid pro-btn" onClick={correr}><Play size={18} aria-hidden="true" />Correr esta rota</button>
+          <button className="btn outline pro-btn" onClick={() => setEnviar(true)}><Share2 size={18} aria-hidden="true" />Enviar</button>
+        </div>
+        {r.compartilhada && <small className="mp-status"><Link2 size={13} aria-hidden="true" /> Compartilhada: quem tem o link vê esta rota.</small>}
+        {enviar && <EnviarRota r={r} fechar={() => setEnviar(false)} mudou={mudou} />}
         {certeza
           ? <div className="pro-grav-confirma"><span>Apagar esta rota?</span><button className="btn outline" onClick={() => setCerteza(false)}>Não</button><button className="btn text pro-grav-apagar" onClick={apagar}>Sim, apagar</button></div>
           : <button className="btn text pro-grav-apagar" onClick={() => setCerteza(true)}><Trash2 size={16} aria-hidden="true" />Apagar rota</button>}
@@ -189,6 +213,65 @@ function EditorRota({ fechar, salvou }: { fechar: () => void; salvou: (r: Rota) 
           <button className="btn solid" onClick={salvar} disabled={salvando === 'indo'}><Check size={18} aria-hidden="true" />{salvando === 'indo' ? 'Salvando…' : 'Salvar'}</button>
         </div> : <button className="btn solid pro-btn" onClick={() => { setErro(null); setSalvando('nome'); }} disabled={!calc || calculando}><Check size={18} aria-hidden="true" />Salvar rota</button>}
         {calc?.fonte === 'osm' && <small className="mp-status">Caminho pelas ruas do OpenStreetMap.</small>}
+      </div>
+    </div>
+  );
+}
+
+/* ───────── enviar a rota (pros alunos, pro grupo do treino…) ───────── */
+function EnviarRota({ r, fechar, mudou }: { r: Rota; fechar: () => void; mudou: (r: Rota) => void }) {
+  const [estado, setEstado] = useState<'pronto' | 'abrindo' | 'copiado' | 'erro'>(r.compartilhada ? 'pronto' : 'abrindo');
+  const url = linkRota(r.id);
+  const texto = `Rota do treino: ${r.nome} (${kmTxt(r.distancia_m)} km). Abra no Radar pra ver no mapa e correr com ela:`;
+  useEffect(() => {
+    if (r.compartilhada) return;
+    sb.from('radar_rotas').update({ compartilhada: true }).eq('id', r.id).then(({ error }) => {
+      if (error) return setEstado('erro');
+      setEstado('pronto'); mudou({ ...r, compartilhada: true });
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const copiar = async () => { try { await navigator.clipboard.writeText(`${texto} ${url}`); setEstado('copiado'); } catch { setEstado('erro'); } };
+  const outros = async () => { try { await navigator.share({ title: r.nome, text: texto, url }); } catch { /* cancelou */ } };
+  const parar = async () => { await sb.from('radar_rotas').update({ compartilhada: false }).eq('id', r.id); mudou({ ...r, compartilhada: false }); fechar(); };
+  const ok = estado !== 'abrindo' && estado !== 'erro';
+  return (
+    <div className="mp-enviar" role="group" aria-label="Enviar rota">
+      <div className="pro-linha"><b>Enviar a rota</b><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={18} aria-hidden="true" /></button></div>
+      <p className="pro-sub pro-sem-margem">Mande pros alunos ou pro grupo do treino. Quem abrir vê a rota no mapa e pode salvar e correr com ela no Gravar.</p>
+      {estado === 'erro' && <p className="ct-erro" role="alert">Não deu pra gerar o link agora. Tente de novo.</p>}
+      <div className="mp-enviar-bts">
+        <a className={'btn solid' + (ok ? '' : ' desab')} aria-disabled={!ok} href={ok ? `https://wa.me/?text=${encodeURIComponent(`${texto} ${url}`)}` : undefined} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <button className="btn outline" onClick={copiar} disabled={!ok}>{estado === 'copiado' ? <><Check size={17} aria-hidden="true" />Copiado</> : <><Link2 size={17} aria-hidden="true" />Copiar link</>}</button>
+        {typeof navigator.share === 'function' && <button className="btn outline" onClick={outros} disabled={!ok}><Share2 size={17} aria-hidden="true" />Outros</button>}
+      </div>
+      {ok && <button className="btn text mp-parar" onClick={parar}>Parar de compartilhar</button>}
+    </div>
+  );
+}
+
+/* ───────── rota que alguém mandou ───────── */
+function RotaRecebida({ r, fechar, correr, salvou }: { r: Recebida; fechar: () => void; correr: () => void; salvou: (r: Rota) => void }) {
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const salvar = async () => {
+    setSalvando(true); setErro(null);
+    const { data, error } = await sb.from('radar_rotas').insert({ nome: r.nome, pontos: r.pontos, geometria: r.geometria, distancia_m: r.distancia_m, subida_m: r.subida_m, piso: r.piso, elevacao: r.elevacao, ida_volta: r.ida_volta }).select().single();
+    setSalvando(false);
+    if (error || !data) return setErro(error?.message.includes('row-level') ? 'Você chegou ao limite de 100 rotas.' : 'Não deu pra salvar agora. Tente de novo.');
+    salvou(data as Rota);
+  };
+  return (
+    <div className="pro-folha" role="dialog" aria-modal="true" aria-label={r.nome} onClick={fechar}>
+      <div className="pro-folha-caixa" onClick={e => e.stopPropagation()}>
+        <div className="pro-linha"><span><small className="pro-k cinza">Rota enviada{r.autor ? ` por @${r.autor}` : ''}</small><b className="mp-rec-nome">{r.nome}</b></span><button className="btn text" onClick={fechar} aria-label="Fechar"><X size={20} aria-hidden="true" /></button></div>
+        <MapaCorrida rota={r.geometria} />
+        <div className="mp-nums"><span><small>Distância</small><b>{kmTxt(r.distancia_m)} km</b></span>{r.subida_m != null && <span><small>Subida</small><b>{r.subida_m} m</b></span>}<span><small>Tipo</small><b>{r.ida_volta ? 'Ida e volta' : 'Só ida'}</b></span></div>
+        <BarraPiso piso={r.piso} />
+        {erro && <p className="ct-erro" role="alert">{erro}</p>}
+        <div className="mp-acoes">
+          <button className="btn solid pro-btn" onClick={salvar} disabled={salvando}><BookmarkPlus size={18} aria-hidden="true" />{salvando ? 'Salvando…' : 'Salvar rota'}</button>
+          <button className="btn outline pro-btn" onClick={correr}><Play size={18} aria-hidden="true" />Correr agora</button>
+        </div>
       </div>
     </div>
   );
