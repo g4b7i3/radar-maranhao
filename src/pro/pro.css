@@ -1211,3 +1211,95 @@ main.pro:has(.pro-menu) { padding-bottom: calc(108px + env(safe-area-inset-botto
 .pro-banner-x { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; }
 @keyframes pro-banner-entra { from { opacity: 0; transform: translateY(-8px); } }
 @media (prefers-reduced-motion: reduce) { .pro-banner-assinar { animation: none; } }
+
+/* ───────── Gravar (correr sem relógio) ───────── */
+.pro-grav { display: flex; flex-direction: column; gap: 14px; }
+.pro-grav-modo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pro-grav-modo button { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 16px; border-radius: 20px; border: 1.5px solid var(--line); background: var(--vidro, var(--surface)); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.pro-grav-modo button svg { color: var(--cobalt); margin-bottom: 4px; }
+.pro-grav-modo button b { font-size: 1.05rem; } .pro-grav-modo button small { color: var(--muted); font-size: .82rem; }
+.pro-grav-modo button.on { border-color: var(--primario, #1d3fbf); box-shadow: 0 0 0 3px var(--cobalt-tint); }
+.pro-grav-lista { display: flex; flex-direction: column; gap: 8px; }
+.pro-grav-op { display: flex; align-items: center; gap: 4px; border-radius: 18px; border: 1.5px solid var(--line); background: var(--vidro, var(--surface)); }
+button.pro-grav-op, .pro-grav-op-corpo { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+button.pro-grav-op { border: 1.5px solid var(--line); background: var(--vidro, var(--surface)); }
+.pro-grav-op.on, button.pro-grav-op.on { border-color: var(--primario, #1d3fbf); }
+.pro-grav-op b { display: block; } .pro-grav-op small { display: block; color: var(--muted); font-size: .84rem; margin-top: 2px; }
+.pro-grav-check { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; color: var(--primario-txt, #fff); }
+.on > .pro-grav-check, .on .pro-grav-check { background: var(--primario, #1d3fbf); border-color: transparent; }
+.pro-grav-ed { flex: none; margin-right: 6px; }
+.pro-grav-novo { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 18px; border: 1.5px dashed var(--line); background: transparent; color: var(--cobalt); font: inherit; font-weight: 750; cursor: pointer; }
+.pro-grav-etapas ol { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; }
+.pro-grav-etapas li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0 8px 12px; border-bottom: 1px solid var(--line); border-left: 3px solid var(--line); font-size: .92rem; }
+.pro-grav-etapas li:last-child { border-bottom: 0; }
+.pro-grav-etapas li.e-aq, .pro-grav-etapas li.e-dq { border-left-color: #2fbf71; }
+.pro-grav-etapas li.e-tiro, .pro-grav-etapas li.e-co { border-left-color: var(--cobalt); }
+.pro-grav-etapas li.e-rec { border-left-color: #ffd34d; color: var(--muted); }
+.pro-grav-obs { margin: 8px 0 0; font-style: italic; color: var(--muted); font-size: .9rem; }
+.pro-grav-iniciar { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.08rem; }
+.pro-grav-trava { align-items: center; text-align: center; gap: 10px; }
+.pro-grav-trava h2 { margin: 0; }
+.pro-grav-trava-ic { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--cobalt-tint); color: var(--cobalt); }
+/* montar treino */
+.pro-grav-form .pro-campo { display: flex; flex-direction: column; gap: 6px; font-size: .88rem; font-weight: 700; }
+.pro-grav-form .pro-campo input, .pro-grav-fim .pro-campo input { font: inherit; font-size: 1rem; font-weight: 500; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper, #fff); color: var(--ink); }
+.pro-grav-rot { display: block; font-size: .88rem; font-weight: 700; margin-bottom: 6px; }
+.pro-grav-liga { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.pro-grav-liga input { width: 20px; height: 20px; accent-color: var(--primario, #1d3fbf); }
+.pro-grav-trecho { display: grid; grid-template-columns: 1fr 92px 72px; align-items: center; gap: 8px; }
+.pro-grav-trecho > span:first-child { font-size: .92rem; color: var(--muted); }
+.pro-grav-trecho input, .pro-grav-trecho select { font: inherit; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper, #fff); color: var(--ink); min-width: 0; }
+.pro-grav-n { grid-column: 2 / 4; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+.pro-grav-n b { min-width: 28px; text-align: center; font-size: 1.3rem; }
+.pro-grav-n .btn { padding: 8px; min-height: 0; }
+.pro-grav-seg { display: flex; padding: 4px; border-radius: 999px; background: var(--cobalt-tint); }
+.pro-grav-seg button { flex: 1; border: 0; border-radius: 999px; padding: 9px; font: inherit; font-weight: 750; background: transparent; color: var(--muted); cursor: pointer; }
+.pro-grav-seg button.on { background: var(--surface, #fff); color: var(--ink); box-shadow: 0 2px 8px -3px rgba(10,18,64,.3); }
+.pro-grav-apagar { color: #c0392b !important; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.pro-grav-confirma { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .9rem; }
+.pro-grav-confirma span { flex: 1 1 100%; }
+/* fim */
+.pro-grav-fim { gap: 12px; }
+.pro-grav-fim h2 { margin: 0; font-size: 3.2rem; font-weight: 900; font-stretch: 70%; line-height: 1; }
+.pro-grav-fim-nums { display: flex; gap: 26px; }
+.pro-grav-fim-nums span { display: flex; flex-direction: column; } .pro-grav-fim-nums small { color: var(--muted); font-size: .8rem; } .pro-grav-fim-nums b { font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+
+/* tela cheia gravando */
+.pro-gravando { position: fixed; inset: 0; z-index: 80; display: flex; flex-direction: column; gap: 14px; padding: max(16px, env(safe-area-inset-top)) 18px max(20px, env(safe-area-inset-bottom)); background: var(--paper, #fff); color: var(--ink); overflow-y: auto; }
+.pro-gravando-topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pro-gravando-tit { min-width: 0; display: flex; flex-direction: column; }
+.pro-gravando-tit b { font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pro-gravando-tit small { color: var(--muted); font-size: .82rem; }
+.pro-gravando-voz { flex: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--vidro, var(--surface)); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.pro-gravando-etapa { display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 22px; color: #fff; background: linear-gradient(150deg, #1d3fbf, #0a1240); }
+.pro-gravando-etapa.e-aq, .pro-gravando-etapa.e-dq { background: linear-gradient(150deg, #1f9d5c, #0b5a35); }
+.pro-gravando-etapa.e-rec { background: linear-gradient(150deg, #6b5a12, #2e2708); }
+.pro-gravando-etapa.e-rec b { color: #ffd34d; }
+.pro-gravando-etapa.fim { background: linear-gradient(150deg, #0a1240, #05081a); }
+.pro-gravando-etapa > span { font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.pro-gravando-etapa > b { font-size: 2.6rem; font-weight: 900; font-stretch: 70%; line-height: 1; font-variant-numeric: tabular-nums; }
+.pro-gravando-etapa > b small { font-size: 1rem; font-weight: 600; opacity: .8; }
+.pro-gravando-etapa i { display: block; height: 6px; border-radius: 3px; background: rgba(255,255,255,.2); overflow: hidden; }
+.pro-gravando-etapa i em { display: block; height: 100%; background: #ffd34d; transition: width .9s linear; }
+.pro-gravando-etapa > small { font-size: .88rem; opacity: .9; }
+.pro-gravando-tempo { text-align: center; }
+.pro-gravando-tempo small { font-size: .8rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.pro-gravando-tempo b { display: block; font-size: clamp(4rem, 22vw, 6rem); font-weight: 900; font-stretch: 62%; line-height: .95; font-variant-numeric: tabular-nums; }
+.pro-gravando-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.pro-gravando-nums small { display: block; font-size: .78rem; color: var(--muted); }
+.pro-gravando-nums b { font-size: 1.7rem; font-weight: 900; font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.pro-gravando-nums em { font-style: normal; font-size: .8rem; font-weight: 600; color: var(--muted); margin-left: 2px; }
+.pro-gravando-vel { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.pro-gravando-vel button { min-width: 48px; height: 48px; border-radius: 14px; border: 1px solid var(--line); background: var(--vidro, var(--surface)); color: var(--ink); font: inherit; font-weight: 800; font-size: 1.05rem; cursor: pointer; }
+.pro-gravando-vel span { display: flex; flex-direction: column; align-items: center; min-width: 96px; }
+.pro-gravando-vel span b { font-size: 2rem; font-weight: 900; font-stretch: 75%; line-height: 1; }
+.pro-gravando-vel span small { font-size: .72rem; color: var(--muted); }
+.pro-gravando-acoes { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 26px; padding-top: 10px; }
+.pro-gravando-b { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 0; cursor: pointer; font: inherit; }
+.pro-gravando-b.sec { width: 64px; height: 64px; border-radius: 50%; background: var(--vidro, var(--surface)); border: 1px solid var(--line); color: var(--ink); }
+.pro-gravando-b.sec small { font-size: .62rem; font-weight: 750; }
+.pro-gravando-b.principal { width: 96px; height: 96px; border-radius: 50%; background: var(--primario, #1d3fbf); color: var(--primario-txt, #fff); box-shadow: 0 14px 30px -12px rgba(29,63,191,.7); }
+.pro-gravando-b.principal.play { background: #1f9d5c; color: #fff; }
+.pro-gravando.pausado .pro-gravando-tempo b { animation: pro-pisca 1.4s ease-in-out infinite; }
+@keyframes pro-pisca { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .pro-gravando.pausado .pro-gravando-tempo b { animation: none; opacity: .6; } }

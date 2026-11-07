@@ -14,7 +14,7 @@ export type Atividade = {
   parciais: { km: number; seg: number; fc?: number | null; parcial?: boolean }[] | null; rota: [number, number][] | null;
   feed_em: string | null; legenda: string | null; card_url: string | null;
 };
-const FONTE: Record<string, string> = { garmin: 'Garmin', intervals: 'Intervals.icu' };
+const FONTE: Record<string, string> = { garmin: 'Garmin', intervals: 'Intervals.icu', celular: 'Radar (celular)' };
 const TIPO: Record<string, string> = { corrida: 'Corrida', trail: 'Trail', esteira: 'Esteira', caminhada: 'Caminhada' };
 const km = (m: number) => (m / 1000).toFixed(2).replace('.', ',');
 const pace = (s: number) => { const r = Math.round(s); return `${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`; };
@@ -113,6 +113,7 @@ export function DetalheTreino({ a, perfil, fechar, mudou }: { a: Atividade; perf
             ? <button className="btn outline" onClick={tirar}><Trash2 size={16} aria-hidden="true" />Tirar do feed</button>
             : <button className="btn outline" onClick={() => setPostar(true)}><Send size={16} aria-hidden="true" />Postar no feed</button>}
         </div>
+        {a.fonte === 'celular' && <ApagarAtividade id={a.id} apagou={fechar} />}
         <p className="fine pro-sem-margem">Suas atividades aparecem só pra você. No feed vão só a distância, o tempo, o pace e a subida (e o card, se você postar com ele). Frequência cardíaca e percurso ficam com você, a não ser que estejam no card que você escolher.</p>
       </div>
       {card && <GeradorCard a={a} perfil={perfil} fechar={() => setCard(false)} postou={(url) => { setCard(false); mudou({ ...a, feed_em: a.feed_em ?? new Date().toISOString(), card_url: url }); }} />}
@@ -337,4 +338,13 @@ export function GeradorCard({ a, perfil, fechar, postou }: { a: Atividade; perfi
       {envio && <PostarTreino a={a} cardUrl={envio.url} fechar={() => setEnvio(null)} postou={() => postou(envio.url)} />}
     </div>
   );
+}
+
+/** Apagar uma corrida gravada pelo celular (as do relógio só saem desconectando). */
+function ApagarAtividade({ id, apagou }: { id: string; apagou: () => void }) {
+  const [certeza, setCerteza] = useState(false);
+  const apagar = async () => { await sb.rpc('radar_atividade_apagar', { p_id: id }); window.dispatchEvent(new Event('radar-atividades-recarregar')); apagou(); };
+  return certeza
+    ? <div className="pro-grav-confirma"><span>Apagar esta atividade? Não dá pra desfazer.</span><button className="btn outline" onClick={() => setCerteza(false)}>Não</button><button className="btn text pro-grav-apagar" onClick={apagar}>Sim, apagar</button></div>
+    : <button className="btn text pro-grav-apagar" onClick={() => setCerteza(true)}><Trash2 size={16} aria-hidden="true" />Apagar atividade</button>;
 }

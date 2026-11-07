@@ -125,7 +125,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
         <p className="pro-feed-txt"><Crown size={16} aria-hidden="true" /> É {d.sexo === 'F' ? <b>Rainha</b> : <b>Rei</b>} da prova nos {kmTxt(Number(d.km))} da <b>{d.prova}</b>: melhor nota por idade entre {d.atletas ? `${d.atletas} atletas` : 'todos'} ({pct(d.nota)}%, {relogio(Number(d.tempo))}).</p>
       )}
       {treino && <>
-        <p className="pro-feed-sub"><Footprints size={15} aria-hidden="true" /> {TREINO_TIPO[treino.tipo] ?? 'Treino'} · via {treino.fonte === 'garmin' ? 'Garmin' : treino.fonte === 'intervals' ? 'Intervals.icu' : treino.fonte}</p>
+        <p className="pro-feed-sub"><Footprints size={15} aria-hidden="true" /> {TREINO_TIPO[treino.tipo] ?? 'Treino'} · via {treino.fonte === 'garmin' ? 'Garmin' : treino.fonte === 'intervals' ? 'Intervals.icu' : treino.fonte === 'celular' ? 'Radar' : treino.fonte}</p>
         <h3 className="pro-feed-titulo">{treino.titulo || TREINO_TIPO[treino.tipo] || 'Treino'}</h3>
         <dl className="pro-feed-nums">
           <div><dt>Distância</dt><dd>{kmTxt(Number(treino.km))}</dd></div>

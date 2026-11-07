@@ -28,11 +28,12 @@ import AssessoriaPublica from './Assessoria';
 import './pro.css';
 import './visual.css';
 import { useTema } from '../tema';
+import { TelaGravar, IconeGravar } from './Gravar';
 import { Arroba } from './Selo';
 
-const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'comunidades', 'assista', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
+const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'gravar', 'comunidades', 'assista', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
 const abaDoEndereco = (): Aba | null => { const h = lerEndereco().aba; return (ABAS_VALIDAS as readonly string[]).includes(h) ? h as Aba : null; };
-type Aba = 'temporada' | 'campeonatos' | 'feed' | 'comunidades' | 'assista' | 'provas' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
+type Aba = 'temporada' | 'campeonatos' | 'feed' | 'gravar' | 'comunidades' | 'assista' | 'provas' | 'corri' | 'ranking' | 'duelos' | 'conta' | 'admin';
 const qs = new URLSearchParams(window.location.search);
 try { if (qs.get('pro') === 'duelo' && qs.get('c')) sessionStorage.setItem('radar-duelo', qs.get('c')!); } catch { /* sem armazenamento */ }
 // Link de cortesia (/?pro=cortesia&k=código): libera o Radar Pro sem pagar, até o Vinik revogar
@@ -241,7 +242,7 @@ function ProTelas() {
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
-    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'gravar', nome: 'Gravar', Icone: IconeGravar as unknown as LucideIcon }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
     { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: UserRound },
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
@@ -271,6 +272,7 @@ function ProTelas() {
       {aba === 'campeonatos' && <TelaCampeonatos perfil={perfil} />}
       {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} fotoMudou={recarregar} pro={pro || admin} assinar={irAssinar} />}
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pro={pro} assinar={irAssinar} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
+      {aba === 'gravar' && <TelaGravar pro={pro || admin} assinar={irAssinar} irAtividades={() => { setAba('temporada'); window.scrollTo(0, 0); try { localStorage.setItem('radar-atividades-aberto', '1'); } catch { /* */ } }} />}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'assista' && <TelaAssista />}
