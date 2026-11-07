@@ -527,7 +527,7 @@ function Concluir({ s, pronto }: { s: Sessao; pronto: (ok: boolean) => void }) {
           ? <div className="pro-grav-confirma"><span>Descartar esta corrida? Não dá pra desfazer.</span><button className="btn outline" onClick={() => setDescartando(false)}>Não</button><button className="btn text pro-grav-apagar" onClick={() => pronto(false)}>Sim, descartar</button></div>
           : <button className="btn text pro-grav-apagar" onClick={() => setDescartando(true)}><Trash2 size={16} aria-hidden="true" />Descartar</button>}
       </section>
-      <p className="fine pro-centro">Depois de salvar, ela aparece em <b>Temporada → Minhas atividades</b>, com a resenha do treino, gráficos e o card. <ChevronRight size={12} aria-hidden="true" /></p>
+      <p className="fine pro-centro">Depois de salvar, ela aparece em <b>Você → Minhas atividades</b>, com a resenha do treino, gráficos e o card. <ChevronRight size={12} aria-hidden="true" /></p>
     </div>
   );
 }

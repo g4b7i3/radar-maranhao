@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, Sun, Moon, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, Tv, X, Sun, Moon, CircleUserRound, Settings, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -242,8 +242,8 @@ function ProTelas() {
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
-    { id: 'temporada', nome: 'Temporada', Icone: Award }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'gravar', nome: 'Gravar', Icone: IconeGravar as unknown as LucideIcon }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
-    { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: UserRound },
+    { id: 'temporada', nome: 'Você', Icone: CircleUserRound }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'gravar', nome: 'Gravar', Icone: IconeGravar as unknown as LucideIcon }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'assista', nome: 'Assista', Icone: Tv }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: Settings },
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];
   return (
@@ -252,7 +252,10 @@ function ProTelas() {
       {topo(aba === 'temporada' ? (new Date().getFullYear() === 2026 ? 'Pré-temporada 2027' : `Minha temporada ${new Date().getFullYear()}`) : ABAS.find(a => a.id === aba)!.nome, <span className="pro-topo-dir">{temp.assinante ? <span className="pro-selo">PRO</span> : null}<BotaoTema /><Sino n={notif.nao_lidas} onClick={() => setNotifAberto(true)} /></span>)}
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
-      <MenuAbas abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
+      <MenuAbas abas={ABAS.filter(a => a.id !== 'temporada' && a.id !== 'provas' && a.id !== 'feed')} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
+      <nav className="pro-seg-topo" aria-label="Principais">
+        {([['temporada', 'Você'], ['provas', 'Agenda'], ['feed', 'Feed']] as [Aba, string][]).map(([id, n]) => <button key={id} aria-current={aba === id ? 'page' : undefined} className={aba === id ? 'on' : ''} onClick={() => { setAba(id); window.scrollTo(0, 0); }}>{n}</button>)}
+      </nav>
       <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <BannerAviso lista={notif.lista} abrir={() => setNotifAberto(true)} />
       <PushConvite userId={perfil.user_id} />

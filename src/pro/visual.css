@@ -191,3 +191,10 @@ body::after { background-image: var(--fundo-grade); background-size: var(--fundo
 :root:not([data-theme="dark"]) .pro .pro-card.pro-prova-card { border-radius: 0; border-width: 0 0 1px; border-color: var(--line); padding-left: 2px; padding-right: 2px; margin: 0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pro .pro-card.pro-prova-card { border-radius: var(--raio); border-width: 1px; border-color: var(--vidro-borda); padding-left: 16px; padding-right: 16px; } }
 .pro .pro-provas-mes .pro-k { margin-bottom: 4px; }
+
+/* barra de cima: Você · Agenda · Feed (como no modelo Pista) */
+.pro-seg-topo { position: sticky; top: calc(max(10px, env(safe-area-inset-top)) + 46px); z-index: 19; display: flex; gap: 2px; padding: 4px; margin: 2px 0 12px; border-radius: 999px; background: color-mix(in srgb, var(--cobalt-tint) 70%, var(--paper)); border: 1px solid var(--line); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.pro-seg-topo button { flex: 1; border: 0; border-radius: 999px; padding: 9px 0; font: inherit; font-size: .95rem; font-weight: 800; color: var(--muted); background: transparent; cursor: pointer; transition: background .15s, color .15s; }
+.pro-seg-topo button.on { background: var(--surface, #fff); color: var(--ink); box-shadow: 0 2px 8px -3px rgba(10, 18, 64, .35); }
+:root[data-theme="dark"] .pro-seg-topo button.on { background: rgba(255, 255, 255, .14); color: #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pro-seg-topo button.on { background: rgba(255, 255, 255, .14); color: #fff; } }
