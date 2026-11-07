@@ -1441,3 +1441,6 @@ button.pro-grav-op { border: 1.5px solid var(--line); background: var(--vidro, v
 .mp-parar{justify-self:start;font-size:.85rem;opacity:.8}
 .mp-rec-nome{display:block;font-size:1.1rem}
 .mp-status{display:flex;align-items:center;gap:5px}
+.mp-editor-lado { position: absolute; z-index: 2; right: 12px; top: calc(max(12px, env(safe-area-inset-top)) + 56px); display: grid; gap: 8px; }
+.mp-3d { font-weight: 800; font-size: .9rem; }
+.pro-mapa-estilos.mp-editor-estilos { position: absolute; z-index: 3; right: 64px; top: calc(max(12px, env(safe-area-inset-top)) + 56px); left: auto; }

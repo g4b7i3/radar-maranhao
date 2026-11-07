@@ -84,7 +84,7 @@ export function MapaCorrida({ rota, eu = null, aoVivo = false, falhou, guia }: {
     setEstilo(e); try { localStorage.setItem(CHAVE, e); } catch { /* */ }
     mapa.current?.setStyle(url(e), { diff: false }); // recarrega inteiro; as camadas do trajeto voltam no style.load
   };
-  const trocar3d = () => { const m = mapa.current; if (!m) return; const n = !p3d; setP3d(n); m.easeTo({ pitch: n ? 60 : 0, zoom: n ? 16.5 : 15.5, duration: 600 }); };
+  const trocar3d = () => { const m = mapa.current; if (!m) return; const n = !p3d; setP3d(n); m.easeTo(aoVivo ? { pitch: n ? 60 : 0, zoom: n ? 16.5 : 15.5, duration: 600 } : { pitch: n ? 60 : 0, duration: 600 }); };
   const centralizar = () => { setSeguir(true); const m = mapa.current; if (m && eu) m.easeTo({ center: [eu[1], eu[0]], duration: 500 }); };
 
   return (
@@ -93,7 +93,7 @@ export function MapaCorrida({ rota, eu = null, aoVivo = false, falhou, guia }: {
       {msg && <span className="pro-mapa-msg">{msg}</span>}
       {pronto && <div className="pro-mapa-bts">
         <button onClick={() => setMenu(v => !v)} aria-label="Estilo do mapa" aria-expanded={menu}><Layers size={18} /></button>
-        {aoVivo && <button onClick={trocar3d} aria-label={p3d ? 'Ver o mapa de cima (2D)' : 'Ver o mapa inclinado (3D)'}>{p3d ? '2D' : '3D'}</button>}
+        <button onClick={trocar3d} aria-label={p3d ? 'Ver o mapa de cima (2D)' : 'Ver o mapa inclinado (3D)'}>{p3d ? '2D' : '3D'}</button>
         {aoVivo && !seguir && <button onClick={centralizar} aria-label="Voltar para a minha posição"><Crosshair size={18} /></button>}
       </div>}
       {menu && <div className="pro-mapa-estilos" role="menu" aria-label="Estilo do mapa">

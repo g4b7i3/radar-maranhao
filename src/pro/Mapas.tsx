@@ -1,9 +1,9 @@
 // Radar · Mapas: criar rotas tocando no mapa (o caminho segue as ruas), salvar e usar no Gravar.
 import { useEffect, useRef, useState } from 'react';
-import { Plus, X, Undo2, Trash2, Repeat, Check, MapPin, ChevronRight, Play, Crosshair, Mountain, Share2, Link2, BookmarkPlus } from 'lucide-react';
+import { Plus, X, Undo2, Trash2, Repeat, Check, MapPin, ChevronRight, Play, Crosshair, Mountain, Share2, Link2, BookmarkPlus, Layers } from 'lucide-react';
 import type { Map as MLMap, GeoJSONSource, Marker } from 'maplibre-gl';
 import { sb, chamar } from './sb';
-import { MapaCorrida } from './MapaCorrida';
+import { MapaCorrida, ESTILOS } from './MapaCorrida';
 
 type P = [number, number];
 export type Rota = { id: string; nome: string; pontos: P[]; geometria: P[]; distancia_m: number; subida_m: number | null; piso: { tipo: string; pct: number }[] | null; elevacao: number[] | null; ida_volta: boolean; criado_em: string; compartilhada?: boolean };
@@ -121,7 +121,11 @@ function EditorRota({ fechar, salvou }: { fechar: () => void; salvou: (r: Rota) 
   const [nome, setNome] = useState('');
   const [salvando, setSalvando] = useState<'nome' | 'indo' | null>(null);
   const [pronto, setPronto] = useState(false);
+  const [estilo, setEstilo] = useState(estiloMapa);
+  const [menuEstilo, setMenuEstilo] = useState(false);
+  const [p3d, setP3d] = useState(false);
   const pedido = useRef(0);
+  const geomRef = useRef<P[]>([]);
 
   useEffect(() => {
     let vivo = true, m: MLMap | null = null;
@@ -129,13 +133,15 @@ function EditorRota({ fechar, salvou }: { fechar: () => void; salvou: (r: Rota) 
       if (!vivo || !caixa.current) return; ml.current = lib;
       m = new lib.Map({ container: caixa.current, style: `https://tiles.openfreemap.org/styles/${estiloMapa()}`, center: [-44.27, -2.5], zoom: 13, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, touchPitch: false });
       mapa.current = m;
-      m.on('load', () => {
-        if (!vivo || !m) return;
-        m.addSource('rota', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      // camada do caminho (refeita a cada troca de estilo)
+      const camadas = () => {
+        if (!m || m.getSource('rota')) return;
+        m.addSource('rota', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: geomRef.current.map(p => [p[1], p[0]]) } } });
         m.addLayer({ id: 'rota-borda', type: 'line', source: 'rota', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#0a1240', 'line-width': 9, 'line-opacity': .55 } });
         m.addLayer({ id: 'rota', type: 'line', source: 'rota', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffd34d', 'line-width': 5 } });
-        setPronto(true);
-      });
+      };
+      m.on('style.load', () => { if (vivo) camadas(); });
+      m.on('load', () => { if (!vivo || !m) return; camadas(); setPronto(true); });
       m.on('click', e => setPontos(ps => (ps.length >= 40 ? ps : [...ps, [+e.lngLat.lat.toFixed(6), +e.lngLat.lng.toFixed(6)]])));
       navigator.geolocation?.getCurrentPosition(p => { if (vivo && m) m.jumpTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 15 }); }, () => null, { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 });
     });
@@ -168,6 +174,7 @@ function EditorRota({ fechar, salvou }: { fechar: () => void; salvou: (r: Rota) 
 
   // desenha
   const geom: P[] = calc ? (idaVolta ? [...calc.geometria, ...[...calc.geometria].reverse().slice(1)] : calc.geometria) : [];
+  geomRef.current = geom;
   const dist = calc ? calc.distancia_m * (idaVolta ? 2 : 1) : 0;
   const subida = calc?.subida_m != null ? (idaVolta ? calc.subida_m + (calc.descida_m ?? 0) : calc.subida_m) : null;
   useEffect(() => {
@@ -175,6 +182,12 @@ function EditorRota({ fechar, salvou }: { fechar: () => void; salvou: (r: Rota) 
     (m.getSource('rota') as GeoJSONSource | undefined)?.setData({ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: geom.map(p => [p[1], p[0]]) } });
   }, [geom.length, pronto, idaVolta, calc]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const trocarEstilo = (e: typeof estilo) => {
+    setMenuEstilo(false); if (e === estilo) return;
+    setEstilo(e); try { localStorage.setItem('radar-mapa-estilo', e); } catch { /* */ }
+    mapa.current?.setStyle(`https://tiles.openfreemap.org/styles/${e}`, { diff: false });
+  };
+  const trocar3d = () => { const n = !p3d; setP3d(n); mapa.current?.easeTo({ pitch: n ? 60 : 0, duration: 600 }); };
   const minhaPosicao = () => navigator.geolocation?.getCurrentPosition(p => mapa.current?.easeTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 15.5 }), () => setErro('Libere a localização pra centralizar no mapa.'));
   const salvar = async () => {
     if (!calc) return;
@@ -194,6 +207,18 @@ function EditorRota({ fechar, salvou }: { fechar: () => void; salvou: (r: Rota) 
         <span className="mp-editor-dica">{pontos.length === 0 ? 'Toque no mapa onde a rota começa' : pontos.length === 1 ? 'Agora toque onde ela vai' : 'Toque pra continuar o caminho'}</span>
         <button className="mp-redondo" onClick={minhaPosicao} aria-label="Ir pra minha posição"><Crosshair size={19} /></button>
       </div>
+      {pronto && <div className="mp-editor-lado">
+        <button className="mp-redondo" onClick={() => setMenuEstilo(v => !v)} aria-label="Estilo do mapa" aria-expanded={menuEstilo}><Layers size={19} /></button>
+        <button className="mp-redondo mp-3d" onClick={trocar3d} aria-label={p3d ? 'Ver o mapa de cima (2D)' : 'Ver o mapa inclinado (3D)'}>{p3d ? '2D' : '3D'}</button>
+      </div>}
+      {menuEstilo && <div className="pro-mapa-estilos mp-editor-estilos" role="menu" aria-label="Estilo do mapa">
+        {ESTILOS.map(e => (
+          <button key={e.id} role="menuitemradio" aria-checked={estilo === e.id} className={estilo === e.id ? 'on' : ''} onClick={() => trocarEstilo(e.id)}>
+            <i style={{ background: e.cor }}>{estilo === e.id && <Check size={14} />}</i>
+            <span><b>{e.nome}</b><small>{e.d}</small></span>
+          </button>
+        ))}
+      </div>}
       <div className="mp-editor-painel">
         <div className="mp-nums">
           <span><small>Distância</small><b>{calc ? `${kmTxt(dist)} km` : '–'}</b></span>
