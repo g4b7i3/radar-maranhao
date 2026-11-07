@@ -93,7 +93,7 @@ function bipe(n = 1) {
 type Sessao = {
   ext: string; modo: 'rua' | 'esteira'; treino: Treino | null; inicio: number; estado: 'correndo' | 'pausado';
   mov: number; marca: number | null; dist: number; etapa: number; etapaIni: { t: number; d: number }; voltas: { k: Etapa['k']; t: number; d: number }[];
-  parciais: { km: number; seg: number; parcial?: boolean }[]; ultKm: { t: number; d: number }; rota: [number, number][]; vel: number; salvoEm: number;
+  parciais: { km: number; seg: number; parcial?: boolean }[]; ultKm: { t: number; d: number }; rota: [number, number][]; vel: number; salvoEm: number; guia?: { nome: string; geometria: [number, number][]; distancia_m: number } | null;
 };
 const movDe = (s: Sessao) => s.mov + (s.estado === 'correndo' && s.marca ? Date.now() - s.marca : 0) / 1000;
 
@@ -108,6 +108,8 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
   useEffect(() => gravarLocal('radar-gravar-modo', modo), [modo]);
   const salvarTreinos = (l: Treino[]) => { setTreinos(l); gravarLocal(CHAVE_TREINOS, l); };
   const treino = pro ? treinos.find(t => t.id === escolhido) ?? null : null;
+  const [guia, setGuia] = useState<Sessao['guia']>(() => ler<Sessao['guia']>('radar-gravar-rota', null));
+  const tirarGuia = () => { setGuia(null); gravarLocal('radar-gravar-rota', null); };
   const [trava, setTrava] = useState(false);
 
   if (sessao) return <Gravando s0={sessao} sair={s => { setSessao(null); if (s) setFim(s); }} />;
@@ -115,7 +117,7 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
 
   const iniciar = () => {
     const agora = Date.now();
-    const s: Sessao = { ext: 'cel-' + uid(), modo, treino, inicio: agora, estado: 'correndo', mov: 0, marca: agora, dist: 0, etapa: 0, etapaIni: { t: 0, d: 0 }, voltas: [], parciais: [], ultKm: { t: 0, d: 0 }, rota: [], vel: ler<number>('radar-esteira-vel', 9), salvoEm: agora };
+    const s: Sessao = { ext: 'cel-' + uid(), modo, treino, inicio: agora, estado: 'correndo', mov: 0, marca: agora, dist: 0, etapa: 0, etapaIni: { t: 0, d: 0 }, voltas: [], parciais: [], ultKm: { t: 0, d: 0 }, rota: [], vel: ler<number>('radar-esteira-vel', 9), salvoEm: agora, guia: modo === 'rua' ? guia : null };
     gravarLocal(CHAVE_SESSAO, s); setSessao(s);
   };
 
@@ -126,6 +128,10 @@ export function TelaGravar({ pro, assinar, irAtividades }: { pro: boolean; assin
         <button role="radio" aria-checked={modo === 'esteira'} className={modo === 'esteira' ? 'on' : ''} onClick={() => setModo('esteira')}><Footprints size={22} aria-hidden="true" /><b>Na esteira</b><small>Velocidade do painel</small></button>
       </div>
 
+      {modo === 'rua' && guia && <div className="pro-grav-guia">
+        <span><small>Rota</small><b>{guia.nome}</b><em>{(guia.distancia_m / 1000).toFixed(2).replace('.', ',')} km · aparece no mapa durante a corrida</em></span>
+        <button className="btn text" onClick={tirarGuia} aria-label="Correr sem a rota"><X size={18} aria-hidden="true" /></button>
+      </div>}
       <p className="pro-k cinza pro-sem-margem">Qual treino?</p>
       <div className="pro-grav-lista">
         <button className={'pro-grav-op' + (!escolhido ? ' on' : '')} onClick={() => setEscolhido(null)}>
@@ -444,7 +450,7 @@ function Gravando({ s0, sair }: { s0: Sessao; sair: (s: Sessao | null) => void }
         <button className="pro-gravando-voz" onClick={() => { vozLigada = !vozLigada; setVoz(vozLigada); if (!vozLigada) speechSynthesis?.cancel?.(); }} aria-label={voz ? 'Desligar voz' : 'Ligar voz'}>{voz ? <Volume2 size={20} /> : <VolumeX size={20} />}</button></span>
       </div>
 
-      {st.modo === 'rua' && verMapa && <MapaCorrida rota={st.rota} eu={ult.current?.p ?? null} aoVivo />}
+      {st.modo === 'rua' && verMapa && <MapaCorrida rota={st.rota} eu={ult.current?.p ?? null} aoVivo guia={st.guia?.geometria ?? null} />}
 
       {e ? <div className={'pro-gravando-etapa e-' + e.k}>
         <span>{nomeEtapa(e)} · etapa {st.etapa + 1} de {etapas.length}</span>
@@ -506,7 +512,7 @@ function Concluir({ s, pronto }: { s: Sessao; pronto: (ok: boolean) => void }) {
     const { error } = await sb.rpc('radar_atividade_gravar', { p: {
       ext_id: s.ext, tipo: s.modo === 'esteira' ? 'esteira' : 'corrida', titulo, data: new Date(s.inicio).toISOString(),
       distancia_m: dist, duracao_s: Math.round(s.mov), parciais, rota: s.modo === 'rua' ? s.rota : [],
-      resumo_rel: { celular: true, treino: s.treino ? { nome: s.treino.nome, tipo: s.treino.tipo, resumo: resumoTreino(s.treino), obs: s.treino.obs ?? null } : null, etapas: s.voltas },
+      resumo_rel: { celular: true, rota: s.guia ? s.guia.nome : null, treino: s.treino ? { nome: s.treino.nome, tipo: s.treino.tipo, resumo: resumoTreino(s.treino), obs: s.treino.obs ?? null } : null, etapas: s.voltas },
     } });
     setIndo(false);
     if (error) return setErro(error.message.includes('Pro') ? 'Treino do treinador é do Radar Pro.' : error.message.includes('Limite') ? 'No modo grátis dá pra salvar até 3 corridas por dia.' : error.message.includes('perfil') ? 'Complete o seu perfil antes de salvar.' : 'Não deu pra salvar agora. Confira a internet e tente de novo: a corrida continua guardada no aparelho.');

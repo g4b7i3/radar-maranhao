@@ -1395,3 +1395,37 @@ button.pro-grav-op { border: 1.5px solid var(--line); background: var(--vidro, v
 .pro-mapa-estilos button.on { background: var(--cobalt-tint); }
 .pro-mapa-estilos i { flex: none; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #ffd34d; border: 1px solid var(--line); }
 .pro-mapa-estilos b { display: block; font-size: .92rem; } .pro-mapa-estilos small { display: block; font-size: .76rem; color: var(--muted); }
+
+/* ───────── Mapas (rotas) ───────── */
+.mp { display: flex; flex-direction: column; gap: 14px; }
+.mp-capa { gap: 10px; }
+.mp-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mp-lista button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 18px; border: 1px solid var(--line); background: var(--vidro, var(--surface)); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.mp-mini { flex: none; width: 56px; height: 56px; border-radius: 14px; padding: 2px; background: var(--cobalt-tint); color: var(--cobalt); }
+.mp-lista-t { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.mp-lista-t b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .mp-lista-t small { color: var(--muted); font-size: .84rem; }
+.mp-nums { display: flex; gap: 24px; }
+.mp-nums span { display: flex; flex-direction: column; } .mp-nums small { display: inline-flex; align-items: center; gap: 4px; font-size: .76rem; color: var(--muted); } .mp-nums b { font-size: 1.35rem; font-weight: 900; font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.mp-piso { display: flex; flex-direction: column; gap: 6px; }
+.mp-piso-barra { display: flex; height: 10px; border-radius: 6px; overflow: hidden; background: var(--line); }
+.mp-piso-barra i { display: block; height: 100%; }
+.mp-piso-leg { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .78rem; color: var(--muted); }
+.mp-piso-leg span { display: inline-flex; align-items: center; gap: 5px; } .mp-piso-leg i { width: 9px; height: 9px; border-radius: 3px; }
+.mp-editor { position: fixed; inset: 0; z-index: 85; background: var(--paper, #fff); }
+.mp-editor-mapa { position: absolute !important; inset: 0; width: 100%; height: 100%; }
+.mp-editor-topo { position: absolute; z-index: 2; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; display: flex; align-items: center; gap: 8px; }
+.mp-redondo { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; display: grid; place-items: center; background: var(--surface, #fff); color: var(--ink); box-shadow: 0 6px 18px -6px rgba(0,0,0,.4); cursor: pointer; }
+.mp-editor-dica { flex: 1; text-align: center; font-size: .9rem; font-weight: 750; padding: 11px 14px; border-radius: 999px; background: var(--surface, #fff); color: var(--ink); box-shadow: 0 6px 18px -6px rgba(0,0,0,.4); }
+.mp-editor-painel { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 12px; padding: 16px 16px max(16px, env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; background: var(--surface, #fff); color: var(--ink); box-shadow: 0 -10px 30px -12px rgba(0,0,0,.35); }
+.mp-editor-bts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mp-editor-bts .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 4px; font-size: .86rem; }
+.mp-editor-bts .btn.on { background: var(--primario, #1d3fbf); color: var(--primario-txt, #fff); border-color: transparent; }
+.mp-salvar { display: flex; gap: 8px; }
+.mp-salvar input { flex: 1; min-width: 0; font: inherit; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper, #fff); color: var(--ink); }
+.mp-salvar .btn { display: inline-flex; align-items: center; gap: 6px; }
+.mp-status { font-size: .78rem; color: var(--muted); }
+.mp-ponto { width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 3px solid #1d3fbf; box-shadow: 0 2px 6px rgba(0,0,0,.35); display: grid; place-items: center; font: 900 10px/1 system-ui; color: #fff; }
+.mp-ponto.ini, .mp-ponto.fim { width: 26px; height: 26px; border: 3px solid #fff; }
+.mp-ponto.ini { background: #1f9d5c; } .mp-ponto.fim { background: #0a1240; color: #ffd34d; }
+.pro-grav-guia { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px; background: var(--cobalt-tint); border: 1px dashed var(--cobalt); }
+.pro-grav-guia span { flex: 1; display: flex; flex-direction: column; } .pro-grav-guia small { font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--cobalt); } .pro-grav-guia em { font-style: normal; font-size: .8rem; color: var(--muted); }

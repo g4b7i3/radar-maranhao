@@ -19,21 +19,24 @@ const url = (e: Estilo) => `https://tiles.openfreemap.org/styles/${e}`;
 const linha = (rota: [number, number][]) => ({ type: 'Feature' as const, properties: {}, geometry: { type: 'LineString' as const, coordinates: rota.map(p => [p[1], p[0]]) } });
 const ponto = (p: [number, number] | null) => ({ type: 'FeatureCollection' as const, features: p ? [{ type: 'Feature' as const, properties: {}, geometry: { type: 'Point' as const, coordinates: [p[1], p[0]] } }] : [] });
 
-export function MapaCorrida({ rota, eu = null, aoVivo = false, falhou }: { rota: [number, number][]; eu?: [number, number] | null; aoVivo?: boolean; falhou?: () => void }) {
+export function MapaCorrida({ rota, eu = null, aoVivo = false, falhou, guia }: { rota: [number, number][]; eu?: [number, number] | null; aoVivo?: boolean; falhou?: () => void; guia?: [number, number][] | null }) {
   const caixa = useRef<HTMLDivElement>(null);
   const mapa = useRef<MLMap | null>(null);
-  const dados = useRef({ rota, eu }); dados.current = { rota, eu };
+  const dados = useRef({ rota, eu, guia }); dados.current = { rota, eu, guia };
   const [pronto, setPronto] = useState(false);
   const [msg, setMsg] = useState<string | null>('Carregando o mapa…');
   const [p3d, setP3d] = useState(false);
   const [seguir, setSeguir] = useState(true);
   const [estilo, setEstilo] = useState<Estilo>(padrao);
   const [menu, setMenu] = useState(false);
-  const inicio = useRef<[number, number] | null>(eu ?? rota[rota.length - 1] ?? null);
+  const inicio = useRef<[number, number] | null>(eu ?? rota[rota.length - 1] ?? guia?.[0] ?? null);
 
   // trajeto e posição por cima do mapa (refeito a cada troca de estilo)
   const camadas = (m: MLMap) => {
     if (m.getSource('rota')) return;
+    // a rota planejada (Mapas), por baixo, tracejada em azul
+    m.addSource('guia', { type: 'geojson', data: linha(dados.current.guia ?? []) });
+    m.addLayer({ id: 'guia', type: 'line', source: 'guia', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1d3fbf', 'line-width': 6, 'line-opacity': .6, 'line-dasharray': [1.5, 1.2] } });
     m.addSource('rota', { type: 'geojson', data: linha(dados.current.rota) });
     m.addLayer({ id: 'rota-borda', type: 'line', source: 'rota', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#0a1240', 'line-width': 9, 'line-opacity': .55 } });
     m.addLayer({ id: 'rota', type: 'line', source: 'rota', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffd34d', 'line-width': 5 } });
