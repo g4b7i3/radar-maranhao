@@ -15,26 +15,19 @@ function falta() {
   return d <= 0 ? 'É hoje!' : d === 1 ? 'É amanhã' : `Faltam ${d} dias`;
 }
 
-/** Raposa geométrica (marca d'água do card). */
-const Raposa = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M10 8 L38 34 L62 34 L90 8 L84 52 L50 92 L16 52 Z" fill="currentColor" />
-    <path d="M16 52 L50 62 L84 52 L50 92 Z" fill="#fff" opacity=".9" />
-    <path d="M44 74 L56 74 L50 84 Z" fill="#141414" />
-    <path d="M30 46 L42 50 L32 54 Z M70 46 L58 50 L68 54 Z" fill="#141414" />
-  </svg>
-);
+/** Logo oficial da Fox Crew. */
+const LOGO = '/img/fox-crew-logo.webp';
+const Logo = ({ className }: { className?: string }) => <img className={className} src={LOGO} alt="Fox Crew" width={512} height={512} decoding="async" />;
 
 export function DestaqueFox() {
   if (Date.now() >= FIM) return null;
   return (
     <article className="fox" aria-label="Evento em destaque: Corre Solidário Fox Crew">
-      <Raposa className="fox-marca" />
       <div className="fox-topo">
         <span className="fox-selo">Evento em destaque</span>
         <span className="fox-falta">{falta()}</span>
       </div>
-      <h2 className="fox-titulo"><span>Corre solidário</span><b>Fox Crew</b></h2>
+      <div className="fox-cab"><h2 className="fox-titulo"><span>Corre solidário</span><b>Fox Crew</b></h2><Logo className="fox-logo" /></div>
       <p className="fox-lema">Vem correr. Vem somar. <b>Vem com a Fox.</b></p>
 
       <dl className="fox-info">
@@ -72,7 +65,7 @@ export function DestaqueFox() {
 export function CardFoxGrupo({ membros, posts, membro, indo, abrir }: { membros: number; posts: number; membro: boolean; indo: boolean; abrir: () => void }) {
   return (
     <article className="fox fox-grupo" aria-label="Grupo Fox Crew">
-      <Raposa className="fox-grupo-raposa" />
+      <Logo className="fox-logo fox-grupo-logo" />
       <div className="fox-topo">
         <span className="fox-selo">Grupo parceiro</span>
         {membro && <span className="fox-falta fox-dentro"><Check size={13} aria-hidden="true" /> Você está</span>}

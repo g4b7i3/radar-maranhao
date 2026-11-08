@@ -4,7 +4,6 @@
     repeating-linear-gradient(-58deg, rgba(255,255,255,.035) 0 2px, transparent 2px 14px), linear-gradient(160deg, #1d1d1d, #0e0e0e);
   box-shadow: 0 18px 40px -18px rgba(255,90,26,.55), inset 0 0 0 1px rgba(255,138,61,.28); }
 .fox::before { content: ''; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, var(--fox), var(--fox2), var(--fox)); }
-.fox-marca { position: absolute; z-index: -1; right: -34px; top: 150px; width: 190px; color: var(--fox); opacity: .1; transform: rotate(10deg); }
 .fox-topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .fox-selo { font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--fox2); }
 .fox-falta { font-size: .78rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; background: var(--fox); color: #fff; }
@@ -37,7 +36,6 @@
 .fox-rodape b { color: var(--fox); }
 /* grupo */
 .fox-grupo { padding-top: 20px; min-height: 0; }
-.fox-grupo-raposa { position: absolute; z-index: -1; right: -6px; top: 92px; width: 118px; color: var(--fox); opacity: .9; filter: drop-shadow(0 14px 30px rgba(255,90,26,.45)); transform: rotate(6deg); }
 .fox-grupo .fox-titulo b { font-size: 3rem; }
 .fox-grupo .fox-lema { max-width: 64%; }
 .fox-dentro { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,.12); }
@@ -47,3 +45,6 @@
 .fox-grupo-nums b { color: #fff; }
 button.fox-btn { border: 0; width: 100%; font: inherit; font-weight: 800; font-size: 1.02rem; cursor: pointer; }
 button.fox-btn:disabled { opacity: .7; }
+.fox-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.fox-logo { flex: none; width: 76px; height: 76px; border-radius: 50%; box-shadow: 0 0 0 3px rgba(255,255,255,.08), 0 10px 26px -8px rgba(255,90,26,.75); }
+.fox-grupo-logo { position: absolute; right: 16px; top: 96px; width: 92px; height: 92px; }
