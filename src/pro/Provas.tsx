@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CalendarDays, ExternalLink, MapPin, Search } from 'lucide-react';
 import { status, norm, load, store, icsFor, type Race } from '../lib';
 import { Sheet, ProvaDestaque, destaque, mesCurto } from '../App';
+import { DestaqueFox } from './Fox';
 import { useClimas } from '../Clima';
 import { useVoltar, telaInicial } from './voltar';
 import { PertoDeVoce, distancia, kmTexto, type Perto } from '../PertoFds';
@@ -54,6 +55,7 @@ export function TelaProvas() {
   const nomeMes = (k: string) => new Date(k + '-15T12:00:00-03:00').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
   return (
     <div className="pro-cont">
+      <DestaqueFox />
       <label className="pro-busca"><Search size={18} aria-hidden="true" /><input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Buscar prova ou cidade" aria-label="Buscar prova" /></label>
       <div className="chips" role="group" aria-label="Filtro">
         {([['proximas', 'Próximas'], ['abertas', 'Inscrições abertas'], ['mes', 'Este mês'], ['trail', 'Trail'], ['salvas', `Minha agenda${salvas.length ? ' · ' + salvas.length : ''}`], ['passadas', 'Já aconteceram']] as [Filtro, string][]).map(([k, n]) => <button key={k} className="chip" aria-pressed={filtro === k} onClick={() => setFiltro(k)}>{n}</button>)}
