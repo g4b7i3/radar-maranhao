@@ -1,6 +1,6 @@
 // Destaque de evento parceiro na Agenda: Corre Solidário da Fox Crew (13/11/2026).
 // Fica em primeiro na Agenda até o fim do dia do evento e some sozinho depois.
-import { CalendarDays, Clock, MapPin, Route, Ticket, Music2, Droplets, Zap, Gift, ArrowUpRight, Instagram } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, Route, Ticket, Music2, Droplets, Zap, Gift, ArrowUpRight, Instagram, UsersRound, Check, Plus, MessageCircle } from 'lucide-react';
 import './fox.css';
 
 const FIM = new Date('2026-11-14T00:00:00-03:00').getTime();
@@ -61,6 +61,32 @@ export function DestaqueFox() {
 
       <div className="fox-bts">
         <a className="fox-btn" href={LINK} target="_blank" rel="noopener noreferrer">Garantir minha vaga<ArrowUpRight size={18} aria-hidden="true" /></a>
+        <a className="fox-insta" href={INSTA} target="_blank" rel="noopener noreferrer" aria-label="Instagram da Fox Crew"><Instagram size={18} aria-hidden="true" />@foox.crew</a>
+      </div>
+      <p className="fox-rodape">Quem corre junto, <b>corre com a Fox!</b></p>
+    </article>
+  );
+}
+
+/** Grupo da Fox Crew em Comunidades: card próprio, no visual da Fox, sempre em primeiro. */
+export function CardFoxGrupo({ membros, posts, membro, indo, abrir }: { membros: number; posts: number; membro: boolean; indo: boolean; abrir: () => void }) {
+  return (
+    <article className="fox fox-grupo" aria-label="Grupo Fox Crew">
+      <Raposa className="fox-grupo-raposa" />
+      <div className="fox-topo">
+        <span className="fox-selo">Grupo parceiro</span>
+        {membro && <span className="fox-falta fox-dentro"><Check size={13} aria-hidden="true" /> Você está</span>}
+      </div>
+      <h2 className="fox-titulo"><b>Fox Crew</b></h2>
+      <p className="fox-lema">A crew da raposa. Treinos, corres, paredão e <b>muita energia boa.</b></p>
+      <div className="fox-grupo-nums">
+        {membros > 0
+          ? <span><UsersRound size={15} aria-hidden="true" /><b>{membros}</b> {membros === 1 ? 'membro' : 'membros'}</span>
+          : <span><UsersRound size={15} aria-hidden="true" />Grupo novo: <b>chega junto</b></span>}
+        {posts > 0 && <span><MessageCircle size={15} aria-hidden="true" /><b>{posts}</b> {posts === 1 ? 'post' : 'posts'} na semana</span>}
+      </div>
+      <div className="fox-bts">
+        <button className="fox-btn" onClick={abrir} disabled={indo}>{indo ? 'Entrando…' : membro ? <>Abrir o grupo<ArrowUpRight size={18} aria-hidden="true" /></> : <><Plus size={18} aria-hidden="true" />Entrar na Fox Crew</>}</button>
         <a className="fox-insta" href={INSTA} target="_blank" rel="noopener noreferrer" aria-label="Instagram da Fox Crew"><Instagram size={18} aria-hidden="true" />@foox.crew</a>
       </div>
       <p className="fox-rodape">Quem corre junto, <b>corre com a Fox!</b></p>

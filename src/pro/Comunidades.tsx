@@ -9,6 +9,7 @@ import { ItemFeed, Publicar, type Evento } from './Feed';
 import { useVoltar, telaInicial } from './voltar';
 import { TopoVoltar } from './Topo';
 import { Arroba } from './Selo';
+import { CardFoxGrupo } from './Fox';
 
 type Comunidade = { id: string; nome: string; descricao: string; tipo: 'sexo' | 'aberta'; sexo: 'F' | 'M' | null; emoji: string; cor: string; foto?: string | null; criador?: string | null; minha?: boolean; membro: boolean; membros: number; posts_semana: number; ultimo: string | null };
 
@@ -38,7 +39,8 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
   const sem = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const q = sem(busca.trim());
   const filtradas = (lista ?? []).filter(c => !q || sem(`${c.nome} ${c.descricao} ${c.criador ?? ''}`).includes(q));
-  const minhas = filtradas.filter(c => c.membro), outras = filtradas.filter(c => !c.membro);
+  const fox = filtradas.find(c => c.id === 'fox-crew'); // grupo parceiro: card próprio, sempre em primeiro
+  const minhas = filtradas.filter(c => c.membro && c !== fox), outras = filtradas.filter(c => !c.membro && c !== fox);
   const Card = ({ c }: { c: Comunidade }) => {
     const fechada = c.tipo === 'sexo' && !c.membro;
     const quem = c.tipo === 'sexo' ? (c.sexo === 'F' ? 'mulheres' : 'homens') : (c.membros === 1 ? 'membro' : 'membros');
@@ -57,6 +59,7 @@ export function TelaComunidades({ perfil, pro, assinar, admin = false }: { perfi
   };
   return (
     <div className="pro-cont">
+      {fox && !criando && <CardFoxGrupo membros={fox.membros} posts={fox.posts_semana} membro={fox.membro} indo={indo === fox.id} abrir={() => fox.membro ? setAberta(fox) : entrar(fox, true)} />}
       {criando
         ? <FormComunidade admin={admin} ideia={ideia} fechar={() => { setCriando(false); setIdeia(null); }} salvou={() => { setCriando(false); setIdeia(null); carregar(); }} />
         : <>
