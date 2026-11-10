@@ -880,7 +880,7 @@
       "city": "Imperatriz",
       "state": "MA",
       "modality": "Rua",
-      "date": "2026-11-08",
+      "date": "2026-11-20",
       "distances": [
         5
       ],
@@ -892,8 +892,8 @@
       "sourceUrl": "https://www.topchip.com.br/adventista130anos",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial · data em conflito (Topchip mostra 20/11), confirmar no organizador",
-      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto. Atenção (28/10): desde 27/10 o cabeçalho da página da Topchip mostra 20/11/2026 às 6h30, mas o regulamento continua com 08/11/2026 (kit em 05/11). Data mantida em 08/11 até o organizador confirmar. Local (regulamento): Colégio Adventista de Imperatriz, concentração às 5h30.",
+      "confidence": "Página de inscrição oficial (Topchip) · data diverge do regulamento, confirmar no organizador",
+      "notes": "Largada às 6h30. Comemoração dos 130 anos da Educação Adventista. Regulamento: R$ 90 + taxa do site (camisa, medalha, número, chip, hidratação e café da manhã); 5 km 100% em asfalto. Local (regulamento): Colégio Adventista de Imperatriz, concentração às 5h30. Data: o regulamento falava em 08/11/2026, mas a Topchip e o Road Runners mostram 20/11/2026 às 6h30 desde 27/10, e em 10/11 a prova continua na lista de próximos eventos da Topchip, sem resultado de 08/11. Data passada para 20/11; confirmar com o organizador e a nova data de entrega de kit.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -905,7 +905,7 @@
         "text": "R$ 90 + taxa"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-29T10:53:43.607Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -974,7 +974,7 @@
       "city": "São Luís",
       "state": "MA",
       "modality": "Rua",
-      "date": "2026-11-14",
+      "date": "2027-01-23",
       "distances": [
         3.2,
         6.4
@@ -988,12 +988,12 @@
       "sourceName": "running.life",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Prova num sábado, às 17h, em voltas de 3,2 km. Categorias 60+.",
+      "notes": "Prova transferida: em 10/11/2026 a Central da Corrida passou a mostrar sábado, 23/01/2027, às 17h (antes era 14/11/2026). Voltas de 3,2 km (6,4 km = 2 voltas), com categorias 60+. Organização: EuCorro Eventos Esportivos. Local e entrega de kits a divulgar (até 1 semana antes, segundo o regulamento). Inscrições abertas.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "17:00",
-      "verifiedAt": "2026-10-27T15:49:41.447Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1173,8 +1173,8 @@
       "sourceUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial",
-      "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra. Regulamento: inscrições presenciais e pela internet até 15/11/2026 às 12h (300 vagas), R$ 100; kit e chip na loja Top Sport em 18 e 19/11.",
+      "confidence": "Página de inscrição saiu do ar · confirmar no organizador",
+      "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra. Regulamento: inscrições presenciais e pela internet até 15/11/2026 às 12h (300 vagas), R$ 100; kit e chip na loja Top Sport em 18 e 19/11. Em 10/11/2026 a página antiga da Topchip dá \"Not Found\" e a prova saiu da lista de próximos eventos da Topchip; o Road Runners mostra \"II Corrida da Resistência Negra\" em 20/11 com novo link (topchip.com.br/ii-corrida-da-resistencia-negra). Confirmar com o organizador se a prova continua.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -1186,7 +1186,7 @@
         "text": "R$ 100"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1989,12 +1989,12 @@
       "sourceName": "Road Runners",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Organização da Unifacimp. Distâncias ainda não divulgadas. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\").",
+      "notes": "Organização da Unifacimp. Distâncias ainda não divulgadas. Em 19/10 a página da prova na Topchip saiu do ar (\"Not Found\"). Em 10/11/2026 a prova não aparece mais no calendário da Topchip.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
@@ -2054,13 +2054,15 @@
     },
     {
       "id": "cdm-running-2027-campestre",
-      "name": "6º Aniversário CDM Running",
+      "name": "Corrida de Aniversário CDM Running 7 Anos",
       "edition": "2027",
       "city": "Campestre do Maranhão",
       "state": "MA",
       "modality": "Rua",
       "date": "2027-01-24",
-      "distances": [],
+      "distances": [
+        5
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
@@ -2069,13 +2071,17 @@
       "sourceUrl": "https://roadrunners.run/evento/2027-6-aniversario-cdm-running/",
       "sourceName": "Road Runners",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Organização da CDM Running. Distâncias ainda não divulgadas.",
-      "prize": null,
+      "confidence": "Página oficial da cronometragem (Topchip)",
+      "notes": "Comemoração dos 7 anos do grupo CDM Running, domingo 24/01/2027 às 6h30, em Campestre do Maranhão. 5 km, categorias visitante e cidade. Inscrições pela Inscrição Fácil (link na Topchip). Local de largada, preço e kit ainda não divulgados.",
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "R$ 500, 400, 300, 200 e 100 + troféu do 1º ao 5º geral nos 5 km, masc. e fem., nas categorias visitante e cidade; troféus por faixa etária."
+      },
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-06T18:09:01.255Z",
+      "start": "06:30",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T15:18:30.039Z"
     },
     {
@@ -2219,13 +2225,13 @@
       "location": "Praça dos Pescadores, Avenida Litorânea",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/4638/blue-wave-corrida-novembro-azul-2026",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/4638/blue-wave-corrida-novembro-azul-2026",
       "sourceName": "Crono Esportes",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h. Categorias PcD, kids e médicos sócios da SBU-MA.",
+      "notes": "Largada às 6h. Categorias PcD, kids e médicos sócios da SBU-MA. Em 10/11/2026 a página da Crono Esportes mostra \"INSCRIÇÕES ENCERRADAS\" e o botão indisponível.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -2234,7 +2240,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-21T10:58:57.704Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -2252,14 +2258,14 @@
       ],
       "location": "UEMA, Campus Paulo VI",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Esgotadas",
+      "registrationClose": "2026-12-06",
+      "status": "Abertas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceName": "Crono Esportes",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada dos 10 km às 5h45; 3 e 5 km às 6h. 2º lote: R$ 90 comunidade, R$ 60 alunos da UEMA, doação de 1 kg de alimento. Kit em 10 e 11/12.",
+      "notes": "Largada dos 10 km às 5h45; 3 e 5 km às 6h. 2º lote: R$ 90 comunidade, R$ 60 alunos da UEMA, doação de 1 kg de alimento. Kit em 10 e 11/12. Em 10/11/2026 a página da Crono Esportes voltou a mostrar o botão INSCREVA-SE (2º lote), depois de aparecer como VAGAS ESGOTADAS desde o fim de outubro: vagas reabertas, podem esgotar de novo. Prazo no sistema da Crono: 06/12/2026.",
       "prize": {
         "kind": "dinheiro",
         "top": 700,
@@ -2271,7 +2277,7 @@
         "text": "R$ 60 a R$ 90 + 1 kg de alimento"
       },
       "start": "05:45",
-      "verifiedAt": "2026-10-29T04:08:31.034Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -2406,16 +2412,17 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
-      "officialUrl": "https://topchip.com.br/calendario",
-      "sourceUrl": "https://topchip.com.br/calendario",
+      "officialUrl": "https://topchip.com.br/igrejabatista",
+      "sourceUrl": "https://topchip.com.br/igrejabatista",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Largada às 6h30. Distâncias ainda não divulgadas.",
+      "notes": "Largada às 6h30. Organização: Igreja Batista Campestre. A Topchip já tem página própria da prova, com link de inscrição (Inscrição Fácil) e regulamento em PDF, que não puderam ser lidos nesta pesquisa: conferir distâncias, preço e status.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -3253,13 +3260,13 @@
       "location": "Praia do Caju, Nova Iorque",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://runtra.com.br/eventos/4a-edicao-corrida-movimente-se",
       "sourceUrl": "https://runtra.com.br/eventos/4a-edicao-corrida-movimente-se",
       "sourceName": "Runtra",
       "publishedAt": null,
       "confidence": "Fonte única: plataforma de inscrição (Runtra)",
-      "notes": "Corrida do Grupo Movimente-se, tema \"Energia que conecta e transforma!\". Largada às 6h na Praia do Caju. 3 km (corrida e caminhada), 5 km e 10 km. Kit com camisa, medalha, número de peito e brindes. Inscrições limitadas, pela Runtra (lote de abertura). A página fala em premiação para os melhores colocados, sem detalhar. Organização: Guilherme Junqueira. Retirada de kit a confirmar. Regulamento: troféu e premiação em dinheiro para os 3 primeiros no geral dos 5 e 10 km (valores não divulgados); troféus por faixa etária e só troféu nos 3 km.",
+      "notes": "Corrida do Grupo Movimente-se, tema \"Energia que conecta e transforma!\". Largada às 6h na Praia do Caju. 3 km (corrida e caminhada), 5 km e 10 km. Kit com camisa, medalha, número de peito e brindes. Inscrições limitadas, pela Runtra (lote de abertura). A página fala em premiação para os melhores colocados, sem detalhar. Organização: Guilherme Junqueira. Retirada de kit a confirmar. Regulamento: troféu e premiação em dinheiro para os 3 primeiros no geral dos 5 e 10 km (valores não divulgados); troféus por faixa etária e só troféu nos 3 km. Em 10/11/2026 a página da Runtra mostra \"Inscrições Esgotadas\".",
       "prize": {
         "kind": "dinheiro",
         "top": 500,
@@ -3271,7 +3278,7 @@
         "text": "R$ 65,89 (lote de abertura)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-26T23:22:45.880Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-23T13:19:43.298Z"
     },
     {
@@ -3499,21 +3506,24 @@
         5,
         10
       ],
-      "location": "Tocauto Volkswagen, BR-010, km 1350, Maranhão Novo",
+      "location": "Concessionária Tocauto Volkswagen, BR-010, Imperatriz",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-11-21",
+      "status": "Abertas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
-      "sourceUrl": "https://roadrunners.run/evento/2026-tocauto-running-2026/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
+      "sourceName": "Meta Sport",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Visto só no Road Runners (29/11/2026, Imperatriz, 5 e 10 km, local na concessionária Tocauto Volkswagen, organizador informado: Meta Sport), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam confirmar horário, preço e status das inscrições.",
+      "confidence": "Página de inscrição oficial (Meta Sport)",
+      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Inscrições pela Meta Sport até 21/11/2026 ou até esgotar, R$ 190. Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página fala em premiação em dinheiro no geral e troféus por faixa etária, sem dizer valores.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-30T10:57:10.638Z",
+      "price": {
+        "min": 190,
+        "text": "R$ 190 (5 ou 10 km)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-30T10:57:10.638Z"
     },
     {
@@ -3528,21 +3538,21 @@
         5,
         10
       ],
-      "location": "Local a confirmar",
+      "location": "Praça Iete Marinho",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-12-03",
+      "status": "Encerradas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/corrida-dos-aumigos",
-      "sourceUrl": "https://roadrunners.run/evento/2026-corrida-dos-aumigos/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.metasportoficial.com.br/eventos/corrida-dos-aumigos",
+      "sourceName": "Meta Sport",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Visto só no Road Runners (06/12/2026, São João do Paraíso/MA, 5 e 10 km, prova em prol da causa animal; mapa do calendário aponta a cidade maranhense, na região tocantina), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam confirmar horário, local de largada, preço e status das inscrições.",
+      "confidence": "Página de inscrição oficial (Meta Sport)",
+      "notes": "Corrida pela causa animal, domingo 06/12/2026. Página da Meta Sport: 10 km às 6h e 5 km às 6h30 (categorias visitantes e locais), largada na Praça Iete Marinho, São João do Paraíso/MA. Prazo informado era 03/12, mas em 10/11 todos os percursos aparecem como \"Inscrições encerradas\". Kit e preço não divulgados.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-31T10:57:27.170Z",
+      "start": "06:00",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-10-31T10:57:27.170Z"
     },
     {
@@ -3657,11 +3667,15 @@
       "publishedAt": null,
       "confidence": "Fonte única (calendário) · confirmar no organizador",
       "notes": "Vista só no running.life (\"Corrida 5k\"), que aponta a inscrição na Sporttimer (página não pôde ser aberta nesta conferência). Horário, local, preço e status a confirmar.",
-      "prize": null,
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus aos 3 primeiros colocados, masculino e feminino."
+      },
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-11-04T11:14:45.182Z",
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-11-04T11:14:45.182Z"
     },
     {
@@ -3717,16 +3731,156 @@
       "start": "06:00",
       "verifiedAt": "2026-11-06T10:56:32.039Z",
       "firstSeenAt": "2026-11-06T04:53:00.510Z"
+    },
+    {
+      "id": "paiva-run-2026-imperatriz",
+      "name": "Paiva Run 2026",
+      "edition": "2026",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [],
+      "location": "Centro de Ensino Estado de Goiás, Av. Dorgival Pinheiro de Sousa, Centro",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.metasportoficial.com.br/eventos/paiva-run-2026",
+      "sourceUrl": "https://roadrunners.run/evento/2026-paiva-run-2026/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Visto só no Road Runners (20/12/2026, Imperatriz, organizador informado: Israel Paiva Assessoria), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam distâncias, horário, preço e status das inscrições.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "firstSeenAt": "2026-11-10T10:57:12.181Z"
+    },
+    {
+      "id": "uema-2026-colinas",
+      "name": "I Corrida da UEMA · Colinas",
+      "edition": "2026",
+      "city": "Colinas",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-06",
+      "distances": [],
+      "location": "UEMA, Campus Colinas",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://doity.com.br/corridauema2026",
+      "sourceUrl": "https://roadrunners.run/evento/2026-i-edicao-da-corrida-da-uema-2026/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Visto só no Road Runners como \"I Edição da Corrida da UEMA 2026\", 06/12/2026, na UEMA em Colinas/MA, organizada pelo curso de bacharelado em Enfermagem, com inscrição pela Doity (página não abriu nesta pesquisa). Faltam distâncias, horário, preço e status.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "firstSeenAt": "2026-11-10T10:57:12.181Z"
     }
   ],
   "changes": [
+    {
+      "id": "c1830814-2229-474f-b4ca-da695d51532f",
+      "eventId": "uema-2026-colinas",
+      "version": "[\"2026-12-06\",[],\"UEMA, Campus Colinas\",null,null,\"Consultar\",\"https://doity.com.br/corridauema2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "15eba106-3e5b-42e9-bce7-42d1e9ded00e",
+      "eventId": "paiva-run-2026-imperatriz",
+      "version": "[\"2026-12-20\",[],\"Centro de Ensino Estado de Goiás, Av. Dorgival Pinheiro de Sousa, Centro\",null,null,\"Consultar\",\"https://www.metasportoficial.com.br/eventos/paiva-run-2026\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "03a1ac02-9c64-4274-b544-f41f4ac386eb",
+      "eventId": "adventista-run-2026-imperatriz",
+      "version": "[\"2026-11-20\",[5],\"Colégio Adventista de Imperatriz\",null,null,\"Abertas\",\"https://www.topchip.com.br/adventista130anos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "dcca13a5-2b06-4f9d-b46c-ef37a88cc815",
+      "eventId": "igreja-batista-2026-campestre",
+      "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/igrejabatista\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "ccf7f74c-792d-40e9-a6b8-1257df9f25fe",
+      "eventId": "cdm-running-2027-campestre",
+      "version": "[\"2027-01-24\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.topchip.com.br/6-aniversario-cdm-running\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "3a916f17-865e-4fa1-b4ed-4239dfef2c90",
+      "eventId": "blue-wave-2026-sao-luis",
+      "version": "[\"2026-11-29\",[5,10],\"Praça dos Pescadores, Avenida Litorânea\",null,null,\"Encerradas\",\"https://www.cronoesportes.com.br/evento/4638/blue-wave-corrida-novembro-azul-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "332a23ee-b3e3-40d6-b62c-a4c7bbc3b5c4",
+      "eventId": "movimente-se-4-2026-nova-iorque",
+      "version": "[\"2026-11-22\",[3,5,10],\"Praia do Caju, Nova Iorque\",null,null,\"Esgotadas\",\"https://runtra.com.br/eventos/4a-edicao-corrida-movimente-se\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "1f0b1451-bfe9-4d8c-b7b7-eab397000227",
+      "eventId": "aumigos-2026-sao-joao-do-paraiso",
+      "version": "[\"2026-12-06\",[5,10],\"Praça Iete Marinho\",null,\"2026-12-03\",\"Encerradas\",\"https://www.metasportoficial.com.br/eventos/corrida-dos-aumigos\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "bce332eb-37e6-4788-9efd-3ffd98c8a782",
+      "eventId": "tocauto-running-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Concessionária Tocauto Volkswagen, BR-010, Imperatriz\",null,\"2026-11-21\",\"Abertas\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "cd6c632a-9c50-4cae-b754-826ab8b707a8",
+      "eventId": "uema-viii-2026-sao-luis",
+      "version": "[\"2026-12-13\",[3,5,10],\"UEMA, Campus Paulo VI\",null,\"2026-12-06\",\"Abertas\",\"https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
+    {
+      "id": "067ce25d-5b09-455b-8f1d-c6476d3b4225",
+      "eventId": "fitness-club-2026-sao-luis",
+      "version": "[\"2027-01-23\",[3.2,6.4],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/evento/corridafitnessclub2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T10:57:12.181Z",
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
+    },
     {
       "id": "26c4dc7c-b201-4456-ab30-93d26b922760",
       "eventId": "cdm-running-2027-campestre",
       "version": "[\"2027-01-24\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.topchip.com.br/6-aniversario-cdm-running\"]",
       "kind": "Alteração importante",
       "at": "2026-11-06T18:09:01.255Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-10T10:57:58.081Z"
     },
     {
       "id": "ee3d9218-e3f1-42c5-bfd9-f8f77edae038",
@@ -5745,7 +5899,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-06T18:09:01.255Z",
+  "lastChecked": "2026-11-10T10:57:12.181Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
