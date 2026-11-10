@@ -2259,7 +2259,7 @@
       "location": "UEMA, Campus Paulo VI",
       "registrationOpen": null,
       "registrationClose": "2026-12-06",
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema",
       "sourceName": "Crono Esportes",
@@ -2277,7 +2277,7 @@
         "text": "R$ 60 a R$ 90 + 1 kg de alimento"
       },
       "start": "05:45",
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-10T18:22:01.894Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -2411,7 +2411,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/igrejabatista",
       "sourceUrl": "https://topchip.com.br/igrejabatista",
       "sourceName": "Topchip",
@@ -2422,7 +2422,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-10T18:22:01.894Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -3786,6 +3786,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "90db3d53-48fd-4c1c-a089-eab183db5731",
+      "eventId": "igreja-batista-2026-campestre",
+      "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/igrejabatista\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T18:22:01.894Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "2f1a6662-e225-4fb2-b89a-ceab9f331775",
+      "eventId": "uema-viii-2026-sao-luis",
+      "version": "[\"2026-12-13\",[3,5,10],\"UEMA, Campus Paulo VI\",null,\"2026-12-06\",\"Esgotadas\",\"https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-10T18:22:01.894Z",
+      "notifiedAt": null
+    },
     {
       "id": "c1830814-2229-474f-b4ca-da695d51532f",
       "eventId": "uema-2026-colinas",
@@ -5899,7 +5915,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-10T10:57:12.181Z",
+  "lastChecked": "2026-11-10T18:22:01.894Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
