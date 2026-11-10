@@ -32,12 +32,12 @@
   {
    "url": "https://guardalugar.com/api/v1/version",
    "status": 200,
-   "body": "{\"version\":\"1.084\",\"full_version\":\"1.084\",\"build_date\":\"2026-11-09T18:28:18.131859-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
+   "body": "{\"version\":\"1.087\",\"full_version\":\"1.087\",\"build_date\":\"2026-11-09T22:06:56.113216-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
   },
   {
    "url": "https://guardalugar.com/api/v1/version",
    "status": 200,
-   "body": "{\"version\":\"1.084\",\"full_version\":\"1.084\",\"build_date\":\"2026-11-09T18:28:18.154337-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
+   "body": "{\"version\":\"1.087\",\"full_version\":\"1.087\",\"build_date\":\"2026-11-09T22:06:56.118324-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
   },
   {
    "url": "https://guardalugar.com/api/v1/events/public/list?is_test=true&ended=false",
@@ -67,12 +67,12 @@
   {
    "url": "https://guardalugar.com/api/v1/version",
    "status": 200,
-   "body": "{\"version\":\"1.084\",\"full_version\":\"1.084\",\"build_date\":\"2026-11-09T18:28:18.131859-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
+   "body": "{\"version\":\"1.087\",\"full_version\":\"1.087\",\"build_date\":\"2026-11-09T22:06:56.119002-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
   },
   {
    "url": "https://guardalugar.com/api/v1/version",
    "status": 200,
-   "body": "{\"version\":\"1.084\",\"full_version\":\"1.084\",\"build_date\":\"2026-11-09T18:28:18.154337-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
+   "body": "{\"version\":\"1.087\",\"full_version\":\"1.087\",\"build_date\":\"2026-11-09T22:06:56.112735-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
   },
   {
    "url": "https://guardalugar.com/api/v1/events/public/list?is_test=true&ended=false",
@@ -91,5 +91,5 @@
   }
  ],
  "totalLinks": 1,
- "coletadoEm": "2026-11-09T21:32:31.122Z"
+ "coletadoEm": "2026-11-10T03:54:27.502Z"
 }
