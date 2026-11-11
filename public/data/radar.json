@@ -969,8 +969,8 @@
     },
     {
       "id": "fitness-club-2026-sao-luis",
-      "name": "Corrida Fitness Club 2026",
-      "edition": "2026",
+      "name": "Corrida Fitness Club 2027",
+      "edition": "2027",
       "city": "São Luís",
       "state": "MA",
       "modality": "Rua",
@@ -993,7 +993,7 @@
       "elevation": null,
       "price": null,
       "start": "17:00",
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1043,14 +1043,14 @@
       ],
       "location": "São Luís Shopping, Av. Prof. Carlos Cunha, 1000",
       "registrationOpen": "2026-08-06",
-      "registrationClose": "2026-11-10",
+      "registrationClose": "2026-11-12",
       "status": "Abertas",
       "officialUrl": "https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996",
       "sourceUrl": "https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996",
       "sourceName": "Ticket Sports",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "1ª edição. Corrida de 5 e 10 km (percurso em breve). Inscrições de 06/08 a 10/11/2026 pela Ticket Sports: 1º lote R$ 119,90, 2º R$ 129,90, 3º R$ 139,90 + taxa; 60+ com 50% de desconto. Kits de 12 a 14/11 na loja Lupo Sport do São Luís Shopping.",
+      "notes": "1ª edição. Corrida de 5 e 10 km (percurso em breve). Inscrições abertas desde 06/08 pela Ticket Sports, prorrogadas até 12/11/2026 (antes 10/11): 1º lote R$ 119,90, 2º R$ 129,90, 3º R$ 139,90 + taxa; 60+ com 50% de desconto. Kits de 12 a 14/11 na loja Lupo Sport do São Luís Shopping.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -1062,7 +1062,7 @@
         "text": "A partir de R$ 119,90 + taxa"
       },
       "start": null,
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1568,7 +1568,7 @@
       "city": "Imperatriz",
       "state": "MA",
       "modality": "Rua",
-      "date": "2027-01-10",
+      "date": "2027-01-15",
       "distances": [],
       "location": "Local a confirmar",
       "registrationOpen": null,
@@ -1579,12 +1579,12 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Página com inscrição disponível; distâncias no regulamento.",
+      "notes": "Largada às 6h30. Em 11/11/2026 a página da Topchip passou a mostrar sexta-feira, 15/01/2027 (antes 10/01/2027). Inscrições disponíveis; distâncias no regulamento.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -1594,7 +1594,7 @@
       "city": "Imperatriz",
       "state": "MA",
       "modality": "Rua",
-      "date": "2027-01-17",
+      "date": "2027-01-31",
       "distances": [],
       "location": "Local a confirmar",
       "registrationOpen": null,
@@ -1605,11 +1605,12 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Inscrições em breve.",
+      "notes": "Largada às 6h30. Em 11/11/2026 a página da Topchip passou a mostrar 31/01/2027 (antes 17/01/2027). Inscrições em breve; distâncias a divulgar.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -2265,7 +2266,7 @@
       "sourceName": "Crono Esportes",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada dos 10 km às 5h45; 3 e 5 km às 6h. 2º lote: R$ 90 comunidade, R$ 60 alunos da UEMA, doação de 1 kg de alimento. Kit em 10 e 11/12. Em 10/11/2026 a página da Crono Esportes voltou a mostrar o botão INSCREVA-SE (2º lote), depois de aparecer como VAGAS ESGOTADAS desde o fim de outubro: vagas reabertas, podem esgotar de novo. Prazo no sistema da Crono: 06/12/2026.",
+      "notes": "Largada dos 10 km às 5h45; 3 e 5 km às 6h. 2º lote: R$ 90 comunidade, R$ 60 alunos da UEMA, doação de 1 kg de alimento. Kit em 10 e 11/12. Vagas esgotadas (limite técnico atingido): a página da Crono Esportes chegou a reabrir o 2º lote em 10/11/2026, mas em 11/11 voltou a mostrar VAGAS ESGOTADAS. Prazo no sistema da Crono: 06/12/2026.",
       "prize": {
         "kind": "dinheiro",
         "top": 700,
@@ -2277,7 +2278,7 @@
         "text": "R$ 60 a R$ 90 + 1 kg de alimento"
       },
       "start": "05:45",
-      "verifiedAt": "2026-11-10T18:22:01.894Z",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3237,11 +3238,15 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 5h30 de domingo, 22/11, em Montes Altos, segundo o calendário da Topchip (que escreve o nome como \"Corrida Contra As Drigas\", erro de digitação). Prova sem cronometragem eletrônica pela Topchip. Distâncias, local de largada, preço e abertura das inscrições ainda não divulgados: confirmar na página da Topchip.",
-      "prize": null,
+      "prize": {
+        "kind": "trofeu",
+        "top": null,
+        "summary": "Regulamento: troféus do 1º ao 10º lugar geral masc. e fem., medalha de participação e sorteio de brindes."
+      },
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-10-21T20:24:12.739Z"
     },
     {
@@ -3603,19 +3608,22 @@
       ],
       "location": "Local a confirmar",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-11-12",
+      "status": "Abertas",
       "officialUrl": "https://www.even3.com.br/e/street-race-dp-2026-764585",
       "sourceUrl": "https://running.life/en/event/street-race-dp",
       "sourceName": "running.life",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Vista só no running.life, que aponta a inscrição no Even3 (página não pôde ser aberta nesta conferência). A página da prova diz 5 km; a lista do running.life mostra 3 e 5 km. Horário, local, preço e status a confirmar.",
+      "confidence": "Plataforma de inscrição (Even3)",
+      "notes": "A página do Even3 abriu em 11/11/2026: domingo, 15/11/2026, das 5h às 8h, em Dom Pedro; inscrição masculino e feminino R$ 80 até 12/11/2026. A página da prova no running.life diz 5 km (a lista dele mostra 3 e 5 km); local de largada a confirmar. Organização: Elis Sandra Lima Vieira.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-04T11:14:45.182Z",
+      "price": {
+        "min": 80,
+        "text": "R$ 80 (masc. e fem.)"
+      },
+      "start": "05:00",
+      "verifiedAt": "2026-11-11T10:50:29.099Z",
       "firstSeenAt": "2026-11-04T11:14:45.182Z"
     },
     {
@@ -3787,12 +3795,44 @@
   ],
   "changes": [
     {
+      "id": "cc01da33-4351-4c20-86ea-a6417a8f46cf",
+      "eventId": "street-race-dp-2026-dom-pedro",
+      "version": "[\"2026-11-15\",[5],\"Local a confirmar\",null,\"2026-11-12\",\"Abertas\",\"https://www.even3.com.br/e/street-race-dp-2026-764585\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-11T10:50:29.099Z",
+      "notifiedAt": "2026-11-11T10:51:03.571Z"
+    },
+    {
+      "id": "51f67d65-5716-451b-a7a4-35be82bf90b6",
+      "eventId": "acii-2027-imperatriz",
+      "version": "[\"2027-01-31\",[],\"Local a confirmar\",null,null,\"Em breve\",\"https://topchip.com.br/corrida-acii-2027\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-11T10:50:29.099Z",
+      "notifiedAt": "2026-11-11T10:51:03.571Z"
+    },
+    {
+      "id": "9335d8ed-2707-4cc6-9eac-d7d6ac5775d7",
+      "eventId": "sobra-2027-imperatriz",
+      "version": "[\"2027-01-15\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/ii-corrida-da-sobra\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-11T10:50:29.099Z",
+      "notifiedAt": "2026-11-11T10:51:03.571Z"
+    },
+    {
+      "id": "ce16a325-ae50-4a0b-9b0d-802a749c6d32",
+      "eventId": "lupo-sport-2026-sao-luis",
+      "version": "[\"2026-11-15\",[5,10],\"São Luís Shopping, Av. Prof. Carlos Cunha, 1000\",\"2026-08-06\",\"2026-11-12\",\"Abertas\",\"https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-11T10:50:29.099Z",
+      "notifiedAt": "2026-11-11T10:51:03.571Z"
+    },
+    {
       "id": "90db3d53-48fd-4c1c-a089-eab183db5731",
       "eventId": "igreja-batista-2026-campestre",
       "version": "[\"2026-12-13\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/igrejabatista\"]",
       "kind": "Alteração importante",
       "at": "2026-11-10T18:22:01.894Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-11T10:51:03.571Z"
     },
     {
       "id": "2f1a6662-e225-4fb2-b89a-ceab9f331775",
@@ -3800,7 +3840,7 @@
       "version": "[\"2026-12-13\",[3,5,10],\"UEMA, Campus Paulo VI\",null,\"2026-12-06\",\"Esgotadas\",\"https://www.cronoesportes.com.br/evento/6491/viii-corrida-da-uema\"]",
       "kind": "Alteração importante",
       "at": "2026-11-10T18:22:01.894Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-11T10:51:03.571Z"
     },
     {
       "id": "c1830814-2229-474f-b4ca-da695d51532f",
@@ -5915,7 +5955,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-10T18:22:01.894Z",
+  "lastChecked": "2026-11-11T10:50:29.099Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
