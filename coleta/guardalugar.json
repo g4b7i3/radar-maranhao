@@ -32,7 +32,7 @@
   {
    "url": "https://guardalugar.com/api/v1/version",
    "status": 200,
-   "body": "{\"version\":\"1.102\",\"full_version\":\"1.102\",\"build_date\":\"2026-11-11T13:20:56.934758-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
+   "body": "{\"version\":\"1.102\",\"full_version\":\"1.102\",\"build_date\":\"2026-11-11T13:20:57.160558-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
   },
   {
    "url": "https://guardalugar.com/api/v1/version",
@@ -72,7 +72,7 @@
   {
    "url": "https://guardalugar.com/api/v1/version",
    "status": 200,
-   "body": "{\"version\":\"1.102\",\"full_version\":\"1.102\",\"build_date\":\"2026-11-11T13:20:56.934758-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
+   "body": "{\"version\":\"1.102\",\"full_version\":\"1.102\",\"build_date\":\"2026-11-11T13:20:56.920628-03:00\",\"environment\":\"production\",\"min_app_build_number\":890}"
   },
   {
    "url": "https://guardalugar.com/api/v1/events/public/list?is_test=true&ended=false",
@@ -91,5 +91,5 @@
   }
  ],
  "totalLinks": 1,
- "coletadoEm": "2026-11-11T17:28:15.197Z"
+ "coletadoEm": "2026-11-11T18:47:52.103Z"
 }
