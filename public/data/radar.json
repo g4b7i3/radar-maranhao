@@ -3800,7 +3800,7 @@
       "version": "[\"2026-11-15\",[4],\"Local a confirmar\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/dmrun%E2%80%93etapasaude\"]",
       "kind": "Alteração importante",
       "at": "2026-11-11T23:44:48.381Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-12T10:56:46.160Z"
     },
     {
       "id": "cc01da33-4351-4c20-86ea-a6417a8f46cf",
@@ -5963,7 +5963,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-11T23:44:48.381Z",
+  "lastChecked": "2026-11-12T10:56:21.285Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
