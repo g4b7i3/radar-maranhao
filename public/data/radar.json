@@ -1449,7 +1449,7 @@
       "location": "Local a confirmar",
       "registrationOpen": "2026-07-02",
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://topchip.com.br/aniversario-bora-correr-imperatriz",
       "sourceUrl": "https://topchip.com.br/aniversario-bora-correr-imperatriz",
       "sourceName": "Topchip",
@@ -1467,7 +1467,7 @@
         "text": "R$ 100"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-24T18:57:04.540Z",
+      "verifiedAt": "2026-11-12T18:52:11.103Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -3795,6 +3795,14 @@
   ],
   "changes": [
     {
+      "id": "6e2b6391-ae6b-4998-9dd1-c2a576c2f50f",
+      "eventId": "bora-correr-aniversario-2026-imperatriz",
+      "version": "[\"2026-11-15\",[5,10],\"Local a confirmar\",\"2026-07-02\",null,\"Encerradas\",\"https://topchip.com.br/aniversario-bora-correr-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-12T18:52:11.103Z",
+      "notifiedAt": null
+    },
+    {
       "id": "4cc86533-e67a-4719-805f-7a65cb902b3e",
       "eventId": "dm-run-saude-2026-sao-luis",
       "version": "[\"2026-11-15\",[4],\"Local a confirmar\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/dmrun%E2%80%93etapasaude\"]",
@@ -5963,7 +5971,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-12T10:56:21.285Z",
+  "lastChecked": "2026-11-12T18:52:11.103Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
