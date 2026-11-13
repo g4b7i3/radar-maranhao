@@ -3843,9 +3843,43 @@
       "start": null,
       "verifiedAt": "2026-11-13T18:29:37.717Z",
       "firstSeenAt": "2026-11-13T18:29:37.717Z"
+    },
+    {
+      "id": "i-corrida-das-torcidas-2027-imperatriz",
+      "name": "I Corrida das Torcidas",
+      "edition": "2027",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-05-27",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-13T22:54:35.178Z",
+      "firstSeenAt": "2026-11-13T22:54:35.178Z"
     }
   ],
   "changes": [
+    {
+      "id": "f8235db5-7ef3-49e1-b82b-428eb9ebaed2",
+      "eventId": "i-corrida-das-torcidas-2027-imperatriz",
+      "version": "[\"2027-05-27\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-13T22:54:35.178Z",
+      "notifiedAt": null
+    },
     {
       "id": "d4507298-c508-4399-a843-be40b0500993",
       "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
@@ -6063,7 +6097,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-13T18:29:37.717Z",
+  "lastChecked": "2026-11-13T22:54:35.178Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
