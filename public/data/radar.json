@@ -3804,7 +3804,7 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/montesaltos2026",
       "sourceUrl": "https://topchip.com.br/calendario",
       "sourceName": "Topchip",
@@ -3815,11 +3815,53 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-13T10:50:57.977Z",
+      "verifiedAt": "2026-11-13T18:29:37.717Z",
       "firstSeenAt": "2026-11-13T00:45:12.794Z"
+    },
+    {
+      "id": "2-corrida-da-imaculada-conceicao-2026-porto-franco",
+      "name": "2ª Corrida da Imaculada Conceição",
+      "edition": "2026",
+      "city": "Porto Franco",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-06",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-13T18:29:37.717Z",
+      "firstSeenAt": "2026-11-13T18:29:37.717Z"
     }
   ],
   "changes": [
+    {
+      "id": "d4507298-c508-4399-a843-be40b0500993",
+      "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
+      "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/montesaltos2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-13T18:29:37.717Z",
+      "notifiedAt": null
+    },
+    {
+      "id": "e7ca2016-cb82-439d-a2ed-4478dba92347",
+      "eventId": "2-corrida-da-imaculada-conceicao-2026-porto-franco",
+      "version": "[\"2026-12-06\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-13T18:29:37.717Z",
+      "notifiedAt": null
+    },
     {
       "id": "f8082fc7-6c44-4393-a1fb-f8398524f960",
       "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
@@ -6021,7 +6063,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-13T10:50:57.977Z",
+  "lastChecked": "2026-11-13T18:29:37.717Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
