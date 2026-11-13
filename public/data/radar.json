@@ -1044,13 +1044,13 @@
       "location": "São Luís Shopping, Av. Prof. Carlos Cunha, 1000",
       "registrationOpen": "2026-08-06",
       "registrationClose": "2026-11-12",
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996",
       "sourceUrl": "https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996",
       "sourceName": "Ticket Sports",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "1ª edição. Corrida de 5 e 10 km (percurso em breve). Inscrições abertas desde 06/08 pela Ticket Sports, prorrogadas até 12/11/2026 (antes 10/11): 1º lote R$ 119,90, 2º R$ 129,90, 3º R$ 139,90 + taxa; 60+ com 50% de desconto. Kits de 12 a 14/11 na loja Lupo Sport do São Luís Shopping.",
+      "notes": "1ª edição. Corrida de 5 e 10 km (percurso em breve). Inscrições pela Ticket Sports de 06/08 até 12/11/2026 (prorrogadas; antes 10/11), prazo já encerrado: 1º lote R$ 119,90, 2º R$ 129,90, 3º R$ 139,90 + taxa; 60+ com 50% de desconto. Kits de 12 a 14/11 na loja Lupo Sport do São Luís Shopping.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -1062,7 +1062,7 @@
         "text": "A partir de R$ 119,90 + taxa"
       },
       "start": null,
-      "verifiedAt": "2026-11-11T10:50:29.099Z",
+      "verifiedAt": "2026-11-13T10:50:57.977Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3805,28 +3805,44 @@
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Consultar",
-      "officialUrl": "https://topchip.com.br/calendario",
+      "officialUrl": "https://topchip.com.br/montesaltos2026",
       "sourceUrl": "https://topchip.com.br/calendario",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "confidence": "Fonte única (calendário da Topchip) · confirmar no organizador",
+      "notes": "Aniversário de 71 anos de Montes Altos, organizada pela Prefeitura Municipal de Montes Altos, com largada às 6h30 (calendário da Topchip, status \"Confirmado\"). Distâncias, local de largada, preço e inscrições ainda não divulgados.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-13T00:45:12.794Z",
+      "start": "06:30",
+      "verifiedAt": "2026-11-13T10:50:57.977Z",
       "firstSeenAt": "2026-11-13T00:45:12.794Z"
     }
   ],
   "changes": [
+    {
+      "id": "f8082fc7-6c44-4393-a1fb-f8398524f960",
+      "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
+      "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/montesaltos2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-13T10:50:57.977Z",
+      "notifiedAt": "2026-11-13T10:51:28.436Z"
+    },
+    {
+      "id": "440fbdf1-76e8-4237-af30-51d83ba86dd9",
+      "eventId": "lupo-sport-2026-sao-luis",
+      "version": "[\"2026-11-15\",[5,10],\"São Luís Shopping, Av. Prof. Carlos Cunha, 1000\",\"2026-08-06\",\"2026-11-12\",\"Encerradas\",\"https://www.ticketsports.com.br/e/LUPO+SPORT+CORRE+S%C3%83O+LU%C3%8DS-87996\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-13T10:50:57.977Z",
+      "notifiedAt": "2026-11-13T10:51:28.436Z"
+    },
     {
       "id": "6eb42ecb-2f0c-4fee-bfc9-f14be8fc9d94",
       "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
       "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-11-13T00:45:12.794Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-13T10:51:28.436Z"
     },
     {
       "id": "6e2b6391-ae6b-4998-9dd1-c2a576c2f50f",
@@ -3834,7 +3850,7 @@
       "version": "[\"2026-11-15\",[5,10],\"Local a confirmar\",\"2026-07-02\",null,\"Encerradas\",\"https://topchip.com.br/aniversario-bora-correr-imperatriz\"]",
       "kind": "Alteração importante",
       "at": "2026-11-12T18:52:11.103Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-13T10:51:28.436Z"
     },
     {
       "id": "4cc86533-e67a-4719-805f-7a65cb902b3e",
@@ -6005,7 +6021,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-13T00:45:12.794Z",
+  "lastChecked": "2026-11-13T10:50:57.977Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
