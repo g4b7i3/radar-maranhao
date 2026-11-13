@@ -3791,9 +3791,43 @@
       "start": null,
       "verifiedAt": "2026-11-10T10:57:12.181Z",
       "firstSeenAt": "2026-11-10T10:57:12.181Z"
+    },
+    {
+      "id": "corrida-71-anos-montes-altos-2026-montes-altos",
+      "name": "Corrida 71 Anos - Montes Altos",
+      "edition": "2026",
+      "city": "Montes Altos",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-20",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-13T00:45:12.794Z",
+      "firstSeenAt": "2026-11-13T00:45:12.794Z"
     }
   ],
   "changes": [
+    {
+      "id": "6eb42ecb-2f0c-4fee-bfc9-f14be8fc9d94",
+      "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
+      "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-13T00:45:12.794Z",
+      "notifiedAt": null
+    },
     {
       "id": "6e2b6391-ae6b-4998-9dd1-c2a576c2f50f",
       "eventId": "bora-correr-aniversario-2026-imperatriz",
@@ -5971,7 +6005,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-12T18:52:11.103Z",
+  "lastChecked": "2026-11-13T00:45:12.794Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
