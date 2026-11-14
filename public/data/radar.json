@@ -1814,7 +1814,7 @@
       "location": "Campus da UEMA em Coroatá",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Esgotadas",
       "officialUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema",
       "sourceUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema",
       "sourceName": "SA Crono",
@@ -1822,9 +1822,10 @@
       "confidence": "Página de inscrição oficial",
       "notes": "Largada às 6h. Categoria geral e UEMA. Junto com a feira Expo UEMA.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-11-14T04:37:54.573Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -3872,6 +3873,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "3eb0ffab-8ace-489b-bd7b-e189ca715cb2",
+      "eventId": "uema-2026-coroata",
+      "version": "[\"2026-11-29\",[5],\"Campus da UEMA em Coroatá\",null,null,\"Esgotadas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-14T04:37:54.573Z",
+      "notifiedAt": null
+    },
     {
       "id": "f8235db5-7ef3-49e1-b82b-428eb9ebaed2",
       "eventId": "i-corrida-das-torcidas-2027-imperatriz",
@@ -6097,7 +6106,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-13T22:54:35.178Z",
+  "lastChecked": "2026-11-14T04:37:54.573Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
