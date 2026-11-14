@@ -2420,11 +2420,15 @@
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
       "notes": "Largada às 6h30. Organização: Igreja Batista Campestre. A Topchip já tem página própria da prova, com link de inscrição (Inscrição Fácil) e regulamento em PDF, que não puderam ser lidos nesta pesquisa: conferir distâncias, preço e status.",
-      "prize": null,
+      "prize": {
+        "kind": "dinheiro",
+        "top": 400,
+        "summary": "5 km: visitante R$ 400, R$ 300 e R$ 200; cidade R$ 300 a R$ 100 (1º ao 5º), masc. e fem., com troféu. Troféu por faixa etária."
+      },
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-10T18:22:01.894Z",
+      "verifiedAt": "2026-11-14T10:55:51.797Z",
       "firstSeenAt": "2026-10-14T15:58:57.274Z"
     },
     {
@@ -3734,11 +3738,15 @@
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
       "notes": "Domingo, 20/12/2026: concentração às 5h30 e largada às 6h na Praça da Prefeitura (largada e chegada). Corrida de 5 km a partir de 13 anos e provas kids de 500 m (5 a 8 anos) e 2 km (9 a 12 anos). Preço, prazo e premiação não aparecem no texto da página; regulamento em PDF na SA Crono ainda não conferido.",
-      "prize": null,
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "Geral 5 km (masc. e fem.): R$ 500, 300, 200, 100 e 90 + troféu; R$ 50 ao campeão de cada faixa etária. Kids: troféu."
+      },
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-06T10:56:32.039Z",
+      "verifiedAt": "2026-11-14T10:55:51.797Z",
       "firstSeenAt": "2026-11-06T04:53:00.510Z"
     },
     {
@@ -3879,7 +3887,7 @@
       "version": "[\"2026-11-29\",[5],\"Campus da UEMA em Coroatá\",null,null,\"Esgotadas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema\"]",
       "kind": "Alteração importante",
       "at": "2026-11-14T04:37:54.573Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-14T10:56:20.413Z"
     },
     {
       "id": "f8235db5-7ef3-49e1-b82b-428eb9ebaed2",
@@ -3887,7 +3895,7 @@
       "version": "[\"2027-05-27\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-11-13T22:54:35.178Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-14T10:56:20.413Z"
     },
     {
       "id": "d4507298-c508-4399-a843-be40b0500993",
@@ -3895,7 +3903,7 @@
       "version": "[\"2026-12-20\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/montesaltos2026\"]",
       "kind": "Alteração importante",
       "at": "2026-11-13T18:29:37.717Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-14T10:56:20.413Z"
     },
     {
       "id": "e7ca2016-cb82-439d-a2ed-4478dba92347",
@@ -3903,7 +3911,7 @@
       "version": "[\"2026-12-06\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-11-13T18:29:37.717Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-14T10:56:20.413Z"
     },
     {
       "id": "f8082fc7-6c44-4393-a1fb-f8398524f960",
@@ -6106,7 +6114,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-14T04:37:54.573Z",
+  "lastChecked": "2026-11-14T10:55:51.797Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
