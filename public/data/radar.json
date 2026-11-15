@@ -2191,8 +2191,8 @@
       ],
       "location": "Praça dos Pescadores, Avenida Litorânea",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Abertas",
+      "registrationClose": "2026-11-14",
+      "status": "Encerradas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6167/7-corrida-da-prematuridade",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6167/7-corrida-da-prematuridade",
       "sourceName": "Crono Esportes",
@@ -2204,12 +2204,13 @@
         "top": null,
         "summary": "Troféus aos 3 primeiros gerais dos 5 km (masc. e fem.) e da categoria PCD, sem premiação em dinheiro."
       },
+      "elevation": null,
       "price": {
         "min": 99,
         "text": "R$ 99 a R$ 120"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "verifiedAt": "2026-11-15T04:07:12.565Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -3881,6 +3882,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "a2f3a1c1-b1ec-4d89-b4aa-a2bed2256314",
+      "eventId": "prematuridade-2026-sao-luis",
+      "version": "[\"2026-11-15\",[5],\"Praça dos Pescadores, Avenida Litorânea\",null,\"2026-11-14\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/6167/7-corrida-da-prematuridade\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-15T04:07:12.565Z",
+      "notifiedAt": null
+    },
     {
       "id": "3eb0ffab-8ace-489b-bd7b-e189ca715cb2",
       "eventId": "uema-2026-coroata",
@@ -6114,7 +6123,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-14T10:55:51.797Z",
+  "lastChecked": "2026-11-15T04:07:12.565Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
