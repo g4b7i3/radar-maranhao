@@ -1364,13 +1364,13 @@
       "sourceUrl": "https://running.life/en/event/corrida-crea-ma-etapa-imperatriz",
       "sourceName": "running.life",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Organização do CREA-MA, largada às 6h30. Também aparece como I Corrida CREA-MA – Etapa Imperatriz. Distâncias não divulgadas.",
+      "confidence": "Calendário de corridas · página oficial fora do ar · confirmar no organizador",
+      "notes": "Organização do CREA-MA, largada às 6h30. Também aparece como I Corrida CREA-MA – Etapa Imperatriz. Distâncias não divulgadas. Em 15/11/2026 a página da Topchip (topchip.com.br/crea2026) dá \"Not Found\" e a prova não aparece no calendário da Topchip; o Road Runners ainda lista em 06/12. Confirmar com o CREA-MA se a prova continua.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-11-15T10:51:21.173Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1730,12 +1730,13 @@
       "sourceUrl": "https://topchip.com.br/v-corrida-avb-lasulma",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Página de inscrição oficial",
-      "notes": "Prova num sábado, largada às 6h30. Inscrições em breve.",
+      "confidence": "Página de inscrição saiu do ar · confirmar no organizador",
+      "notes": "Prova num sábado, largada às 6h30. Inscrições em breve. Em 15/11/2026 a página da Topchip dá \"Not Found\" e a prova não aparece no calendário da Topchip; o Road Runners ainda lista em 12/12. Confirmar com o organizador se a prova continua.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-14T15:08:52.450Z",
+      "verifiedAt": "2026-11-15T10:51:21.173Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -3888,7 +3889,7 @@
       "version": "[\"2026-11-15\",[5],\"Praça dos Pescadores, Avenida Litorânea\",null,\"2026-11-14\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/6167/7-corrida-da-prematuridade\"]",
       "kind": "Alteração importante",
       "at": "2026-11-15T04:07:12.565Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-15T10:51:56.476Z"
     },
     {
       "id": "3eb0ffab-8ace-489b-bd7b-e189ca715cb2",
@@ -6123,7 +6124,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-15T04:07:12.565Z",
+  "lastChecked": "2026-11-15T10:51:21.173Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
