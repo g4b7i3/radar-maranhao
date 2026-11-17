@@ -1168,13 +1168,13 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": "2026-11-15",
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceUrl": "https://topchip.com.br/ii-corrida-da-consciencia-negra",
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição saiu do ar · confirmar no organizador",
-      "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra. Regulamento: inscrições presenciais e pela internet até 15/11/2026 às 12h (300 vagas), R$ 100; kit e chip na loja Top Sport em 18 e 19/11. Em 10/11/2026 a página antiga da Topchip dá \"Not Found\" e a prova saiu da lista de próximos eventos da Topchip; o Road Runners mostra \"II Corrida da Resistência Negra\" em 20/11 com novo link (topchip.com.br/ii-corrida-da-resistencia-negra). Confirmar com o organizador se a prova continua.",
+      "notes": "Dia da Consciência Negra, largada às 6h30. Aparece no running.life como Corrida da Resistência Negra. Regulamento: inscrições presenciais e pela internet até 15/11/2026 às 12h (300 vagas), R$ 100; kit e chip na loja Top Sport em 18 e 19/11. Em 10/11/2026 a página antiga da Topchip dá \"Not Found\" e a prova saiu da lista de próximos eventos da Topchip; o Road Runners mostra \"II Corrida da Resistência Negra\" em 20/11 com novo link (topchip.com.br/ii-corrida-da-resistencia-negra). Confirmar com o organizador se a prova continua. Em 17/11/2026 o prazo do regulamento (15/11, 12h) já passou e a prova segue fora do calendário da Topchip; o Road Runners ainda lista em 20/11.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -1186,7 +1186,7 @@
         "text": "R$ 100"
       },
       "start": "06:30",
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3644,21 +3644,24 @@
       "distances": [
         3
       ],
-      "location": "Local a confirmar",
+      "location": "Igreja Matriz Maria Imaculada",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://uticket.com.br/event/ii-corrida-da-padroeira/01MGZV68WB0DSY",
-      "sourceUrl": "https://running.life/en/event/corrida-da-padroeira-igarape-grande",
-      "sourceName": "running.life",
+      "sourceUrl": "https://uticket.com.br/event/ii-corrida-da-padroeira/01MGZV68WB0DSY",
+      "sourceName": "Uticket",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Vista só no running.life (\"Ii Corre Da Padroeira 3km\"), que aponta a inscrição na Uticket (página não pôde ser aberta nesta conferência). Terça-feira, 08/12, dia da Imaculada Conceição. Horário, local, preço e status a confirmar.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "Página da Uticket: terça, 08/12/2026, às 5h, na Igreja Matriz Maria Imaculada, Igarapé Grande; 1º lote R$ 50 + taxa, à venda. Produtora: Diva Nascimento. O running.life cita 3 km; a página não detalha distâncias. Prazo de inscrição não informado.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-04T11:14:45.182Z",
+      "price": {
+        "min": 50,
+        "text": "R$ 50 + taxa (1º lote)"
+      },
+      "start": "05:00",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-11-04T11:14:45.182Z"
     },
     {
@@ -3675,13 +3678,13 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://www.sporttimer.com.br/site/eventosel.php?ev=2710",
-      "sourceUrl": "https://running.life/en/event/run-love-sao-domingos-do-maranhao",
-      "sourceName": "running.life",
+      "sourceUrl": "https://www.sporttimer.com.br/site/eventosel.php?ev=2710",
+      "sourceName": "SportTimer",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Vista só no running.life (\"Corrida 5k\"), que aponta a inscrição na Sporttimer (página não pôde ser aberta nesta conferência). Horário, local, preço e status a confirmar.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "Página da SportTimer (\"RUN LOVE SAO DOMINGOS\", 20/12/2026) com botão \"INSCREVA-SE AGORA\". O running.life cita 5 km. Horário, local, preço e prazo a confirmar.",
       "prize": {
         "kind": "trofeu",
         "top": null,
@@ -3690,7 +3693,7 @@
       "elevation": null,
       "price": null,
       "start": null,
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-11-04T11:14:45.182Z"
     },
     {
@@ -3759,22 +3762,28 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-20",
-      "distances": [],
-      "location": "Centro de Ensino Estado de Goiás, Av. Dorgival Pinheiro de Sousa, Centro",
+      "distances": [
+        5,
+        10
+      ],
+      "location": "Estacionamento do Centro de Ensino Estado de Goiás",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-12-17",
+      "status": "Abertas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/paiva-run-2026",
-      "sourceUrl": "https://roadrunners.run/evento/2026-paiva-run-2026/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.metasportoficial.com.br/eventos/paiva-run-2026",
+      "sourceName": "Meta Sport",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Visto só no Road Runners (20/12/2026, Imperatriz, organizador informado: Israel Paiva Assessoria), com link de inscrição na Meta Sport, que não abriu nesta pesquisa. Faltam distâncias, horário, preço e status das inscrições.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "2ª edição, organização Israel Paiva Assessoria. Página da Meta Sport: 20/12/2026 (domingo), largada às 6h para 5 e 10 km, no estacionamento do Centro de Ensino Estado de Goiás, Imperatriz. Inscrições abertas até 17/12/2026 ou até esgotar, R$ 79,90. Kit, regulamento e premiação ainda não publicados.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "price": {
+        "min": 79.9,
+        "text": "R$ 79,90 (5 e 10 km)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-11-10T10:57:12.181Z"
     },
     {
@@ -3789,18 +3798,21 @@
       "location": "UEMA, Campus Colinas",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://doity.com.br/corridauema2026",
-      "sourceUrl": "https://roadrunners.run/evento/2026-i-edicao-da-corrida-da-uema-2026/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://doity.com.br/corridauema2026",
+      "sourceName": "Doity",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Visto só no Road Runners como \"I Edição da Corrida da UEMA 2026\", 06/12/2026, na UEMA em Colinas/MA, organizada pelo curso de bacharelado em Enfermagem, com inscrição pela Doity (página não abriu nesta pesquisa). Faltam distâncias, horário, preço e status.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "Organização do curso de Enfermagem da UEMA, Campus Colinas (Av. Dr. Osano Brandão, Centro). Página da Doity: domingo, 06/12/2026, \"das 6h às 12h\"; inscrições abertas: lote promocional R$ 75 até 17/11/2026, 2º lote R$ 85 até 22/11/2026. Distâncias e horário de largada ainda não divulgados.",
       "prize": null,
       "elevation": null,
-      "price": null,
+      "price": {
+        "min": 75,
+        "text": "R$ 75 (lote promocional até 17/11); 2º lote R$ 85"
+      },
       "start": null,
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-11-10T10:57:12.181Z"
     },
     {
@@ -3811,22 +3823,24 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-20",
-      "distances": [],
+      "distances": [
+        5
+      ],
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
       "officialUrl": "https://topchip.com.br/montesaltos2026",
-      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/montesaltos2026",
       "sourceName": "Topchip",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário da Topchip) · confirmar no organizador",
-      "notes": "Aniversário de 71 anos de Montes Altos, organizada pela Prefeitura Municipal de Montes Altos, com largada às 6h30 (calendário da Topchip, status \"Confirmado\"). Distâncias, local de largada, preço e inscrições ainda não divulgados.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "Aniversário de 71 anos de Montes Altos, organização da Prefeitura Municipal, largada às 6h30. Página da Topchip: percurso de 5 km, categorias masculino e feminino. Local de largada e preço ainda não divulgados.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-13T18:29:37.717Z",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-11-13T00:45:12.794Z"
     },
     {
@@ -3880,16 +3894,105 @@
       "start": null,
       "verifiedAt": "2026-11-13T22:54:35.178Z",
       "firstSeenAt": "2026-11-13T22:54:35.178Z"
+    },
+    {
+      "id": "metropolitana-2026-sao-luis",
+      "name": "1ª Corrida da Metropolitana",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-11-29",
+      "distances": [
+        5,
+        10,
+        21
+      ],
+      "location": "Avenida Metropolitana",
+      "registrationOpen": "2026-11-16",
+      "registrationClose": "2026-11-18",
+      "status": "Abertas",
+      "officialUrl": "https://www.corridametropolitana.com.br/eventos/corrida-metropolitana",
+      "sourceUrl": "https://jornalpequeno.com.br/2026/11/16/corrida-metropolitana-abre-inscricoes-nesta-segunda-feira-em-sao-luis/",
+      "sourceName": "Jornal Pequeno",
+      "publishedAt": "2026-11-15",
+      "confidence": "Notícias (Jornal Pequeno, O Imparcial, Maranhão Esportes) e lista da Crono Esportes",
+      "notes": "Anunciada pelo Governo do Maranhão (governador Carlos Brandão) para a inauguração da Avenida Metropolitana. Largadas: 21 km às 4h30 (concentração 4h); 5 km PcD às 5h50; 5 e 10 km às 6h. Inscrições pela Crono Esportes / corridametropolitana.com.br de 16/11 (18h) a 18/11/2026 ou até acabarem as 4.000 vagas, R$ 25 (Maranhão Esportes). A Crono Esportes lista a prova em 29/11 com \"INSCREVA-SE\". Local exato de largada/chegada, kit e premiação ainda não divulgados.",
+      "prize": null,
+      "elevation": null,
+      "price": {
+        "min": 25,
+        "text": "R$ 25"
+      },
+      "start": "04:30",
+      "verifiedAt": "2026-11-17T10:56:50.214Z",
+      "firstSeenAt": "2026-11-17T10:56:50.214Z"
     }
   ],
   "changes": [
+    {
+      "id": "bd5fb3bd-2aae-453f-89f8-a768a65c8635",
+      "eventId": "negro-cosme-2026-imperatriz",
+      "version": "[\"2026-11-20\",[5],\"Local a confirmar\",null,\"2026-11-15\",\"Encerradas\",\"https://topchip.com.br/ii-corrida-da-consciencia-negra\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
+    {
+      "id": "e6137892-9223-46ae-9480-467a24a82950",
+      "eventId": "run-love-2026-sao-domingos-do-maranhao",
+      "version": "[\"2026-12-20\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://www.sporttimer.com.br/site/eventosel.php?ev=2710\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
+    {
+      "id": "0a59a251-80f0-4fdd-b862-7cc06a414ce1",
+      "eventId": "padroeira-2026-igarape-grande",
+      "version": "[\"2026-12-08\",[3],\"Igreja Matriz Maria Imaculada\",null,null,\"Abertas\",\"https://uticket.com.br/event/ii-corrida-da-padroeira/01MGZV68WB0DSY\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
+    {
+      "id": "a95e8edf-d406-4274-b06a-9381bd13bdb6",
+      "eventId": "corrida-71-anos-montes-altos-2026-montes-altos",
+      "version": "[\"2026-12-20\",[5],\"Local a confirmar\",null,null,\"Abertas\",\"https://topchip.com.br/montesaltos2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
+    {
+      "id": "d3922e0b-1fe4-48c0-b815-51c8faee622e",
+      "eventId": "uema-2026-colinas",
+      "version": "[\"2026-12-06\",[],\"UEMA, Campus Colinas\",null,null,\"Abertas\",\"https://doity.com.br/corridauema2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
+    {
+      "id": "f7018fab-2be8-4643-bb79-0955ba786f7d",
+      "eventId": "paiva-run-2026-imperatriz",
+      "version": "[\"2026-12-20\",[5,10],\"Estacionamento do Centro de Ensino Estado de Goiás\",null,\"2026-12-17\",\"Abertas\",\"https://www.metasportoficial.com.br/eventos/paiva-run-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
+    {
+      "id": "b31ebf9a-eb65-48e0-96e4-b7ead2a819cf",
+      "eventId": "metropolitana-2026-sao-luis",
+      "version": "[\"2026-11-29\",[5,10,21],\"Avenida Metropolitana\",\"2026-11-16\",\"2026-11-18\",\"Abertas\",\"https://www.corridametropolitana.com.br/eventos/corrida-metropolitana\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-17T10:56:50.214Z",
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
+    },
     {
       "id": "97841195-e94c-4f87-aecc-506bf6f92774",
       "eventId": "unimed-2026-imperatriz",
       "version": "[\"2026-11-29\",[5,10],\"Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes\",null,null,\"Encerradas\",\"https://topchip.com.br/unimed2026\"]",
       "kind": "Alteração importante",
       "at": "2026-11-17T04:30:51.909Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-17T10:57:25.176Z"
     },
     {
       "id": "a2f3a1c1-b1ec-4d89-b4aa-a2bed2256314",
@@ -6132,7 +6235,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-17T04:30:51.909Z",
+  "lastChecked": "2026-11-17T10:56:50.214Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
