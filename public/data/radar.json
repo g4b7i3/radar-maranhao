@@ -1204,7 +1204,7 @@
       "location": "Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://topchip.com.br/unimed2026",
       "sourceUrl": "https://topchip.com.br/unimed2026",
       "sourceName": "Topchip",
@@ -1222,7 +1222,7 @@
         "text": "R$ 90 (1º lote)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-10-19T12:57:04.561Z",
+      "verifiedAt": "2026-11-17T04:30:51.909Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3884,6 +3884,14 @@
   ],
   "changes": [
     {
+      "id": "97841195-e94c-4f87-aecc-506bf6f92774",
+      "eventId": "unimed-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes\",null,null,\"Encerradas\",\"https://topchip.com.br/unimed2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-17T04:30:51.909Z",
+      "notifiedAt": null
+    },
+    {
       "id": "a2f3a1c1-b1ec-4d89-b4aa-a2bed2256314",
       "eventId": "prematuridade-2026-sao-luis",
       "version": "[\"2026-11-15\",[5],\"Praça dos Pescadores, Avenida Litorânea\",null,\"2026-11-14\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/6167/7-corrida-da-prematuridade\"]",
@@ -6124,7 +6132,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-16T10:55:26.514Z",
+  "lastChecked": "2026-11-17T04:30:51.909Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
