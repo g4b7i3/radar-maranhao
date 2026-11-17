@@ -1204,7 +1204,7 @@
       "location": "Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Encerradas",
+      "status": "Abertas",
       "officialUrl": "https://topchip.com.br/unimed2026",
       "sourceUrl": "https://topchip.com.br/unimed2026",
       "sourceName": "Topchip",
@@ -1222,7 +1222,7 @@
         "text": "R$ 90 (1º lote)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-11-17T04:30:51.909Z",
+      "verifiedAt": "2026-11-17T19:48:26.523Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3927,9 +3927,43 @@
       "start": "04:30",
       "verifiedAt": "2026-11-17T10:56:50.214Z",
       "firstSeenAt": "2026-11-17T10:56:50.214Z"
+    },
+    {
+      "id": "corrida-juscelinense-2026-presidente-juscelino",
+      "name": "Corrida Juscelinense 2026",
+      "edition": "2026",
+      "city": "Presidente Juscelino",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-27",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Abertas",
+      "officialUrl": "https://centraldacorrida.com.br/",
+      "sourceUrl": "https://centraldacorrida.com.br/",
+      "sourceName": "Central da Corrida",
+      "publishedAt": null,
+      "confidence": "Plataforma de inscrição (Central da Corrida)",
+      "notes": "Largada às 06h. Encontrada automaticamente na Central da Corrida; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": "06:00",
+      "verifiedAt": "2026-11-17T19:48:26.523Z",
+      "firstSeenAt": "2026-11-17T19:48:26.523Z"
     }
   ],
   "changes": [
+    {
+      "id": "d377fac3-599c-4698-bd42-4d7e183ee897",
+      "eventId": "corrida-juscelinense-2026-presidente-juscelino",
+      "version": "[\"2026-12-27\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-17T19:48:26.523Z",
+      "notifiedAt": null
+    },
     {
       "id": "bd5fb3bd-2aae-453f-89f8-a768a65c8635",
       "eventId": "negro-cosme-2026-imperatriz",
@@ -6235,7 +6269,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-17T10:56:50.214Z",
+  "lastChecked": "2026-11-17T19:48:26.523Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
