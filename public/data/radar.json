@@ -1355,22 +1355,26 @@
       "state": "MA",
       "modality": "Rua",
       "date": "2026-12-06",
-      "distances": [],
-      "location": "Local a confirmar",
+      "distances": [
+        3,
+        5,
+        10
+      ],
+      "location": "Beira Rio (Av. Beira Rio, s/n)",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Em breve",
-      "officialUrl": "https://topchip.com.br/crea2026",
-      "sourceUrl": "https://running.life/en/event/corrida-crea-ma-etapa-imperatriz",
-      "sourceName": "running.life",
+      "status": "Consultar",
+      "officialUrl": "https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026",
+      "sourceUrl": "https://roadrunners.run/evento/2026-corrida-das-engenharias-2026-imperatriz/",
+      "sourceName": "Road Runners",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · página oficial fora do ar · confirmar no organizador",
-      "notes": "Organização do CREA-MA, largada às 6h30. Também aparece como I Corrida CREA-MA – Etapa Imperatriz. Distâncias não divulgadas. Em 15/11/2026 a página da Topchip (topchip.com.br/crea2026) dá \"Not Found\" e a prova não aparece no calendário da Topchip; o Road Runners ainda lista em 06/12. Confirmar com o CREA-MA se a prova continua.",
+      "confidence": "Fonte única (calendário Road Runners, que aponta a inscrição na MetaSport) · confirmar na MetaSport",
+      "notes": "Organização do CREA-MA, largada às 6h30 (Topchip, antes). Também aparece como I Corrida CREA-MA – Etapa Imperatriz. A página antiga da Topchip saiu do ar em 15/11; em 17/11 o Road Runners passou a ligar a prova à MetaSport (organizador META SPORT), com 3, 5 e 10 km e largada na Av. Beira Rio. A página da MetaSport não pôde ser aberta nesta conferência: status, preço e prazo a confirmar. O CREA-MA tem também a etapa de São Luís em 12/12.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-15T10:51:21.173Z",
+      "verifiedAt": "2026-11-18T10:56:33.191Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -2761,18 +2765,18 @@
       "location": "Local a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-",
       "sourceUrl": "https://centraldacorrida.com.br/",
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição (Central da Corrida)",
-      "notes": "Sexta-feira (feriado da Consciência Negra), largada às 5h30. Integra o Festejo do Santuário de Nossa Senhora da Conceição. Percursos de 4 e 8 km. Kits em 17 e 18/11, das 9h às 19h30, na Sala Padre Dehon do Santuário (Av. Getúlio Vargas, 2655, Monte Castelo). Local de largada a confirmar.",
+      "notes": "Sexta-feira (feriado da Consciência Negra), largada às 5h30. Integra o Festejo do Santuário de Nossa Senhora da Conceição. Percursos de 4 e 8 km. Em 17/11/2026 a página da Central da Corrida mostra \"Inscrições Indisponíveis\" e a retirada de kits passou para 19/11 (quinta), das 9h às 12h e das 14h às 21h, na Sala Padre Dehon do Santuário (Av. Getúlio Vargas, 2655, Monte Castelo). Local de largada a confirmar.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "05:30",
-      "verifiedAt": "2026-10-16T10:58:05.494Z",
+      "verifiedAt": "2026-11-18T10:56:33.191Z",
       "firstSeenAt": "2026-10-14T23:57:03.900Z"
     },
     {
@@ -3908,16 +3912,16 @@
         10,
         21
       ],
-      "location": "Avenida Metropolitana",
+      "location": "Avenida Metropolitana – Vila Funil",
       "registrationOpen": "2026-11-16",
-      "registrationClose": "2026-11-18",
-      "status": "Abertas",
+      "registrationClose": "2026-11-16",
+      "status": "Encerradas",
       "officialUrl": "https://www.corridametropolitana.com.br/eventos/corrida-metropolitana",
       "sourceUrl": "https://jornalpequeno.com.br/2026/11/16/corrida-metropolitana-abre-inscricoes-nesta-segunda-feira-em-sao-luis/",
       "sourceName": "Jornal Pequeno",
       "publishedAt": "2026-11-15",
-      "confidence": "Notícias (Jornal Pequeno, O Imparcial, Maranhão Esportes) e lista da Crono Esportes",
-      "notes": "Anunciada pelo Governo do Maranhão (governador Carlos Brandão) para a inauguração da Avenida Metropolitana. Largadas: 21 km às 4h30 (concentração 4h); 5 km PcD às 5h50; 5 e 10 km às 6h. Inscrições pela Crono Esportes / corridametropolitana.com.br de 16/11 (18h) a 18/11/2026 ou até acabarem as 4.000 vagas, R$ 25 (Maranhão Esportes). A Crono Esportes lista a prova em 29/11 com \"INSCREVA-SE\". Local exato de largada/chegada, kit e premiação ainda não divulgados.",
+      "confidence": "Página oficial (Crono Esportes) e notícias (Jornal Pequeno, O Imparcial, Maranhão Esportes)",
+      "notes": "Anunciada pelo Governo do Maranhão para a inauguração da Avenida Metropolitana. Largadas: 21 km às 4h30 (concentração 4h); 5 km PcD às 5h50; 5 e 10 km às 6h. Inscrições abriram em 16/11 (18h) pela Crono Esportes, R$ 25, 4.000 vagas. Na noite de 17/11 a página oficial mostra \"Inscrições encerradas\" e \"Inscrições até 16/11/2026 às 23h59\" (a lista da Crono Esportes ainda exibia \"Inscreva-se\"). Kits em 27 e 28/11, das 10h às 21h, local a definir. Regulamento em PDF publicado na página (etapa \"das Quebradas\"); premiação ainda não conferida.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3925,7 +3929,7 @@
         "text": "R$ 25"
       },
       "start": "04:30",
-      "verifiedAt": "2026-11-17T10:56:50.214Z",
+      "verifiedAt": "2026-11-18T10:56:33.191Z",
       "firstSeenAt": "2026-11-17T10:56:50.214Z"
     },
     {
@@ -3953,16 +3957,115 @@
       "start": "06:00",
       "verifiedAt": "2026-11-17T19:48:26.523Z",
       "firstSeenAt": "2026-11-17T19:48:26.523Z"
+    },
+    {
+      "id": "engenharias-2026-sao-luis",
+      "name": "Corrida das Engenharias 2026 – São Luís",
+      "edition": "2026",
+      "city": "São Luís",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2026-12-12",
+      "distances": [
+        3,
+        5,
+        10
+      ],
+      "location": "Praça dos Pescadores, Av. Litorânea, 4498, São Marcos",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026-sao-luis",
+      "sourceUrl": "https://roadrunners.run/evento/2026-corrida-das-engenharias-2026-sao-luis/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Sábado. Etapa de São Luís da Corrida das Engenharias (a de Imperatriz é em 06/12). Road Runners lista 3, 5 e 10 km, largada na Praça dos Pescadores, organizador informado META SPORT, com inscrição na MetaSport. A página da MetaSport não pôde ser aberta nesta conferência: horário, preço, status e prazo a confirmar.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-18T10:56:33.191Z",
+      "firstSeenAt": "2026-11-18T10:56:33.191Z"
+    },
+    {
+      "id": "ironpleno-2027-timon",
+      "name": "IronPleno – 1ª edição",
+      "edition": "2027",
+      "city": "Timon",
+      "state": "MA",
+      "modality": "Trail",
+      "date": "2027-01-31",
+      "distances": [],
+      "location": "Maraúí EcoPark e Camping",
+      "registrationOpen": null,
+      "registrationClose": "2027-01-30",
+      "status": "Consultar",
+      "officialUrl": "https://www.sympla.com.br/evento/ironpleno-1-edicao/3628986",
+      "sourceUrl": "https://roadrunners.run/evento/2027-ironpleno-1-edicao/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Desafio ao ar livre com trilhas, obstáculos e provas de força e resistência, início às 6h (sujeito a alteração). Texto do organizador no Road Runners: R$ 70 no 1º lote (até 05/01/2027) e R$ 90 no 2º lote (até 30/01/2027), inscrição pela Sympla. Distância não informada; página da Sympla não pôde ser aberta nesta conferência.",
+      "prize": null,
+      "elevation": null,
+      "price": {
+        "min": 70,
+        "text": "R$ 70 (1º lote, até 05/01/2027)"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-11-18T10:56:33.191Z",
+      "firstSeenAt": "2026-11-18T10:56:33.191Z"
     }
   ],
   "changes": [
+    {
+      "id": "b9788e5d-87c4-4dae-842c-40b497c3e2e2",
+      "eventId": "ironpleno-2027-timon",
+      "version": "[\"2027-01-31\",[],\"Maraúí EcoPark e Camping\",null,\"2027-01-30\",\"Consultar\",\"https://www.sympla.com.br/evento/ironpleno-1-edicao/3628986\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-18T10:56:33.191Z",
+      "notifiedAt": "2026-11-18T10:57:05.749Z"
+    },
+    {
+      "id": "560d3ea2-e4f7-41e0-b050-6a6bf358c876",
+      "eventId": "engenharias-2026-sao-luis",
+      "version": "[\"2026-12-12\",[3,5,10],\"Praça dos Pescadores, Av. Litorânea, 4498, São Marcos\",null,null,\"Consultar\",\"https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026-sao-luis\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-18T10:56:33.191Z",
+      "notifiedAt": "2026-11-18T10:57:05.749Z"
+    },
+    {
+      "id": "2027054c-2b11-40ce-b453-6898145020fe",
+      "eventId": "crea-2026-imperatriz",
+      "version": "[\"2026-12-06\",[3,5,10],\"Beira Rio (Av. Beira Rio, s/n)\",null,null,\"Consultar\",\"https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-18T10:56:33.191Z",
+      "notifiedAt": "2026-11-18T10:57:05.749Z"
+    },
+    {
+      "id": "71f17b51-c915-4fe1-90e6-002bffd7530b",
+      "eventId": "metropolitana-2026-sao-luis",
+      "version": "[\"2026-11-29\",[5,10,21],\"Avenida Metropolitana – Vila Funil\",\"2026-11-16\",\"2026-11-16\",\"Encerradas\",\"https://www.corridametropolitana.com.br/eventos/corrida-metropolitana\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-18T10:56:33.191Z",
+      "notifiedAt": "2026-11-18T10:57:05.749Z"
+    },
+    {
+      "id": "1869e8d3-2fe5-4d59-a480-1ba74f148dbc",
+      "eventId": "2-corrida-do-santuario-da-conceicao-2026-sao-luis",
+      "version": "[\"2026-11-20\",[4,8],\"Local a confirmar\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-18T10:56:33.191Z",
+      "notifiedAt": "2026-11-18T10:57:05.749Z"
+    },
     {
       "id": "d377fac3-599c-4698-bd42-4d7e183ee897",
       "eventId": "corrida-juscelinense-2026-presidente-juscelino",
       "version": "[\"2026-12-27\",[],\"Local a confirmar\",null,null,\"Abertas\",\"https://centraldacorrida.com.br/\"]",
       "kind": "Nova prova",
       "at": "2026-11-17T19:48:26.523Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-18T10:57:05.749Z"
     },
     {
       "id": "bd5fb3bd-2aae-453f-89f8-a768a65c8635",
@@ -6269,7 +6372,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-17T19:48:26.523Z",
+  "lastChecked": "2026-11-18T10:56:33.191Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
