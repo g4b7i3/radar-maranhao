@@ -221,11 +221,12 @@
       "sourceName": "Central da Corrida",
       "publishedAt": null,
       "confidence": "Plataforma oficial",
-      "notes": "Organização: EuCorro Eventos Esportivos. Também oferece caminhada participativa de 3 km. Local e horários de kit a divulgar.",
+      "notes": "Organização: EuCorro Eventos Esportivos. Domingo, largada às 6h (Central da Corrida). Também oferece caminhada participativa de 3 km e 5 km PcD (sem premiação). Local de largada e retirada de kit a divulgar; não haverá entrega de kit no dia.",
       "prize": null,
+      "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-10-13T02:25:00Z",
+      "start": "06:00",
+      "verifiedAt": "2026-11-19T10:51:17.032Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -1340,11 +1341,12 @@
       "sourceName": "Sou Corredor",
       "publishedAt": null,
       "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Largada às 6h no Itapiracó (São Luís, segundo a Central da Corrida). Inscrições abertas.",
+      "notes": "Organização: Síndicas do Maranhão. Largada às 6h no Parque Estadual do Itapiracó (São Luís, segundo a Central da Corrida; o running.life cita Paço do Lumiar). Corrida de 5 km e caminhada de 3 km. Kit (camisa, número, chip, mochila tipo saco e viseira) em 25 e 26/11/2026, local a divulgar.",
       "prize": null,
+      "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-10-14T16:33:38.073Z",
+      "verifiedAt": "2026-11-19T10:51:17.032Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -4025,7 +4027,7 @@
       "version": "[\"2026-11-22\",[5,10],\"Senac de Imperatriz\",null,null,\"Esgotadas\",\"https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz\"]",
       "kind": "Alteração importante",
       "at": "2026-11-19T01:50:55.607Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-19T10:51:46.800Z"
     },
     {
       "id": "fd184652-a5ea-428b-85fe-577ccfebce5e",
@@ -4033,7 +4035,7 @@
       "version": "[\"2026-11-20\",[4,8],\"Local a confirmar\",null,null,\"Consultar\",\"https://centraldacorrida.com.br/evento/2%C2%AA-corrida-do-santuario-da-con%C3%A7ei%C3%A7%C3%A3o-\"]",
       "kind": "Alteração importante",
       "at": "2026-11-18T19:34:10.323Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-19T10:51:46.800Z"
     },
     {
       "id": "b9788e5d-87c4-4dae-842c-40b497c3e2e2",
@@ -6388,7 +6390,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-19T01:50:55.607Z",
+  "lastChecked": "2026-11-19T10:51:17.032Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
