@@ -215,7 +215,7 @@
       "location": "São Luís · largada a confirmar",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Em breve",
       "officialUrl": "https://centraldacorrida.com.br/evento/corridaefuncional2026",
       "sourceUrl": "https://centraldacorrida.com.br/evento/corridaefuncional2026",
       "sourceName": "Central da Corrida",
@@ -226,7 +226,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-19T10:51:17.032Z",
+      "verifiedAt": "2026-11-19T19:41:39.099Z",
       "firstSeenAt": "2026-10-13T02:25:00Z"
     },
     {
@@ -1205,7 +1205,7 @@
       "location": "Espaço Viver Bem, Av. Bernardo Sayão, 1172, Três Poderes",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://topchip.com.br/unimed2026",
       "sourceUrl": "https://topchip.com.br/unimed2026",
       "sourceName": "Topchip",
@@ -1223,7 +1223,7 @@
         "text": "R$ 90 (1º lote)"
       },
       "start": "06:30",
-      "verifiedAt": "2026-11-17T19:48:26.523Z",
+      "verifiedAt": "2026-11-19T19:41:39.099Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -4022,6 +4022,14 @@
   ],
   "changes": [
     {
+      "id": "d9a4c24d-625c-451c-90b6-163f52e1031c",
+      "eventId": "e-funcional-2026-sao-luis",
+      "version": "[\"2026-11-22\",[5,10],\"São Luís · largada a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridaefuncional2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-19T19:41:39.099Z",
+      "notifiedAt": null
+    },
+    {
       "id": "80103fc9-7bbc-4686-97ca-a99fa73856b1",
       "eventId": "sesc-2026-imperatriz",
       "version": "[\"2026-11-22\",[5,10],\"Senac de Imperatriz\",null,null,\"Esgotadas\",\"https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz\"]",
@@ -6390,7 +6398,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-19T10:51:17.032Z",
+  "lastChecked": "2026-11-19T19:41:39.099Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
