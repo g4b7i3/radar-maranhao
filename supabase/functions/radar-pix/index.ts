@@ -56,6 +56,15 @@ Deno.serve(async req => {
     return resp({ ok: true });
   }
 
+  // ───────── Diagnóstico interno (só com o cabeçalho interno): confere se o token do Mercado Pago ainda vale, sem expor nada
+  const xi = req.headers.get('x-radar-interno');
+  if (xi && (xi === Deno.env.get('RADAR_INTERNO') || xi === Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'))) {
+    if (!token) return resp({ token: false });
+    const r = await fetch(`${MP}/users/me`, { headers: { Authorization: `Bearer ${token}` } });
+    const u = await r.json().catch(() => ({}));
+    return resp({ token: true, mp_status: r.status, conta_ok: r.ok, site: u?.site_id ?? null, teste: String(token).startsWith('TEST-') });
+  }
+
   // ───────── Atleta pede o Pix
   const anon = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } });
   const { data: { user } } = await anon.auth.getUser();
