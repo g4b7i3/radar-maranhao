@@ -4027,7 +4027,7 @@
       "version": "[\"2026-11-22\",[5,10],\"São Luís · largada a confirmar\",null,null,\"Em breve\",\"https://centraldacorrida.com.br/evento/corridaefuncional2026\"]",
       "kind": "Alteração importante",
       "at": "2026-11-19T19:41:39.099Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-20T10:51:31.208Z"
     },
     {
       "id": "80103fc9-7bbc-4686-97ca-a99fa73856b1",
@@ -6398,7 +6398,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-19T19:41:39.099Z",
+  "lastChecked": "2026-11-20T10:51:07.143Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
