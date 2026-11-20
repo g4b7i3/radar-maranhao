@@ -1,6 +1,6 @@
 // Radar Pro · leitura dos resultados oficiais das cronometragens e conferência dos registros.
 // Formatos lidos direto (sem navegador):
-//  - Racezone (SA Crono, RaceTag, Meta Sport…): <base>/#/<prova> → <base>/data/events.json, data/<id>/event.json e results.json
+//  - Racezone (SA Crono, RaceTag, Meta Sport, Guará Crono…): <base>/#/<prova> → <base>/data/events.json, data/<id>/event.json e results.json
 //  - Wiclax .clax (Crono Esportes / resultadonline…): <host>/?f=<pasta>/<arquivo>.clax → <host>/<pasta>/<arquivo>.clax
 // Só guardamos nome, peito, sexo, faixa, tempo e colocação (nada de CPF ou outros dados das planilhas).
 // deno-lint-ignore-file no-explicit-any
@@ -108,7 +108,7 @@ async function wiclax(url: string): Promise<Lido | null> {
 }
 
 /** Sites de cronometragem que o Radar sabe ler. */
-export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info', 'resultadosbrasil.com.br', 'sfcrono.com.br'];
+export const HOSTS = ['resultadonline.com.br', 'racetag.com.br', 'sacrono.com.br', 'metasportoficial.com', 'cronoesportes.com.br', 'brlive.info', 'resultadosbrasil.com.br', 'sfcrono.com.br', 'guaracrono.com.br'];
 /** Lê um link de resultado. Devolve null se o formato não é conhecido. */
 export async function lerLink(url: string): Promise<Lido | null> {
   let u: URL; try { u = new URL(url.trim()); } catch { return null; }
@@ -123,7 +123,7 @@ export async function lerLink(url: string): Promise<Lido | null> {
 export type EventoRes = { nome: string; data: string; url: string };
 export async function listarEventos(): Promise<EventoRes[]> {
   const out: EventoRes[] = [];
-  const rz = ['https://result.racetag.com.br/sacrono/', 'https://www.sacrono.com.br/resultados/racetag/', 'https://resultados.metasportoficial.com/', 'https://sfcrono.com.br/resultados/sf/racetag/'];
+  const rz = ['https://result.racetag.com.br/sacrono/', 'https://www.sacrono.com.br/resultados/racetag/', 'https://resultados.metasportoficial.com/', 'https://sfcrono.com.br/resultados/sf/racetag/', 'https://www.guaracrono.com.br/resultados/racetag/'];
   await Promise.all(rz.map(async base => {
     try { for (const e of await pegar(base + 'data/events.json')) if (e.link && e.startDate) out.push({ nome: e.name, data: e.startDate, url: `${base}#/${e.link}` }); } catch { /* fonte fora do ar */ }
   }));
