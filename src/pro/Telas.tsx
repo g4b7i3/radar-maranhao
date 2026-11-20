@@ -1,5 +1,5 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Search, MessageCircle, Accessibility, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, MapPin, type LucideIcon } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga , GENEROS} from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
@@ -743,7 +743,10 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
 
 /* ───────── 8 · Minha conta ───────── */
 export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; temp: Temporada; email: string; pronto: () => void }) {
-  const [renovar, setRenovar] = useState(false);
+  // veio do aviso "Renovar com Pix": já abre o pagamento e rola até ele
+  const [renovar, setRenovar] = useState(() => { try { const v = sessionStorage.getItem('radar-renovar') === '1'; sessionStorage.removeItem('radar-renovar'); return v; } catch { return false; } });
+  const caixaRenovar = useRef<HTMLElement>(null);
+  useEffect(() => { if (renovar) setTimeout(() => caixaRenovar.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [editando, setEditando] = useState(false);
   const [apagar, setApagar] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
@@ -775,7 +778,7 @@ export function TelaConta({ perfil, temp, email, pronto }: { perfil: Perfil; tem
       </>}
       <FotoConta perfil={perfil} pronto={pronto} />
       <ZapConta perfil={perfil} pronto={pronto} />
-      {temp.assinante && <section className="pro-card">
+      {temp.assinante && <section className="pro-card" ref={caixaRenovar}>
         <p className="pro-k cinza">Assinatura</p>
         <p className="pro-sem-margem">{propria ? <><b className="pro-verde">Ativa</b> · vence em {vence}</> : equipePro ? <><b className="pro-verde">Ativa pela equipe {equipePro.nome}</b> · até {new Date(equipePro.valida_ate).toLocaleDateString('pt-BR')}{equipePro.dono ? ' · você é o treinador' : ''}</> : <><b className="pro-verde">Ativa</b></>}</p>
         {!renovar && <button className="btn outline pro-btn" onClick={() => setRenovar(true)}>Renovar com Pix</button>}

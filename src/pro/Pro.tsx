@@ -258,7 +258,7 @@ function ProTelas() {
       <PushConvite userId={perfil.user_id} />
       {!pro && !admin && <BannerAssinar pendentes={temp.pontos_pendentes} provas={temp.provas} assinar={irAssinar} />}
       {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê a agenda de provas, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
-      <AvisoVencimento validaAte={temp.valida_ate} renovar={irAssinar} />
+      <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { try { sessionStorage.setItem('radar-renovar', '1'); } catch { /* */ } irAssinar(); }} />
       {bemVindo && <BemVindoPro fechar={() => { setBemVindo(false); setAba('temporada'); window.scrollTo(0, 0); }} />}
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
       {fimDuelos.map(d => (
@@ -550,7 +550,23 @@ export function Assinar({ perfil, pronto, planoInicial = 'mensal', fixo = false 
     const t = setInterval(async () => { const r = await chamar<{ ativo: boolean; equipe_valida_ate?: string | null }>('radar-pix', { acao: 'status' }); if (r.ativo || (plano === 'equipe' && r.equipe_valida_ate && new Date(r.equipe_valida_ate) > new Date())) { setEstado('pago'); clearInterval(t); setTimeout(pronto, 1800); } }, 5000);
     return () => clearInterval(t);
   }, [estado, pronto, plano]);
-  const copiar = async () => { try { await navigator.clipboard.writeText(pix!.qr); setCopiado(true); setTimeout(() => setCopiado(false), 2500); } catch { /* */ } };
+  const [falhouCopia, setFalhouCopia] = useState(false);
+  const caixaPix = useRef<HTMLTextAreaElement>(null);
+  // copia o código: API moderna; se o navegador bloquear (app do Instagram/WhatsApp, iPhone antigo), seleciona e copia do jeito antigo
+  const copiar = async () => {
+    const ok = () => { setCopiado(true); setFalhouCopia(false); setTimeout(() => setCopiado(false), 2500); };
+    try { await navigator.clipboard.writeText(pix!.qr); return ok(); } catch { /* tenta o plano B */ }
+    const t = caixaPix.current;
+    if (t) {
+      try {
+        t.removeAttribute('readonly'); t.focus(); t.select(); t.setSelectionRange(0, pix!.qr.length);
+        const feito = document.execCommand('copy');
+        t.setAttribute('readonly', ''); t.blur();
+        if (feito) return ok();
+      } catch { /* */ }
+    }
+    setFalhouCopia(true);
+  };
   return (
     <div className="pro-form">
       {!fixo && estado === 'inicio' && (
@@ -569,8 +585,9 @@ export function Assinar({ perfil, pronto, planoInicial = 'mensal', fixo = false 
       {estado === 'inicio' && plano === 'equipe' && !perfil.assessoria && <p className="ct-erro">Antes, escreva o nome da sua assessoria no seu perfil (Conta → Editar perfil).</p>}
       {estado === 'gerando' && <button className="btn solid pro-btn" disabled>Gerando…</button>}
       {estado === 'aguardando' && pix && <>
-        <label className="ct-cidade">Pix copia e cola<textarea className="pro-copia" readOnly value={pix.qr} rows={3} onFocus={e => e.target.select()} /></label>
+        <label className="ct-cidade">Pix copia e cola<textarea ref={caixaPix} className="pro-copia" readOnly value={pix.qr} rows={4} onFocus={e => e.target.select()} onClick={e => (e.target as HTMLTextAreaElement).select()} /></label>
         <button className="btn pro-btn pro-pix" onClick={copiar}>{copiado ? 'Copiado!' : 'Copiar código Pix'}</button>
+        {falhouCopia && <p className="pro-aviso" role="alert">Seu celular não deixou copiar sozinho. Toque e segure no código acima, escolha <b>Selecionar tudo</b> e depois <b>Copiar</b>. Ou aponte a câmera do app do banco para o QR Code.</p>}
         <p className="pro-ok">Assim que o Pix cair, o acesso libera sozinho nesta tela.</p>
       </>}
       {estado === 'indisponivel' && <>
