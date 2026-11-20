@@ -52,7 +52,7 @@ export { MEDALHAS, GRUPOS } from './medalhas';
 
 export const STATUS: Record<Resultado['status'], { txt: string; cls: string; dica: string }> = {
   verificado: { txt: 'Verificado', cls: 'ok', dica: 'Conferido no resultado oficial da cronometragem.' },
-  aprovado: { txt: 'Aprovado', cls: 'ok', dica: 'Comprovante aprovado pelo Radar.' },
+  aprovado: { txt: 'Aprovado', cls: 'ok', dica: 'Aprovado no Radar Pro: conta no ranking.' },
   declarado: { txt: 'Declarado', cls: 'dec', dica: 'Conta na sua temporada. Para valer no ranking, o resultado oficial precisa sair ou você envia o comprovante.' },
   em_analise: { txt: 'Em análise', cls: 'ana', dica: 'O Radar está conferindo. Normalmente em até 2 dias.' },
   recusado: { txt: 'Recusado', cls: 'rec', dica: 'Não foi aceito. Fale com o Radar pelo WhatsApp.' },

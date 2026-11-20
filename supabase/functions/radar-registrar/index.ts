@@ -88,26 +88,29 @@ Deno.serve(async req => {
       await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk || null, obs: [obs, motivo].filter(Boolean).join(' · ').slice(0, 300) || null, tempo_s: Number(b.tempo_s) >= 300 ? Math.round(Number(b.tempo_s)) : null, peito: String(b.peito ?? '').replace(/\D/g, '').slice(0, 8) || null });
       return resp({ pedido: true, motivo });
     };
-    if (!lk) return await pedido('');
-    if (gratis) return await pedido('Modo grátis: a verificação pelo link é do Radar Pro');
-    try { lidoNovo = await lerLink(lk); } catch { lidoNovo = null; }
-    if (!lidoNovo?.linhas.length) return await pedido('Link não lido automaticamente');
-    if (lidoNovo.data && Math.abs(new Date(lidoNovo.data.slice(0, 10)).getTime() - new Date(dia).getTime()) > 86400_000)
-      return resp({ erro: `Esse link é de outro dia (${lidoNovo.data.slice(0, 10).split('-').reverse().join('/')}). Confira a data da prova ou o link.` }, 400);
-    const distsLink = [...new Set(lidoNovo.linhas.map(l => l.distancia_km).filter((x): x is number => !!x && x > 0).map(x => Math.round(x * 10) / 10))].sort((x, y) => x - y);
-    if (distsLink.length && !distsLink.some(d => Math.abs(real(d) - real(kmN)) < 0.2))
-      return resp({ erro: `No resultado essa prova tem ${distsLink.map(d => String(d).replace('.', ',') + ' km').join(', ')}. Escolha a distância certa.` }, 400);
-    // prova de verdade: precisa achar o atleta no resultado
-    const pre = lidoNovo.linhas.map(l => ({ nome: l.nome, nome_norm: normNome(l.nome), peito: l.peito ? l.peito.replace(/\D/g, '') || null : null, tempo_s: l.tempo_s, distancia_km: l.distancia_km, colocacao_geral: l.colocacao_geral, colocacao_faixa: l.colocacao_faixa }));
-    const nomeInsN = limpa(b.nome_inscricao, 120);
-    const pPeito = String(b.peito ?? '').replace(/\D/g, '').slice(0, 8) || null;
-    const achou = acharNoOficial(pre, real(kmN), { peito: pPeito, nomePerfil: perfil.nome_completo, nomeBusca: nomeInsN || perfil.nome_completo, tempo: Number(b.tempo_s) || null });
-    if (achou.outroAtleta) return resp({ erro: 'Esse número de peito é de outro atleta no resultado.' }, 400);
-    if (!achou.of) return await pedido('O Radar leu o link mas não achou o atleta');
+    // Grátis: continua indo para o pedido. Pro (decisão do Vinik, 20/11/2026): aprova na hora, com ou sem link.
+    if (gratis) return await pedido(lk ? 'Modo grátis: a verificação pelo link é do Radar Pro' : '');
+    if (lk) { try { lidoNovo = await lerLink(lk); } catch { lidoNovo = null; } }
+    let conferido = false;
+    if (lidoNovo?.linhas.length) {
+      if (lidoNovo.data && Math.abs(new Date(lidoNovo.data.slice(0, 10)).getTime() - new Date(dia).getTime()) > 86400_000)
+        return resp({ erro: `Esse link é de outro dia (${lidoNovo.data.slice(0, 10).split('-').reverse().join('/')}). Confira a data da prova ou o link.` }, 400);
+      const distsL = [...new Set(lidoNovo.linhas.map(l => l.distancia_km).filter((x): x is number => !!x && x > 0).map(x => Math.round(x * 10) / 10))];
+      if (distsL.length && !distsL.some(d => Math.abs(real(d) - real(kmN)) < 0.2))
+        return resp({ erro: `No resultado essa prova tem ${distsL.sort((x, y) => x - y).map(d => String(d).replace('.', ',') + ' km').join(', ')}. Escolha a distância certa.` }, 400);
+      const pre = lidoNovo.linhas.map(l => ({ nome: l.nome, nome_norm: normNome(l.nome), peito: l.peito ? l.peito.replace(/\D/g, '') || null : null, tempo_s: l.tempo_s, distancia_km: l.distancia_km, colocacao_geral: l.colocacao_geral, colocacao_faixa: l.colocacao_faixa }));
+      const nomeInsN = limpa(b.nome_inscricao, 120);
+      const pPeito = String(b.peito ?? '').replace(/\D/g, '').slice(0, 8) || null;
+      const achou = acharNoOficial(pre, real(kmN), { peito: pPeito, nomePerfil: perfil.nome_completo, nomeBusca: nomeInsN || perfil.nome_completo, tempo: Number(b.tempo_s) || null });
+      if (achou.outroAtleta) return resp({ erro: 'Esse número de peito é de outro atleta no resultado.' }, 400);
+      conferido = !!achou.of;
+    }
+    if (!conferido) lidoNovo = null; // não achou no link (ou não tem link): entra sem resultado oficial
+    const distsLink = lidoNovo ? [...new Set(lidoNovo.linhas.map(l => l.distancia_km).filter((x): x is number => !!x && x > 0).map(x => Math.round(x * 10) / 10))] : [];
     // junta com prova do mesmo dia que já exista (outra pessoa pediu, ou está na agenda)
-    const nomeEvento = lidoNovo.evento && lidoNovo.evento.length >= 5 ? lidoNovo.evento : nome;
+    const nomeEvento = lidoNovo?.evento && lidoNovo.evento.length >= 5 ? lidoNovo.evento : nome;
     const { data: doDia } = await db.from('radar_provas').select('*').gte('data', new Date(new Date(dia).getTime() - 86400_000).toISOString().slice(0, 10)).lte('data', new Date(new Date(dia).getTime() + 86400_000).toISOString().slice(0, 10));
-    const igual = (doDia ?? []).find(p => p.link_resultado === lk) ?? (doDia ?? []).find(p => p.data === dia && (parecenca(p.nome, nomeEvento) >= 0.5 || parecenca(p.nome, nome) >= 0.5));
+    const igual = (lk ? (doDia ?? []).find(p => p.link_resultado === lk) : undefined) ?? (doDia ?? []).find(p => p.data === dia && (parecenca(p.nome, nomeEvento) >= 0.5 || parecenca(p.nome, nome) >= 0.5));
     const todas = (ds: number[]) => [...new Set([...ds.map(Number), ...distsLink, kmN])].sort((x, y) => x - y);
     let pid: string;
     if (igual) {
@@ -120,8 +123,11 @@ Deno.serve(async req => {
     }
     const { data: pv } = await db.from('radar_provas').select('*').eq('id', pid).single();
     provaNova = { id: pv.id, name: pv.nome, date: pv.data, city: pv.cidade, uf: pv.uf ?? 'MA', distances: (pv.distancias ?? []).map(Number), start: pv.largada };
-    await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk, obs: obs || null, status: 'aprovada', prova_id: pid, resposta: 'Aprovada na hora pelo link do resultado.', decidido_em: new Date().toISOString() });
+    await db.from('radar_sugestoes_provas').insert({ user_id: user.id, nome, cidade, uf, data: dia, distancia_km: kmN, link: lk || null, obs: obs || null, status: 'aprovada', prova_id: pid,
+      resposta: conferido ? 'Aprovada na hora pelo link do resultado.' : 'Aprovada na hora (Radar Pro).', decidido_em: new Date().toISOString() });
     b.prova_id = pid;
+    // sem tempo informado: a prova já fica aprovada e aparece em "Eu corri" para registrar
+    if (!conferido && !(Number(b.tempo_s) > 0)) return resp({ pedido: true, aprovada: true, motivo: 'Aprovada' });
   }
 
   // A prova precisa estar na agenda do Radar e já ter acontecido.
@@ -227,15 +233,11 @@ Deno.serve(async req => {
   const melhorAntes = mesmaDist.length ? Math.min(...mesmaDist.map(h => h.tempo_s)) : null;
 
   // 2) Status e alarmes contra fraude
-  let status = oficial ? 'verificado' : link && !gratis ? 'em_analise' : 'declarado';
-  let motivo: string | null = oficial ? null : gratis ? 'Verificar com o resultado oficial é do Radar Pro. Assine para validar esta prova.' : link ? (linkLido ? 'O Radar leu o resultado, mas não achou o seu nome/peito: conferir.' : 'Comprovante enviado: aguardando aprovação.') : null;
-  if (!oficial && !gratis && n > 90) { status = 'em_analise'; motivo = 'Nota por idade acima de 90%: precisa do resultado oficial.'; }
-  if (!oficial && !gratis && melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Melhora de mais de 8% sobre o seu melhor tempo: precisa do resultado oficial.'; }
-  if (viaIA) {
-    motivo = `Verificado por leitura automática do link (${viaIA.fonte}).`;
-    if (n > 90) { status = 'em_analise'; motivo = 'Leitura automática com nota acima de 90%: o Radar confere.'; }
-    else if (melhorAntes && tempo < melhorAntes * 0.92) { status = 'em_analise'; motivo = 'Leitura automática com melhora de mais de 8%: o Radar confere.'; }
-  }
+  // Pro (decisão do Vinik, 20/11/2026, sem prêmios): o que não bate com o resultado oficial entra aprovado na hora, com ou sem link.
+  // Grátis continua "declarado" (fora do ranking).
+  const status = oficial ? 'verificado' : gratis ? 'declarado' : 'aprovado';
+  let motivo: string | null = oficial ? null : gratis ? 'Verificar com o resultado oficial é do Radar Pro. Assine para validar esta prova.' : 'Aprovado na hora (Radar Pro), sem conferência do resultado oficial.';
+  if (viaIA) motivo = `Verificado por leitura automática do link (${viaIA.fonte}).`;
 
   // 3) Pontos
   const temporada = Number(prova.date.slice(0, 4));
