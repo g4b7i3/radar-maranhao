@@ -292,8 +292,8 @@ function ProTelas() {
 }
 
 
-/* ───────── Menu de baixo: Feed · Gravar · Agenda · Você · Mais (o resto fica no Mais) ───────── */
-const FIXAS: Aba[] = ['feed', 'gravar', 'provas', 'temporada'];
+/* ───────── Menu de baixo: Feed · Gravar · Território · Agenda · Você · Mais (o resto fica no Mais) ───────── */
+const FIXAS: Aba[] = ['feed', 'gravar', 'territorio', 'provas', 'temporada'];
 function MenuFixo({ abas, aba, ir }: { abas: { id: Aba; nome: string; Icone: LucideIcon }[]; aba: Aba; ir: (a: Aba) => void }) {
   const [mais, setMais] = useState(false);
   const fixas = FIXAS.map(id => abas.find(a => a.id === id)!).filter(Boolean);

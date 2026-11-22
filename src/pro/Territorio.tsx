@@ -1,9 +1,10 @@
 // Radar · Território: o Maranhão em hexágonos. Quem corre domina; para tomar, precisa correr mais forte (nota por idade).
 // A casa marcada esconde dos outros o que fica perto dela. As regras ficam no banco (radar_priv.terr_*).
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Crosshair, Home, Hexagon, Crown, Flame, Shield, Check, X, ChevronDown, ChevronUp, MapPin, Snowflake } from 'lucide-react';
+import { Crosshair, Home, Hexagon, Crown, Flame, Shield, Check, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, MapPin, Snowflake, User, Users, UserPlus, Search, Mail, LogOut } from 'lucide-react';
 import type { Map as MLMap, GeoJSONSource, Marker } from 'maplibre-gl';
 import { sb } from './sb';
+import MA from './mapa-ma.json';
 import './territorio.css';
 
 type Hex = { hex: string; lat: number; lng: number; dono: string | null; dono_chave: string | null; dono_foto: string | null; eu: boolean; forca: number | null; desde: string | null; minha_forca: number | null; reacoes: Record<string, number>; minha_reacao: string | null };
@@ -13,7 +14,7 @@ type Placar = { posicao: number; nome: string; chave: string; foto: string | nul
 const EMOJIS = ['🔥', '💪', '👀', '👑', '😂', '⚡'];
 const S = 0.0015, K = 0.9986; // mesma grade do banco
 // cores dos outros atletas: bem diferentes entre si, sem rosa e sem dourado (dourado é só seu)
-const PALETA = ['#1d3fbf', '#0f9d8a', '#f07c1e', '#7b4fd6', '#2fa84f', '#1aa3e8', '#d63a2f', '#8a9a1b', '#a0642c', '#17becf', '#4b5bd6', '#5f7a8c', '#c2571a', '#3f8f3a'];
+const PALETA = ['#1d3fbf', '#f07c1e', '#2fa84f', '#7b4fd6', '#d63a2f', '#17becf', '#8a9a1b', '#795548', '#1aa3e8', '#00695c', '#4b5bd6', '#5f7a8c', '#3d5a80', '#0f9d8a'];
 const OURO = '#ffd34d';
 const escuro = () => document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 const estilo = () => `https://tiles.openfreemap.org/styles/${escuro() ? 'fiord' : 'positron'}`;
@@ -37,11 +38,11 @@ function atribuirCores(lista: Hex[], extras: string[]) {
   const ordem = [...qtd.keys()].sort((a, b) => (qtd.get(b)! - qtd.get(a)!) || a.localeCompare(b));
   for (const k of [...ordem, ...extras.filter(e => !qtd.has(e))]) {
     if (cores.has(k)) continue;
-    const usadas = new Set([...(viz.get(k) ?? [])].map(v => cores.get(v)).filter(Boolean));
-    const ini = hashDe(k) % PALETA.length;
-    let cor = PALETA[ini];
-    for (let i = 0; i < PALETA.length; i++) { const c = PALETA[(ini + i) % PALETA.length]; if (!usadas.has(c)) { cor = c; break; } }
-    cores.set(k, cor);
+    // 1º: cor que ninguém no mapa usa; 2º: ao menos diferente dos vizinhos; 3º: a da chave
+    const vizinhas = new Set([...(viz.get(k) ?? [])].map(v => cores.get(v)).filter(Boolean));
+    const emUso = new Set(cores.values());
+    const ini = hashDe(k) % PALETA.length, roda = PALETA.map((_, i) => PALETA[(ini + i) % PALETA.length]);
+    cores.set(k, roda.find(c => !emUso.has(c)) ?? roda.find(c => !vizinhas.has(c)) ?? roda[0]);
   }
   return cores;
 }
@@ -94,7 +95,8 @@ const geoHex = (lista: Hex[]) => ({
   })),
 });
 
-export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => void }) {
+function JogoTerritorio({ pro, assinar, modo, minha, recarregarMinha }: { pro: boolean; assinar: () => void; modo: 'individual' | 'equipe'; minha: Minha | null; recarregarMinha: () => void }) {
+  const eq = modo === 'equipe';
   const [hexes, setHexes] = useState<Hex[] | null>(null);
   const [meu, setMeu] = useState<Meu | null>(null);
   const [placar, setPlacar] = useState<Placar[]>([]);
@@ -103,9 +105,17 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
   const [depois, setDepois] = useState(() => { try { return sessionStorage.getItem('radar-terr-casa-depois') === '1'; } catch { return false; } });
   const [regras, setRegras] = useState(false);
   const carregar = () => {
-    sb.rpc('radar_territorio_mapa_v2').then(({ data }) => setHexes((data ?? []) as Hex[]));
     sb.rpc('radar_territorio_meu').then(({ data }) => setMeu(data as Meu));
-    sb.rpc('radar_territorio_placar_v2').then(({ data }) => setPlacar((data ?? []) as Placar[]));
+    if (eq) {
+      // modo equipe: o hexágono é da equipe cujo melhor atleta correu ali com mais força
+      sb.rpc('radar_dominio_mapa_equipes').then(({ data }) => setHexes(((data ?? []) as { hex: string; lat: number; lng: number; equipe: string; chave: string; minha: boolean; forca: number }[])
+        .map(x => ({ hex: x.hex, lat: x.lat, lng: x.lng, dono: x.equipe, dono_chave: x.chave, dono_foto: null, eu: x.minha, forca: x.forca, desde: null, minha_forca: null, reacoes: {}, minha_reacao: null }))));
+      sb.rpc('radar_dominio_placar_equipes').then(({ data }) => setPlacar(((data ?? []) as { posicao: number; equipe: string; chave: string; hexagonos: number; minha: boolean }[])
+        .map(x => ({ posicao: x.posicao, nome: x.equipe, chave: x.chave, foto: null, hexagonos: x.hexagonos, eu: x.minha }))));
+    } else {
+      sb.rpc('radar_territorio_mapa_v2').then(({ data }) => setHexes((data ?? []) as Hex[]));
+      sb.rpc('radar_territorio_placar_v2').then(({ data }) => setPlacar((data ?? []) as Placar[]));
+    }
   };
   useEffect(carregar, []);
   // cores do mapa: decididas antes de desenhar (o mapa e as fotos usam as mesmas)
@@ -139,8 +149,8 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
         </section>
       )}
 
-      <section className="pro-card terr-topo">
-        <p className="pro-k"><Hexagon size={15} aria-hidden="true" /> Território</p>
+      {eq ? <PainelEquipe minha={minha} pro={pro} assinar={assinar} mudou={() => { recarregarMinha(); carregar(); }} /> : <section className="pro-card terr-topo">
+        <p className="pro-k"><Hexagon size={15} aria-hidden="true" /> Individual</p>
         <h2 className="terr-tit">Corra e domine o Maranhão</h2>
         <p className="pro-sem-margem terr-sub">Cada hexágono é de quem correu ali com mais força. Para tomar, corra mais forte que o dono.</p>
         <div className="terr-nums">
@@ -150,22 +160,22 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
           <span className={meu?.esfriando ? 'frio' : ''}><b>{meu?.esfriando ?? '–'}</b><small>esfriando</small></span>
         </div>
         {!pro && <div className="terr-pro"><span><b>Você já vê o mapa.</b> Para dominar território, é o Radar Pro.</span><button className="btn solid" onClick={assinar}>Assinar · R$ 10</button></div>}
-      </section>
+      </section>}
 
-      <MapaTerritorio hexes={hexes} casa={meu?.casa ?? null} sel={sel} escolher={setSel} />
+      <MapaTerritorio key={modo} hexes={hexes} casa={meu?.casa ?? null} sel={sel} escolher={setSel} equipe={eq} />
 
       {h && (
         <section className="pro-card terr-hex" aria-live="polite">
           <div className="pro-linha">
-            <p className="pro-k">{h.eu ? <><Crown size={15} aria-hidden="true" /> Seu território</> : h.dono ? 'Território dominado' : 'Hexágono livre'}</p>
+            <p className="pro-k">{h.eu ? <><Crown size={15} aria-hidden="true" /> {eq ? 'Território da sua equipe' : 'Seu território'}</> : h.dono ? (eq ? 'Território de outra equipe' : 'Território dominado') : 'Hexágono livre'}</p>
             <button className="btn text" onClick={() => setSel(null)} aria-label="Fechar"><X size={18} /></button>
           </div>
           {h.dono ? (
             <div className="terr-dono">
               {h.dono_foto ? <img src={h.dono_foto} alt="" /> : <i style={{ background: h.eu ? OURO : corDe(h.dono_chave) }}>{h.dono.slice(0, 1).toUpperCase()}</i>}
               <div>
-                <b>{h.eu ? 'Você' : `@${h.dono}`}</b>
-                <small>força {num(h.forca)} · desde {h.desde ? haTempo(h.desde) : '–'}</small>
+                <b>{eq ? h.dono : h.eu ? 'Você' : `@${h.dono}`}</b>
+                <small>força {num(h.forca)}{h.desde ? ` · desde ${haTempo(h.desde)}` : eq ? ' · do melhor atleta da equipe aqui' : ''}</small>
               </div>
             </div>
           ) : <p className="pro-sem-margem">Ninguém domina aqui. Corra por este hexágono e ele é seu.</p>}
@@ -173,15 +183,16 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
             ? <p className="terr-alerta frio"><Snowflake size={15} aria-hidden="true" /> Esfriando: perde 1 ponto por dia até você correr aqui de novo.</p>
             : <p className="fine pro-sem-margem">Começa a esfriar em {14 - dias(h.desde)} {14 - dias(h.desde) === 1 ? 'dia' : 'dias'}. Corra aqui de novo para defender.</p>)}
           {!h.eu && h.dono && h.forca != null && (
-            <p className="terr-alerta"><Flame size={15} aria-hidden="true" /> Para tomar: corra aqui com força acima de <b>{num(h.forca)}</b>.{h.minha_forca != null ? ` A sua aqui é ${num(h.minha_forca)}.` : ''}</p>
+            <p className="terr-alerta"><Flame size={15} aria-hidden="true" /> {eq ? 'Para a sua equipe tomar: alguém dela' : 'Para tomar:'} corra aqui com força acima de <b>{num(h.forca)}</b>.{h.minha_forca != null ? ` A sua aqui é ${num(h.minha_forca)}.` : ''}</p>
           )}
-          <div className="terr-emojis" role="group" aria-label="Reagir a este lugar">
+          {eq && h.eu && <p className="fine pro-sem-margem">Para defender, qualquer atleta da equipe corre aqui de novo.</p>}
+          {!eq && <div className="terr-emojis" role="group" aria-label="Reagir a este lugar">
             {EMOJIS.map(e => (
               <button key={e} className={h.minha_reacao === e ? 'on' : ''} aria-pressed={h.minha_reacao === e} onClick={() => reagir(e)}>
                 <span aria-hidden="true">{e}</span>{h.reacoes[e] ? <small>{h.reacoes[e]}</small> : null}
               </button>
             ))}
-          </div>
+          </div>}
         </section>
       )}
 
@@ -195,18 +206,19 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
           <li><b>Para tomar um hexágono,</b> corra por ele com força maior que a do dono. Empate fica com quem já estava.</li>
           <li><b>Defenda.</b> Território sem corrida por 14 dias começa a esfriar: perde 1 ponto de força por dia. Correr ali de novo faz parar de esfriar.</li>
           <li><b>Vale corrida no Maranhão</b>, de 1 km pra cima, no ritmo de corrida (entre 2:30 e 15 min/km).</li>
+          <li><b>Em equipe</b> (até 5 atletas), o hexágono é da equipe cujo melhor atleta correu ali com mais força. O individual continua valendo ao mesmo tempo.</li>
         </ol>}
       </section>
 
       {placar.length > 0 && (
         <section className="pro-card terr-placar">
-          <p className="pro-k"><Crown size={15} aria-hidden="true" /> Quem domina mais</p>
+          <p className="pro-k"><Crown size={15} aria-hidden="true" /> {eq ? 'Equipes que dominam mais' : 'Quem domina mais'}</p>
           <ol>
             {placar.slice(0, 10).map(p => (
               <li key={p.posicao + p.nome} className={p.eu ? 'eu' : ''}>
                 <span className="pos">{p.posicao}º</span>
                 {p.foto ? <img src={p.foto} alt="" /> : <i style={{ background: p.eu ? OURO : corDe(p.chave) }}>{p.nome.slice(0, 1).toUpperCase()}</i>}
-                <span className="nome">{p.eu ? 'Você' : `@${p.nome}`}</span>
+                <span className="nome">{eq ? `${p.nome}${p.eu ? ' (sua)' : ''}` : p.eu ? 'Você' : `@${p.nome}`}</span>
                 <b>{p.hexagonos}</b>
               </li>
             ))}
@@ -231,7 +243,7 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
 }
 
 /* ───────── o mapa 3D dos hexágonos ───────── */
-function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; casa: Meu['casa']; sel: string | null; escolher: (h: string | null) => void }) {
+function MapaTerritorio({ hexes, casa, sel, escolher, equipe = false }: { hexes: Hex[] | null; casa: Meu['casa']; sel: string | null; escolher: (h: string | null) => void; equipe?: boolean }) {
   const caixa = useRef<HTMLDivElement>(null);
   const mapa = useRef<MLMap | null>(null);
   const lib = useRef<typeof import('maplibre-gl') | null>(null);
@@ -286,11 +298,11 @@ function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; c
       const el = document.createElement('button');
       el.type = 'button';
       el.className = 'terr-avatar' + (b.eu ? ' eu' : '');
-      el.setAttribute('aria-label', `${b.eu ? 'Seu território' : `Território de @${b.nome}`}: ${b.tamanho} ${b.tamanho === 1 ? 'hexágono' : 'hexágonos'}`);
+      el.setAttribute('aria-label', `${equipe ? `Território da equipe ${b.nome}` : b.eu ? 'Seu território' : `Território de @${b.nome}`}: ${b.tamanho} ${b.tamanho === 1 ? 'hexágono' : 'hexágonos'}`);
       el.style.setProperty('--cor', b.eu ? OURO : corDe(b.chave));
       const foto = document.createElement('span'); foto.className = 'terr-avatar-foto';
       if (b.foto) { const img = document.createElement('img'); img.src = b.foto; img.alt = ''; img.loading = 'lazy'; img.onerror = () => { img.remove(); foto.textContent = b.nome.slice(0, 1).toUpperCase(); }; foto.appendChild(img); }
-      else foto.textContent = (b.eu ? 'Você' : b.nome).slice(0, 1).toUpperCase();
+      else foto.textContent = b.nome.slice(0, 1).toUpperCase();
       el.appendChild(foto);
       el.onclick = ev => { ev.stopPropagation(); escolher(b.centro.hex); };
       novas.push({ marker: new ml.Marker({ element: el, anchor: 'bottom' }).setLngLat([b.centro.lng, b.centro.lat]).addTo(m), peso: (b.eu ? 1e6 : 0) + b.tamanho, tipo: 'foto' });
@@ -348,11 +360,11 @@ function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; c
         <button className="mp-redondo" onClick={minhaPosicao} aria-label="Ir para a minha posição"><Crosshair size={19} /></button>
       </div>
       <div className="terr-legenda" aria-hidden="true">
-        <span><i style={{ background: OURO }} />Seu</span>
-        <span><i className="terr-leg-varias" />Outros atletas, cada um com a sua cor</span>
+        <span><i style={{ background: OURO }} />{equipe ? 'Sua equipe' : 'Seu'}</span>
+        <span><i className="terr-leg-varias" />{equipe ? 'Outras equipes' : 'Outros atletas, cada um com a sua cor'}</span>
         <span className="alt">Mais alto = mais força</span>
       </div>
-      {hexes && !hexes.length && <p className="terr-vazio">O mapa ainda está livre. A primeira corrida gravada aqui já conquista território.</p>}
+      {hexes && !hexes.length && <p className="terr-vazio">{equipe ? 'Nenhuma equipe dominou território ainda. Monte a sua e saiam pra correr.' : 'O mapa ainda está livre. A primeira corrida gravada aqui já conquista território.'}</p>}
     </div>
   );
 }
@@ -445,5 +457,203 @@ function MarcarCasa({ atual, fechar, salvou }: { atual: Meu['casa']; fechar: () 
         <button className="btn solid pro-btn" onClick={salvar} disabled={!ponto || salvando}><Check size={18} aria-hidden="true" />{salvando ? 'Salvando…' : 'Proteger minha casa'}</button>
       </div>
     </div>
+  );
+}
+
+/* ═════════ Domínio Maranhão: abertura do jogo, escolha do modo e equipe ═════════ */
+type Minha = {
+  equipe: { id: string; nome: string; sou_dono: boolean; chave: string; membros: { apelido: string; foto: string | null; eu: boolean; dono: boolean; hexagonos: number }[]; chamados: { apelido: string; foto: string | null }[] } | null;
+  convites: { id: string; equipe: string; de: string | null; membros: number }[];
+};
+type Modo = 'inicio' | 'individual' | 'equipe';
+
+export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => void }) {
+  const [modo, setModo] = useState<Modo>('inicio');
+  const [minha, setMinha] = useState<Minha | null>(null);
+  const [meu, setMeu] = useState<Meu | null>(null);
+  const carregarMinha = () => { sb.rpc('radar_dominio_minha').then(({ data }) => setMinha((data as Minha) ?? { equipe: null, convites: [] })); };
+  useEffect(() => { carregarMinha(); sb.rpc('radar_territorio_meu').then(({ data }) => setMeu(data as Meu)); }, []);
+  const ir = (m: Modo) => { setModo(m); window.scrollTo(0, 0); try { localStorage.setItem('radar-dominio-modo', m); } catch { /* */ } };
+  if (modo === 'inicio') return <AberturaDominio meu={meu} minha={minha} escolher={ir} />;
+  return (
+    <div className="dom-jogo">
+      <div className="dom-barra pro-cont">
+        <button className="dom-voltar" onClick={() => ir('inicio')} aria-label="Voltar para o início do Domínio Maranhão"><ChevronLeft size={18} aria-hidden="true" /><span>Domínio <b>MA</b></span></button>
+        <div className="dom-alternar" role="tablist" aria-label="Modo de jogo">
+          <button role="tab" aria-selected={modo === 'individual'} onClick={() => ir('individual')}><User size={15} aria-hidden="true" />Individual</button>
+          <button role="tab" aria-selected={modo === 'equipe'} onClick={() => ir('equipe')}><Users size={15} aria-hidden="true" />Equipe{minha?.convites.length ? <i className="dom-bolinha">{minha.convites.length}</i> : null}</button>
+        </div>
+      </div>
+      <JogoTerritorio key={modo} modo={modo} pro={pro} assinar={assinar} minha={minha} recarregarMinha={carregarMinha} />
+    </div>
+  );
+}
+
+// hexágonos que acendem no mapa da abertura (fixos, para a cena ficar igual em todo celular)
+const LUZES = Array.from({ length: 46 }, (_, i) => {
+  const a = Math.sin(i * 12.9898) * 43758.5453, b = Math.sin(i * 78.233) * 12345.6789;
+  const col = Math.floor((a - Math.floor(a)) * 30), lin = Math.floor((b - Math.floor(b)) * 22);
+  return { x: 40 + col * 8.66 + (lin % 2) * 4.33, y: 40 + lin * 7.5, cor: ['#ffd34d', '#ffd34d', '#ffd34d', '#1aa3e8', '#f07c1e', '#2fa84f', '#7b4fd6'][i % 7], atraso: (i * 0.37) % 6 };
+});
+const hexPts = (x: number, y: number, r: number) => Array.from({ length: 6 }, (_, k) => { const a = Math.PI / 180 * (60 * k - 30); return `${(x + r * Math.cos(a)).toFixed(2)},${(y + r * Math.sin(a)).toFixed(2)}`; }).join(' ');
+
+function AberturaDominio({ meu, minha, escolher }: { meu: Meu | null; minha: Minha | null; escolher: (m: Modo) => void }) {
+  const convites = minha?.convites.length ?? 0;
+  return (
+    <section className="dom-abertura" aria-labelledby="dom-titulo">
+      <div className="dom-grade" aria-hidden="true" />
+      <div className="dom-brilho" aria-hidden="true" />
+      <svg className="dom-mapa" viewBox="0 0 300 300" aria-hidden="true">
+        <defs>
+          <pattern id="dom-hex" width="8.66" height="15" patternUnits="userSpaceOnUse">
+            <polygon points={hexPts(4.33, 2.5, 4.6)} fill="none" stroke="rgba(255,211,77,.28)" strokeWidth=".6" />
+            <polygon points={hexPts(0, 10, 4.6)} fill="none" stroke="rgba(255,211,77,.28)" strokeWidth=".6" />
+            <polygon points={hexPts(8.66, 10, 4.6)} fill="none" stroke="rgba(255,211,77,.28)" strokeWidth=".6" />
+          </pattern>
+          <clipPath id="dom-recorte"><path d={MA.d} /></clipPath>
+          <linearGradient id="dom-varredura" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stopColor="#ffd34d" stopOpacity="0" />
+            <stop offset=".5" stopColor="#ffd34d" stopOpacity=".55" />
+            <stop offset="1" stopColor="#ffd34d" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={MA.d} className="dom-mapa-fundo" />
+        <g clipPath="url(#dom-recorte)">
+          <rect width="300" height="300" fill="url(#dom-hex)" />
+          {LUZES.map((l, i) => <polygon key={i} className="dom-luz" points={hexPts(l.x, l.y, 4.2)} fill={l.cor} style={{ animationDelay: `${l.atraso}s` }} />)}
+          <rect className="dom-scan" x="0" y="-60" width="300" height="60" fill="url(#dom-varredura)" />
+        </g>
+        <path d={MA.d} className="dom-mapa-borda" />
+      </svg>
+
+      <div className="dom-conteudo">
+        <p className="dom-kicker"><Hexagon size={13} aria-hidden="true" /> Radar · Temporada 1</p>
+        <h1 id="dom-titulo" className="dom-titulo"><span>Domínio</span><span>Maranhão</span></h1>
+        <p className="dom-lema">Corra. Conquiste. Defenda.</p>
+
+        <div className="dom-stats">
+          <span><b>{meu?.hexagonos ?? '–'}</b><small>seus hexágonos</small></span>
+          <span><b>{meu?.ganhos_7d ?? '–'}</b><small>conquistas na semana</small></span>
+          <span className="dom-stat-equipe"><b>{minha?.equipe ? minha.equipe.nome : '—'}</b><small>{minha?.equipe ? 'sua equipe' : 'sem equipe'}</small></span>
+        </div>
+
+        <p className="dom-escolha">Como você quer jogar?</p>
+        <div className="dom-modos">
+          <button className="dom-modo" onClick={() => escolher('individual')}>
+            <span className="dom-modo-ic"><User size={26} aria-hidden="true" /></span>
+            <span className="dom-modo-txt"><b>Individual</b><small>Cada hexágono é seu. Corra mais forte que o dono para tomar.</small></span>
+            <span className="dom-modo-ir" aria-hidden="true"><ChevronRight size={22} /></span>
+          </button>
+          <button className="dom-modo equipe" onClick={() => escolher('equipe')}>
+            <span className="dom-modo-ic"><Users size={26} aria-hidden="true" /></span>
+            <span className="dom-modo-txt"><b>Equipe</b><small>{minha?.equipe ? `${minha.equipe.nome} · ${minha.equipe.membros.length} de 5 atletas` : 'Chame até 4 amigos e dominem o mapa juntos.'}</small></span>
+            {convites > 0 ? <span className="dom-convite">{convites} {convites === 1 ? 'convite' : 'convites'}</span> : <span className="dom-modo-ir" aria-hidden="true"><ChevronRight size={22} /></span>}
+          </button>
+        </div>
+        <p className="dom-rodape">Todo o Maranhão está no jogo. As suas corridas entram sozinhas.</p>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── painel da equipe: criar, chamar atletas (até 5), aceitar convites ───────── */
+function PainelEquipe({ minha, pro, assinar, mudou }: { minha: Minha | null; pro: boolean; assinar: () => void; mudou: () => void }) {
+  const [nome, setNome] = useState('');
+  const [busca, setBusca] = useState('');
+  const [achados, setAchados] = useState<{ apelido: string; foto: string | null; tem_equipe: boolean }[]>([]);
+  const [erro, setErro] = useState<string | null>(null);
+  const [ok, setOk] = useState<string | null>(null);
+  const [indo, setIndo] = useState(false);
+  const [sair, setSair] = useState(false);
+  const e = minha?.equipe ?? null;
+
+  useEffect(() => {
+    const q = busca.trim().replace(/^@/, '');
+    if (q.length < 2) { setAchados([]); return; }
+    const t = setTimeout(() => sb.rpc('radar_dominio_buscar', { p_q: q }).then(({ data }) => setAchados((data ?? []) as typeof achados)), 250);
+    return () => clearTimeout(t);
+  }, [busca]);
+
+  const fazer = async (fn: string, args: Record<string, unknown>, sucesso?: string) => {
+    setErro(null); setOk(null); setIndo(true);
+    const { error } = await sb.rpc(fn, args);
+    setIndo(false);
+    if (error) { setErro(error.message || 'Não deu agora. Tente de novo.'); return false; }
+    if (sucesso) setOk(sucesso);
+    mudou(); return true;
+  };
+
+  if (minha == null) return <section className="pro-card dom-equipe"><p className="pro-sem-margem">Carregando…</p></section>;
+
+  if (!e) return (
+    <>
+      {minha.convites.map(c => (
+        <section key={c.id} className="pro-card dom-convite-card">
+          <p className="pro-k"><Mail size={15} aria-hidden="true" /> Convite para equipe</p>
+          <p className="pro-sem-margem">{c.de ? <b>@{c.de}</b> : 'Um atleta'} chamou você para a equipe <b>{c.equipe}</b> ({c.membros} de 5 atletas).</p>
+          <div className="terr-bts">
+            <button className="btn solid" disabled={indo} onClick={() => fazer('radar_dominio_responder', { p_convite: c.id, p_aceitar: true })}><Check size={17} aria-hidden="true" />Entrar na equipe</button>
+            <button className="btn text" disabled={indo} onClick={() => fazer('radar_dominio_responder', { p_convite: c.id, p_aceitar: false })}>Recusar</button>
+          </div>
+        </section>
+      ))}
+      <section className="pro-card dom-equipe">
+        <p className="pro-k"><Users size={15} aria-hidden="true" /> Criar sua equipe</p>
+        <h2 className="terr-tit">Dominem o Maranhão juntos</h2>
+        <p className="pro-sem-margem terr-sub">Até 5 atletas. O hexágono é da equipe cujo melhor atleta correu ali com mais força. O seu individual continua valendo ao mesmo tempo.</p>
+        {pro ? <>
+          <label className="ct-cidade">Nome da equipe<input value={nome} onChange={ev => setNome(ev.target.value)} maxLength={30} placeholder="Ex.: Lobos da Litorânea" /></label>
+          {erro && <p className="ct-erro" role="alert">{erro}</p>}
+          <button className="btn solid pro-btn" disabled={indo || nome.trim().length < 3} onClick={() => fazer('radar_dominio_equipe_criar', { p_nome: nome })}><Users size={18} aria-hidden="true" />{indo ? 'Criando…' : 'Criar equipe'}</button>
+        </> : <div className="terr-pro"><span><b>Criar equipe é do Radar Pro.</b> Se alguém te chamar, o convite aparece aqui.</span><button className="btn solid" onClick={assinar}>Assinar · R$ 10</button></div>}
+      </section>
+    </>
+  );
+
+  const vagas = 5 - e.membros.length - e.chamados.length;
+  return (
+    <section className="pro-card dom-equipe">
+      <div className="pro-linha">
+        <p className="pro-k"><Users size={15} aria-hidden="true" /> Sua equipe</p>
+        <span className="dom-contagem">{e.membros.length} de 5</span>
+      </div>
+      <h2 className="terr-tit dom-nome-equipe"><Hexagon size={22} aria-hidden="true" fill={OURO} color={OURO} />{e.nome}</h2>
+      <ul className="dom-vagas">
+        {e.membros.map(m => (
+          <li key={m.apelido} className={m.eu ? 'eu' : ''}>
+            <span className="dom-av">{m.foto ? <img src={m.foto} alt="" /> : m.apelido.slice(0, 1).toUpperCase()}{m.dono && <Crown size={13} aria-label="Criou a equipe" className="dom-coroa" />}</span>
+            <span className="dom-vaga-txt"><b>{m.eu ? 'Você' : `@${m.apelido}`}</b><small>{m.hexagonos} {m.hexagonos === 1 ? 'hexágono' : 'hexágonos'}</small></span>
+            {e.sou_dono && !m.eu && <button className="btn text dom-tirar" disabled={indo} onClick={() => fazer('radar_dominio_remover', { p_apelido: m.apelido })} aria-label={`Tirar @${m.apelido} da equipe`}><X size={16} /></button>}
+          </li>
+        ))}
+        {e.chamados.map(c => (
+          <li key={c.apelido} className="chamado">
+            <span className="dom-av">{c.foto ? <img src={c.foto} alt="" /> : c.apelido.slice(0, 1).toUpperCase()}</span>
+            <span className="dom-vaga-txt"><b>@{c.apelido}</b><small>esperando resposta</small></span>
+            {e.sou_dono && <button className="btn text dom-tirar" disabled={indo} onClick={() => fazer('radar_dominio_remover', { p_apelido: c.apelido })} aria-label={`Cancelar o convite de @${c.apelido}`}><X size={16} /></button>}
+          </li>
+        ))}
+        {Array.from({ length: Math.max(0, vagas) }, (_, i) => <li key={'v' + i} className="vazia"><span className="dom-av"><UserPlus size={16} aria-hidden="true" /></span><span className="dom-vaga-txt"><small>vaga livre</small></span></li>)}
+      </ul>
+
+      {vagas > 0 && <div className="dom-chamar">
+        <label className="ct-cidade">Chamar atleta<span className="dom-busca"><Search size={16} aria-hidden="true" /><input value={busca} onChange={ev => setBusca(ev.target.value)} placeholder="Digite o @ do atleta" autoCapitalize="none" autoCorrect="off" /></span></label>
+        {achados.length > 0 && <ul className="dom-achados">
+          {achados.map(a => (
+            <li key={a.apelido}>
+              <span className="dom-av">{a.foto ? <img src={a.foto} alt="" /> : a.apelido.slice(0, 1).toUpperCase()}</span>
+              <b>@{a.apelido}</b>
+              {a.tem_equipe ? <small>já tem equipe</small> : <button className="btn solid" disabled={indo} onClick={async () => { if (await fazer('radar_dominio_convidar', { p_apelido: a.apelido }, `Convite enviado para @${a.apelido}.`)) { setBusca(''); setAchados([]); } }}>Chamar</button>}
+            </li>
+          ))}
+        </ul>}
+        {busca.trim().replace(/^@/, '').length >= 2 && !achados.length && <small className="fine">Ninguém com esse @. Confira com o atleta como ele aparece no Radar.</small>}
+      </div>}
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+      {ok && <p className="dom-ok" role="status">{ok}</p>}
+      {sair
+        ? <div className="terr-bts"><span className="fine">{e.sou_dono && e.membros.length > 1 ? 'A equipe passa para quem entrou primeiro.' : e.membros.length === 1 ? 'Você é o único: a equipe acaba.' : 'Você sai da equipe.'}</span><button className="btn outline" onClick={async () => { if (await fazer('radar_dominio_sair', {})) setSair(false); }}>Confirmar saída</button><button className="btn text" onClick={() => setSair(false)}>Cancelar</button></div>
+        : <button className="btn text dom-sair" onClick={() => setSair(true)}><LogOut size={16} aria-hidden="true" />Sair da equipe</button>}
+    </section>
   );
 }

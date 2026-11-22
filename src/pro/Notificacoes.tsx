@@ -36,7 +36,7 @@ export function PainelNotificacoes({ lista, fechar, recarregar, irPara }: { list
     const sub = resto.join('/');
     if (aba === 'admin') focoAdmin.v = sub || null;
     if (aba === 'provas' && sub) { try { localStorage.setItem('radar-abrir-prova', sub); } catch { /* */ } }
-    if (aba && ['temporada', 'feed', 'corri', 'ranking', 'duelos', 'conta', 'admin', 'provas', 'comunidades', 'campeonatos'].includes(aba)) { irPara(aba); fechar(); if (aba === 'admin' && sub) setTimeout(() => document.getElementById('adm-' + sub)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 700); }
+    if (aba && ['temporada', 'feed', 'corri', 'ranking', 'duelos', 'conta', 'admin', 'provas', 'comunidades', 'campeonatos', 'territorio'].includes(aba)) { irPara(aba); fechar(); if (aba === 'admin' && sub) setTimeout(() => document.getElementById('adm-' + sub)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 700); }
   };
   return (
     <div className="pro-notif-fundo" onClick={fechar}>

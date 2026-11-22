@@ -195,6 +195,7 @@ body::after { background-image: var(--fundo-grade); background-size: var(--fundo
 /* menu de baixo fixo: Feed · Gravar · Agenda · Você · Mais */
 .pro-menu.pro-menu-fixo { display: flex; justify-content: space-around; align-items: center; padding: 6px 6px; }
 .pro-menu-fixo a { flex: 1; max-width: none; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px; border-radius: 16px; font-size: .7rem; font-weight: 750; text-decoration: none; }
+.pro .pro-menu.pro-menu-fixo a { flex: 1 1 0; min-width: 0; padding: 7px 1px; } /* 6 botões (com Território) cabem em qualquer celular */
 .pro-menu-fixo a.gravar svg { color: var(--cobalt); }
 .pro-menu-fixo a.gravar[aria-current="page"] svg { color: currentColor; }
 .pro-mais .pro-folha-caixa { gap: 14px; }

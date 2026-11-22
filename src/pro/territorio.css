@@ -71,3 +71,99 @@
 
 .terr-localizar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 750; }
 .terr-leg-varias { background: conic-gradient(#1d3fbf 0 25%, #f07c1e 0 50%, #2fa84f 0 75%, #7b4fd6 0) !important; border-radius: 50% !important; }
+
+/* ═════════ Domínio Maranhão · abertura de jogo ═════════ */
+.dom-abertura { position: relative; isolation: isolate; overflow: hidden; margin: 4px 12px 0; min-height: calc(100dvh - 210px); border-radius: 28px; color: #fff;
+  background: radial-gradient(120% 70% at 50% 0%, #1b2f8f 0%, #0a1240 45%, #050a26 100%); box-shadow: 0 24px 60px -24px rgba(5, 10, 38, .8), inset 0 0 0 1px rgba(255, 211, 77, .14); display: flex; flex-direction: column; justify-content: flex-end; }
+.dom-grade { position: absolute; z-index: -2; left: -50%; right: -50%; bottom: -10%; height: 55%; transform: perspective(380px) rotateX(62deg); transform-origin: 50% 100%;
+  background-image: linear-gradient(rgba(255, 211, 77, .22) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 211, 77, .22) 1px, transparent 1px); background-size: 46px 46px;
+  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 90%); mask-image: linear-gradient(to top, #000 10%, transparent 90%); animation: dom-chao 3.2s linear infinite; }
+@keyframes dom-chao { to { background-position: 0 46px, 0 0; } }
+.dom-brilho { position: absolute; z-index: -1; inset: 0; pointer-events: none;
+  background: radial-gradient(40% 30% at 20% 30%, rgba(29, 63, 191, .55), transparent 70%), radial-gradient(35% 25% at 85% 20%, rgba(255, 211, 77, .18), transparent 70%), radial-gradient(60% 30% at 50% 100%, rgba(255, 211, 77, .16), transparent 70%); }
+.dom-mapa { position: absolute; z-index: -1; top: 14px; left: 50%; width: min(96%, 400px); transform: translateX(-50%); filter: drop-shadow(0 0 22px rgba(255, 211, 77, .25)); animation: dom-flutua 7s ease-in-out infinite; }
+@keyframes dom-flutua { 50% { transform: translateX(-50%) translateY(-8px); } }
+.dom-mapa-fundo { fill: rgba(10, 18, 64, .55); }
+.dom-mapa-borda { fill: none; stroke: #ffd34d; stroke-width: 1.3; stroke-linejoin: round; stroke-dasharray: 6 3; animation: dom-borda 18s linear infinite; }
+@keyframes dom-borda { to { stroke-dashoffset: -180; } }
+.dom-luz { opacity: 0; animation: dom-acende 6s ease-in-out infinite; }
+@keyframes dom-acende { 0%, 100% { opacity: 0; } 18%, 40% { opacity: .85; } 60% { opacity: .15; } }
+.dom-scan { animation: dom-scan 4.5s linear infinite; }
+@keyframes dom-scan { to { transform: translateY(380px); } }
+
+.dom-conteudo { position: relative; padding: 0 18px 20px; display: flex; flex-direction: column; gap: 12px; background: linear-gradient(to top, #050a26 62%, rgba(5, 10, 38, .7) 82%, transparent); padding-top: min(68vw, 290px); }
+.dom-kicker { margin: 0; display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: #ffd34d; }
+.dom-titulo { margin: 0; display: flex; flex-direction: column; line-height: .9; text-transform: uppercase; }
+.dom-titulo span:first-child { white-space: nowrap; font-size: clamp(2.3rem, 12.4vw, 3.7rem); font-weight: 900; font-stretch: 125%; letter-spacing: -.02em;
+  background: linear-gradient(180deg, #fff6cf 0%, #ffd34d 45%, #e0a800 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 18px rgba(255, 211, 77, .35)); }
+.dom-titulo span:last-child { white-space: nowrap; font-size: clamp(1rem, 5vw, 1.4rem); font-weight: 800; font-stretch: 112%; letter-spacing: .38em; color: #fff; margin-top: 6px; }
+.dom-lema { margin: 0; font-weight: 700; color: rgba(255, 255, 255, .78); letter-spacing: .02em; }
+.dom-stats { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; }
+.dom-stats span { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 16px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); min-width: 0; }
+.dom-stats b { font-size: 1.3rem; line-height: 1.05; color: #ffd34d; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dom-stats .dom-stat-equipe b { font-size: 1rem; line-height: 1.3; color: #fff; }
+.dom-stats small { font-size: .7rem; color: rgba(255, 255, 255, .65); }
+.dom-escolha { margin: 4px 0 0; font-size: .78rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
+.dom-modos { display: grid; gap: 10px; }
+.dom-modo { position: relative; display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 16px; border-radius: 20px; cursor: pointer; color: #fff; font: inherit;
+  border: 1px solid rgba(255, 211, 77, .45); background: linear-gradient(135deg, rgba(255, 211, 77, .16), rgba(255, 211, 77, .03)); box-shadow: 0 0 0 0 rgba(255, 211, 77, .0), inset 0 1px 0 rgba(255, 255, 255, .12); transition: transform .15s ease, box-shadow .2s ease; }
+.dom-modo.equipe { border-color: rgba(90, 130, 255, .6); background: linear-gradient(135deg, rgba(29, 63, 191, .45), rgba(29, 63, 191, .1)); }
+.dom-modo:hover, .dom-modo:focus-visible { transform: translateY(-2px); box-shadow: 0 10px 30px -10px rgba(255, 211, 77, .55); outline: none; }
+.dom-modo.equipe:hover, .dom-modo.equipe:focus-visible { box-shadow: 0 10px 30px -10px rgba(70, 110, 255, .7); }
+.dom-modo:focus-visible { box-shadow: 0 0 0 3px #fff, 0 0 0 6px #ffd34d; }
+.dom-modo-ic { flex: none; width: 50px; height: 50px; border-radius: 16px; display: grid; place-items: center; background: #ffd34d; color: #0a1240; box-shadow: 0 6px 18px -6px rgba(255, 211, 77, .8); }
+.dom-modo.equipe .dom-modo-ic { background: #1d3fbf; color: #fff; box-shadow: 0 6px 18px -6px rgba(29, 63, 191, .9); }
+.dom-modo-txt { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.dom-modo-txt b { font-size: 1.2rem; font-weight: 900; font-stretch: 115%; letter-spacing: .04em; text-transform: uppercase; }
+.dom-modo-txt small { font-size: .84rem; line-height: 1.3; color: rgba(255, 255, 255, .78); }
+.dom-modo-ir { flex: none; opacity: .8; }
+.dom-convite { flex: none; padding: 5px 10px; border-radius: 999px; background: #ffd34d; color: #0a1240; font-size: .74rem; font-weight: 900; animation: dom-pulsa 1.6s ease-in-out infinite; }
+@keyframes dom-pulsa { 50% { box-shadow: 0 0 0 6px rgba(255, 211, 77, .25); } }
+.dom-rodape { margin: 2px 0 0; font-size: .78rem; text-align: center; color: rgba(255, 255, 255, .55); }
+
+/* barra dentro do jogo */
+.pro .dom-barra.pro-cont { display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 0 !important; }
+.dom-voltar { flex: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px 8px 8px; border-radius: 999px; border: 1px solid var(--pro-fio); background: #0a1240; color: #fff; font: inherit; font-size: .82rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.dom-voltar b { color: #ffd34d; }
+.dom-alternar { flex: none; display: inline-flex; padding: 4px; gap: 2px; border-radius: 999px; border: 1px solid var(--pro-fio); background: var(--surface); }
+.dom-alternar button { position: relative; display: inline-flex; align-items: center; gap: 5px; padding: 7px 11px; border: 0; border-radius: 999px; background: none; color: inherit; font: inherit; font-size: .82rem; font-weight: 750; cursor: pointer; }
+.dom-alternar button[aria-selected="true"] { background: #1d3fbf; color: #fff; }
+.dom-bolinha { position: absolute; top: -3px; right: -2px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; background: #ffd34d; color: #0a1240; font-size: .66rem; font-style: normal; font-weight: 900; display: grid; place-items: center; }
+
+/* equipe */
+.dom-equipe .ct-cidade input { width: 100%; }
+.dom-contagem { font-size: .8rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: rgba(29, 63, 191, .1); color: #1d3fbf; }
+.dom-nome-equipe { display: flex; align-items: center; gap: 8px; }
+.dom-vagas, .dom-achados { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dom-vagas li, .dom-achados li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 16px; border: 1px solid var(--pro-fio); }
+.dom-vagas li.eu { background: rgba(255, 211, 77, .2); border-color: transparent; }
+.dom-vagas li.chamado { opacity: .7; border-style: dashed; }
+.dom-vagas li.vazia { border-style: dashed; opacity: .55; }
+.dom-av { position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: #1d3fbf; color: #fff; font-weight: 800; }
+.dom-av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.dom-vagas li.vazia .dom-av { background: transparent; color: inherit; border: 1.5px dashed currentColor; }
+.dom-coroa { position: absolute; right: -4px; bottom: -4px; padding: 2px; border-radius: 50%; background: #ffd34d; color: #0a1240; width: 18px; height: 18px; }
+.dom-vaga-txt { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.dom-vaga-txt b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dom-vaga-txt small { opacity: .7; }
+.dom-tirar { padding: 6px !important; }
+.dom-busca { display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 14px; border: 1px solid var(--pro-fio); background: var(--surface); }
+.dom-busca input { flex: 1; border: 0 !important; background: none !important; box-shadow: none !important; padding: 12px 0 !important; outline: none; }
+.dom-achados li b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.dom-achados li small { opacity: .65; }
+.dom-achados .btn { padding: 8px 14px; }
+.dom-ok { margin: 0; padding: 10px 12px; border-radius: 14px; background: rgba(47, 168, 79, .14); font-weight: 700; }
+.dom-sair { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; opacity: .75; }
+.dom-convite-card { border-color: rgba(255, 211, 77, .7) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dom-grade, .dom-mapa, .dom-mapa-borda, .dom-scan, .dom-convite { animation: none !important; }
+  .dom-luz { animation: none !important; opacity: .55; }
+}
+/* textos da abertura nunca quebram no meio da palavra */
+.dom-abertura, .dom-abertura * { overflow-wrap: normal; word-break: normal; hyphens: none; }
+.dom-stats span { padding: 10px 8px; }
+.dom-stats small { font-size: .68rem; line-height: 1.25; }
+.dom-modo-txt b { white-space: nowrap; font-size: clamp(1rem, 4.8vw, 1.2rem); font-stretch: 108%; }
+.dom-modo { gap: 12px; padding: 14px; }
+.dom-modo-ic { width: 46px; height: 46px; }
