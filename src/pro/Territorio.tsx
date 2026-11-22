@@ -337,12 +337,29 @@ function MarcarCasa({ atual, fechar, salvou }: { atual: Meu['casa']; fechar: () 
   const [pronto, setPronto] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [buscando, setBuscando] = useState(false);
+  const enquadrar = useRef(!!atual); // mostra o círculo inteiro (acima do painel) quando a casa vem da localização ou muda de tamanho
+
+  // pega a localização do celular e já marca a casa ali (a pessoa pode ajustar tocando no mapa)
+  const usarLocalizacao = () => {
+    if (!navigator.geolocation) return setErro('Este aparelho não informa a localização. Toque no mapa onde fica a sua casa.');
+    setErro(null); setBuscando(true);
+    navigator.geolocation.getCurrentPosition(p => {
+      setBuscando(false);
+      const pt: [number, number] = [+p.coords.latitude.toFixed(5), +p.coords.longitude.toFixed(5)];
+      setPonto(pt); enquadrar.current = true;
+    }, e => {
+      setBuscando(false);
+      setErro(e.code === 1 ? 'A localização está bloqueada para o Radar. Libere nas configurações do celular ou toque no mapa onde fica a sua casa.' : 'Não deu para pegar a sua localização agora. Tente de novo ou toque no mapa.');
+    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 });
+  };
 
   useEffect(() => {
     let vivo = true, m: MLMap | null = null;
+    if (!atual) usarLocalizacao(); // primeira vez: já tenta pela localização do celular
     Promise.all([import('maplibre-gl'), import('maplibre-gl/dist/maplibre-gl.css')]).then(([ml]) => {
       if (!vivo || !caixa.current) return;
-      m = new ml.Map({ container: caixa.current, style: estilo(), center: atual ? [atual.lng, atual.lat] : [-44.27, -2.53], zoom: atual ? 14 : 12, attributionControl: { compact: true }, dragRotate: false, touchPitch: false });
+      m = new ml.Map({ container: caixa.current, style: estilo(), center: ponto ? [ponto[1], ponto[0]] : [-44.27, -2.53], zoom: ponto ? 14.5 : 12, attributionControl: { compact: true }, dragRotate: false, touchPitch: false });
       mapa.current = m;
       m.on('load', () => {
         if (!vivo || !m) return;
@@ -352,8 +369,7 @@ function MarcarCasa({ atual, fechar, salvou }: { atual: Meu['casa']; fechar: () 
         m.addLayer({ id: 'zona-centro', type: 'circle', source: 'zona', filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-radius': 8, 'circle-color': '#0a1240', 'circle-stroke-color': OURO, 'circle-stroke-width': 3 } });
         setPronto(true);
       });
-      m.on('click', e => setPonto([+e.lngLat.lat.toFixed(5), +e.lngLat.lng.toFixed(5)]));
-      if (!atual) navigator.geolocation?.getCurrentPosition(p => { if (vivo && m) m.jumpTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 15 }); }, () => null, { timeout: 8000, maximumAge: 60000 });
+      m.on('click', e => { setErro(null); setPonto([+e.lngLat.lat.toFixed(5), +e.lngLat.lng.toFixed(5)]); });
     });
     return () => { vivo = false; m?.remove(); mapa.current = null; };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -366,6 +382,12 @@ function MarcarCasa({ atual, fechar, salvou }: { atual: Meu['casa']; fechar: () 
         { type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [ponto[1], ponto[0]] } },
       ],
     } : { type: 'FeatureCollection', features: [] });
+    if (ponto && enquadrar.current) {
+      enquadrar.current = false;
+      const c = circulo(ponto[0], ponto[1], raio), lo = c.map(x => x[0]), la = c.map(x => x[1]);
+      const painel = (caixa.current?.parentElement?.querySelector('.mp-editor-painel') as HTMLElement | null)?.offsetHeight ?? 280;
+      m.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: { top: 90, bottom: painel + 24, left: 24, right: 24 }, duration: 700 });
+    }
   }, [ponto, raio, pronto]);
 
   const salvar = async () => {
@@ -382,13 +404,13 @@ function MarcarCasa({ atual, fechar, salvou }: { atual: Meu['casa']; fechar: () 
       <div ref={caixa} className="mp-editor-mapa" />
       <div className="mp-editor-topo">
         <button className="mp-redondo" onClick={fechar} aria-label="Fechar"><X size={20} /></button>
-        <span className="mp-editor-dica">{ponto ? 'Toque de novo para ajustar' : 'Toque no mapa onde fica a sua casa'}</span>
-        <button className="mp-redondo" onClick={() => navigator.geolocation?.getCurrentPosition(p => { mapa.current?.easeTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 15.5 }); setPonto([+p.coords.latitude.toFixed(5), +p.coords.longitude.toFixed(5)]); }, () => setErro('Libere a localização ou toque no mapa.'))} aria-label="Usar a minha posição"><Crosshair size={19} /></button>
+        <span className="mp-editor-dica">{buscando ? 'Pegando a sua localização…' : ponto ? 'Se precisar, toque no mapa para ajustar' : 'Toque no mapa onde fica a sua casa'}</span>
       </div>
       <div className="mp-editor-painel">
+        <button className="btn outline pro-btn terr-localizar" onClick={usarLocalizacao} disabled={buscando}><Crosshair size={18} aria-hidden="true" />{buscando ? 'Pegando a localização…' : 'Usar minha localização'}</button>
         <p className="pro-sem-margem"><b>Só você vê este ponto.</b> O que você dominar dentro do círculo fica invisível para os outros atletas.</p>
         <div className="chips" role="group" aria-label="Tamanho da proteção">
-          {[500, 1000, 2000].map(r => <button key={r} className="chip" aria-pressed={raio === r} onClick={() => setRaio(r)}>{r >= 1000 ? `${r / 1000} km` : `${r} m`}</button>)}
+          {[500, 1000, 2000].map(r => <button key={r} className="chip" aria-pressed={raio === r} onClick={() => { enquadrar.current = true; setRaio(r); }}>{r >= 1000 ? `${r / 1000} km` : `${r} m`}</button>)}
         </div>
         {erro && <p className="ct-erro" role="alert">{erro}</p>}
         <button className="btn solid pro-btn" onClick={salvar} disabled={!ponto || salvando}><Check size={18} aria-hidden="true" />{salvando ? 'Salvando…' : 'Proteger minha casa'}</button>

@@ -68,3 +68,5 @@
 .terr-placar .pos { width: 28px; font-weight: 800; opacity: .7; }
 .terr-placar .nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
 .terr-placar b { font-size: 1.05rem; }
+
+.terr-localizar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 750; }
