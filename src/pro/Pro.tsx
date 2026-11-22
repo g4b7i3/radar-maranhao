@@ -2,7 +2,7 @@
 // Abre em /?pro. Convite de duelo: /?pro=duelo&c=<código>.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, X, Sun, Moon, CircleUserRound, Settings, LayoutGrid, Map as IcMapa, Hexagon, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Check, Users, Mail, Accessibility, LogOut, CalendarCheck, Swords as Espadas, Award, PlusCircle, BarChart3, Swords, UserRound, UsersRound, Shield, Radar, Trophy, CalendarDays, X, Sun, Moon, CircleUserRound, Settings, LayoutGrid, Map as IcMapa, type LucideIcon } from 'lucide-react';
 import { sb, chamar, ADMIN_EMAIL, souAdmin, zapLimpo, zapMascara, type Perfil, type Temporada , GENEROS} from './sb';
 import { whatsappLink } from '../lib';
 import InstallPrompt from '../InstallPrompt';
@@ -29,7 +29,7 @@ import './visual.css';
 import { useTema } from '../tema';
 import { TelaGravar, IconeGravar } from './Gravar';
 import { TelaMapas, rotaPedida } from './Mapas';
-import { TelaTerritorio } from './Territorio';
+import { TelaTerritorio, IconeTerritorio } from './Territorio';
 import { Arroba } from './Selo';
 
 const ABAS_VALIDAS = ['temporada', 'campeonatos', 'feed', 'gravar', 'mapas', 'territorio', 'comunidades', 'provas', 'corri', 'ranking', 'duelos', 'conta', 'admin'] as const;
@@ -243,7 +243,7 @@ function ProTelas() {
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
-    { id: 'temporada', nome: 'Você', Icone: CircleUserRound }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'gravar', nome: 'Gravar', Icone: IconeGravar as unknown as LucideIcon }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'mapas', nome: 'Mapas', Icone: IcMapa }, { id: 'territorio', nome: 'Território', Icone: Hexagon }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
+    { id: 'temporada', nome: 'Você', Icone: CircleUserRound }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'gravar', nome: 'Gravar', Icone: IconeGravar as unknown as LucideIcon }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'mapas', nome: 'Mapas', Icone: IcMapa }, { id: 'territorio', nome: 'Território', Icone: IconeTerritorio as unknown as LucideIcon }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
     { id: 'duelos', nome: 'Duelos', Icone: Swords }, { id: 'conta', nome: 'Conta', Icone: Settings },
     ...(admin ? [{ id: 'admin' as Aba, nome: 'Admin', Icone: Shield }] : []),
   ];

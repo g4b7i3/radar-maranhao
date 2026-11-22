@@ -11,6 +11,17 @@ type Hex = { hex: string; lat: number; lng: number; dono: string | null; dono_ch
 type Meu = { hexagonos: number; ganhos_7d: number; perdidos_7d: number; esfriando: number; casa: { lat: number; lng: number; raio_m: number } | null };
 type Placar = { posicao: number; nome: string; chave: string; foto: string | null; hexagonos: number; eu: boolean };
 
+/** Ícone do Território: hexágono com a bandeira da conquista (mesmo traço dos ícones do menu). */
+export function IconeTerritorio({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" aria-hidden="true">
+      <path d="M12 2.6 20.2 7.3v9.4L12 21.4 3.8 16.7V7.3z" />
+      <path d="M10 17V7.4" />
+      <path d="M10 7.4l6 2.3-6 2.3z" fill="currentColor" />
+    </svg>
+  );
+}
+
 const EMOJIS = ['🔥', '💪', '👀', '👑', '😂', '⚡'];
 const S = 0.0015, K = 0.9986; // mesma grade do banco
 // cores dos outros atletas: bem diferentes entre si, sem rosa e sem dourado (dourado é só seu)
@@ -150,7 +161,7 @@ function JogoTerritorio({ pro, assinar, modo, minha, recarregarMinha }: { pro: b
       )}
 
       {eq ? <PainelEquipe minha={minha} pro={pro} assinar={assinar} mudou={() => { recarregarMinha(); carregar(); }} /> : <section className="pro-card terr-topo">
-        <p className="pro-k"><Hexagon size={15} aria-hidden="true" /> Individual</p>
+        <p className="pro-k"><IconeTerritorio size={15} /> Individual</p>
         <h2 className="terr-tit">Corra e domine o Maranhão</h2>
         <p className="pro-sem-margem terr-sub">Cada hexágono é de quem correu ali com mais força. Para tomar, corra mais forte que o dono.</p>
         <div className="terr-nums">
@@ -527,7 +538,7 @@ function AberturaDominio({ meu, minha, escolher }: { meu: Meu | null; minha: Min
       </svg>
 
       <div className="dom-conteudo">
-        <p className="dom-kicker"><Hexagon size={13} aria-hidden="true" /> Radar · Temporada 1</p>
+        <p className="dom-kicker"><IconeTerritorio size={15} /> Radar · Temporada 1</p>
         <h1 id="dom-titulo" className="dom-titulo"><span>Domínio</span><span>Maranhão</span></h1>
         <p className="dom-lema">Corra. Conquiste. Defenda.</p>
 
