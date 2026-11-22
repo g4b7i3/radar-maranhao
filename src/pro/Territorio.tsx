@@ -471,7 +471,7 @@ function MarcarCasa({ atual, fechar, salvou }: { atual: Meu['casa']; fechar: () 
   );
 }
 
-/* ═════════ Domínio Maranhão: abertura do jogo, escolha do modo e equipe ═════════ */
+/* ═════════ Domine o Maranhão: abertura do jogo, escolha do modo e equipe ═════════ */
 type Minha = {
   equipe: { id: string; nome: string; sou_dono: boolean; chave: string; membros: { apelido: string; foto: string | null; eu: boolean; dono: boolean; hexagonos: number }[]; chamados: { apelido: string; foto: string | null }[] } | null;
   convites: { id: string; equipe: string; de: string | null; membros: number }[];
@@ -489,7 +489,7 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
   return (
     <div className="dom-jogo">
       <div className="dom-barra pro-cont">
-        <button className="dom-voltar" onClick={() => ir('inicio')} aria-label="Voltar para o início do Domínio Maranhão"><ChevronLeft size={18} aria-hidden="true" /><span>Domínio <b>MA</b></span></button>
+        <button className="dom-voltar" onClick={() => ir('inicio')} aria-label="Voltar para o início do Domine o Maranhão"><ChevronLeft size={18} aria-hidden="true" /><span>Domine o <b>MA</b></span></button>
         <div className="dom-alternar" role="tablist" aria-label="Modo de jogo">
           <button role="tab" aria-selected={modo === 'individual'} onClick={() => ir('individual')}><User size={15} aria-hidden="true" />Individual</button>
           <button role="tab" aria-selected={modo === 'equipe'} onClick={() => ir('equipe')}><Users size={15} aria-hidden="true" />Equipe{minha?.convites.length ? <i className="dom-bolinha">{minha.convites.length}</i> : null}</button>
@@ -539,7 +539,7 @@ function AberturaDominio({ meu, minha, escolher }: { meu: Meu | null; minha: Min
 
       <div className="dom-conteudo">
         <p className="dom-kicker"><IconeTerritorio size={15} /> Radar · Temporada 1</p>
-        <h1 id="dom-titulo" className="dom-titulo"><span>Domínio</span><span>Maranhão</span></h1>
+        <h1 id="dom-titulo" className="dom-titulo"><span>Domine</span><span>o Maranhão</span></h1>
         <p className="dom-lema">Corra. Conquiste. Defenda.</p>
 
         <div className="dom-stats">
