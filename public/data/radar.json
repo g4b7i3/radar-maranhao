@@ -1364,19 +1364,22 @@
       ],
       "location": "Beira Rio (Av. Beira Rio, s/n)",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-12-04",
+      "status": "Abertas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026",
-      "sourceUrl": "https://roadrunners.run/evento/2026-corrida-das-engenharias-2026-imperatriz/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026",
+      "sourceName": "Meta Sport",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário Road Runners, que aponta a inscrição na MetaSport) · confirmar na MetaSport",
-      "notes": "Organização do CREA-MA, largada às 6h30 (Topchip, antes). Também aparece como I Corrida CREA-MA – Etapa Imperatriz. A página antiga da Topchip saiu do ar em 15/11; em 17/11 o Road Runners passou a ligar a prova à MetaSport (organizador META SPORT), com 3, 5 e 10 km e largada na Av. Beira Rio. A página da MetaSport não pôde ser aberta nesta conferência: status, preço e prazo a confirmar. O CREA-MA tem também a etapa de São Luís em 12/12.",
+      "confidence": "Página de inscrição oficial (Meta Sport)",
+      "notes": "Corrida CREA-MA 2026 – Etapa Imperatriz, organização da Meta Sport. Largadas: PCD 5 km às 6h, 10 km às 6h15, 5 km às 6h25 e 3 km às 6h30. Inscrições abertas na Meta Sport até 04/12/2026 (pagamento até 14h) ou até esgotar: profissionais CREA-MA R$ 49,90 e público geral R$ 69,90, mais 1 kg de alimento na retirada; PCD R$ 34,95. Kit (camiseta, sacochila, meia, número, brindes e medalha) em 04/12 (16h–20h) e 05/12 (9h–14h) na Julin Acessórios, Av. Getúlio Vargas, 1128, Centro. Regulamento em PDF na página (não lido): premiação e percurso a confirmar.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": "06:30",
-      "verifiedAt": "2026-11-18T10:56:33.191Z",
+      "price": {
+        "min": 49.9,
+        "text": "R$ 49,90 (CREA-MA) a R$ 69,90 + 1 kg de alimento"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-11-22T10:51:21.704Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -3527,13 +3530,13 @@
       "location": "Concessionária Tocauto Volkswagen, BR-010, Imperatriz",
       "registrationOpen": null,
       "registrationClose": "2026-11-21",
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
       "sourceUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial (Meta Sport)",
-      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Inscrições pela Meta Sport até 21/11/2026 ou até esgotar, R$ 190. Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página fala em premiação em dinheiro no geral e troféus por faixa etária, sem dizer valores.",
+      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Inscrições pela Meta Sport encerradas em 21/11/2026 (eram R$ 190). Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página fala em premiação em dinheiro no geral e troféus por faixa etária, sem dizer valores.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3541,7 +3544,7 @@
         "text": "R$ 190 (5 ou 10 km)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-11-10T10:57:12.181Z",
+      "verifiedAt": "2026-11-22T10:51:21.704Z",
       "firstSeenAt": "2026-10-30T10:57:10.638Z"
     },
     {
@@ -3975,19 +3978,22 @@
       ],
       "location": "Praça dos Pescadores, Av. Litorânea, 4498, São Marcos",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Consultar",
+      "registrationClose": "2026-12-10",
+      "status": "Abertas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026-sao-luis",
-      "sourceUrl": "https://roadrunners.run/evento/2026-corrida-das-engenharias-2026-sao-luis/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026-sao-luis",
+      "sourceName": "Meta Sport",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Sábado. Etapa de São Luís da Corrida das Engenharias (a de Imperatriz é em 06/12). Road Runners lista 3, 5 e 10 km, largada na Praça dos Pescadores, organizador informado META SPORT, com inscrição na MetaSport. A página da MetaSport não pôde ser aberta nesta conferência: horário, preço, status e prazo a confirmar.",
+      "confidence": "Página de inscrição oficial (Meta Sport)",
+      "notes": "Sábado. Corrida CREA-MA 2026 – Etapa São Luís (a de Imperatriz é em 06/12), organização da Meta Sport. Largadas: PCD 5 km às 6h, 10 km às 6h15, 5 km às 6h25 e 3 km às 6h30, na Praça dos Pescadores. Inscrições abertas na Meta Sport até 10/12/2026 ou até esgotar: profissionais CREA-MA R$ 49,90 e público geral R$ 69,90, mais 1 kg de alimento na retirada; PCD R$ 34,95. Kit em 10/12 (16h–20h) e 11/12 (9h–14h) no Golden Shopping, Av. dos Holandeses, Calhau. Regulamento em PDF na página (não lido): premiação e percurso a confirmar.",
       "prize": null,
       "elevation": null,
-      "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-18T10:56:33.191Z",
+      "price": {
+        "min": 49.9,
+        "text": "R$ 49,90 (CREA-MA) a R$ 69,90 + 1 kg de alimento"
+      },
+      "start": "06:00",
+      "verifiedAt": "2026-11-22T10:51:21.704Z",
       "firstSeenAt": "2026-11-18T10:56:33.191Z"
     },
     {
@@ -4021,6 +4027,30 @@
     }
   ],
   "changes": [
+    {
+      "id": "b07f231e-d33e-49e3-b07a-48c20d7bc5e1",
+      "eventId": "tocauto-running-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Concessionária Tocauto Volkswagen, BR-010, Imperatriz\",null,\"2026-11-21\",\"Encerradas\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-22T10:51:21.704Z",
+      "notifiedAt": "2026-11-22T10:51:55.551Z"
+    },
+    {
+      "id": "859f1dcf-837f-485e-840d-7b042eba93c2",
+      "eventId": "engenharias-2026-sao-luis",
+      "version": "[\"2026-12-12\",[3,5,10],\"Praça dos Pescadores, Av. Litorânea, 4498, São Marcos\",null,\"2026-12-10\",\"Abertas\",\"https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026-sao-luis\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-22T10:51:21.704Z",
+      "notifiedAt": "2026-11-22T10:51:55.551Z"
+    },
+    {
+      "id": "b2f3dd42-be89-4028-a280-97ef8bdf3875",
+      "eventId": "crea-2026-imperatriz",
+      "version": "[\"2026-12-06\",[3,5,10],\"Beira Rio (Av. Beira Rio, s/n)\",null,\"2026-12-04\",\"Abertas\",\"https://www.metasportoficial.com.br/eventos/corrida-das-engenharias-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-22T10:51:21.704Z",
+      "notifiedAt": "2026-11-22T10:51:55.551Z"
+    },
     {
       "id": "d9a4c24d-625c-451c-90b6-163f52e1031c",
       "eventId": "e-funcional-2026-sao-luis",
@@ -6398,7 +6428,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-21T10:50:58.051Z",
+  "lastChecked": "2026-11-22T10:51:21.704Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
