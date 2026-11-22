@@ -360,7 +360,8 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
     const r = await chamar<Resposta & { precisa_link?: boolean; achou_resultado?: boolean }>('radar-registrar', { prova_id: prova.id, distancia_km: km, tempo_s: seg ?? undefined, peito: peito || undefined, nome_inscricao: outroNome || undefined, link_resultado: link || undefined });
     setEnviando(false);
     if (r.erro) return setErro(r.erro);
-    if (r.precisa_link) return setSemResultado(r.achou_resultado ? (r.motivo ?? 'Não achamos o seu resultado. Cole o link aqui.') : 'Ainda não achamos o resultado desta prova. Cole aqui o link do resultado (da cronometragem) que o Radar confere na hora. Se você não colar o link, tudo bem: a gente vai procurar a sua prova, só que pode demorar um pouco mais. Quando achar, você recebe um aviso aqui no app.');
+    // não achou só com o peito: já abre o campo do tempo (Pro entra aprovado na hora, com ou sem link)
+    if (r.precisa_link) { setDarTempo(true); return setSemResultado(r.achou_resultado ? (r.motivo ?? 'Não achamos o seu resultado.') + ' Ou coloque o seu tempo do chip aqui embaixo: a prova já entra aprovada.' : 'O resultado desta prova ainda não saiu. Coloque o seu tempo do chip aqui embaixo e a prova já entra aprovada na sua temporada. Se tiver o link do resultado, pode colar também.'); }
     setFeito(r); pronto(); carregarSugs();
   };
 
@@ -433,12 +434,10 @@ export function TelaEuCorri({ perfil, pronto, irTemporada, pro = true, assinar }
         {!pro && <label className="ct-cidade">4. Tempo líquido (do chip)<input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" /><small>No modo grátis a prova fica como declarada. Achar o resultado oficial pelo peito (e pontuar no ranking) é do Radar Pro.</small></label>}
         {pro && semResultado !== null && <>
           {semResultado && <p className="pro-aviso" role="status">{semResultado}</p>}
-          <label className="ct-cidade">Link do resultado <small>(página da cronometragem)</small><input inputMode="url" value={link} onChange={e => setLink(e.target.value.trim())} placeholder="cole aqui o link do resultado" autoFocus /><small>Vale página, PDF ou foto do resultado. O Radar lê na hora.</small></label>
+          <label className="ct-cidade">Tempo líquido (do chip)<input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" autoFocus /><small>No Radar Pro a prova entra aprovada na hora e já conta no ranking.</small></label>
+          <label className="ct-cidade">Link do resultado <small>(opcional)</small><input inputMode="url" value={link} onChange={e => setLink(e.target.value.trim())} placeholder="cole aqui o link, se tiver" /><small>Com o link, o Radar lê o resultado e marca a prova como verificada.</small></label>
           <button className="btn text pro-esq" aria-expanded={mais} onClick={() => setMais(!mais)}>{mais ? 'Menos opções' : 'Inscrito com outro nome?'}</button>
           {mais && <label className="ct-cidade">Nome usado na inscrição<input value={outroNome} onChange={e => setOutroNome(e.target.value)} placeholder={perfil.nome_completo} /><small>Pode ser diferente (apelido, nome abreviado), mas precisa ter pelo menos um nome do seu nome completo.</small></label>}
-          {!darTempo
-            ? <button className="btn text pro-esq" onClick={() => setDarTempo(true)}>Sem link? Coloque só o seu tempo</button>
-            : <label className="ct-cidade">Tempo líquido (do chip)<input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 52:10" /><small>Sem link tudo bem: no Radar Pro a prova entra aprovada na hora e já conta no ranking.</small></label>}
         </>}
         {previa && <section className="pro-card azul pro-centro"><p className="pro-k">Prévia da nota por idade</p><p className="pro-big">{pct(previa)}%</p></section>}
         {erro && <p className="ct-erro" role="alert">{erro}</p>}
