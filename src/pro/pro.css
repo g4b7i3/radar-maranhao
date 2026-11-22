@@ -1378,3 +1378,4 @@ button.pro-grav-op { border: 1.5px solid var(--line); background: var(--vidro, v
 .mp-editor-lado { position: absolute; z-index: 2; right: 12px; top: calc(max(12px, env(safe-area-inset-top)) + 56px); display: grid; gap: 8px; }
 .mp-3d { font-weight: 800; font-size: .9rem; }
 .pro-mapa-estilos.mp-editor-estilos { position: absolute; z-index: 3; right: 64px; top: calc(max(12px, env(safe-area-inset-top)) + 56px); left: auto; }
+.pro-tempo-falta { margin: 8px 0 4px; padding: 12px; border-radius: 14px; background: color-mix(in srgb, var(--cobalt, #1d3fbf) 7%, transparent); border: 1px dashed var(--cobalt, #1d3fbf); }

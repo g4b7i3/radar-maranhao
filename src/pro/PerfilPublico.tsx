@@ -126,7 +126,7 @@ export default function PerfilPublico({ apelido }: { apelido: string }) {
             {d.resultados.map(r => (
               <li key={r.id}>
                 <div className="pro-linha"><b>{r.prova}</b>{(r.status === 'verificado' || r.status === 'aprovado') ? <span className="pro-st ok">Oficial</span> : <span className="pro-st dec">Declarado</span>}</div>
-                <p>{dataBR(r.data)} · {r.cidade} · {kmTxt(Number(r.km))} · <b>{relogio(r.tempo)}</b> · nota {pct(r.nota)}%{r.geral ? ` · ${r.geral}º geral` : ''}{r.faixa ? ` · ${r.faixa}º na faixa` : ''}</p>
+                <p>{dataBR(r.data)} · {r.cidade} · {kmTxt(Number(r.km))} · <b>{relogio(r.tempo)}</b> · {r.nota != null ? `nota ${pct(r.nota)}%` : 'sem nota'}{r.geral ? ` · ${r.geral}º geral` : ''}{r.faixa ? ` · ${r.faixa}º na faixa` : ''}</p>
               </li>
             ))}
           </ul>

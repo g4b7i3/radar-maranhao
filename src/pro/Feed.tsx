@@ -116,7 +116,7 @@ export function ItemFeed({ e, eu, sigo, mudouSigo, pro = true, assinar, apagou }
           <dl className="pro-feed-nums">
             <div><dt>Distância</dt><dd>{kmTxt(Number(d.km))}</dd></div>
             <div><dt>Tempo</dt><dd>{relogio(Number(d.tempo))}</dd></div>
-            <div><dt>{d.geral ? 'Geral' : 'Nota'}</dt><dd>{d.geral ? <>{d.geral}º{d.total ? <small> de {d.total}</small> : null}</> : `${pct(d.nota)}%`}</dd></div>
+            <div><dt>{d.geral ? 'Geral' : 'Nota'}</dt><dd>{d.geral ? <>{d.geral}º{d.total ? <small> de {d.total}</small> : null}</> : (d.nota == null ? '–' : `${pct(d.nota)}%`)}</dd></div>
           </dl>
           {d.medalhas?.length ? <Meds ids={d.medalhas} /> : null}
         </>

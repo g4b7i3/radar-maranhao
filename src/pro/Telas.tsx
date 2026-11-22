@@ -1,6 +1,6 @@
 // Telas do Radar Pro para quem assina: temporada, "Eu corri!", ranking, duelos, conta e administração.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, Search, MessageCircle, Accessibility, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, MapPin, type LucideIcon } from 'lucide-react';
+import { Timer, Plus, Search, MessageCircle, Accessibility, Download, Trash2, LogOut, Share2, Copy, Flag, Pencil, Image as ImageIcon, Crown, ExternalLink, Smartphone, CalendarPlus, Check, Clock, Users, Swords, X as Fechar, Trophy, Gauge, Plane, MapPin, type LucideIcon } from 'lucide-react';
 import { sb, chamar, LIGAS, MEDALHAS, STATUS, relogio, pct, kmTxt, dataBR, zapLimpo, zapMascara, edicoesRestantes, linkPerfil, type Perfil, type Resultado, type Temporada, type Liga , GENEROS} from './sb';
 import { lerTempo, mascaraTempo } from '../CardTreino';
 import { whatsappLink } from '../lib';
@@ -211,9 +211,10 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou, pro = true, as
           {res?.map(r => (
             <li key={r.id}>
               <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
-              <p>{dataBR(r.prova_data)} · {r.cidade} · {kmTxt(Number(r.distancia_km))} · <b>{relogio(r.tempo_s)}</b> · nota {pct(r.nota)}% · {r.pontos} pts{r.podio ? ' · 🥇 pódio' : ''}</p>
+              <p>{dataBR(r.prova_data)} · {r.cidade} · {kmTxt(Number(r.distancia_km))} · <b>{relogio(r.tempo_s)}</b>{r.nota != null ? ` · nota ${pct(r.nota)}%` : ''} · {r.pontos} pts{r.podio ? ' · 🥇 pódio' : ''}</p>
               {r.colocacao_geral ? <p className="fine pro-sem-margem">{r.colocacao_geral}º no geral{r.total_dist ? ` de ${r.total_dist}` : ''}{r.colocacao_faixa ? ` · ${r.colocacao_faixa}º na faixa` : ''}</p> : null}
               {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
+              {r.tempo_s == null && r.status !== 'recusado' && <ColocarTempo id={r.id} km={Number(r.distancia_km)} salvou={(t, n) => setRes(l => (l ?? []).map(x => x.id === r.id ? { ...x, tempo_s: t, nota: n, motivo_analise: 'Tempo informado pelo atleta.' } : x))} />}
               <div className="pro-linha pro-quebra pro-esq">
                 {r.status !== 'recusado' && <button className="btn outline pro-btn-p" onClick={() => setCard(card === r.id ? null : r.id)}><ImageIcon size={16} aria-hidden="true" />Card pro story</button>}
                 {r.status === 'em_analise' && <a className="btn whats pro-btn-p" href={msgComprovante(perfil, r)} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />Enviar comprovante</a>}
@@ -498,7 +499,7 @@ export function CorreramComigo({ provaId, titulo = 'Quem mais correu essa prova'
         {lista.map(c => (
           <li key={c.apelido}>
             <a href={linkPerfil(c.apelido)}><Avatar foto={c.foto} apelido={c.apelido} tam={40} /></a>
-            <div><b><a href={linkPerfil(c.apelido)}><Arroba a={c.apelido} /></a></b><small>{kmTxt(Number(c.km))} · {relogio(c.tempo)} · nota {pct(c.nota)}%</small></div>
+            <div><b><a href={linkPerfil(c.apelido)}><Arroba a={c.apelido} /></a></b><small>{kmTxt(Number(c.km))} · {relogio(c.tempo)} · {c.nota != null ? `nota ${pct(c.nota)}%` : 'sem nota'}</small></div>
             <Seguir apelido={c.apelido} sigo={c.sigo} mudou={v => setLista(l => (l ?? []).map(x => x.apelido === c.apelido ? { ...x, sigo: v } : x))} />
           </li>
         ))}
@@ -644,7 +645,7 @@ function ProvasDe({ apelido, meu, sigo, mudouSigo }: { apelido: string; meu: boo
       {lista.map(r => (
         <li key={r.id}>
           <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
-          <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}%</p>
+          <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · {r.nota != null ? `nota ${pct(r.nota)}%` : 'sem nota'}</p>
           <p className="pro-pts-conta"><b>{r.pontos} pts</b>{r.detalhes_pontos && Object.keys(r.detalhes_pontos).length ? <> = {Object.entries(r.detalhes_pontos).map(([k, v]) => `${v} ${PONTOS_TXT[k] ?? k}`).join(' + ')}</> : null}{r.status !== 'verificado' && r.status !== 'aprovado' ? <small> · ainda não contam no ranking</small> : null}</p>
           {!meu && contesta !== r.id && <button className="btn text pro-esq" onClick={() => { setContesta(r.id); setMsg(null); }}><Flag size={15} aria-hidden="true" />Contestar</button>}
           {contesta === r.id && (
@@ -1050,7 +1051,7 @@ export function TelaAdmin() {
   const liberar = async () => { const r = await chamar<{ valida_ate: string }>('radar-acoes', { acao: 'admin_liberar', apelido: apelido.replace('@', ''), dias: Number(dias) }); setMsg(r.erro ?? `Liberado até ${new Date(r.valida_ate).toLocaleDateString('pt-BR')}.`); };
   const Item = ({ r }: { r: Resultado & { user_id: string } }) => (
     <><div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
-      <p>{quem(r.user_id)}<br />{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}%{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}{r.nome_inscricao ? ` · inscrito como ${r.nome_inscricao}` : ''}</p>
+      <p>{quem(r.user_id)}<br />{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · {r.nota != null ? `nota ${pct(r.nota)}%` : 'sem nota'}{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}{r.nome_inscricao ? ` · inscrito como ${r.nome_inscricao}` : ''}</p>
       {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
       {r.link_resultado && <p className="fine pro-sem-margem"><a href={r.link_resultado} target="_blank" rel="noopener noreferrer">Abrir link enviado</a></p>}
       <div className="pro-linha pro-quebra"><button className="btn solid" onClick={() => decidir(r.id, 'aprovar')}>Aprovar</button><button className="btn outline pro-vermelho-txt" onClick={() => decidir(r.id, 'recusar')}>Recusar</button>{zapDe(r.user_id) && <a className="btn whats" href={`https://wa.me/${zapDe(r.user_id)}?text=${encodeURIComponent(`Oi, @${p?.perfis.find(y => y.user_id === r.user_id)?.apelido}! Aqui é o Radar Corridas Maranhão. Sobre a sua prova ${r.prova_nome} (${dataBR(r.prova_data)}, ${kmTxt(Number(r.distancia_km))}, ${relogio(r.tempo_s)}) no Radar Pro: ${r.motivo_analise ?? 'precisamos conferir o seu resultado.'} Pode me mandar o print ou o link do resultado oficial?`)}`} target="_blank" rel="noopener"><MessageCircle size={16} aria-hidden="true" />Chamar no WhatsApp</a>}</div></>
@@ -1251,7 +1252,7 @@ export function AdminUsuarioArea({ uid, voltar, aviso }: { uid: string; voltar: 
         {d.resultados.length ? <ul className="pro-provas">{d.resultados.map(r => (
           <li key={r.id}>
             <div className="pro-linha"><b>{r.prova_nome}</b><SeloStatus r={r} /></div>
-            <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · nota {pct(r.nota)}% · {r.pontos} pts{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}</p>
+            <p>{dataBR(r.prova_data)} · {kmTxt(Number(r.distancia_km))} · {relogio(r.tempo_s)} · {r.nota != null ? `nota ${pct(r.nota)}%` : 'sem nota'} · {r.pontos} pts{(r.peito ?? r.peito_declarado) ? ` · peito ${r.peito ?? r.peito_declarado}` : ''}</p>
             {r.motivo_analise && <p className="fine pro-sem-margem">{r.motivo_analise}</p>}
             {r.link_resultado && <p className="fine pro-sem-margem"><a href={r.link_resultado} target="_blank" rel="noopener noreferrer">Abrir link enviado</a></p>}
             <div className="pro-linha pro-quebra">
@@ -1317,3 +1318,29 @@ export function Contador({ valor, fmt, dur = 900 }: { valor: number; fmt?: (n: n
   return <>{fmt ? fmt(v) : Math.round(v)}</>;
 }
 
+
+/** Prova confirmada sem tempo: o atleta coloca o tempo do chip (o Radar também preenche sozinho quando o resultado oficial sai). */
+function ColocarTempo({ id, km, salvou }: { id: string; km: number; salvou: (t: number, nota: number) => void }) {
+  const [aberto, setAberto] = useState(false);
+  const [tempo, setTempo] = useState('');
+  const [erro, setErro] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
+  const seg = lerTempo(tempo);
+  const enviar = async () => {
+    if (!seg) return setErro('Digite o tempo do chip, por exemplo 28:40 ou 1:05:20.');
+    setEnviando(true); setErro(null);
+    const { data, error } = await sb.rpc('radar_resultado_tempo', { p_id: id, p_tempo: seg });
+    setEnviando(false);
+    const d = data as { ok?: boolean; nota?: number; erro?: string } | null;
+    if (error || !d?.ok) return setErro(d?.erro ?? 'Não deu pra salvar agora. Tente de novo.');
+    salvou(seg, Number(d.nota));
+  };
+  if (!aberto) return <button className="btn solid pro-btn-p pro-esq" onClick={() => setAberto(true)}><Timer size={16} aria-hidden="true" />Colocar meu tempo</button>;
+  return (
+    <div className="pro-tempo-falta">
+      <label className="ct-cidade">Seu tempo líquido nos {kmTxt(km)} (do chip)<input inputMode="numeric" value={tempo} onChange={e => setTempo(mascaraTempo(e.target.value))} placeholder="Ex.: 28:40" autoFocus /><small>Com o tempo, a prova ganha nota por idade e entra na liga e nos recordes. Se o resultado oficial sair, o Radar confere sozinho.</small></label>
+      {erro && <p className="ct-erro" role="alert">{erro}</p>}
+      <div className="pro-linha pro-esq"><button className="btn solid pro-btn-p" disabled={enviando || !seg} onClick={enviar}>{enviando ? 'Salvando…' : 'Salvar tempo'}</button><button className="btn text pro-btn-p" onClick={() => setAberto(false)}>Cancelar</button></div>
+    </div>
+  );
+}
