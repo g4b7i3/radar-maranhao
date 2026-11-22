@@ -267,7 +267,8 @@ type Resposta = { nota: number; pontos: number; detalhes: Record<string, number>
 
 /* ───────── Prova que não está na agenda: o atleta pede, o Vinik aprova ───────── */
 type Sugestao = { id: string; nome: string; data: string; cidade: string; distancia_km: number; link: string | null; obs: string | null; status: 'pendente' | 'aprovada' | 'recusada'; prova_id: string | null; resposta: string | null; criado_em: string };
-const INICIO = '2026-10-15';
+const INICIO = '1990-01-01'; // provas antigas do Maranhão liberadas (Vinik, 22/11/2026)
+const INICIO_FORA = '2026-10-15';
 const hojeBR = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
 export const UFS: [string, string][] = [['MA', 'Maranhão'], ['AC', 'Acre'], ['AL', 'Alagoas'], ['AP', 'Amapá'], ['AM', 'Amazonas'], ['BA', 'Bahia'], ['CE', 'Ceará'], ['DF', 'Distrito Federal'], ['ES', 'Espírito Santo'], ['GO', 'Goiás'], ['MT', 'Mato Grosso'], ['MS', 'Mato Grosso do Sul'], ['MG', 'Minas Gerais'], ['PA', 'Pará'], ['PB', 'Paraíba'], ['PR', 'Paraná'], ['PE', 'Pernambuco'], ['PI', 'Piauí'], ['RJ', 'Rio de Janeiro'], ['RN', 'Rio Grande do Norte'], ['RS', 'Rio Grande do Sul'], ['RO', 'Rondônia'], ['RR', 'Roraima'], ['SC', 'Santa Catarina'], ['SP', 'São Paulo'], ['SE', 'Sergipe'], ['TO', 'Tocantins'], ['EX', 'Fora do Brasil']];
 function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resposta & { pedido?: boolean; aprovada?: boolean; motivo?: string }) => void }) {
@@ -285,7 +286,8 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
     setErro(null);
     if (f.nome.trim().length < 5) return setErro('Escreva o nome da prova.');
     if (!f.data) return setErro('Escolha a data da prova.');
-    if (f.data < INICIO) return setErro('A pré-temporada conta só as provas a partir de 15/10/2026.');
+    if (f.data < INICIO) return setErro('Confira a data da prova.');
+    if (f.uf !== 'MA' && f.data < INICIO_FORA) return setErro('Provas antigas valem só se forem no Maranhão. De fora do estado, só a partir de 15/10/2026.');
     if (f.cidade.trim().length < 3) return setErro('Diga a cidade.');
     if (!dist) return setErro('Escolha a distância que você correu.');
     setIndo(true);
@@ -298,7 +300,7 @@ function PedirProva({ fechar, enviado }: { fechar: () => void; enviado: (r: Resp
   return (
     <section className="pro-card pro-pedir">
       <div className="pro-linha"><p className="pro-k cinza"><CalendarPlus size={14} aria-hidden="true" /> Pedir uma prova</p><button className="btn text" onClick={fechar} aria-label="Fechar"><Fechar size={18} aria-hidden="true" /></button></div>
-      <p className="fine pro-sem-margem"><b>No Radar Pro a prova entra na hora, com ou sem link.</b> Com o link do resultado, o Radar ainda lê e pega o seu tempo oficial. Sem o link, é só colocar o seu tempo.</p>
+      <p className="fine pro-sem-margem"><b>No Radar Pro a prova entra na hora, com ou sem link.</b> Com o link do resultado, o Radar ainda lê e pega o seu tempo oficial. Sem o link, é só colocar o seu tempo. <b>Prova antiga também vale</b>, de qualquer ano, se foi no Maranhão.</p>
       <label className="ct-cidade">Nome da prova<input value={f.nome} onChange={muda('nome')} placeholder="Ex.: Corrida do Sol 2026" maxLength={120} /></label>
       <label className="ct-cidade">Data<input type="date" min={INICIO} max={hojeBR()} value={f.data} onChange={muda('data')} /></label>
       <div className="pro-cidade-uf">

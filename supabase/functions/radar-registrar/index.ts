@@ -35,6 +35,7 @@ function nota(sexo: 'F' | 'M', km: number, idade: number, seg: number) {
   return (oc / f) / seg * 100;
 }
 const INICIO_TEMPORADA = '2026-10-15';
+const INICIO_RETRO = '1990-01-01'; // provas antigas valem (decisão do Vinik, 22/11/2026): basta ter as informações e ser no Maranhão
 const limpa = (v: unknown, max: number) => String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
 const real = (k: number) => (Math.abs(k - 21) < 0.2 ? 21.0975 : Math.abs(k - 42) < 0.3 ? 42.195 : k);
 const norm = (s: string) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -76,7 +77,8 @@ Deno.serve(async req => {
     if (nome.length < 5) return resp({ erro: 'Escreva o nome da prova.' }, 400);
     if (cidade.length < 3) return resp({ erro: 'Diga a cidade da prova.' }, 400);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dia)) return resp({ erro: 'Data inválida.' }, 400);
-    if (dia < INICIO_TEMPORADA) return resp({ erro: 'A temporada 2026 conta só as provas a partir de 15/10/2026.' }, 400);
+    if (dia < INICIO_RETRO) return resp({ erro: 'Confira a data da prova.' }, 400);
+    if (uf !== 'MA' && dia < INICIO_TEMPORADA) return resp({ erro: 'Provas antigas valem só se forem no Maranhão. De fora do estado, só a partir de 15/10/2026.' }, 400);
     if (dia > hojeN) return resp({ erro: 'A prova ainda não aconteceu.' }, 400);
     if (!(kmN >= 1 && kmN <= 250)) return resp({ erro: 'Escolha a distância que você correu.' }, 400);
     if (lk && !/^https?:\/\/\S+\.\S+/.test(lk)) return resp({ erro: 'O link do resultado precisa começar com http.' }, 400);
@@ -141,7 +143,7 @@ Deno.serve(async req => {
     if (a) prova = { id: a.id, name: a.nome, date: a.data, city: a.cidade, uf: a.uf ?? 'MA', distances: (a.distancias ?? []).map(Number), start: a.largada };
   }
   if (!prova?.date) return resp({ erro: 'Escolha uma prova da agenda do Radar.' }, 400);
-  if (prova.date.slice(0, 10) < new Date(Date.now() - 400 * 86400_000).toISOString().slice(0, 10)) return resp({ erro: 'Só valem provas dos últimos 12 meses.' }, 400);
+  if ((prova.uf ?? 'MA') !== 'MA' && prova.date.slice(0, 10) < INICIO_TEMPORADA) return resp({ erro: 'Provas antigas valem só se forem no Maranhão.' }, 400);
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
   if (prova.date.slice(0, 10) > hoje) return resp({ erro: 'Essa prova ainda não aconteceu.' }, 400);
   const km = real(Number(b.distancia_km));

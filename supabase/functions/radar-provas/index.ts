@@ -1,6 +1,6 @@
 // Radar Pro · arquivo de provas. A agenda (radar.json) tira as provas antigas;
 // aqui elas ficam guardadas para o atleta poder registrar "Eu corri!" depois.
-// GET: sincroniza com o radar.json do site e devolve as provas dos últimos 12 meses que já aconteceram.
+// GET: sincroniza com o radar.json do site e devolve as provas que já aconteceram (antigas do Maranhão também valem).
 // É pública (só dados da agenda). A coleta do GitHub também chama a cada rodada.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 
@@ -18,8 +18,7 @@ Deno.serve(async req => {
     if (linhas.length) { await db.from('radar_provas').upsert(linhas); ultimaSync = Date.now(); }
   }
   const hoje = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
-  // a temporada 2026 do Radar Pro conta as provas a partir de 15/10/2026
-  const desde = [new Date(Date.now() - 400 * 86400_000).toISOString().slice(0, 10), '2026-10-15'].sort()[1];
-  const { data } = await db.from('radar_provas').select('id, nome, data, cidade, distancias, largada').lte('data', hoje).gte('data', desde).order('data', { ascending: false }).limit(500);
+  // provas antigas também valem (Vinik, 22/11/2026): todas as do Maranhão; de fora, a partir de 15/10/2026
+  const { data } = await db.from('radar_provas').select('id, nome, data, cidade, distancias, largada').lte('data', hoje).or('uf.is.null,uf.eq.MA,data.gte.2026-10-15').order('data', { ascending: false }).limit(1000);
   return new Response(JSON.stringify({ provas: data ?? [] }), { headers: { ...CORS, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' } });
 });

@@ -253,7 +253,7 @@ function ProTelas() {
       {notifAberto && <PainelNotificacoes lista={notif.lista} fechar={() => setNotifAberto(false)} recarregar={() => { notif.carregar(); recarregar(); }} irPara={a => { setAba(a as Aba); window.scrollTo(0, 0); }} />}
       {/* menu fixo embaixo, como app: desliza de lado; a borda esfumada mostra que tem mais */}
       <MenuFixo abas={ABAS} aba={aba} ir={a => { setAba(a); window.scrollTo(0, 0); }} />
-      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Pré-temporada 2027:</b> já valem as provas desde 15/10. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
+      <p className="pro-inicio-temporada"><CalendarCheck size={18} aria-hidden="true" /><span><b>Prova antiga também vale:</b> registre qualquer corrida que você fez no Maranhão, de qualquer ano. Em 1º de janeiro começa a <b>temporada 2027</b> e o ranking zera.</span></p>
       <BannerAviso lista={notif.lista} abrir={() => setNotifAberto(true)} />
       <PushConvite userId={perfil.user_id} />
       {!pro && !admin && <BannerAssinar pendentes={temp.pontos_pendentes} provas={temp.provas} assinar={irAssinar} />}

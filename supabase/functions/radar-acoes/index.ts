@@ -15,6 +15,7 @@ const medalhasDe = async (ids: string[]): Promise<Record<string, string[]>> => {
   } catch { return {}; }
 };
 const INICIO_TEMPORADA = '2026-10-15';
+const INICIO_RETRO = '1990-01-01'; // provas antigas liberadas (Vinik, 22/11/2026)
 const hojeBR = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
 const limpa = (v: unknown, max: number) => String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
 const mesAtual = () => new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 7) + '-01';
@@ -81,7 +82,7 @@ Deno.serve(async req => {
       if (nome.length < 5) return resp({ erro: 'Escreva o nome da prova.' }, 400);
       if (cidade.length < 3) return resp({ erro: 'Diga a cidade da prova.' }, 400);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) return resp({ erro: 'Data inválida.' }, 400);
-      if (data < INICIO_TEMPORADA) return resp({ erro: 'A temporada 2026 conta só as provas a partir de 15/10/2026.' }, 400);
+      if (data < INICIO_RETRO) return resp({ erro: 'Confira a data da prova.' }, 400);
       if (data > hojeBR()) return resp({ erro: 'A prova ainda não aconteceu. Peça depois do dia da prova.' }, 400);
       if (!(km >= 1 && km <= 250)) return resp({ erro: 'Distância inválida.' }, 400);
       if (link && !/^https?:\/\/\S+\.\S+/.test(link)) return resp({ erro: 'O link do resultado precisa começar com http.' }, 400);
