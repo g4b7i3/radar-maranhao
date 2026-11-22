@@ -32,7 +32,7 @@ export const GENEROS: [string, string][] = [['mulher', 'Mulher'], ['homem', 'Hom
 export const generoTxt = (g?: string | null) => GENEROS.find(x => x[0] === g)?.[1] ?? null;
 export type Resultado = {
   id: string; user_id: string; colocacao_geral?: number | null; colocacao_faixa?: number | null; total_dist?: number | null; prova_id: string; prova_nome: string; prova_data: string; cidade: string; uf?: string; largada: string | null; distancia_km: number;
-  tempo_s: number; idade: number; nota: number; status: 'verificado' | 'aprovado' | 'declarado' | 'em_analise' | 'recusado';
+  tempo_s: number | null; idade: number; nota: number | null; status: 'verificado' | 'aprovado' | 'declarado' | 'em_analise' | 'recusado';
   motivo_analise: string | null; podio: boolean; pontos: number; detalhes_pontos: Record<string, number> | null; peito: string | null; peito_declarado?: string | null; nome_inscricao?: string | null; link_resultado: string | null;
 };
 export type Temporada = {
@@ -58,7 +58,8 @@ export const STATUS: Record<Resultado['status'], { txt: string; cls: string; dic
   recusado: { txt: 'Recusado', cls: 'rec', dica: 'Não foi aceito. Fale com o Radar pelo WhatsApp.' },
 };
 
-export const relogio = (s: number) => {
+export const relogio = (s: number | null | undefined) => {
+  if (s == null || !(s > 0)) return 'sem tempo'; // prova confirmada sem o tempo
   s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
   return h ? `${h}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}` : `${m}:${String(x).padStart(2, '0')}`;
 };

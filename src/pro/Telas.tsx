@@ -39,7 +39,7 @@ const SeloLiga = ({ liga }: { liga: Liga | null }) => liga
 
 const SeloStatus = ({ r }: { r: Resultado }) => <span className={`pro-st ${STATUS[r.status].cls}`} title={STATUS[r.status].dica}>{STATUS[r.status].txt}</span>;
 
-const msgComprovante = (p: Perfil, r: { prova_nome: string; prova_data: string; distancia_km: number; tempo_s: number }) =>
+const msgComprovante = (p: Perfil, r: { prova_nome: string; prova_data: string; distancia_km: number; tempo_s: number | null }) =>
   whatsappLink(`Comprovante Radar Pro\nApelido: @${p.apelido}\nNome na inscrição: ${p.nome_completo}\nProva: ${r.prova_nome} (${dataBR(r.prova_data)})\nDistância: ${kmTxt(Number(r.distancia_km))}\nTempo: ${relogio(r.tempo_s)}\n\nSegue o print ou link do resultado:`);
 
 /* ───────── Rei e Rainha da prova ───────── */
@@ -147,7 +147,7 @@ export function TelaTemporada({ perfil, temp, irCorri, fotoMudou, pro = true, as
     });
   }, [perfil.user_id]);
   const liga = temp.liga, i = LIGAS.findIndex(l => l.id === liga), prox = LIGAS[i + 1];
-  const evolucao = useMemo(() => (res ?? []).filter(ehValido).slice().reverse().map(r => Number(r.nota)), [res]);
+  const evolucao = useMemo(() => (res ?? []).filter(ehValido).filter(r => r.nota != null).slice().reverse().map(r => Number(r.nota)), [res]);
 
   return (
     <div className="pro-cont">
@@ -677,8 +677,8 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
   const fantasmas = useMemo(() => {
     const out: { km: number; hoje: Resultado; antes: number }[] = [];
     for (const d of DIST_DUELO) {
-      const l = res.filter(r => Math.abs(Number(r.distancia_km) - d) < 0.2);
-      if (l.length >= 2) out.push({ km: d, hoje: l[0], antes: Math.min(...l.slice(1).map(r => r.tempo_s)) });
+      const l = res.filter(r => Math.abs(Number(r.distancia_km) - d) < 0.2 && (r.tempo_s ?? 0) > 0);
+      if (l.length >= 2) out.push({ km: d, hoje: l[0], antes: Math.min(...l.slice(1).map(r => r.tempo_s!)) });
     }
     return out;
   }, [res]);
@@ -696,7 +696,7 @@ export function TelaDuelos({ perfil }: { perfil: Perfil }) {
   return (
     <div className="pro-cont">
       <SecaoX1 />
-      {fantasmas.map(f => { const dif = f.hoje.tempo_s - f.antes; return (
+      {fantasmas.map(f => { const dif = f.hoje.tempo_s! - f.antes; return (
         <section key={f.km} className="pro-card">
           <div className="pro-linha"><p className="pro-k cinza">Fantasma · {kmTxt(f.km)}</p><span className={`pro-st ${dif <= 0 ? 'ok' : 'rec'}`}>{dif <= 0 ? '−' : '+'}{relogio(Math.abs(dif))}</span></div>
           <div className="pro-vs"><div><small>Sua última</small><b>{relogio(f.hoje.tempo_s)}</b></div><em>vs</em><div><small>Seu melhor antes</small><b className="cinza">{relogio(f.antes)}</b></div></div>

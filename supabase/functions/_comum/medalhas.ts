@@ -42,7 +42,7 @@ const ligaDe = (i: number | null) => (i == null ? null : i >= 65 ? 'elite' : i >
 const LIGAS = ['bronze', 'prata', 'ouro', 'elite'];
 /** índice da liga numa data: média das 3 melhores notas oficiais dos 12 meses anteriores */
 const indiceEm = (rs: any[], ate: Date) => {
-  const v = rs.filter(r => VAL(r.status) && dia(r.prova_data) <= ate && dia(r.prova_data) > new Date(ate.getTime() - 365 * DIA)).map(r => Number(r.nota)).sort((a, b) => b - a).slice(0, 3);
+  const v = rs.filter(r => VAL(r.status) && r.nota != null && dia(r.prova_data) <= ate && dia(r.prova_data) > new Date(ate.getTime() - 365 * DIA)).map(r => Number(r.nota)).sort((a, b) => b - a).slice(0, 3);
   return v.length ? v.reduce((a, x) => a + x, 0) / v.length : null;
 };
 const distKm = (a: [number, number], b: [number, number]) => { const R = 6371, r = Math.PI / 180, dl = (b[0] - a[0]) * r, dn = (b[1] - a[1]) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dn / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
@@ -171,14 +171,15 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
       if (meuGrupo) {
         const naProva = (porProva.get(r.prova_id) ?? []).filter(o => grupo.get(o.user_id) === meuGrupo);
         if (naProva.some(o => o.user_id !== u)) dar('no_pelotao', y, r);
-        const val = naProva.filter(o => VAL(o.status));
-        if (VAL(r.status) && val.length >= 2 && val.every(o => o.user_id === u || Number(o.nota) < Number(r.nota))) dar('lider_pelotao', y, r);
+        const val = naProva.filter(o => VAL(o.status) && o.nota != null);
+        if (VAL(r.status) && r.nota != null && val.length >= 2 && val.every(o => o.user_id === u || Number(o.nota) < Number(r.nota))) dar('lider_pelotao', y, r);
       }
 
       // ---------- desempenho: só oficial ----------
       const chaveDist = cl ?? String(Math.round(km * 10) / 10);
       const antes = melhor.get(chaveDist);
-      if (VAL(r.status)) {
+      // desempenho só com tempo (prova confirmada sem tempo conta só participação)
+      if (VAL(r.status) && r.tempo_s > 0) {
         const t = r.tempo_s;
         if (cl === '5k') { if (t < 1800) dar('sub30_5k', y, r); if (t < 1500) dar('sub25_5k', y, r); if (t < 1320) dar('sub22_5k', y, r); if (t < 1200) dar('sub20_5k', y, r); }
         if (cl === '10k') { if (t < 3600) dar('sub60_10k', y, r); if (t < 3000) dar('sub50_10k', y, r); if (t < 2700) dar('sub45_10k', y, r); if (t < 2400) dar('sub40_10k', y, r); }
@@ -219,7 +220,7 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
         if (lg === 'elite') darUmaVez('liga_elite', y, r);
         if (lg) ligaAntes = lg;
       }
-      melhor.set(chaveDist, Math.min(antes ?? Infinity, r.tempo_s));
+      if (r.tempo_s > 0) melhor.set(chaveDist, Math.min(antes ?? Infinity, r.tempo_s));
     }
 
     // ---------- temporada ----------
@@ -279,7 +280,7 @@ export async function atualizarMedalhas(db: any, ids?: string[]): Promise<Map<st
       contra.set(adv, (contra.get(adv) ?? 0) + 1); if (contra.get(adv) === 5) dar('rival', y);
       const fim = new Date(dia(d.mes).getTime()); fim.setUTCMonth(fim.getUTCMonth() + 1);
       if (fim > agora) continue;
-      const melhorNota = (uid: string) => { const v = (porUser.get(uid) ?? []).filter(r => VAL(r.status) && r.prova_data.slice(0, 7) === d.mes.slice(0, 7) && Math.abs(Number(r.distancia_km) - Number(d.distancia_km)) < 0.2).map(r => Number(r.nota)); return v.length ? Math.max(...v) : null; };
+      const melhorNota = (uid: string) => { const v = (porUser.get(uid) ?? []).filter(r => VAL(r.status) && r.nota != null && r.prova_data.slice(0, 7) === d.mes.slice(0, 7) && Math.abs(Number(r.distancia_km) - Number(d.distancia_km)) < 0.2).map(r => Number(r.nota)); return v.length ? Math.max(...v) : null; };
       const eu = melhorNota(u), ele = melhorNota(adv);
       const venci = eu != null && (ele == null || eu > ele);
       if (venci) {

@@ -14,12 +14,12 @@ type Num = { ano: number; provas: number; km: number; cidades: number; melhorNot
 export function numeros(res: Resultado[], meds: string[], reis: number, liga: Liga | null, indice: number | null, posicao: number | null, ano: number): Num {
   const v = res.filter(r => r.status !== 'recusado' && Number(String(r.prova_data).slice(0, 4)) === ano);
   const ok = v.filter(r => r.status === 'verificado' || r.status === 'aprovado');
-  const melhor = ok.slice().sort((a, b) => Number(b.nota) - Number(a.nota))[0];
+  const melhor = ok.filter(r => r.nota != null).sort((a, b) => Number(b.nota) - Number(a.nota))[0];
   return {
     ano, provas: v.length, km: Math.round(v.reduce((a, r) => a + Number(r.distancia_km), 0)), cidades: new Set(v.map(r => r.cidade)).size,
     melhorNota: melhor ? Number(melhor.nota) : null, melhorProva: melhor?.prova_nome ?? null, pontos: ok.reduce((a, r) => a + r.pontos, 0),
     medalhas: meds.length, reis, liga, indice, posicao, seq: sequenciaMeses(v.map(r => ({ data: r.prova_data, cidade: r.cidade, status: r.status }))),
-    recs: recordes(v.map(r => ({ prova: r.prova_nome, data: r.prova_data, km: Number(r.distancia_km), tempo: r.tempo_s, status: r.status }))).filter(x => x.r).map(x => ({ rot: x.rot, t: x.r!.tempo })),
+    recs: recordes(v.map(r => ({ prova: r.prova_nome, data: r.prova_data, km: Number(r.distancia_km), tempo: r.tempo_s, status: r.status }))).filter(x => x.r).map(x => ({ rot: x.rot, t: x.r!.tempo! })),
   };
 }
 

@@ -31,7 +31,7 @@ export function fotoRedonda(ctx: Ctx, img: HTMLImageElement, cx: number, cy: num
   ctx.drawImage(img, (img.naturalWidth - s) / 2, (img.naturalHeight - s) / 2, s, s, cx - raio, cy - raio, raio * 2, raio * 2); ctx.restore();
 }
 const svgImg = (m: Medalha) => carregar('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(medalhaSVG(m, true, 200).replace(/'Archivo Variable',sans-serif/g, "'Arial Black',Arial,sans-serif")));
-const ritmo = (s: number, km: number) => { const p = s / km; return `${Math.floor(p / 60)}:${String(Math.round(p % 60)).padStart(2, '0')}`; };
+const ritmo = (s: number | null, km: number) => { if (!s) return '–'; const p = s / km; return `${Math.floor(p / 60)}:${String(Math.round(p % 60)).padStart(2, '0')}`; };
 const dataLonga = (d: string) => new Date(d.slice(0, 10) + 'T12:00:00Z').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 function cobrir(ctx: Ctx, img: CanvasImageSource, w: number, h: number) {
@@ -105,7 +105,7 @@ export async function desenharResultado(c: HTMLCanvasElement, r: Resultado, apel
   if (col.length) { fonte(ctx, 700, 36, false); ctx.fillText(col.join('  ·  '), X, base); base -= 110; }
   // três números
   const km = Number(r.distancia_km);
-  const itens: [string, string][] = [[kmTxt(km).replace(' km', ''), 'KM'], [ritmo(r.tempo_s, km), 'RITMO /KM'], [`${String(Number(r.nota).toFixed(1)).replace('.', ',')}%`, 'NOTA POR IDADE']];
+  const itens: [string, string][] = [[kmTxt(km).replace(' km', ''), 'KM'], [ritmo(r.tempo_s, km), 'RITMO /KM'], [(r.nota == null ? '–' : `${String(Number(r.nota).toFixed(1)).replace('.', ',')}%`), 'NOTA POR IDADE']];
   const colW = (W - 2 * X) / 3;
   itens.forEach(([v, rot], i) => {
     const x = X + i * colW;
@@ -205,7 +205,7 @@ export async function desenharCartao(c: HTMLCanvasElement, r: Resultado, apelido
   const ly = py + ph + 210;
   ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fillRect(ix, ly, iw, 2); ctx.fillRect(ix, ly + 190, iw, 2);
   const terceiro: [string, string] = r.colocacao_faixa ? [`${r.colocacao_faixa}º`, 'na faixa'] : r.colocacao_geral ? [`${r.colocacao_geral}º`, 'no geral'] : [`+${r.pontos}`, 'pontos'];
-  const nums: [string, string][] = [[relogio(r.tempo_s), 'tempo'], [`${String(Number(r.nota).toFixed(1)).replace('.', ',')}%`, 'nota por idade'], terceiro];
+  const nums: [string, string][] = [[relogio(r.tempo_s), 'tempo'], [(r.nota == null ? '–' : `${String(Number(r.nota).toFixed(1)).replace('.', ',')}%`), 'nota por idade'], terceiro];
   const colW = iw / 3;
   ctx.textAlign = 'center';
   nums.forEach(([v, t], i) => {

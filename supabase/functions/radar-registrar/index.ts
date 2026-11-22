@@ -229,7 +229,7 @@ Deno.serve(async req => {
   // Histórico do atleta (para recorde, cidade nova, alarmes e medalhas)
   const { data: hist } = await db.from('radar_resultados').select('*').eq('user_id', user.id).neq('status', 'recusado');
   if (hist?.some(h => h.prova_id === prova.id && Math.abs(Number(h.distancia_km) - km) < 0.2)) return resp({ erro: 'Você já registrou essa prova nessa distância.' }, 409);
-  const mesmaDist = (hist ?? []).filter(h => Math.abs(Number(h.distancia_km) - km) < 0.2);
+  const mesmaDist = (hist ?? []).filter(h => Math.abs(Number(h.distancia_km) - km) < 0.2 && h.tempo_s > 0); // prova confirmada sem tempo não entra no recorde
   const melhorAntes = mesmaDist.length ? Math.min(...mesmaDist.map(h => h.tempo_s)) : null;
 
   // 2) Status e alarmes contra fraude
