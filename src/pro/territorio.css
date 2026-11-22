@@ -1,0 +1,61 @@
+/* Radar · Território (jogo) */
+.terr { display: flex; flex-direction: column; gap: 14px; }
+.terr .pro-card { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.terr .pro-k { display: inline-flex; align-items: center; gap: 6px; margin: 0; }
+.terr-tit { margin: 0; font-size: 1.35rem; line-height: 1.15; letter-spacing: -.01em; }
+.terr-sub { opacity: .85; }
+.terr-bts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.terr-bts .btn { display: inline-flex; align-items: center; gap: 6px; }
+
+.pro .pro-card.terr-seguranca { color: #fff; }
+.pro .terr-seguranca, .pro .terr-seguranca p { color: #fff; }
+.pro .terr-seguranca .pro-k, .pro .terr-seguranca .fine { color: #ffd34d; }
+.terr-seguranca .fine { opacity: .95; }
+.pro .terr-seguranca .btn.solid { background: #ffd34d; color: #0a1240; }
+.pro .terr-seguranca .btn.text { color: #fff; }
+
+.terr-nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.terr-nums span { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; padding: 10px 4px; border-radius: 16px; border: 1px solid var(--pro-fio); }
+.terr-nums b { font-size: 1.35rem; line-height: 1; }
+.terr-nums small { font-size: .7rem; line-height: 1.2; opacity: .75; }
+.terr-nums .ouro { background: #ffd34d; color: #0a1240; border-color: transparent; }
+.terr-nums .ouro small { opacity: .85; }
+.terr-nums .frio b { color: #3b82c4; }
+@media (max-width: 380px) { .terr-nums { grid-template-columns: repeat(2, 1fr); } }
+
+.terr-pro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 14px; background: rgba(29, 63, 191, .08); font-size: .9rem; }
+
+.terr-mapa-caixa { position: relative; height: min(62vh, 560px); min-height: 360px; border-radius: 22px; overflow: hidden; border: 1px solid var(--pro-fio); box-shadow: var(--pro-sombra); }
+.terr-mapa { position: absolute !important; inset: 0; width: 100%; height: 100%; }
+.terr-mapa-lado { position: absolute; z-index: 2; right: 10px; top: 10px; display: grid; gap: 8px; }
+.terr-legenda { position: absolute; z-index: 2; left: 10px; bottom: 26px; display: flex; flex-wrap: wrap; gap: 6px; max-width: calc(100% - 20px); }
+.terr-legenda span { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 999px; font-size: .74rem; font-weight: 700; background: var(--pro-vidro); color: var(--ink); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.terr-legenda i { width: 11px; height: 11px; border-radius: 3px; }
+.terr-legenda .alt { font-weight: 600; opacity: .9; }
+.terr-vazio { position: absolute; z-index: 2; left: 12px; right: 12px; top: 50%; transform: translateY(-50%); margin: 0; text-align: center; padding: 12px 14px; border-radius: 16px; background: var(--pro-vidro); color: var(--ink); font-weight: 650; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.terr-emoji-mapa { font-size: 20px; line-height: 1; cursor: pointer; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .35)); }
+
+.terr-dono { display: flex; align-items: center; gap: 10px; }
+.terr-dono img, .terr-dono i, .terr-placar img, .terr-placar li > i { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; display: grid; place-items: center; font-style: normal; font-weight: 800; color: #fff; }
+.terr-dono div { display: flex; flex-direction: column; }
+.terr-dono small { opacity: .75; }
+.terr-alerta { display: flex; align-items: flex-start; gap: 6px; margin: 0; padding: 10px 12px; border-radius: 14px; background: rgba(255, 211, 77, .2); font-size: .92rem; }
+.terr-alerta svg { flex: none; margin-top: 2px; }
+.terr-alerta.frio { background: rgba(59, 130, 196, .14); }
+
+.terr-emojis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.terr-emojis button { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 8px 2px; border-radius: 14px; border: 1px solid var(--pro-fio); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.terr-emojis button span { font-size: 1.3rem; line-height: 1; }
+.terr-emojis button small { font-size: .72rem; font-weight: 750; opacity: .8; }
+.terr-emojis button.on { border-color: #1d3fbf; background: rgba(29, 63, 191, .1); }
+
+.terr-regras-bt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.terr-passos { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: .94rem; }
+
+.terr-placar ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.terr-placar li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 14px; }
+.terr-placar li.eu { background: rgba(255, 211, 77, .22); }
+.terr-placar img, .terr-placar li > i { width: 32px; height: 32px; font-size: .85rem; }
+.terr-placar .pos { width: 28px; font-weight: 800; opacity: .7; }
+.terr-placar .nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
+.terr-placar b { font-size: 1.05rem; }
