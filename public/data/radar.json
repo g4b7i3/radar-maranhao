@@ -1269,8 +1269,8 @@
       ],
       "location": "Senac de Imperatriz",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Esgotadas",
+      "registrationClose": "2026-11-22",
+      "status": "Encerradas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz",
       "sourceName": "Crono Esportes",
@@ -1285,7 +1285,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-19T01:50:55.607Z",
+      "verifiedAt": "2026-11-22T18:38:11.948Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -4028,6 +4028,14 @@
   ],
   "changes": [
     {
+      "id": "75bea9d1-15be-4099-b507-a8151f7a7507",
+      "eventId": "sesc-2026-imperatriz",
+      "version": "[\"2026-11-22\",[5,10],\"Senac de Imperatriz\",null,\"2026-11-22\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-22T18:38:11.948Z",
+      "notifiedAt": null
+    },
+    {
       "id": "b07f231e-d33e-49e3-b07a-48c20d7bc5e1",
       "eventId": "tocauto-running-2026-imperatriz",
       "version": "[\"2026-11-29\",[5,10],\"Concessionária Tocauto Volkswagen, BR-010, Imperatriz\",null,\"2026-11-21\",\"Encerradas\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
@@ -6428,7 +6436,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-22T10:51:21.704Z",
+  "lastChecked": "2026-11-22T18:38:11.948Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
