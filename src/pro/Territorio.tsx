@@ -33,6 +33,31 @@ function circulo(lat: number, lng: number, m: number): [number, number][] {
   for (let i = 0; i <= 48; i++) { const a = i / 48 * 2 * Math.PI; out.push([lng + dLng * Math.cos(a), lat + dLat * Math.sin(a)]); }
   return out;
 }
+/** Blocos de território: hexágonos vizinhos do mesmo dono viram um bloco só (uma foto por bloco). */
+type Bloco = { nome: string; foto: string | null; eu: boolean; tamanho: number; centro: Hex };
+const VIZ = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]];
+function blocos(lista: Hex[]): Bloco[] {
+  const porHex = new Map(lista.filter(h => h.dono).map(h => [h.hex, h]));
+  const dono = (h: Hex) => (h.eu ? '\u0000eu' : h.dono!);
+  const visto = new Set<string>(), out: Bloco[] = [];
+  for (const h of porHex.values()) {
+    if (visto.has(h.hex)) continue;
+    const grupo: Hex[] = [], fila = [h]; visto.add(h.hex);
+    while (fila.length) {
+      const a = fila.pop()!; grupo.push(a);
+      const [q, r] = a.hex.split('_').map(Number);
+      for (const [dq, dr] of VIZ) {
+        const v = porHex.get(`${q + dq}_${r + dr}`);
+        if (v && !visto.has(v.hex) && dono(v) === dono(h)) { visto.add(v.hex); fila.push(v); }
+      }
+    }
+    const la = grupo.reduce((s, x) => s + x.lat, 0) / grupo.length, lo = grupo.reduce((s, x) => s + x.lng, 0) / grupo.length;
+    const centro = grupo.reduce((m, x) => (Math.hypot(x.lat - la, x.lng - lo) < Math.hypot(m.lat - la, m.lng - lo) ? x : m), grupo[0]);
+    out.push({ nome: h.dono!, foto: h.dono_foto, eu: h.eu, tamanho: grupo.length, centro });
+  }
+  return out;
+}
+
 const geoHex = (lista: Hex[]) => ({
   type: 'FeatureCollection' as const,
   features: lista.map(h => ({
@@ -181,7 +206,7 @@ function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; c
   const caixa = useRef<HTMLDivElement>(null);
   const mapa = useRef<MLMap | null>(null);
   const lib = useRef<typeof import('maplibre-gl') | null>(null);
-  const marcas = useRef<Marker[]>([]);
+  const marcas = useRef<{ marker: Marker; peso: number; tipo: 'foto' | 'emoji' }[]>([]);
   const [pronto, setPronto] = useState(false);
   const [p3d, setP3d] = useState(true);
   const centrou = useRef(false);
@@ -224,16 +249,53 @@ function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; c
         m.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, maxZoom: 14.5, pitch: 50, bearing: -12, duration: 0 });
       }
     }
-    // emojis mais usados em cima dos hexágonos
-    marcas.current.forEach(x => x.remove());
+    // fotos: uma por bloco de território (hexágonos colados do mesmo dono) + emojis mais usados
+    marcas.current.forEach(x => x.marker.remove());
     const ml = lib.current; if (!ml) return;
-    marcas.current = hexes.filter(x => Object.keys(x.reacoes).length).slice(0, 80).map(x => {
+    const novas: typeof marcas.current = [];
+    for (const b of blocos(hexes)) {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'terr-avatar' + (b.eu ? ' eu' : '');
+      el.setAttribute('aria-label', `${b.eu ? 'Seu território' : `Território de @${b.nome}`}: ${b.tamanho} ${b.tamanho === 1 ? 'hexágono' : 'hexágonos'}`);
+      el.style.setProperty('--cor', b.eu ? OURO : corDe(b.nome));
+      const foto = document.createElement('span'); foto.className = 'terr-avatar-foto';
+      if (b.foto) { const img = document.createElement('img'); img.src = b.foto; img.alt = ''; img.loading = 'lazy'; img.onerror = () => { img.remove(); foto.textContent = b.nome.slice(0, 1).toUpperCase(); }; foto.appendChild(img); }
+      else foto.textContent = (b.eu ? 'Você' : b.nome).slice(0, 1).toUpperCase();
+      el.appendChild(foto);
+      el.onclick = ev => { ev.stopPropagation(); escolher(b.centro.hex); };
+      novas.push({ marker: new ml.Marker({ element: el, anchor: 'bottom' }).setLngLat([b.centro.lng, b.centro.lat]).addTo(m), peso: (b.eu ? 1e6 : 0) + b.tamanho, tipo: 'foto' });
+    }
+    for (const x of hexes.filter(x => Object.keys(x.reacoes).length).slice(0, 80)) {
       const [e] = Object.entries(x.reacoes).sort((a, b) => b[1] - a[1])[0];
-      const el = document.createElement('div'); el.className = 'terr-emoji-mapa'; el.textContent = e;
+      const el = document.createElement('button'); el.type = 'button'; el.className = 'terr-emoji-mapa'; el.textContent = e; el.setAttribute('aria-label', `Reações neste lugar: ${e}`);
       el.onclick = ev => { ev.stopPropagation(); escolher(x.hex); };
-      return new ml.Marker({ element: el }).setLngLat([x.lng, x.lat]).addTo(m);
-    });
+      novas.push({ marker: new ml.Marker({ element: el }).setLngLat([x.lng, x.lat]).addTo(m), peso: -1, tipo: 'emoji' });
+    }
+    marcas.current = novas;
+    arrumar();
   }, [dados, pronto]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // sem bagunça: quando duas marcas ficam perto na tela, fica só a mais importante (a sua, depois o território maior)
+  const arrumar = () => {
+    const m = mapa.current; if (!m) return;
+    const z = m.getZoom(), postas: { x: number; y: number }[] = [];
+    for (const it of [...marcas.current].sort((a, b) => b.peso - a.peso)) {
+      const el = it.marker.getElement();
+      if (it.tipo === 'emoji' && z < 14) { el.style.visibility = 'hidden'; continue; }
+      const p = m.project(it.marker.getLngLat()), raio = it.tipo === 'foto' ? 46 : 30;
+      const bate = postas.some(q => Math.hypot(q.x - p.x, q.y - p.y) < raio);
+      el.style.visibility = bate ? 'hidden' : 'visible';
+      if (!bate) postas.push({ x: p.x, y: p.y });
+    }
+  };
+  useEffect(() => {
+    const m = mapa.current; if (!m || !pronto) return;
+    let quadro = 0;
+    const f = () => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(arrumar); };
+    m.on('move', f);
+    return () => { m.off('move', f); cancelAnimationFrame(quadro); };
+  }, [pronto]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const m = mapa.current; if (!m || !pronto) return;
