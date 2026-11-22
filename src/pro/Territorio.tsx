@@ -6,18 +6,45 @@ import type { Map as MLMap, GeoJSONSource, Marker } from 'maplibre-gl';
 import { sb } from './sb';
 import './territorio.css';
 
-type Hex = { hex: string; lat: number; lng: number; dono: string | null; dono_foto: string | null; eu: boolean; forca: number | null; desde: string | null; minha_forca: number | null; reacoes: Record<string, number>; minha_reacao: string | null };
+type Hex = { hex: string; lat: number; lng: number; dono: string | null; dono_chave: string | null; dono_foto: string | null; eu: boolean; forca: number | null; desde: string | null; minha_forca: number | null; reacoes: Record<string, number>; minha_reacao: string | null };
 type Meu = { hexagonos: number; ganhos_7d: number; perdidos_7d: number; esfriando: number; casa: { lat: number; lng: number; raio_m: number } | null };
-type Placar = { posicao: number; nome: string; foto: string | null; hexagonos: number; eu: boolean };
+type Placar = { posicao: number; nome: string; chave: string; foto: string | null; hexagonos: number; eu: boolean };
 
 const EMOJIS = ['🔥', '💪', '👀', '👑', '😂', '⚡'];
 const S = 0.0015, K = 0.9986; // mesma grade do banco
-const CORES = ['#1d3fbf', '#2f9e8f', '#5b7cff', '#0f766e', '#3b82c4', '#6d7fe0'];
+// cores dos outros atletas: bem diferentes entre si, sem rosa e sem dourado (dourado é só seu)
+const PALETA = ['#1d3fbf', '#0f9d8a', '#f07c1e', '#7b4fd6', '#2fa84f', '#1aa3e8', '#d63a2f', '#8a9a1b', '#a0642c', '#17becf', '#4b5bd6', '#5f7a8c', '#c2571a', '#3f8f3a'];
 const OURO = '#ffd34d';
 const escuro = () => document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
 const estilo = () => `https://tiles.openfreemap.org/styles/${escuro() ? 'fiord' : 'positron'}`;
 const num = (n: number | null | undefined) => (n == null ? '–' : String(Number(n).toFixed(1)).replace('.', ','));
-const corDe = (nome: string) => { let h = 0; for (const c of nome) h = (h * 31 + c.charCodeAt(0)) >>> 0; return CORES[h % CORES.length]; };
+const hashDe = (t: string) => { let h = 0; for (const c of t) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+let coresAtuais = new Map<string, string>();
+const corDe = (chave: string | null | undefined) => (chave ? coresAtuais.get(chave) ?? PALETA[hashDe(chave) % PALETA.length] : '#9aa4cc');
+/** Dá uma cor a cada atleta do mapa: quem tem território perto (até 2 hexágonos) nunca fica com a mesma cor. */
+const PERTO = (() => { const o: [number, number][] = []; for (let dq = -2; dq <= 2; dq++) for (let dr = -2; dr <= 2; dr++) { const d = (Math.abs(dq) + Math.abs(dr) + Math.abs(dq + dr)) / 2; if (d >= 1 && d <= 2) o.push([dq, dr]); } return o; })();
+function atribuirCores(lista: Hex[], extras: string[]) {
+  const dono = new Map<string, string>(), qtd = new Map<string, number>(), viz = new Map<string, Set<string>>();
+  for (const h of lista) if (h.dono_chave && !h.eu) { dono.set(h.hex, h.dono_chave); qtd.set(h.dono_chave, (qtd.get(h.dono_chave) ?? 0) + 1); }
+  for (const [hex, k] of dono) {
+    const [q, r] = hex.split('_').map(Number);
+    for (const [dq, dr] of PERTO) {
+      const o = dono.get(`${q + dq}_${r + dr}`);
+      if (o && o !== k) { if (!viz.has(k)) viz.set(k, new Set()); if (!viz.has(o)) viz.set(o, new Set()); viz.get(k)!.add(o); viz.get(o)!.add(k); }
+    }
+  }
+  const cores = new Map<string, string>();
+  const ordem = [...qtd.keys()].sort((a, b) => (qtd.get(b)! - qtd.get(a)!) || a.localeCompare(b));
+  for (const k of [...ordem, ...extras.filter(e => !qtd.has(e))]) {
+    if (cores.has(k)) continue;
+    const usadas = new Set([...(viz.get(k) ?? [])].map(v => cores.get(v)).filter(Boolean));
+    const ini = hashDe(k) % PALETA.length;
+    let cor = PALETA[ini];
+    for (let i = 0; i < PALETA.length; i++) { const c = PALETA[(ini + i) % PALETA.length]; if (!usadas.has(c)) { cor = c; break; } }
+    cores.set(k, cor);
+  }
+  return cores;
+}
 const dias = (iso: string) => Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86400_000));
 const haTempo = (iso: string) => { const d = dias(iso); return d === 0 ? 'hoje' : d === 1 ? 'ontem' : `há ${d} dias`; };
 
@@ -34,11 +61,11 @@ function circulo(lat: number, lng: number, m: number): [number, number][] {
   return out;
 }
 /** Blocos de território: hexágonos vizinhos do mesmo dono viram um bloco só (uma foto por bloco). */
-type Bloco = { nome: string; foto: string | null; eu: boolean; tamanho: number; centro: Hex };
+type Bloco = { nome: string; chave: string | null; foto: string | null; eu: boolean; tamanho: number; centro: Hex };
 const VIZ = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]];
 function blocos(lista: Hex[]): Bloco[] {
   const porHex = new Map(lista.filter(h => h.dono).map(h => [h.hex, h]));
-  const dono = (h: Hex) => (h.eu ? '\u0000eu' : h.dono!);
+  const dono = (h: Hex) => (h.eu ? '\u0000eu' : h.dono_chave ?? h.dono!);
   const visto = new Set<string>(), out: Bloco[] = [];
   for (const h of porHex.values()) {
     if (visto.has(h.hex)) continue;
@@ -53,7 +80,7 @@ function blocos(lista: Hex[]): Bloco[] {
     }
     const la = grupo.reduce((s, x) => s + x.lat, 0) / grupo.length, lo = grupo.reduce((s, x) => s + x.lng, 0) / grupo.length;
     const centro = grupo.reduce((m, x) => (Math.hypot(x.lat - la, x.lng - lo) < Math.hypot(m.lat - la, m.lng - lo) ? x : m), grupo[0]);
-    out.push({ nome: h.dono!, foto: h.dono_foto, eu: h.eu, tamanho: grupo.length, centro });
+    out.push({ nome: h.dono!, chave: h.dono_chave, foto: h.dono_foto, eu: h.eu, tamanho: grupo.length, centro });
   }
   return out;
 }
@@ -62,7 +89,7 @@ const geoHex = (lista: Hex[]) => ({
   type: 'FeatureCollection' as const,
   features: lista.map(h => ({
     type: 'Feature' as const, id: undefined,
-    properties: { hex: h.hex, cor: h.eu ? OURO : h.dono ? corDe(h.dono) : '#9aa4cc', altura: h.forca != null ? 20 + h.forca * 4 : 8 },
+    properties: { hex: h.hex, cor: h.eu ? OURO : h.dono ? corDe(h.dono_chave) : '#9aa4cc', altura: h.forca != null ? 20 + h.forca * 4 : 8 },
     geometry: { type: 'Polygon' as const, coordinates: [poligono(h.hex)] },
   })),
 });
@@ -76,11 +103,13 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
   const [depois, setDepois] = useState(() => { try { return sessionStorage.getItem('radar-terr-casa-depois') === '1'; } catch { return false; } });
   const [regras, setRegras] = useState(false);
   const carregar = () => {
-    sb.rpc('radar_territorio_mapa').then(({ data }) => setHexes((data ?? []) as Hex[]));
+    sb.rpc('radar_territorio_mapa_v2').then(({ data }) => setHexes((data ?? []) as Hex[]));
     sb.rpc('radar_territorio_meu').then(({ data }) => setMeu(data as Meu));
-    sb.rpc('radar_territorio_placar').then(({ data }) => setPlacar((data ?? []) as Placar[]));
+    sb.rpc('radar_territorio_placar_v2').then(({ data }) => setPlacar((data ?? []) as Placar[]));
   };
   useEffect(carregar, []);
+  // cores do mapa: decididas antes de desenhar (o mapa e as fotos usam as mesmas)
+  useMemo(() => { coresAtuais = atribuirCores(hexes ?? [], placar.filter(p => !p.eu).map(p => p.chave)); }, [hexes, placar]);
   const h = hexes?.find(x => x.hex === sel) ?? null;
   const reagir = async (e: string) => {
     if (!h) return;
@@ -133,7 +162,7 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
           </div>
           {h.dono ? (
             <div className="terr-dono">
-              {h.dono_foto ? <img src={h.dono_foto} alt="" /> : <i style={{ background: h.eu ? OURO : corDe(h.dono) }}>{h.dono.slice(0, 1).toUpperCase()}</i>}
+              {h.dono_foto ? <img src={h.dono_foto} alt="" /> : <i style={{ background: h.eu ? OURO : corDe(h.dono_chave) }}>{h.dono.slice(0, 1).toUpperCase()}</i>}
               <div>
                 <b>{h.eu ? 'Você' : `@${h.dono}`}</b>
                 <small>força {num(h.forca)} · desde {h.desde ? haTempo(h.desde) : '–'}</small>
@@ -176,7 +205,7 @@ export function TelaTerritorio({ pro, assinar }: { pro: boolean; assinar: () => 
             {placar.slice(0, 10).map(p => (
               <li key={p.posicao + p.nome} className={p.eu ? 'eu' : ''}>
                 <span className="pos">{p.posicao}º</span>
-                {p.foto ? <img src={p.foto} alt="" /> : <i style={{ background: p.eu ? OURO : corDe(p.nome) }}>{p.nome.slice(0, 1).toUpperCase()}</i>}
+                {p.foto ? <img src={p.foto} alt="" /> : <i style={{ background: p.eu ? OURO : corDe(p.chave) }}>{p.nome.slice(0, 1).toUpperCase()}</i>}
                 <span className="nome">{p.eu ? 'Você' : `@${p.nome}`}</span>
                 <b>{p.hexagonos}</b>
               </li>
@@ -258,7 +287,7 @@ function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; c
       el.type = 'button';
       el.className = 'terr-avatar' + (b.eu ? ' eu' : '');
       el.setAttribute('aria-label', `${b.eu ? 'Seu território' : `Território de @${b.nome}`}: ${b.tamanho} ${b.tamanho === 1 ? 'hexágono' : 'hexágonos'}`);
-      el.style.setProperty('--cor', b.eu ? OURO : corDe(b.nome));
+      el.style.setProperty('--cor', b.eu ? OURO : corDe(b.chave));
       const foto = document.createElement('span'); foto.className = 'terr-avatar-foto';
       if (b.foto) { const img = document.createElement('img'); img.src = b.foto; img.alt = ''; img.loading = 'lazy'; img.onerror = () => { img.remove(); foto.textContent = b.nome.slice(0, 1).toUpperCase(); }; foto.appendChild(img); }
       else foto.textContent = (b.eu ? 'Você' : b.nome).slice(0, 1).toUpperCase();
@@ -320,7 +349,7 @@ function MapaTerritorio({ hexes, casa, sel, escolher }: { hexes: Hex[] | null; c
       </div>
       <div className="terr-legenda" aria-hidden="true">
         <span><i style={{ background: OURO }} />Seu</span>
-        <span><i style={{ background: CORES[0] }} />De outros atletas</span>
+        <span><i className="terr-leg-varias" />Outros atletas, cada um com a sua cor</span>
         <span className="alt">Mais alto = mais força</span>
       </div>
       {hexes && !hexes.length && <p className="terr-vazio">O mapa ainda está livre. A primeira corrida gravada aqui já conquista território.</p>}

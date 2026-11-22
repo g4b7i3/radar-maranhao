@@ -70,3 +70,4 @@
 .terr-placar b { font-size: 1.05rem; }
 
 .terr-localizar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 750; }
+.terr-leg-varias { background: conic-gradient(#1d3fbf 0 25%, #f07c1e 0 50%, #2fa84f 0 75%, #7b4fd6 0) !important; border-radius: 50% !important; }
