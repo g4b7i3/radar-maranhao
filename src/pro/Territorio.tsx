@@ -22,6 +22,7 @@ export function IconeTerritorio({ size = 22 }: { size?: number }) {
   );
 }
 
+const ESFRIA = 90; // dias sem corrida até o território começar a esfriar (decisão do Vinik, 22/11/2026)
 const EMOJIS = ['🔥', '💪', '👀', '👑', '😂', '⚡'];
 const S = 0.0015, K = 0.9986; // mesma grade do banco
 // cores dos outros atletas: bem diferentes entre si, sem rosa e sem dourado (dourado é só seu)
@@ -190,9 +191,9 @@ function JogoTerritorio({ pro, assinar, modo, minha, recarregarMinha }: { pro: b
               </div>
             </div>
           ) : <p className="pro-sem-margem">Ninguém domina aqui. Corra por este hexágono e ele é seu.</p>}
-          {h.eu && h.desde && (dias(h.desde) >= 14
+          {h.eu && h.desde && (dias(h.desde) >= ESFRIA
             ? <p className="terr-alerta frio"><Snowflake size={15} aria-hidden="true" /> Esfriando: perde 1 ponto por dia até você correr aqui de novo.</p>
-            : <p className="fine pro-sem-margem">Começa a esfriar em {14 - dias(h.desde)} {14 - dias(h.desde) === 1 ? 'dia' : 'dias'}. Corra aqui de novo para defender.</p>)}
+            : <p className="fine pro-sem-margem">Começa a esfriar em {ESFRIA - dias(h.desde)} {ESFRIA - dias(h.desde) === 1 ? 'dia' : 'dias'}. Corra aqui de novo para defender.</p>)}
           {!h.eu && h.dono && h.forca != null && (
             <p className="terr-alerta"><Flame size={15} aria-hidden="true" /> {eq ? 'Para a sua equipe tomar: alguém dela' : 'Para tomar:'} corra aqui com força acima de <b>{num(h.forca)}</b>.{h.minha_forca != null ? ` A sua aqui é ${num(h.minha_forca)}.` : ''}</p>
           )}
@@ -215,7 +216,7 @@ function JogoTerritorio({ pro, assinar, modo, minha, recarregarMinha }: { pro: b
           <li><b>Corra.</b> Grave pelo botão Gravar ou pelo relógio Garmin conectado. Os hexágonos por onde você passou entram sozinhos.</li>
           <li><b>Sua força é a sua nota por idade</b> naquela corrida. Assim quem tem 60 anos disputa de igual pra igual com quem tem 25.</li>
           <li><b>Para tomar um hexágono,</b> corra por ele com força maior que a do dono. Empate fica com quem já estava.</li>
-          <li><b>Defenda.</b> Território sem corrida por 14 dias começa a esfriar: perde 1 ponto de força por dia. Correr ali de novo faz parar de esfriar.</li>
+          <li><b>Defenda.</b> Território sem corrida por 90 dias começa a esfriar: perde 1 ponto de força por dia. Correr ali de novo faz parar de esfriar.</li>
           <li><b>Vale corrida no Maranhão</b>, de 1 km pra cima, no ritmo de corrida (entre 2:30 e 15 min/km).</li>
           <li><b>Em equipe</b> (até 5 atletas), o hexágono é da equipe cujo melhor atleta correu ali com mais força. O individual continua valendo ao mesmo tempo.</li>
         </ol>}
