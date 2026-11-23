@@ -4024,16 +4024,50 @@
       "start": "06:00",
       "verifiedAt": "2026-11-18T10:56:33.191Z",
       "firstSeenAt": "2026-11-18T10:56:33.191Z"
+    },
+    {
+      "id": "mirante-2027-balsas",
+      "name": "Circuito de Corrida Mirante",
+      "edition": "2027",
+      "city": "Balsas",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-04-25",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": null,
+      "sourceUrl": "https://roadrunners.run/evento/2027-circuito-de-corrida-mirante-balsas/",
+      "sourceName": "Road Runners",
+      "publishedAt": null,
+      "confidence": "Fonte única (calendário) · confirmar no organizador",
+      "notes": "Listada no Road Runners como corrida de rua em Balsas, organização da Meta Sport, com página em metasportoficial.com.br/eventos/corrida-mirante-balsas (não foi possível abrir nesta conferência). Distâncias, horário, local de largada e inscrições ainda não informados.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-23T10:55:56.753Z",
+      "firstSeenAt": "2026-11-23T10:55:56.753Z"
     }
   ],
   "changes": [
+    {
+      "id": "1aabd983-9378-445d-9d42-bc755d54085f",
+      "eventId": "mirante-2027-balsas",
+      "version": "[\"2027-04-25\",[],\"Local a confirmar\",null,null,\"Consultar\",null]",
+      "kind": "Nova prova",
+      "at": "2026-11-23T10:55:56.753Z",
+      "notifiedAt": "2026-11-23T10:56:27.591Z"
+    },
     {
       "id": "35110887-3529-41f7-83d8-1d3aafb18b7b",
       "eventId": "uema-2026-coroata",
       "version": "[\"2026-11-29\",[5],\"Campus da UEMA em Coroatá\",null,\"2026-11-22\",\"Encerradas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema\"]",
       "kind": "Alteração importante",
       "at": "2026-11-23T04:58:55.786Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-23T10:56:27.591Z"
     },
     {
       "id": "75bea9d1-15be-4099-b507-a8151f7a7507",
@@ -4041,7 +4075,7 @@
       "version": "[\"2026-11-22\",[5,10],\"Senac de Imperatriz\",null,\"2026-11-22\",\"Encerradas\",\"https://www.cronoesportes.com.br/evento/9042/circuito-sesc-de-corridas-2026-imperatriz\"]",
       "kind": "Alteração importante",
       "at": "2026-11-22T18:38:11.948Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-23T10:56:27.591Z"
     },
     {
       "id": "b07f231e-d33e-49e3-b07a-48c20d7bc5e1",
@@ -6444,7 +6478,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-23T04:58:55.786Z",
+  "lastChecked": "2026-11-23T10:55:56.753Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
