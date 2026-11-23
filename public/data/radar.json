@@ -1823,8 +1823,8 @@
       ],
       "location": "Campus da UEMA em Coroatá",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Esgotadas",
+      "registrationClose": "2026-11-22",
+      "status": "Encerradas",
       "officialUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema",
       "sourceUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema",
       "sourceName": "SA Crono",
@@ -1835,7 +1835,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-14T04:37:54.573Z",
+      "verifiedAt": "2026-11-23T04:58:55.786Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -4027,6 +4027,14 @@
     }
   ],
   "changes": [
+    {
+      "id": "35110887-3529-41f7-83d8-1d3aafb18b7b",
+      "eventId": "uema-2026-coroata",
+      "version": "[\"2026-11-29\",[5],\"Campus da UEMA em Coroatá\",null,\"2026-11-22\",\"Encerradas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/1-corrida-da-uema\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-23T04:58:55.786Z",
+      "notifiedAt": null
+    },
     {
       "id": "75bea9d1-15be-4099-b507-a8151f7a7507",
       "eventId": "sesc-2026-imperatriz",
@@ -6436,7 +6444,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-22T18:38:11.948Z",
+  "lastChecked": "2026-11-23T04:58:55.786Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
