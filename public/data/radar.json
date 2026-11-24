@@ -1577,9 +1577,9 @@
       "city": "Imperatriz",
       "state": "MA",
       "modality": "Rua",
-      "date": "2027-01-15",
+      "date": "2027-01-17",
       "distances": [],
-      "location": "Local a confirmar",
+      "location": "Loja Top Sport",
       "registrationOpen": null,
       "registrationClose": null,
       "status": "Abertas",
@@ -1588,12 +1588,12 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h30. Em 11/11/2026 a página da Topchip passou a mostrar sexta-feira, 15/01/2027 (antes 10/01/2027). Inscrições disponíveis; distâncias no regulamento.",
+      "notes": "Largada às 6h30, na Loja Top Sport (Topchip). Em 24/11/2026 a página da Topchip passou a mostrar domingo, 17/01/2027 (antes 15/01 e 10/01); a página de inscrição (Inscrição Fácil) ainda mostra 10/01/2027 — confirmar com a organização. Inscrições disponíveis; distâncias não divulgadas.",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-11T10:50:29.099Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -1788,7 +1788,7 @@
       ],
       "location": "Espaço Cultural",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-11-25",
       "status": "Abertas",
       "officialUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/2-corrida-da-polcia-civil-de-barra-do-corda",
       "sourceUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/2-corrida-da-polcia-civil-de-barra-do-corda",
@@ -1807,7 +1807,7 @@
         "text": "R$ 70 (1º lote), R$ 80 e R$ 90"
       },
       "start": "07:00",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -2307,7 +2307,7 @@
       ],
       "location": "Estacionamento do São Luís Shopping, Via Expressa",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2027-01-25",
       "status": "Abertas",
       "officialUrl": "https://www.cronoesportes.com.br/evento/6850/iii-corrida-edufor",
       "sourceUrl": "https://www.cronoesportes.com.br/evento/6850/iii-corrida-edufor",
@@ -2320,12 +2320,13 @@
         "top": null,
         "summary": "Troféus aos 3 primeiros gerais dos 5 e 10 km e PCD (masc. e fem.); medalhas por faixa etária, sem premiação em dinheiro."
       },
+      "elevation": null,
       "price": {
         "min": 65,
         "text": "R$ 130 (idoso e PcD R$ 65)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-15T11:31:38.796Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-10-14T15:54:43.321Z"
     },
     {
@@ -2951,7 +2952,7 @@
       ],
       "location": "Em frente ao Casarão, na Avenida Principal",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2027-01-05",
       "status": "Abertas",
       "officialUrl": "https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027",
       "sourceUrl": "https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027",
@@ -2967,7 +2968,7 @@
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-10-20T10:59:04.116Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-10-18T10:59:56.483Z"
     },
     {
@@ -3224,15 +3225,15 @@
       "sourceName": "Marakarun Eventos (inscrição)",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 6h (a descrição diz 6h; o resumo da plataforma mostra outro horário). Kit no 1º lote por R$ 90 + R$ 2,70 de taxa: camisa, medalha, número de peito e pulseira. A página fala em \"premiação por categoria\", sem dizer se é troféu ou dinheiro. Toda a renda vai para a construção da Igreja Batista no bairro Monteiro Lobato. Restavam 82 vagas na coleta de 21/10/2026. Local de largada ainda não divulgado. Organização: Marakarun Eventos (Maracaçumé), (98) 98502-4870.",
+      "notes": "Largada às 6h (a descrição diz 6h; o resumo da plataforma mostra outro horário). Kit no 2º lote por R$ 110 + R$ 3,30 de taxa (38 vagas restantes em 24/11): camisa, medalha, número de peito e pulseira. A página fala em \"premiação por categoria\", sem dizer se é troféu ou dinheiro. Toda a renda vai para a construção da Igreja Batista no bairro Monteiro Lobato. Restavam 82 vagas na coleta de 21/10/2026. Local de largada ainda não divulgado. Organização: Marakarun Eventos (Maracaçumé), (98) 98502-4870.",
       "prize": null,
       "elevation": null,
       "price": {
-        "min": 90,
-        "text": "R$ 90 + taxa (1º lote)"
+        "min": 110,
+        "text": "R$ 110 + taxa (2º lote)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-10-22T10:56:46.652Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-10-21T17:05:54.960Z"
     },
     {
@@ -3536,7 +3537,7 @@
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial (Meta Sport)",
-      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Inscrições pela Meta Sport encerradas em 21/11/2026 (eram R$ 190). Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página fala em premiação em dinheiro no geral e troféus por faixa etária, sem dizer valores.",
+      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Inscrições pela Meta Sport encerradas em 21/11/2026 (eram R$ 190). Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página fala em premiação em dinheiro no geral e troféus por faixa etária, sem dizer valores. A página da Meta Sport cita premiação em dinheiro na categoria geral e troféus por faixa etária, sem valores.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3544,7 +3545,7 @@
         "text": "R$ 190 (5 ou 10 km)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-11-22T10:51:21.704Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-10-30T10:57:10.638Z"
     },
     {
@@ -3589,7 +3590,7 @@
       ],
       "location": "Igreja Matriz de São José",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-12-23",
       "status": "Abertas",
       "officialUrl": "https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026",
       "sourceUrl": "https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026",
@@ -3608,7 +3609,7 @@
         "text": "R$ 40 + taxa (lote promocional)"
       },
       "start": "17:30",
-      "verifiedAt": "2026-11-02T10:52:05.809Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-11-01T17:33:41.969Z"
     },
     {
@@ -3744,7 +3745,7 @@
       ],
       "location": "Praça da Prefeitura",
       "registrationOpen": null,
-      "registrationClose": null,
+      "registrationClose": "2026-12-17",
       "status": "Abertas",
       "officialUrl": "https://www.sacrono.com.br/evento/corre-dom-pedro-2026",
       "sourceUrl": "https://www.sacrono.com.br/evento/corre-dom-pedro-2026",
@@ -3760,7 +3761,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-14T10:55:51.797Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-11-06T04:53:00.510Z"
     },
     {
@@ -3806,14 +3807,14 @@
       "distances": [],
       "location": "UEMA, Campus Colinas",
       "registrationOpen": null,
-      "registrationClose": null,
-      "status": "Abertas",
+      "registrationClose": "2026-11-22",
+      "status": "Encerradas",
       "officialUrl": "https://doity.com.br/corridauema2026",
       "sourceUrl": "https://doity.com.br/corridauema2026",
       "sourceName": "Doity",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição oficial",
-      "notes": "Organização do curso de Enfermagem da UEMA, Campus Colinas (Av. Dr. Osano Brandão, Centro). Página da Doity: domingo, 06/12/2026, \"das 6h às 12h\"; inscrições abertas: lote promocional R$ 75 até 17/11/2026, 2º lote R$ 85 até 22/11/2026. Distâncias e horário de largada ainda não divulgados.",
+      "notes": "Organização do curso de Enfermagem da UEMA, Campus Colinas (Av. Dr. Osano Brandão, Centro). Página da Doity: domingo, 06/12/2026, \"das 6h às 12h\". Os dois lotes (promocional R$ 75 até 17/11 e 2º lote R$ 85 até 22/11) aparecem como encerrados em 24/11/2026, sem novo lote. Road Runners informa 5 km; horário de largada ainda não divulgado.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3821,7 +3822,7 @@
         "text": "R$ 75 (lote promocional até 17/11); 2º lote R$ 85"
       },
       "start": null,
-      "verifiedAt": "2026-11-17T10:56:50.214Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-11-10T10:57:12.181Z"
     },
     {
@@ -4008,21 +4009,21 @@
       "location": "Maraúí EcoPark e Camping",
       "registrationOpen": null,
       "registrationClose": "2027-01-30",
-      "status": "Consultar",
+      "status": "Abertas",
       "officialUrl": "https://www.sympla.com.br/evento/ironpleno-1-edicao/3628986",
-      "sourceUrl": "https://roadrunners.run/evento/2027-ironpleno-1-edicao/",
-      "sourceName": "Road Runners",
+      "sourceUrl": "https://www.sympla.com.br/evento/ironpleno-1-edicao/3628986",
+      "sourceName": "Sympla",
       "publishedAt": null,
-      "confidence": "Fonte única (calendário) · confirmar no organizador",
-      "notes": "Desafio ao ar livre com trilhas, obstáculos e provas de força e resistência, início às 6h (sujeito a alteração). Texto do organizador no Road Runners: R$ 70 no 1º lote (até 05/01/2027) e R$ 90 no 2º lote (até 30/01/2027), inscrição pela Sympla. Distância não informada; página da Sympla não pôde ser aberta nesta conferência.",
+      "confidence": "Página de inscrição oficial (Sympla)",
+      "notes": "Desafio ao ar livre com trilhas, obstáculos e provas de força e resistência no Maraúí EcoPark e Camping, das 6h às 16h. Inscrições abertas na Sympla até 30/01/2027: ingresso único R$ 70 no 1º lote (até 05/01/2027) e R$ 90 no 2º lote. Distância não informada.",
       "prize": null,
       "elevation": null,
       "price": {
         "min": 70,
-        "text": "R$ 70 (1º lote, até 05/01/2027)"
+        "text": "R$ 70 (1º lote até 05/01); R$ 90 (2º lote)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-11-18T10:56:33.191Z",
+      "verifiedAt": "2026-11-24T10:51:43.179Z",
       "firstSeenAt": "2026-11-18T10:56:33.191Z"
     },
     {
@@ -4053,6 +4054,70 @@
     }
   ],
   "changes": [
+    {
+      "id": "79afff9e-bcd9-44b5-900b-ab76c8ccff5b",
+      "eventId": "edufor-2027-sao-luis",
+      "version": "[\"2027-01-31\",[5,10],\"Estacionamento do São Luís Shopping, Via Expressa\",null,\"2027-01-25\",\"Abertas\",\"https://www.cronoesportes.com.br/evento/6850/iii-corrida-edufor\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "52fe730c-5bb0-456c-bf27-f55d7e665534",
+      "eventId": "reis-sotense-2027-sao-joao-do-soter",
+      "version": "[\"2027-01-10\",[5],\"Em frente ao Casarão, na Avenida Principal\",null,\"2027-01-05\",\"Abertas\",\"https://www.sacrono.com.br/evento/corrida-de-reis-sotense-2027\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "16961eac-1fa9-4b1e-8f8b-adce064d5e35",
+      "eventId": "iii-corrida-da-amizade-2026-duque-bacelar",
+      "version": "[\"2026-12-27\",[5],\"Igreja Matriz de São José\",null,\"2026-12-23\",\"Abertas\",\"https://www.sacrono.com.br/evento/iii-corrida-da-amizade-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "f3c0ac7c-82ca-4c8c-a29a-addc0042da7d",
+      "eventId": "corre-dom-pedro-2026-dom-pedro",
+      "version": "[\"2026-12-20\",[5],\"Praça da Prefeitura\",null,\"2026-12-17\",\"Abertas\",\"https://www.sacrono.com.br/evento/corre-dom-pedro-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "efe68602-daf1-4dc8-8a53-349dc8038bb1",
+      "eventId": "policia-civil-2026-barra-do-corda",
+      "version": "[\"2026-11-29\",[1,5,7],\"Espaço Cultural\",null,\"2026-11-25\",\"Abertas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/2-corrida-da-polcia-civil-de-barra-do-corda\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "8f8f9883-a4d7-4101-9f78-97340c692fe1",
+      "eventId": "sobra-2027-imperatriz",
+      "version": "[\"2027-01-17\",[],\"Loja Top Sport\",null,null,\"Abertas\",\"https://topchip.com.br/ii-corrida-da-sobra\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "8ab94717-29c6-4cf0-9d65-ad5e7af64da5",
+      "eventId": "ironpleno-2027-timon",
+      "version": "[\"2027-01-31\",[],\"Maraúí EcoPark e Camping\",null,\"2027-01-30\",\"Abertas\",\"https://www.sympla.com.br/evento/ironpleno-1-edicao/3628986\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
+    {
+      "id": "f5d9a778-3b6d-4034-99ef-cac4ededfce1",
+      "eventId": "uema-2026-colinas",
+      "version": "[\"2026-12-06\",[],\"UEMA, Campus Colinas\",null,\"2026-11-22\",\"Encerradas\",\"https://doity.com.br/corridauema2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-24T10:51:43.179Z",
+      "notifiedAt": "2026-11-24T10:52:20.996Z"
+    },
     {
       "id": "1aabd983-9378-445d-9d42-bc755d54085f",
       "eventId": "mirante-2027-balsas",
@@ -6478,7 +6543,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-23T10:55:56.753Z",
+  "lastChecked": "2026-11-24T10:51:43.179Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
