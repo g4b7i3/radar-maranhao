@@ -4051,9 +4051,43 @@
       "start": null,
       "verifiedAt": "2026-11-23T10:55:56.753Z",
       "firstSeenAt": "2026-11-23T10:55:56.753Z"
+    },
+    {
+      "id": "barirun-2027-imperatriz",
+      "name": "Barirun 2027",
+      "edition": "2027",
+      "city": "Imperatriz",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-11-07",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-24T21:23:55.160Z",
+      "firstSeenAt": "2026-11-24T21:23:55.160Z"
     }
   ],
   "changes": [
+    {
+      "id": "95778801-1790-4fe2-ad59-544179e7fa25",
+      "eventId": "barirun-2027-imperatriz",
+      "version": "[\"2027-11-07\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-24T21:23:55.160Z",
+      "notifiedAt": null
+    },
     {
       "id": "79afff9e-bcd9-44b5-900b-ab76c8ccff5b",
       "eventId": "edufor-2027-sao-luis",
@@ -6543,7 +6577,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-24T10:51:43.179Z",
+  "lastChecked": "2026-11-24T21:23:55.160Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
