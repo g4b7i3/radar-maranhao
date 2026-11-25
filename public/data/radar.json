@@ -3530,14 +3530,14 @@
       ],
       "location": "Concessionária Tocauto Volkswagen, BR-010, Imperatriz",
       "registrationOpen": null,
-      "registrationClose": "2026-11-21",
-      "status": "Encerradas",
+      "registrationClose": "2026-11-29",
+      "status": "Abertas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
       "sourceUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial (Meta Sport)",
-      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Inscrições pela Meta Sport encerradas em 21/11/2026 (eram R$ 190). Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página fala em premiação em dinheiro no geral e troféus por faixa etária, sem dizer valores. A página da Meta Sport cita premiação em dinheiro na categoria geral e troféus por faixa etária, sem valores.",
+      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. As inscrições tinham sido encerradas em 21/11, mas desde a noite de 24/11 a página da Meta Sport voltou a mostrar \"Inscrições abertas\", com prazo até 29/11/2026 (pagamento até 23h59) ou até esgotar as vagas; R$ 190 (5 ou 10 km). Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página cita premiação em dinheiro na categoria geral e troféus por faixa etária, sem dizer valores.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3545,7 +3545,7 @@
         "text": "R$ 190 (5 ou 10 km)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-11-24T10:51:43.179Z",
+      "verifiedAt": "2026-11-25T10:51:01.407Z",
       "firstSeenAt": "2026-10-30T10:57:10.638Z"
     },
     {
@@ -3846,11 +3846,15 @@
       "publishedAt": null,
       "confidence": "Plataforma de inscrição oficial",
       "notes": "Aniversário de 71 anos de Montes Altos, organização da Prefeitura Municipal, largada às 6h30. Página da Topchip: percurso de 5 km, categorias masculino e feminino. Local de largada e preço ainda não divulgados.",
-      "prize": null,
+      "prize": {
+        "kind": "dinheiro",
+        "top": 500,
+        "summary": "Regulamento: 5 km, R$ 500, 300, 200, 150 e 100 + troféu do 1º ao 5º em cada uma das quatro classificações gerais (R$ 5.000 no total), mais premiação por faixa etária para atletas locais."
+      },
       "elevation": null,
       "price": null,
       "start": "06:30",
-      "verifiedAt": "2026-11-17T10:56:50.214Z",
+      "verifiedAt": "2026-11-25T10:51:01.407Z",
       "firstSeenAt": "2026-11-13T00:45:12.794Z"
     },
     {
@@ -4081,12 +4085,20 @@
   ],
   "changes": [
     {
+      "id": "64f9d2ad-cfdc-48d1-a0a6-3ec8bfa617ab",
+      "eventId": "tocauto-running-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Concessionária Tocauto Volkswagen, BR-010, Imperatriz\",null,\"2026-11-29\",\"Abertas\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-25T10:51:01.407Z",
+      "notifiedAt": "2026-11-25T10:51:26.818Z"
+    },
+    {
       "id": "95778801-1790-4fe2-ad59-544179e7fa25",
       "eventId": "barirun-2027-imperatriz",
       "version": "[\"2027-11-07\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
       "kind": "Nova prova",
       "at": "2026-11-24T21:23:55.160Z",
-      "notifiedAt": null
+      "notifiedAt": "2026-11-25T10:51:26.818Z"
     },
     {
       "id": "79afff9e-bcd9-44b5-900b-ab76c8ccff5b",
@@ -6577,7 +6589,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-24T21:23:55.160Z",
+  "lastChecked": "2026-11-25T10:51:01.407Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
