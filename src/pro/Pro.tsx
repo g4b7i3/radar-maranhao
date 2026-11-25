@@ -154,7 +154,7 @@ function ProTelas() {
     return () => data.subscription.unsubscribe();
   }, []);
 
-  const [bloqueios, setBloqueios] = useState<string[]>([]); // recursos fechados pelo admin só pra esta conta enquanto ela não assina (ex.: 'agenda')
+  const [bloqueios, setBloqueios] = useState<string[]>([]); // conta fechada pelo admin enquanto não assina ('tudo'): só a Conta (para pagar) fica aberta
   const recarregar = useCallback(async () => {
     if (!sessao) return;
     const { data: p } = await sb.from('radar_perfis').select('*').eq('user_id', sessao.user.id).maybeSingle();
@@ -243,6 +243,7 @@ function ProTelas() {
   iniciarPresenca(); // online/offline (liga uma vez só)
   const pro = temp.assinante;
   const irAssinar = () => { setAba('conta'); window.scrollTo(0, 0); };
+  const fechado = (bloqueios.includes('tudo') || bloqueios.includes('agenda')) && !pro && !admin; // conta fechada pelo admin: só a parte de assinar fica aberta
 
   const ABAS: { id: Aba; nome: string; Icone: LucideIcon }[] = [
     { id: 'temporada', nome: 'Você', Icone: CircleUserRound }, { id: 'provas', nome: 'Agenda', Icone: CalendarDays }, { id: 'gravar', nome: 'Gravar', Icone: IconeGravar as unknown as LucideIcon }, { id: 'feed', nome: 'Feed', Icone: Radar }, { id: 'mapas', nome: 'Mapas', Icone: IcMapa }, { id: 'territorio', nome: 'Território', Icone: IconeTerritorio as unknown as LucideIcon }, { id: 'campeonatos', nome: 'Campeonatos', Icone: Trophy }, { id: 'comunidades', nome: 'Comunidades', Icone: UsersRound }, { id: 'corri', nome: 'Eu corri', Icone: PlusCircle }, { id: 'ranking', nome: 'Ranking', Icone: BarChart3 },
@@ -260,7 +261,7 @@ function ProTelas() {
       <BannerAviso lista={notif.lista} abrir={() => setNotifAberto(true)} />
       <PushConvite userId={perfil.user_id} />
       {!pro && !admin && <BannerAssinar pendentes={temp.pontos_pendentes} provas={temp.provas} assinar={irAssinar} />}
-      {!pro && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê a agenda de provas, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
+      {!pro && !fechado && <div className="pro-gratis" role="status"><span><b>Modo grátis:</b> você vê a agenda de provas, publica texto, segue e reage. Provas verificadas, pontos, ranking, duelos e foto abrem com o Pro.</span><button className="btn solid" onClick={irAssinar}>Assinar · R$ 10</button></div>}
       <AvisoVencimento validaAte={temp.valida_ate} renovar={() => { try { sessionStorage.setItem('radar-renovar', '1'); } catch { /* */ } irAssinar(); }} />
       {bemVindo && <BemVindoPro fechar={() => { setBemVindo(false); setAba('temporada'); window.scrollTo(0, 0); }} />}
       {aviso && <p className="pro-aviso" role="status">{aviso} <button className="btn text" onClick={() => setAviso(null)}>Ok</button></p>}
@@ -272,6 +273,14 @@ function ProTelas() {
           {cardDuelo === d.id ? <CardDuelo d={d} eu={perfil.apelido} fechar={() => setCardDuelo(null)} /> : <button className="btn outline pro-btn" onClick={() => setCardDuelo(d.id)}>Card pro story</button>}
         </section>
       ))}
+      {fechado && aba !== 'conta' ? (
+        <div className="pro-cont"><section className="pro-card azul">
+          <p className="pro-k">Radar Pro</p>
+          <h2 className="pro-sem-margem">Sua conta é liberada com a assinatura</h2>
+          <p className="pro-sem-margem">Agenda de provas, feed, gravar corridas, Território e todo o resto abrem assim que o Pro estiver ativo.</p>
+          <button className="btn solid pro-btn" onClick={irAssinar}>Assinar · R$ 10</button>
+        </section></div>
+      ) : <>
       {aba === 'campeonatos' && <TelaCampeonatos perfil={perfil} />}
       {aba === 'temporada' && <TelaTemporada perfil={perfil} temp={temp} irCorri={() => setAba('corri')} fotoMudou={recarregar} pro={pro || admin} assinar={irAssinar} />}
       {aba === 'corri' && <TelaEuCorri perfil={perfil} pro={pro} assinar={irAssinar} pronto={() => { recarregar(); }} irTemporada={() => setAba('temporada')} />}
@@ -280,11 +289,10 @@ function ProTelas() {
       {aba === 'territorio' && <TelaTerritorio pro={pro || admin} assinar={irAssinar} />}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
-      {aba === 'provas' && (bloqueios.includes('agenda') && !pro && !admin
-        ? <div className="pro-cont"><section className="pro-card"><p className="pro-k">Agenda de provas</p><p className="pro-sem-margem">Na sua conta, a agenda de provas é liberada com o Radar Pro.</p><button className="btn solid pro-btn" onClick={irAssinar}>Assinar · R$ 10</button></section></div>
-        : <TelaProvas />)}
+      {aba === 'provas' && <TelaProvas />}
       {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
+      </>}
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
       {aberto && <div ref={sobreRef} className="pro-sobre" role="dialog" aria-label={aberto.tipo === 'atleta' ? `Perfil de @${aberto.nome}` : aberto.nome}>
         <TopoVoltar titulo={aberto.tipo === 'atleta' ? <Arroba a={aberto.nome} /> : aberto.nome} voltar={() => setAberto(null)} />
