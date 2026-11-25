@@ -154,11 +154,13 @@ function ProTelas() {
     return () => data.subscription.unsubscribe();
   }, []);
 
+  const [bloqueios, setBloqueios] = useState<string[]>([]); // recursos fechados pelo admin só pra esta conta enquanto ela não assina (ex.: 'agenda')
   const recarregar = useCallback(async () => {
     if (!sessao) return;
     const { data: p } = await sb.from('radar_perfis').select('*').eq('user_id', sessao.user.id).maybeSingle();
     setPerfil(p as Perfil | null);
     if (p) { const { data: t } = await sb.rpc('radar_minha_temporada', { temporada: new Date().getFullYear() }); setTemp(t as Temporada); }
+    sb.rpc('radar_meus_bloqueios').then(({ data }) => setBloqueios((data as string[] | null) ?? []));
   }, [sessao]);
   useEffect(() => { if (sessao) recarregar(); else if (sessao === null) setPerfil(undefined); }, [sessao, recarregar]);
 
@@ -278,7 +280,9 @@ function ProTelas() {
       {aba === 'territorio' && <TelaTerritorio pro={pro || admin} assinar={irAssinar} />}
       {aba === 'feed' && <TelaFeed perfil={perfil} pro={pro} assinar={irAssinar} />}
       {aba === 'comunidades' && <TelaComunidades perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
-      {aba === 'provas' && <TelaProvas />}
+      {aba === 'provas' && (bloqueios.includes('agenda') && !pro && !admin
+        ? <div className="pro-cont"><section className="pro-card"><p className="pro-k">Agenda de provas</p><p className="pro-sem-margem">Na sua conta, a agenda de provas é liberada com o Radar Pro.</p><button className="btn solid pro-btn" onClick={irAssinar}>Assinar · R$ 10</button></section></div>
+        : <TelaProvas />)}
       {aba === 'ranking' && <TelaRanking perfil={perfil} pro={pro} assinar={irAssinar} admin={admin} />}
       {aba === 'duelos' && (pro ? <TelaDuelos perfil={perfil} /> : <Travado tela="duelos" perfil={perfil} assinar={irAssinar} />)}
       {aba === 'conta' && <TelaConta key={stravaVersao} perfil={perfil} temp={temp} email={sessao.user.email ?? ''} pronto={recarregar} />}
