@@ -1335,18 +1335,18 @@
       "location": "Parque Estadual do Itapiracó",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://centraldacorrida.com.br/evento/ii-corrida-condominial-",
       "sourceUrl": "https://soucorredor.com.br/evento/8372/2_corrida_condominial_2026",
       "sourceName": "Sou Corredor",
       "publishedAt": null,
-      "confidence": "Calendário de corridas · confirmar no organizador",
-      "notes": "Organização: Síndicas do Maranhão. Largada às 6h no Parque Estadual do Itapiracó (São Luís, segundo a Central da Corrida; o running.life cita Paço do Lumiar). Corrida de 5 km e caminhada de 3 km. Kit (camisa, número, chip, mochila tipo saco e viseira) em 25 e 26/11/2026, local a divulgar.",
+      "confidence": "Plataforma de inscrição oficial",
+      "notes": "Organização: Síndicas do Maranhão. Largada às 6h no Parque Estadual do Itapiracó (São Luís, segundo a Central da Corrida; o running.life cita Paço do Lumiar). Corrida de 5 km e caminhada de 3 km. Kit (camisa, número, chip, mochila tipo saco e viseira) em 25 e 26/11/2026 no Comercial Entre Rios, Rua dos Rouxinóis, Jardim Renascença. Em 26/11/2026 a Central da Corrida mostra \"Inscrições Indisponíveis\" (inscrições fechadas).",
       "prize": null,
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-19T10:51:17.032Z",
+      "verifiedAt": "2026-11-26T10:50:24.311Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -1371,7 +1371,7 @@
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial (Meta Sport)",
-      "notes": "Corrida CREA-MA 2026 – Etapa Imperatriz, organização da Meta Sport. Largadas: PCD 5 km às 6h, 10 km às 6h15, 5 km às 6h25 e 3 km às 6h30. Inscrições abertas na Meta Sport até 04/12/2026 (pagamento até 14h) ou até esgotar: profissionais CREA-MA R$ 49,90 e público geral R$ 69,90, mais 1 kg de alimento na retirada; PCD R$ 34,95. Kit (camiseta, sacochila, meia, número, brindes e medalha) em 04/12 (16h–20h) e 05/12 (9h–14h) na Julin Acessórios, Av. Getúlio Vargas, 1128, Centro. Regulamento em PDF na página (não lido): premiação e percurso a confirmar.",
+      "notes": "Corrida CREA-MA 2026 – Etapa Imperatriz, organização da Meta Sport. Largadas: PCD 5 km às 6h, 10 km às 6h15, 5 km às 6h25 e 3 km às 6h30. Inscrições abertas na Meta Sport (em 25/11/2026 os 5 km e o 5 km PCD aparecem esgotados; 3 e 10 km ainda abertos) até 04/12/2026 (pagamento até 14h) ou até esgotar: profissionais CREA-MA R$ 49,90 e público geral R$ 69,90, mais 1 kg de alimento na retirada; PCD R$ 34,95. Kit (camiseta, sacochila, meia, número, brindes e medalha) em 04/12 (16h–20h) e 05/12 (9h–14h) na Julin Acessórios, Av. Getúlio Vargas, 1128, Centro. Regulamento em PDF na página (não lido): premiação e percurso a confirmar.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -1379,7 +1379,7 @@
         "text": "R$ 49,90 (CREA-MA) a R$ 69,90 + 1 kg de alimento"
       },
       "start": "06:00",
-      "verifiedAt": "2026-11-22T10:51:21.704Z",
+      "verifiedAt": "2026-11-26T10:50:24.311Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -4085,6 +4085,14 @@
   ],
   "changes": [
     {
+      "id": "9c8ebaf3-54e0-416b-a9ec-cf98cd02500f",
+      "eventId": "condominial-2026-sao-luis",
+      "version": "[\"2026-11-29\",[3,5],\"Parque Estadual do Itapiracó\",null,null,\"Encerradas\",\"https://centraldacorrida.com.br/evento/ii-corrida-condominial-\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-26T10:50:24.311Z",
+      "notifiedAt": "2026-11-26T10:50:52.831Z"
+    },
+    {
       "id": "64f9d2ad-cfdc-48d1-a0a6-3ec8bfa617ab",
       "eventId": "tocauto-running-2026-imperatriz",
       "version": "[\"2026-11-29\",[5,10],\"Concessionária Tocauto Volkswagen, BR-010, Imperatriz\",null,\"2026-11-29\",\"Abertas\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
@@ -6589,7 +6597,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-25T10:51:01.407Z",
+  "lastChecked": "2026-11-26T10:50:24.311Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
