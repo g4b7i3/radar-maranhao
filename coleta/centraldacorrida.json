@@ -23,14 +23,14 @@
    "url": "https://centraldacorrida.com.br/evento/ii-corrida-condominial-",
    "titulo": "Central da Corrida - II Corrida Condominial",
    "maranhao": true,
-   "texto": "ORGANIZADOR\nACESSAR\nII Corrida Condominial \nDomingo, 29 de Nov de 2026 - 06:00\nSao Luis/ MA\nInscrições Indisponíveis\nINFORMAÇÕES GERAIS\nA II Corrida Condominial do Maranhão será realizada no dia 29 de novembro de 2026, no Parque Estadual do Itapiracó, em São Luís/MA.\nA prova contará com percursos de 3 km e 5 km, destinados a atletas de ambos os sexos, regularmente inscritos, com largada as 06:hs\nRegulamento oficial\nPERCURSOS/ DISTÂNCIAS\n5 km\nVer mapa\n3km caminhada \nVer mapa\nENTREGA DE KIT\nENTREGA DE KITS\nA retirada ocorrerá nos dias 25 e 26 de novembro de 2026, no COMERCIAL ENTRE RIOS, LOCALIZADO NA RUA DOS ROXINOIS JARDIM RENASCENÇA (ARMAZEM)\n O kit será composto por:\nCamisa\nNumero\nChip de cronometragem\nMochila – tipo saco\nViseira\nCompartilhe\nPREPARE-SE! FALTAM:\n3\nDias\n13\nhoras\n24\nMinutos\n10\nSegundos\nCENTRAL DE SUPORTE\nOrganizador do Evento\nSINDICAS DO MARANHÃO\nA Central da Corrida foi criada pensando nas necessidades e na comodidade de organizadores de eventos esportivos e atletas. Estamos aqui para auxiliar no gerenciamento do seu evento e oferecer aos atletas informações sobre provas em todo o Brasil e serviços de inscrição, de forma prática e segura. \nATLETAS\nAcessar\nCrie sua conta\nTermos de Uso\nORGANIZADORES\nServiços Oferecidos\nCrie sua conta\nTermos de Uso\nINSTITUCIONAL\nSobre Nós\nOportunidades\nPoítica de Privacidade\n© 2013 - 2026  - Central da Corrida - CNPJ: 11.458.400/0001-61 - Todos os direitos reservados."
+   "texto": "ORGANIZADOR\nACESSAR\nII Corrida Condominial \nDomingo, 29 de Nov de 2026 - 06:00\nSao Luis/ MA\nInscrições Indisponíveis\nINFORMAÇÕES GERAIS\nA II Corrida Condominial do Maranhão será realizada no dia 29 de novembro de 2026, no Parque Estadual do Itapiracó, em São Luís/MA.\nA prova contará com percursos de 3 km e 5 km, destinados a atletas de ambos os sexos, regularmente inscritos, com largada as 06:hs\nRegulamento oficial\nPERCURSOS/ DISTÂNCIAS\n5 km\nVer mapa\n3km caminhada \nVer mapa\nENTREGA DE KIT\nENTREGA DE KITS\nA retirada ocorrerá nos dias 25 e 26 de novembro de 2026, no COMERCIAL ENTRE RIOS, LOCALIZADO NA RUA DOS ROXINOIS JARDIM RENASCENÇA (ARMAZEM)\n O kit será composto por:\nCamisa\nNumero\nChip de cronometragem\nMochila – tipo saco\nViseira\nCompartilhe\nPREPARE-SE! FALTAM:\n3\nDias\n6\nhoras\n32\nMinutos\n47\nSegundos\nCENTRAL DE SUPORTE\nOrganizador do Evento\nSINDICAS DO MARANHÃO\nA Central da Corrida foi criada pensando nas necessidades e na comodidade de organizadores de eventos esportivos e atletas. Estamos aqui para auxiliar no gerenciamento do seu evento e oferecer aos atletas informações sobre provas em todo o Brasil e serviços de inscrição, de forma prática e segura. \nATLETAS\nAcessar\nCrie sua conta\nTermos de Uso\nORGANIZADORES\nServiços Oferecidos\nCrie sua conta\nTermos de Uso\nINSTITUCIONAL\nSobre Nós\nOportunidades\nPoítica de Privacidade\n© 2013 - 2026  - Central da Corrida - CNPJ: 11.458.400/0001-61 - Todos os direitos reservados."
   }
  ],
  "api": [
   {
    "url": "https://centraldacorrida.com.br/user/hi",
    "status": 200,
-   "body": "{\"bubble_session_uid\":\"1795635267934x391534516013674100\"}"
+   "body": "{\"bubble_session_uid\":\"1795659947820x363214481202454000\"}"
   },
   {
    "url": "https://centraldacorrida.com.br/user/apm",
@@ -40,7 +40,7 @@
   {
    "url": "https://centraldacorrida.com.br/user/hi",
    "status": 200,
-   "body": "{\"bubble_session_uid\":\"1795635267934x391534516013674100\"}"
+   "body": "{\"bubble_session_uid\":\"1795659947820x363214481202454000\"}"
   },
   {
    "url": "https://centraldacorrida.com.br/user/apm",
@@ -50,12 +50,12 @@
   {
    "url": "https://centraldacorrida.com.br/user/hi",
    "status": 200,
-   "body": "{\"bubble_session_uid\":\"1795635267934x391534516013674100\"}"
+   "body": "{\"bubble_session_uid\":\"1795659947820x363214481202454000\"}"
   },
   {
    "url": "https://centraldacorrida.com.br/elasticsearch/msearch",
    "status": 200,
-   "body": "{\"responses\":[{\"hits\":{\"hits\":[],\"total\":0},\"extras\":[],\"at_end\":true,\"search_version\":1795635330698}],\"bulk_watch_results\":[{\"search_ids\":[\"3665a3b815492141ac1ae3bd109028d0\"],\"expires\":1795656630685}]}"
+   "body": "{\"responses\":[{\"hits\":{\"hits\":[],\"total\":0},\"extras\":[],\"at_end\":true,\"search_version\":1795660012290}],\"bulk_watch_results\":[{\"search_ids\":[\"3665a3b815492141ac1ae3bd109028d0\"],\"expires\":1795681312275}]}"
   },
   {
    "url": "https://centraldacorrida.com.br/user/apm",
@@ -64,5 +64,5 @@
   }
  ],
  "totalLinks": 2,
- "coletadoEm": "2026-11-25T19:35:50.291Z"
+ "coletadoEm": "2026-11-26T02:27:12.972Z"
 }
