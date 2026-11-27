@@ -1789,13 +1789,13 @@
       "location": "Espaço Cultural",
       "registrationOpen": null,
       "registrationClose": "2026-11-25",
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/2-corrida-da-polcia-civil-de-barra-do-corda",
       "sourceUrl": "https://www.sacrono.com.br/evento/2026/corrida-de-rua/2-corrida-da-polcia-civil-de-barra-do-corda",
       "sourceName": "SA Crono",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial",
-      "notes": "Largada às 7h. Categorias 5 km policial e 1 km infantil.",
+      "notes": "Largada às 7h. Categorias 5 km policial e 1 km infantil. A SA Crono mostra \"INSCRIÇÕES ENCERRADAS EM: 25/11/2026 23:59:59\" (visto em 27/11).",
       "prize": {
         "kind": "dinheiro",
         "top": 400,
@@ -1807,7 +1807,7 @@
         "text": "R$ 70 (1º lote), R$ 80 e R$ 90"
       },
       "start": "07:00",
-      "verifiedAt": "2026-11-24T10:51:43.179Z",
+      "verifiedAt": "2026-11-27T10:49:57.283Z",
       "firstSeenAt": "2026-10-14T15:08:52.450Z"
     },
     {
@@ -3531,13 +3531,13 @@
       "location": "Concessionária Tocauto Volkswagen, BR-010, Imperatriz",
       "registrationOpen": null,
       "registrationClose": "2026-11-29",
-      "status": "Abertas",
+      "status": "Encerradas",
       "officialUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
       "sourceUrl": "https://www.metasportoficial.com.br/eventos/tocauto-running-2026",
       "sourceName": "Meta Sport",
       "publishedAt": null,
       "confidence": "Página de inscrição oficial (Meta Sport)",
-      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. As inscrições tinham sido encerradas em 21/11, mas desde a noite de 24/11 a página da Meta Sport voltou a mostrar \"Inscrições abertas\", com prazo até 29/11/2026 (pagamento até 23h59) ou até esgotar as vagas; R$ 190 (5 ou 10 km). Kit (camisa, sacochila e medalha) em 27 e 28/11, das 8h às 18h, na concessionária. A página cita premiação em dinheiro na categoria geral e troféus por faixa etária, sem dizer valores.",
+      "notes": "Organização da Meta Sport. Largadas: 10 km às 6h e 5 km às 6h20, percurso todo em asfalto. Em 27/11/2026 a página da Meta Sport voltou a mostrar \"Inscrições encerradas\" nos 5 e 10 km (tinham reaberto em 24/11). O topo da página passou a dizer \"Data a definir\", mas a descrição e a retirada de kit (27 e 28/11, 8h às 18h, na concessionária) continuam com a prova em 29/11/2026: confirmar com a organização. R$ 190 (5 ou 10 km). A página cita premiação em dinheiro na categoria geral e troféus por faixa etária, sem dizer valores.",
       "prize": null,
       "elevation": null,
       "price": {
@@ -3545,7 +3545,7 @@
         "text": "R$ 190 (5 ou 10 km)"
       },
       "start": "06:00",
-      "verifiedAt": "2026-11-25T10:51:01.407Z",
+      "verifiedAt": "2026-11-27T10:49:57.283Z",
       "firstSeenAt": "2026-10-30T10:57:10.638Z"
     },
     {
@@ -3807,22 +3807,22 @@
       "distances": [],
       "location": "UEMA, Campus Colinas",
       "registrationOpen": null,
-      "registrationClose": "2026-11-22",
-      "status": "Encerradas",
+      "registrationClose": "2026-11-27",
+      "status": "Abertas",
       "officialUrl": "https://doity.com.br/corridauema2026",
       "sourceUrl": "https://doity.com.br/corridauema2026",
       "sourceName": "Doity",
       "publishedAt": null,
       "confidence": "Plataforma de inscrição oficial",
-      "notes": "Organização do curso de Enfermagem da UEMA, Campus Colinas (Av. Dr. Osano Brandão, Centro). Página da Doity: domingo, 06/12/2026, \"das 6h às 12h\". Os dois lotes (promocional R$ 75 até 17/11 e 2º lote R$ 85 até 22/11) aparecem como encerrados em 24/11/2026, sem novo lote. Road Runners informa 5 km; horário de largada ainda não divulgado.",
+      "notes": "Organização do curso de Enfermagem da UEMA, Campus Colinas (Av. Dr. Osano Brandão, Centro). Página da Doity: domingo, 06/12/2026, \"das 6h às 12h\". O 2º lote (R$ 85) foi prorrogado e aparece disponível até 27/11/2026 às 23h59 (visto na coleta de 26/11 à noite); o lote promocional (R$ 75) terminou em 17/11. Road Runners informa 5 km; horário de largada ainda não divulgado.",
       "prize": null,
       "elevation": null,
       "price": {
-        "min": 75,
-        "text": "R$ 75 (lote promocional até 17/11); 2º lote R$ 85"
+        "min": 85,
+        "text": "2º lote R$ 85 (até 27/11); promocional R$ 75 encerrado"
       },
       "start": null,
-      "verifiedAt": "2026-11-24T10:51:43.179Z",
+      "verifiedAt": "2026-11-27T10:49:57.283Z",
       "firstSeenAt": "2026-11-10T10:57:12.181Z"
     },
     {
@@ -4084,6 +4084,30 @@
     }
   ],
   "changes": [
+    {
+      "id": "e848d766-1935-42de-a8ca-83e42cda4b43",
+      "eventId": "uema-2026-colinas",
+      "version": "[\"2026-12-06\",[],\"UEMA, Campus Colinas\",null,\"2026-11-27\",\"Abertas\",\"https://doity.com.br/corridauema2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-27T10:49:57.283Z",
+      "notifiedAt": "2026-11-27T10:50:27.014Z"
+    },
+    {
+      "id": "d8403f04-bade-4d59-b6be-ad27ccc3ef0b",
+      "eventId": "tocauto-running-2026-imperatriz",
+      "version": "[\"2026-11-29\",[5,10],\"Concessionária Tocauto Volkswagen, BR-010, Imperatriz\",null,\"2026-11-29\",\"Encerradas\",\"https://www.metasportoficial.com.br/eventos/tocauto-running-2026\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-27T10:49:57.283Z",
+      "notifiedAt": "2026-11-27T10:50:27.014Z"
+    },
+    {
+      "id": "39f68df9-cf2f-4ce5-8b42-349e16923536",
+      "eventId": "policia-civil-2026-barra-do-corda",
+      "version": "[\"2026-11-29\",[1,5,7],\"Espaço Cultural\",null,\"2026-11-25\",\"Encerradas\",\"https://www.sacrono.com.br/evento/2026/corrida-de-rua/2-corrida-da-polcia-civil-de-barra-do-corda\"]",
+      "kind": "Alteração importante",
+      "at": "2026-11-27T10:49:57.283Z",
+      "notifiedAt": "2026-11-27T10:50:27.014Z"
+    },
     {
       "id": "9c8ebaf3-54e0-416b-a9ec-cf98cd02500f",
       "eventId": "condominial-2026-sao-luis",
@@ -6597,7 +6621,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-26T10:50:24.311Z",
+  "lastChecked": "2026-11-27T10:49:57.283Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
