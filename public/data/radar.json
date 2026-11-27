@@ -1335,7 +1335,7 @@
       "location": "Parque Estadual do Itapiracó",
       "registrationOpen": null,
       "registrationClose": null,
-      "status": "Encerradas",
+      "status": "Abertas",
       "officialUrl": "https://centraldacorrida.com.br/evento/ii-corrida-condominial-",
       "sourceUrl": "https://soucorredor.com.br/evento/8372/2_corrida_condominial_2026",
       "sourceName": "Sou Corredor",
@@ -1346,7 +1346,7 @@
       "elevation": null,
       "price": null,
       "start": "06:00",
-      "verifiedAt": "2026-11-26T10:50:24.311Z",
+      "verifiedAt": "2026-11-27T20:10:52.301Z",
       "firstSeenAt": "2026-10-14T14:56:38.965Z"
     },
     {
@@ -4081,9 +4081,43 @@
       "start": null,
       "verifiedAt": "2026-11-24T21:23:55.160Z",
       "firstSeenAt": "2026-11-24T21:23:55.160Z"
+    },
+    {
+      "id": "corrida-bora-correr-porto-franco-2027-porto-franco",
+      "name": "Corrida Bora Correr Porto Franco",
+      "edition": "2027",
+      "city": "Porto Franco",
+      "state": "MA",
+      "modality": "Rua",
+      "date": "2027-11-14",
+      "distances": [],
+      "location": "Local a confirmar",
+      "registrationOpen": null,
+      "registrationClose": null,
+      "status": "Consultar",
+      "officialUrl": "https://topchip.com.br/calendario",
+      "sourceUrl": "https://topchip.com.br/calendario",
+      "sourceName": "Topchip",
+      "publishedAt": null,
+      "confidence": "Calendário oficial da cronometragem (Topchip)",
+      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "prize": null,
+      "elevation": null,
+      "price": null,
+      "start": null,
+      "verifiedAt": "2026-11-27T20:10:52.301Z",
+      "firstSeenAt": "2026-11-27T20:10:52.301Z"
     }
   ],
   "changes": [
+    {
+      "id": "1adb8b55-610d-499b-977f-e1b2359f9b48",
+      "eventId": "corrida-bora-correr-porto-franco-2027-porto-franco",
+      "version": "[\"2027-11-14\",[],\"Local a confirmar\",null,null,\"Consultar\",\"https://topchip.com.br/calendario\"]",
+      "kind": "Nova prova",
+      "at": "2026-11-27T20:10:52.301Z",
+      "notifiedAt": null
+    },
     {
       "id": "e848d766-1935-42de-a8ca-83e42cda4b43",
       "eventId": "uema-2026-colinas",
@@ -6621,7 +6655,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-27T10:49:57.283Z",
+  "lastChecked": "2026-11-27T20:10:52.301Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
