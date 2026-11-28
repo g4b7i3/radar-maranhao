@@ -4100,12 +4100,12 @@
       "sourceName": "Topchip",
       "publishedAt": null,
       "confidence": "Calendário oficial da cronometragem (Topchip)",
-      "notes": "Largada às 06h30. Encontrada automaticamente na Topchip; detalhes na página da plataforma.",
+      "notes": "Largada às 06h30. No calendário da Topchip (organizador: Bora Correr Porto Franco), marcada como confirmada e cronometrada. Distâncias, local, preço e abertura das inscrições ainda não divulgados.",
       "prize": null,
       "elevation": null,
       "price": null,
-      "start": null,
-      "verifiedAt": "2026-11-27T20:10:52.301Z",
+      "start": "06:30",
+      "verifiedAt": "2026-11-28T10:54:55.473Z",
       "firstSeenAt": "2026-11-27T20:10:52.301Z"
     }
   ],
@@ -6655,7 +6655,7 @@
       "notifiedAt": "2026-10-13T11:02:47.921Z"
     }
   ],
-  "lastChecked": "2026-11-27T20:10:52.301Z",
+  "lastChecked": "2026-11-28T10:54:55.473Z",
   "monitoring": true,
   "scheduleLabel": "Busca diária às 8h · São Luís"
 }
